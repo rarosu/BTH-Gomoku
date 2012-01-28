@@ -4,6 +4,7 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth,
 	: D3DApplication(applicationInstance, windowTitle, windowWidth, windowHeight), mGameTime()
 {
 	mDefaultFont = new GameFont(mDeviceD3D, "Times New Roman", 24);
+	mConsole = new Console(mDeviceD3D, (float)mScreenWidth, (float)mScreenHeight);
 }
 
 Game::~Game()
@@ -32,6 +33,8 @@ void Game::Draw()
 	const D3DXCOLOR RED(1.0, 0.0, 0.0, 1.0);
 
 	mDefaultFont->WriteText(L"Hello World!", position, RED);
+
+	mConsole->Draw();
 
 	RenderScene();
 }

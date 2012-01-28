@@ -4,6 +4,7 @@
 #include "D3DApplication.hpp"
 #include "GameTime.hpp"
 #include "GameFont.hpp"
+#include "Console.hpp"
 
 class Game : public D3DApplication
 {
@@ -15,8 +16,9 @@ public:
 	virtual void Draw();
 
 private:
-	GameTime mGameTime;
-	GameFont* mDefaultFont;
+	GameTime		mGameTime;
+	GameFont*		mDefaultFont;
+	Console*		mConsole;
 
 protected:
 	virtual void ProgramLoop();

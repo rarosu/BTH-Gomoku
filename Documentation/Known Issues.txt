@@ -1,2 +1,6 @@
 28-01-2012 15:23 - Base version, Hello World
 	- d3dx10.lib is now copied into project folder, fix linking
+
+28-01-2012 17:41 - Console window, red square
+	- Fix positioning of console window
+	- Font: add numbers and text easily

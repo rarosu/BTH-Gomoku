@@ -35,7 +35,7 @@ public:
 	void MakeActive();
 	void Map();
 
-//private:
+private:
 	ID3D10Device*			mDevice;
 	ID3D10Buffer*			mBuffer;
 

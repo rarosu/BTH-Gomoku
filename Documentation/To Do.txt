@@ -2,3 +2,5 @@
 	- Fix subfolders: Header Files, Source Files etc
 	- The rest of the project
 
+28-01-2012 17:41 - Console window, red square
+	- Fix typing and output
