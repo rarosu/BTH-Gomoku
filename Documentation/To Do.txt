@@ -1,0 +1,4 @@
+28-01-2012 15:23 - Base version, Hello World
+	- Fix subfolders: Header Files, Source Files etc
+	- The rest of the project
+
