@@ -1,17 +1,25 @@
 #include "Console.hpp"
+#include <string>
 
 const char*	Console::C_FILENAME = "Console.fx";
 const int Console::C_NUM_VERTICES = 4;
 
 Console::Console(ID3D10Device* device, float screenWidth, float screenHeight)
+	: mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0))
 {
 	mDevice = device;
 
 	D3DXVECTOR2 vertices[C_NUM_VERTICES];
-	vertices[0] = D3DXVECTOR2(0, 0);
-	vertices[1] = D3DXVECTOR2(screenWidth, 0);
-	vertices[2] = D3DXVECTOR2(0, screenHeight / 2);
-	vertices[3] = D3DXVECTOR2(screenWidth, screenHeight / 2);
+
+	float screenX1 = -(screenWidth / 2);
+	float screenX2 = screenWidth / 2;
+	float screenY1 = screenHeight / 2;
+	float screenY2 = 0;
+
+	vertices[0] = D3DXVECTOR2(screenX1, screenY1);
+	vertices[1] = D3DXVECTOR2(screenX2, screenY1);
+	vertices[2] = D3DXVECTOR2(screenX1, screenY2);
+	vertices[3] = D3DXVECTOR2(screenX2, screenY2);
 
 	mVertexBuffer = new Buffer();
 	BufferInformation bufferDesc;
@@ -26,6 +34,19 @@ Console::Console(ID3D10Device* device, float screenWidth, float screenHeight)
 
 	CreateEffect();
 	CreateVertexLayout();
+
+	mBounds.left = 0;
+	mBounds.right = (LONG)screenWidth;
+	mBounds.top = 0;
+	mBounds.bottom = (LONG)(screenHeight / 2);
+
+	int textHeight = 18;
+
+	mFont = new GameFont(mDevice, "System", textHeight, false, true);
+	mStream.str("");
+	mOutput.clear();
+
+	mMaxNumRows = (int)((screenY1 - textHeight) / textHeight);
 }
 
 // Compile and create the shader/effect
@@ -128,8 +149,19 @@ HRESULT Console::CreateVertexLayout()
 		return result;
 }
 
+// Update the console
+void Console::Update(GameTime gameTime)
+{
+	if(!mIsToggled)
+		return;
+}
+
+// Draw the console
 void Console::Draw()
 {
+	if(!mIsToggled)
+		return;
+
 	mVertexBuffer->MakeActive();
 
 	mDevice->IASetInputLayout(mVertexLayout);
@@ -142,4 +174,46 @@ void Console::Draw()
 		mTechnique->GetPassByIndex(p)->Apply(0);
 		mDevice->Draw(C_NUM_VERTICES, 0);
 	}
+	
+	POINT position = { 10 , mBounds.bottom - 20 };
+	mFont->WriteText(mStream.str(), position, mTextColor);
+
+	position.y = 0;
+	for(UINT i = std::max<int>(0, mOutput.size() - mMaxNumRows); i < mOutput.size(); ++i)
+	{
+		mFont->WriteText(mOutput[i], position, mTextColor);
+		position.y += mFont->GetSize();
+	}
+}
+
+// Toggle showing of the console
+void Console::Toggle()
+{
+	mIsToggled = !mIsToggled;
+}
+
+// When a key is pressed, act on it
+void Console::KeyPressed(unsigned char key)
+{
+	if(!mIsToggled || key < 0x08 || (key > 0x0D && key < 0x20) || (key > 0x7E && key < 0xC0))
+		return;
+
+	if(key == 0x0D)				// Enter Key is pressed
+	{
+		if(mStream.str() != "")
+		{
+			mOutput.push_back(mStream.str());
+			mStream.str("");
+		}
+	}
+	else if(key == 0x08)		// Backspace is pressed
+	{
+		std::string temp = mStream.str();
+		temp = temp.substr(0, temp.size() - 1);
+
+		mStream.str("");
+		mStream << temp;
+	}
+	else
+		mStream << key;
 }

@@ -14,6 +14,7 @@ public:
 	virtual ~Game();
 	virtual void Update();
 	virtual void Draw();
+	virtual LRESULT HandleAppMessages(UINT message, WPARAM wParam, LPARAM lParam);
 
 private:
 	GameTime		mGameTime;

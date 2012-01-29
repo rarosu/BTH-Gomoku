@@ -4,3 +4,6 @@
 28-01-2012 17:41 - Console window, red square
 	- Fix positioning of console window
 	- Font: add numbers and text easily
+
+29-01-2012 16:06 - Console window working
+	- No scrolling possible to see earlier lines

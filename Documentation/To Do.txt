@@ -4,3 +4,8 @@
 
 28-01-2012 17:41 - Console window, red square
 	- Fix typing and output
+
+29-01-2012 16:06 - Console window working
+	- Better handling of key press
+	- More customizeable console?
+	- Better indication of typing area?

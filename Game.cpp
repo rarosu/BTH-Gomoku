@@ -22,19 +22,34 @@ void Game::ProgramLoop()
 void Game::Update()
 {
 	mGameTime.Update();
+	mConsole->Update(mGameTime);
+
+	if(GetAsyncKeyState(VK_ESCAPE))
+		Quit();
+	if(GetAsyncKeyState(VK_CONTROL) && GetAsyncKeyState('T'))
+	{
+		mConsole->Toggle();
+	}
 }
 
 // Draw the scene
 void Game::Draw()
 {
 	ClearScene();
-	
-	POINT position = { 50, 50 };
-	const D3DXCOLOR RED(1.0, 0.0, 0.0, 1.0);
-
-	mDefaultFont->WriteText(L"Hello World!", position, RED);
 
 	mConsole->Draw();
 
 	RenderScene();
+}
+
+LRESULT Game::HandleAppMessages(UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (message)
+	{
+		case WM_CHAR:
+			mConsole->KeyPressed((unsigned char)wParam);
+			return 0;
+	}
+
+	return D3DApplication::HandleAppMessages(message, wParam, lParam);
 }

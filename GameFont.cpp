@@ -34,15 +34,15 @@ GameFont::~GameFont()
 }
 
 // Writes text at the specified position with the specified color
-void GameFont::WriteText(LPCWSTR text, POINT position, D3DXCOLOR textColor)
+void GameFont::WriteText(std::string text, POINT position, D3DXCOLOR textColor)
 {
 	if(mFont == NULL)
 		return;
 
 	RECT destinationRect = {position.x, position.y, 0, 0};
 
-	mFont->DrawTextW(NULL,				// No sprite needed for few print outs
-					text,				// String to print
+	mFont->DrawTextA(NULL,				// No sprite needed for few print outs
+					text.c_str(),		// String to print
 					-1,					// Characters in print string (-1 since the string is null terminated)
 					&destinationRect,	// The rectangle to draw text to
 					DT_NOCLIP,			// How to act when the text reaches rectangle edge
@@ -52,7 +52,7 @@ void GameFont::WriteText(LPCWSTR text, POINT position, D3DXCOLOR textColor)
 // Writes text with the specified color in a rectangle, using the specified vertical and horizontal alignment.
 // If the line goes outside the rectangle, a line break will occur (unless the vertical alignment is set to middle 
 // or bottom which require a single line of text - all line breaks are ignored)
-void GameFont::WriteText(LPCWSTR text, RECT* destinationRect, D3DXCOLOR textColor, 
+void GameFont::WriteText(std::string text, RECT* destinationRect, D3DXCOLOR textColor, 
 	AlignHorizontal alignHor, AlignVertical alignVert)
 {
 	if(mFont == NULL)
@@ -90,8 +90,8 @@ void GameFont::WriteText(LPCWSTR text, RECT* destinationRect, D3DXCOLOR textColo
 			alignment |= DT_TOP;
 	}
 
-	mFont->DrawTextW(NULL,				// No sprite needed for few print outs
-					text,				// String to print
+	mFont->DrawTextA(NULL,				// No sprite needed for few print outs
+					text.c_str(),		// String to print
 					-1,					// Characters in print string (-1 since the string is null terminated)
 					destinationRect,	// The rectangle to draw text to
 					alignment,			// How to act when the text reaches rectangle edge
@@ -135,4 +135,10 @@ void GameFont::ChangeBoldItalic(bool isItalic, bool isBold)
 
 	D3DX10CreateFontIndirect(mGraphicsDevice, &mFontDesc, &mFont);		// Update the font
 
+}
+
+// Returns the current font size
+int GameFont::GetSize()
+{
+	return mFontDesc.Height;
 }
