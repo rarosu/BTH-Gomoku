@@ -217,3 +217,4 @@ void Console::KeyPressed(unsigned char key)
 	else
 		mStream << key;
 }
+
