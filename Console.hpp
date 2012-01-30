@@ -7,15 +7,19 @@
 #include "GameTime.hpp"
 #include "GameFont.hpp"
 #include "Buffer.hpp"
+#include "InputManager.hpp"
 
-class Console
+class Console : public KeyListener
 {
 public:
 	Console(ID3D10Device* device, float screenWidth, float screenHeight);
 	void Update(GameTime gameTime);
 	void Draw();
 	void Toggle();
-	void KeyPressed(unsigned char key);
+
+	void KeyPressed(int code);
+	void KeyReleased(int code);
+	void CharEntered(unsigned char symbol);
 
 private:
 	ID3D10Device*				mDevice;

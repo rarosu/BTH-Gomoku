@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "D3DApplication.hpp"
+#include "InputManager.hpp"
 #include "GameTime.hpp"
 #include "GameFont.hpp"
 #include "Console.hpp"
@@ -20,6 +21,7 @@ private:
 	GameTime		mGameTime;
 	GameFont*		mDefaultFont;
 	Console*		mConsole;
+	InputManager	mInputManager;
 
 protected:
 	virtual void ProgramLoop();

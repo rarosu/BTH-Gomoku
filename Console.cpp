@@ -44,7 +44,6 @@ Console::Console(ID3D10Device* device, float screenWidth, float screenHeight)
 
 	mFont = new GameFont(mDevice, "System", textHeight, false, true);
 	mStream.str("");
-	mOutput.clear();
 
 	mMaxNumRows = (int)((screenY1 - textHeight) / textHeight);
 }
@@ -193,20 +192,25 @@ void Console::Toggle()
 }
 
 // When a key is pressed, act on it
-void Console::KeyPressed(unsigned char key)
+void Console::CharEntered(unsigned char key)
 {
-	if(!mIsToggled || key < 0x08 || (key > 0x0D && key < 0x20) || (key > 0x7E && key < 0xC0))
+	if(!mIsToggled)
 		return;
 
-	if(key == 0x0D)				// Enter Key is pressed
+		mStream << key;
+}
+
+void Console::KeyPressed(int code)
+{
+	if(code == VK_RETURN)
 	{
 		if(mStream.str() != "")
 		{
-			mOutput.push_back(mStream.str());
+			mOutput.push_back("> " + mStream.str());
 			mStream.str("");
 		}
 	}
-	else if(key == 0x08)		// Backspace is pressed
+	else if(code == VK_BACK)
 	{
 		std::string temp = mStream.str();
 		temp = temp.substr(0, temp.size() - 1);
@@ -214,7 +218,9 @@ void Console::KeyPressed(unsigned char key)
 		mStream.str("");
 		mStream << temp;
 	}
-	else
-		mStream << key;
+}
+
+void Console::KeyReleased(int code)
+{
 }
 

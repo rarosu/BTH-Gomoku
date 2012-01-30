@@ -5,6 +5,7 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth,
 {
 	mDefaultFont = new GameFont(mDeviceD3D, "Times New Roman", 24);
 	mConsole = new Console(mDeviceD3D, (float)mScreenWidth, (float)mScreenHeight);
+	mInputManager.AddKeyListener(mConsole);
 }
 
 Game::~Game()
@@ -30,6 +31,8 @@ void Game::Update()
 	{
 		mConsole->Toggle();
 	}
+
+	mInputManager.Update();
 }
 
 // Draw the scene
@@ -47,7 +50,26 @@ LRESULT Game::HandleAppMessages(UINT message, WPARAM wParam, LPARAM lParam)
 	switch (message)
 	{
 		case WM_CHAR:
-			mConsole->KeyPressed((unsigned char)wParam);
+			mInputManager.HandleCharPress(wParam, lParam);
+			return 0;
+		case WM_KEYDOWN:
+			mInputManager.HandleKeyPress(wParam, lParam);
+			return 0;
+		case WM_KEYUP:
+			mInputManager.HandleKeyRelease(wParam, lParam);
+			return 0;
+		case WM_LBUTTONDOWN:
+		case WM_RBUTTONDOWN:
+		case WM_MBUTTONDOWN:
+			mInputManager.HandleMousePress(wParam, lParam);
+			return 0;
+		case WM_LBUTTONUP:
+		case WM_RBUTTONUP:
+		case WM_MBUTTONUP:
+			mInputManager.HandleMouseRelease(wParam, lParam);
+			return 0;
+		case WM_MOUSEMOVE:
+			mInputManager.HandleMouseMove(wParam, lParam);
 			return 0;
 	}
 

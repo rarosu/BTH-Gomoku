@@ -8,4 +8,6 @@
 29-01-2012 16:06 - Console window working
 	- Better handling of key press
 	- More customizeable console?
-	- Better indication of typing area?
+
+30-01-2012 15:15 - Input Working
+	- Mouse Wheel?
