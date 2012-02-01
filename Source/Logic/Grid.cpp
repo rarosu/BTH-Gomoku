@@ -1,6 +1,6 @@
 #include "Grid.hpp"
 
-namespace model
+namespace Logic
 {
 	bool Grid::AddMarker(const Cell& cell, Player player) 
 	{
@@ -71,6 +71,16 @@ namespace model
 	const Player Grid::GetMarkerInCell(int x, int y) const
 	{
 		return mMarkers.find(Cell(x, y))->second;
+	}
+
+	Grid::MarkerMap::const_iterator Grid::GetFirstOccupiedCell() const
+	{
+		return mMarkers.begin();
+	}
+
+	Grid::MarkerMap::const_iterator Grid::GetMarkerMapEnd() const
+	{
+		return mMarkers.end();
 	}
 	
 }

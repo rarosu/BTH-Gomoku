@@ -54,6 +54,11 @@ public:
 	virtual bool IsListeningForMouse(MouseListener* listener) = 0;
 };
 
+/**
+	Manages all input events from the WndProc, manages an input state
+	from the current and previous tick, and will notify listeners about
+	changed states.
+*/
 class InputManager : public InputSubscription
 {
 public:
@@ -82,23 +87,6 @@ private:
 	std::vector<MouseListener*>			mMouseListeners;
 	InputState							mPreviousState;
 	InputState							mCurrentState;
-
-	template <typename T>
-	typename std::vector<T>::iterator FindListener(std::vector<T>& list, T listener);
 };
-
-template <typename T>
-typename std::vector<T>::iterator InputManager::FindListener(std::vector<T>& list, T listener)
-{
-	std::vector<T>::iterator returnIterator;
-
-	for(returnIterator = list.begin(); returnIterator != list.end(); returnIterator++)
-	{
-		if(*returnIterator == listener)
-			break;
-	}
-
-	return returnIterator;
-}
 
 #endif

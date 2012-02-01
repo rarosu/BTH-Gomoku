@@ -1,7 +1,7 @@
 #include "Cell.hpp"
 #include <cmath>
 
-namespace model
+namespace Logic
 {
 	Cell::Cell() : x(0), y(0) {}
 	

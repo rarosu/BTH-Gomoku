@@ -162,6 +162,7 @@
     <ClCompile Include="Source\Logic\Grid.cpp" />
     <ClCompile Include="Source\Logic\Row.cpp" />
     <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Buffer.hpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="Include\Logic\Grid.hpp" />
     <ClInclude Include="Include\Logic\Player.hpp" />
     <ClInclude Include="Include\Logic\Row.hpp" />
+    <ClInclude Include="Include\Scene.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

@@ -1,10 +1,11 @@
 #include "Game.hpp"
 
-Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth, UINT windowHeight)
-	: D3DApplication(applicationInstance, windowTitle, windowWidth, windowHeight), mGameTime()
+Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth, UINT windowHeight) : 
+	D3DApplication(applicationInstance, windowTitle, windowWidth, windowHeight)
 {
 	mDefaultFont = new GameFont(mDeviceD3D, "Times New Roman", 24);
 	mConsole = new Console(mDeviceD3D, (float)mScreenWidth, (float)mScreenHeight);
+	mGrid = new Logic::Grid();
 	mInputManager.AddKeyListener(mConsole);
 }
 

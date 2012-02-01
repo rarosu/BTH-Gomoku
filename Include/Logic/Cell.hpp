@@ -3,7 +3,7 @@
 
 #include "Direction.hpp"
 
-namespace model
+namespace Logic
 {
 	typedef int CellIndex;
 	

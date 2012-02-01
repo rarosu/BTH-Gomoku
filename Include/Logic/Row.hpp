@@ -5,7 +5,7 @@
 #include "Player.hpp"
 #include "Cell.hpp"
 
-namespace model
+namespace Logic
 {
 	// Forward declare Grid, since we need to access it in the Row class
 	class Grid;

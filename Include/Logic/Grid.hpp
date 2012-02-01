@@ -7,7 +7,7 @@
 #include "Cell.hpp"
 #include "Row.hpp"
 
-namespace model
+namespace Logic
 {
 	/**
 		A grid holds the instances of all markers and all the rows
@@ -24,6 +24,9 @@ namespace model
 		const RowVector& GetRows() const;
 		const Player GetMarkerInCell(const Cell& cell) const;
 		const Player GetMarkerInCell(int x, int y) const;
+
+		MarkerMap::const_iterator GetFirstOccupiedCell() const;
+		MarkerMap::const_iterator GetMarkerMapEnd() const;
 	private:
 		MarkerMap mMarkers;
 		RowVector mRows;

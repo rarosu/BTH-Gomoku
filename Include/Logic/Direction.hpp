@@ -1,7 +1,7 @@
 #ifndef DIRECTION_HPP
 #define DIRECTION_HPP
 
-namespace model
+namespace Logic
 {
 	namespace Alignment
 	{

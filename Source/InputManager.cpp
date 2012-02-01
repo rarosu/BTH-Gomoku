@@ -1,5 +1,6 @@
 #include "InputManager.hpp"
 #include <cstring>
+#include <algorithm>
 
 InputState::InputState()
 {
@@ -113,9 +114,8 @@ void InputManager::AddKeyListener(KeyListener* listener)
 
 void InputManager::RemoveKeyListener(KeyListener* listener)
 {
-	std::vector<KeyListener*>::iterator index;
-	index = FindListener(mKeyListeners, listener);
-	
+	std::vector<KeyListener*>::iterator index = std::find(mKeyListeners.begin(), mKeyListeners.end(), listener);
+
 	if(index != mKeyListeners.end())
 		mKeyListeners.erase(index);
 }
@@ -127,8 +127,7 @@ void InputManager::AddMouseListener(MouseListener* listener)
 
 void InputManager::RemoveMouseListener(MouseListener* listener)
 {
-	std::vector<MouseListener*>::iterator index;
-	index = FindListener(mMouseListeners, listener);
+	std::vector<MouseListener*>::iterator index = std::find(mMouseListeners.begin(), mMouseListeners.end(), listener);
 	
 	if(index != mMouseListeners.end())
 		mMouseListeners.erase(index);
@@ -136,10 +135,10 @@ void InputManager::RemoveMouseListener(MouseListener* listener)
 
 bool InputManager::IsListeningForKey(KeyListener* listener)
 {
-	return FindListener(mKeyListeners, listener) != mKeyListeners.end();
+	return std::find(mKeyListeners.begin(), mKeyListeners.end(), listener) != mKeyListeners.end();
 }
 
 bool InputManager::IsListeningForMouse(MouseListener* listener)
 {
-	return FindListener(mMouseListeners, listener) != mMouseListeners.end();
+	return std::find(mMouseListeners.begin(), mMouseListeners.end(), listener) != mMouseListeners.end();
 }

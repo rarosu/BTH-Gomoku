@@ -1,7 +1,7 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
-namespace model
+namespace Logic
 {
 	typedef int Player;
 	

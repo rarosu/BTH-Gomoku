@@ -6,6 +6,7 @@
 #include "GameTime.hpp"
 #include "GameFont.hpp"
 #include "Console.hpp"
+#include "Logic/Grid.hpp"
 
 class Game : public D3DApplication
 {
@@ -23,6 +24,7 @@ private:
 	Console*		mConsole;
 	InputManager	mInputManager;
 
+	Logic::Grid* mGrid;
 protected:
 	virtual void ProgramLoop();
 };

@@ -1,7 +1,7 @@
 #include "Row.hpp"
 #include <algorithm>
 
-namespace model
+namespace Logic
 {
 	Row::Row(Grid* grid) : mGrid(grid), mAlignment(Alignment::None), mPlayer(K_PLAYER_NONE) {}
 		
