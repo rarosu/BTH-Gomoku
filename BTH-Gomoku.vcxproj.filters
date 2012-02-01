@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Source\Buffer.cpp" />
+    <ClCompile Include="Source\Camera.cpp" />
+    <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\Console.cpp" />
+    <ClCompile Include="Source\D3DApplication.cpp" />
+    <ClCompile Include="Source\Game.cpp" />
+    <ClCompile Include="Source\GameFont.cpp" />
+    <ClCompile Include="Source\GameTime.cpp" />
+    <ClCompile Include="Source\InputManager.cpp" />
+    <ClCompile Include="Source\Logic\Cell.cpp" />
+    <ClCompile Include="Source\Logic\Row.cpp" />
+    <ClCompile Include="Source\Logic\Grid.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\Buffer.hpp" />
+    <ClInclude Include="Include\InputManager.hpp" />
+    <ClInclude Include="Include\Camera.hpp" />
+    <ClInclude Include="Include\Console.hpp" />
+    <ClInclude Include="Include\D3DApplication.hpp" />
+    <ClInclude Include="Include\Game.hpp" />
+    <ClInclude Include="Include\GameFont.hpp" />
+    <ClInclude Include="Include\GameTime.hpp" />
+    <ClInclude Include="Include\Globals.hpp" />
+    <ClInclude Include="Include\Logic\Cell.hpp" />
+    <ClInclude Include="Include\Logic\Direction.hpp" />
+    <ClInclude Include="Include\Logic\Grid.hpp" />
+    <ClInclude Include="Include\Logic\Player.hpp" />
+    <ClInclude Include="Include\Logic\Row.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Effects\Console.fx" />
+    <None Include=".gitignore" />
+  </ItemGroup>
+</Project>
