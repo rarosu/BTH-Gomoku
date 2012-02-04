@@ -1,57 +1,66 @@
 #include "Camera.hpp"
+#include <cmath>
 
-Camera::Camera(D3DXVECTOR3 position, D3DXVECTOR3 direction, D3DXVECTOR3 worldUp)
-	: mPosition(position), mDirection(direction), mSpeed(0.15f), mWorldUp(worldUp)
+Camera::Camera(D3DXVECTOR3 position, D3DXVECTOR3 direction, D3DXVECTOR3 worldUp, const Frustrum& viewFrustrum)
+	: mPosition(position), mDirection(direction), mSpeed(0.05f), mWorldUp(worldUp)
 {
 	D3DXVec3Normalize(&mDirection, &mDirection);
+	CreateProjectionMatrix(viewFrustrum);
 }
 
-// Move camera backwards: walk
-void Camera::MoveBack(bool running)
+void Camera::Update(const InputState& prevInput, const InputState& currInput)
+{
+	if(currInput.Keyboard.keyIsPressed['A'])
+		MoveLeft();
+	if(currInput.Keyboard.keyIsPressed['D'])
+		MoveRight();
+	if(currInput.Keyboard.keyIsPressed['W'])
+		MoveForward();
+	if(currInput.Keyboard.keyIsPressed['S'])
+		MoveBack();
+
+	if(currInput.Keyboard.keyIsPressed['J'])
+		TurnHorizontal(0.001f);
+	if(currInput.Keyboard.keyIsPressed['L'])
+		TurnHorizontal(-0.001f);
+	if(currInput.Keyboard.keyIsPressed['I'])
+		TurnVertical(0.001f);
+	if(currInput.Keyboard.keyIsPressed['K'])
+		TurnVertical(-0.001f);
+}
+
+// Move camera backwards
+void Camera::MoveBack()
 {
 	D3DXVECTOR3 forward;
-	float runFactor = 1.0f;
-	if(running)
-		runFactor = 2.0f;
 	
 	forward = mDirection - (D3DXVec3Dot(&mDirection, &mWorldUp) * mWorldUp);
 	D3DXVec3Normalize(&forward, &forward);
-	mPosition -= forward * mSpeed * runFactor;
+	mPosition -= forward * mSpeed;
 }
 
 // Move camera forwards: walk
-void Camera::MoveForward(bool running)
+void Camera::MoveForward()
 {
 	D3DXVECTOR3 forward;
-	float runFactor = 1.0f;
-	if(running)
-		runFactor = 2.0f;
 
 	forward = mDirection - (D3DXVec3Dot(&mDirection, &mWorldUp) * mWorldUp);
 	D3DXVec3Normalize(&forward, &forward);
-	mPosition += forward * mSpeed * runFactor;
+	mPosition += forward * mSpeed;
 }
 
 // Move camera to the left: strafe
-void Camera::MoveLeft(bool running)
+void Camera::MoveLeft()
 {
-	float runFactor = 1.0f;
-	if(running)
-		runFactor = 2.0f;
-
 	D3DXVECTOR3 right = GetRight();
-	mPosition -= right * mSpeed * runFactor;
+	mPosition -= right * mSpeed;
 }
 
 // Move camera to the right: strafe
-void Camera::MoveRight(bool running)
+void Camera::MoveRight()
 {
-	float runFactor = 1.0f;
-	if(running)
-		runFactor = 2.0f;
-
 	D3DXVECTOR3 right = GetRight();
-	mPosition += right * mSpeed* runFactor;
+	mPosition += right * mSpeed;
 }
 
 // Tilt the camera horisontally: look left/right
@@ -78,12 +87,11 @@ void Camera::TurnVertical(float angle)
 }
 
 // Create and return the view matrix for the camera
-D3DXMATRIX Camera::GetViewMatrix()
+D3DXMATRIX Camera::GetViewMatrix() const
 {
 	D3DXVECTOR3 right, up;
 	D3DXMATRIX view;
 
-	D3DXVec3Normalize(&mDirection, &mDirection);
 	right = GetRight();
 	D3DXVec3Cross(&up, &mDirection, &right);
 	
@@ -111,8 +119,31 @@ D3DXMATRIX Camera::GetViewMatrix()
 	return view;
 }
 
+// Return the projection matrix for the camera
+const D3DXMATRIX& Camera::GetProjectionMatrix() const
+{
+	return mProjectionMatrix;
+}
+
+// Create the projection matrix for the camera
+void Camera::CreateProjectionMatrix(const Frustrum& viewFrustrum)
+{
+	ZeroMemory(&mProjectionMatrix, sizeof(mProjectionMatrix));
+	
+	float scaleY, scaleX, length;
+	scaleY = 1.0 / std::tan(viewFrustrum.fovY * 0.5);
+	scaleX = scaleY / viewFrustrum.aspectRatio;
+	length = viewFrustrum.farDistance - viewFrustrum.nearDistance;
+
+	mProjectionMatrix.m[0][0] = scaleX;
+	mProjectionMatrix.m[1][1] = scaleY;
+	mProjectionMatrix.m[2][2] = viewFrustrum.farDistance / length;
+	mProjectionMatrix.m[2][3] = 1;
+	mProjectionMatrix.m[3][2] = (-viewFrustrum.nearDistance * viewFrustrum.farDistance) / length;
+}
+
 // Get the camera's right vector (camera x-axis)
-D3DXVECTOR3 Camera::GetRight()
+D3DXVECTOR3 Camera::GetRight() const
 {
 	D3DXVECTOR3 right;
 	D3DXVec3Cross(&right, &mWorldUp, &mDirection);
@@ -122,7 +153,7 @@ D3DXVECTOR3 Camera::GetRight()
 }
 
 // Get the cameras current position in the world
-D3DXVECTOR3 Camera::GetPos()
+const D3DXVECTOR3& Camera::GetPos() const
 {
 	return mPosition;
 }

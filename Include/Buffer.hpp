@@ -1,5 +1,5 @@
-#ifndef BUFFER_H
-#define BUFFER_H
+#ifndef BUFFER_HPP
+#define BUFFER_HPP
 
 #include <D3DX10.h>
 #include "Globals.hpp"
@@ -33,7 +33,9 @@ public:
 	~Buffer();
 	HRESULT Initialize(ID3D10Device* device, BufferInformation initDescription);
 	void MakeActive();
-	void Map();
+	int GetNumberOfElements();
+	int GetSize();
+	//void Map();
 
 private:
 	ID3D10Device*			mDevice;

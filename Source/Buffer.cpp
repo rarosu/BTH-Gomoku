@@ -83,19 +83,29 @@ void Buffer::MakeActive()
 	}
 }
 
-void Buffer::Map()
+int Buffer::GetNumberOfElements()
 {
-	//void* data;
-
-	switch (mDescription.usage)
-	{
-		case CPUWrite:
-			/*mBuffer->Map(D3D10_MAP_WRITE_DISCARD, 0, &data);
-			memcpy(data, mDescription.firstElementPointer, mDescription.elementSize * mDescription.numberOfElements);
-			mBuffer->Unmap();*/
-			break;
-		case CPURead:
-			//mBuffer->Map(D3D10_MAP_READ, 0, &data);
-			break;
-	}
+	return mDescription.numberOfElements;
 }
+
+int Buffer::GetSize()
+{
+	return mDescription.numberOfElements * mDescription.elementSize;
+}
+
+//void Buffer::Map()
+//{
+//	//void* data;
+//
+//	switch (mDescription.usage)
+//	{
+//		case CPUWrite:
+//			/*mBuffer->Map(D3D10_MAP_WRITE_DISCARD, 0, &data);
+//			memcpy(data, mDescription.firstElementPointer, mDescription.elementSize * mDescription.numberOfElements);
+//			mBuffer->Unmap();*/
+//			break;
+//		case CPURead:
+//			//mBuffer->Map(D3D10_MAP_READ, 0, &data);
+//			break;
+//	}
+//}

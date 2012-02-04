@@ -1,12 +1,14 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef GAME_HPP
+#define GAME_HPP
 
 #include "D3DApplication.hpp"
 #include "InputManager.hpp"
 #include "GameTime.hpp"
 #include "GameFont.hpp"
 #include "Console.hpp"
+#include "Camera.hpp"
 #include "Logic/Grid.hpp"
+#include "Scene.hpp"
 
 class Game : public D3DApplication
 {
@@ -23,8 +25,10 @@ private:
 	GameFont*		mDefaultFont;
 	Console*		mConsole;
 	InputManager	mInputManager;
+	Scene*			mScene;
+	Camera*			mCamera;
 
-	Logic::Grid* mGrid;
+	Logic::Grid*	mGrid;
 protected:
 	virtual void ProgramLoop();
 };

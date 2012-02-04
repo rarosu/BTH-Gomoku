@@ -35,5 +35,6 @@
   <ItemGroup>
     <None Include="Effects\Console.fx" />
     <None Include=".gitignore" />
+    <None Include="Effects\Grid.fx" />
   </ItemGroup>
 </Project>

@@ -6,11 +6,21 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth,
 	mDefaultFont = new GameFont(mDeviceD3D, "Times New Roman", 24);
 	mConsole = new Console(mDeviceD3D, (float)mScreenWidth, (float)mScreenHeight);
 	mGrid = new Logic::Grid();
+	mScene = new Scene(mDeviceD3D);
+	
+	Frustrum viewFrustrum;
+	viewFrustrum.nearDistance = 1.0f;
+	viewFrustrum.farDistance = 1000.0f;
+	viewFrustrum.fovY = (float)D3DX_PI * 0.25f;
+	viewFrustrum.aspectRatio = (float) mScreenWidth / (float) mScreenHeight;
+	mCamera = new Camera(D3DXVECTOR3(0, 0, -15.0f), D3DXVECTOR3(0, 0, 1.0f), D3DXVECTOR3(0, 1.0f, 0), viewFrustrum);
+
 	mInputManager.AddKeyListener(mConsole);
 }
 
 Game::~Game()
 {
+	
 }
 
 //  What happens every loop of the program (ie updating and drawing the game)
@@ -24,7 +34,9 @@ void Game::ProgramLoop()
 void Game::Update()
 {
 	mGameTime.Update();
+	mCamera->Update(mInputManager.GetPrevious(), mInputManager.GetCurrent());
 	mConsole->Update(mGameTime);
+	mScene->Update(mGrid, *mCamera);
 
 	if(GetAsyncKeyState(VK_ESCAPE))
 		Quit();
@@ -41,7 +53,8 @@ void Game::Draw()
 {
 	ClearScene();
 
-	mConsole->Draw();
+	//mConsole->Draw();
+	mScene->Draw();
 
 	RenderScene();
 }

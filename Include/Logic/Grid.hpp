@@ -1,5 +1,5 @@
 #ifndef GRID_HPP
-#define GRIP_HPP
+#define GRID_HPP
 
 #include <vector>
 #include <map>

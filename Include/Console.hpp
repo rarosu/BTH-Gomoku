@@ -22,6 +22,10 @@ public:
 	void CharEntered(unsigned char symbol);
 
 private:
+	struct ConsoleVertex
+	{
+	};
+
 	ID3D10Device*				mDevice;
 	ID3D10Effect*				mEffect;
 	ID3D10EffectTechnique*		mTechnique;
@@ -36,8 +40,8 @@ private:
 	std::vector<std::string>	mOutput;
 	int							mMaxNumRows;
 
-	static const char*		C_FILENAME;
-	static const int		C_NUM_VERTICES;
+	static const char*			C_FILENAME;
+	static const int			C_NUM_VERTICES;
 
 	HRESULT CreateEffect();
 	HRESULT CreateVertexLayout();

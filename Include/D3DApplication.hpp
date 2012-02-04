@@ -1,5 +1,5 @@
-#ifndef D3DAPPLICATION_H
-#define D3DAPPLICATION_H
+#ifndef D3DAPPLICATION_HPP
+#define D3DAPPLICATION_HPP
 
 #include <D3DX10.h>
 #include "Globals.hpp"
