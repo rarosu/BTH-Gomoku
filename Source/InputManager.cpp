@@ -52,20 +52,9 @@ void InputManager::HandleMousePress(WPARAM wParam, LPARAM lParam)
 		(*it)->MouseButtonPressed((int)wParam);
 }
 
-void InputManager::HandleMouseRelease(WPARAM wParam, LPARAM lParam)
+void InputManager::HandleMouseRelease(int buttonIndex, WPARAM wParam, LPARAM lParam)
 {
-	switch(wParam)
-	{
-		case MK_LBUTTON:
-			mCurrentState.Mouse.buttonIsPressed[C_MOUSE_LEFT] = false;
-			break;
-		case MK_RBUTTON:
-			mCurrentState.Mouse.buttonIsPressed[C_MOUSE_RIGHT] = false;
-			break;
-		case MK_MBUTTON:
-			mCurrentState.Mouse.buttonIsPressed[C_MOUSE_MIDDLE] = false;
-			break;
-	}
+	mCurrentState.Mouse.buttonIsPressed[buttonIndex] = false;
 
 	std::vector<MouseListener*>::iterator it;
 	for(it = mMouseListeners.begin(); it != mMouseListeners.end(); it++)
@@ -76,6 +65,16 @@ void InputManager::HandleMouseMove(WPARAM wParam, LPARAM lParam)
 {
 	mCurrentState.Mouse.x = LOWORD(lParam);
 	mCurrentState.Mouse.y = HIWORD(lParam);
+}
+
+void InputManager::HandleMouseWheel(WPARAM wParam, LPARAM lParam)
+{
+	short delta = HIWORD(wParam);
+	delta /= 120;
+
+	std::vector<MouseListener*>::iterator it;
+	for(it = mMouseListeners.begin(); it != mMouseListeners.end(); it++)
+		(*it)->MouseWheelMoved(delta);
 }
 
 void InputManager::HandleCharPress(WPARAM wParam, LPARAM lParam)

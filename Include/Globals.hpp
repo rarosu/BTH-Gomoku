@@ -27,4 +27,10 @@ inline void SafeDeleteArray(T*& item)
 	item = NULL;
 }
 
+template <typename T>
+inline T Clamp(T value, const T& minValue, const T& maxValue)
+{
+	return value < minValue ? minValue : (value > maxValue ? maxValue : value);
+}
+
 #endif

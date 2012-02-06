@@ -33,6 +33,7 @@ class MouseListener
 public:
 	virtual void MouseButtonPressed(int index) = 0;
 	virtual void MouseButtonReleased(int index) = 0;
+	virtual void MouseWheelMoved(short delta) = 0;
 };
 
 class KeyListener
@@ -66,8 +67,9 @@ public:
 	void HandleKeyPress(WPARAM wParam, LPARAM lParam);
 	void HandleKeyRelease(WPARAM wParam, LPARAM lParam);
 	void HandleMousePress(WPARAM wParam, LPARAM lParam);
-	void HandleMouseRelease(WPARAM wParam, LPARAM lParam);
+	void HandleMouseRelease(int buttonIndex, WPARAM wParam, LPARAM lParam);
 	void HandleMouseMove(WPARAM wParam, LPARAM lParam);
+	void HandleMouseWheel(WPARAM wParam, LPARAM lParam);
 	void HandleCharPress(WPARAM wParam, LPARAM lParam);
 
 	const InputState& GetPrevious();

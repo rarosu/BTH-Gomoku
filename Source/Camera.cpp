@@ -1,66 +1,82 @@
 #include "Camera.hpp"
+#include "Globals.hpp"
 #include <cmath>
 
+const float	Camera::C_MOVE_SPEED		= 50.0f;
+const float	Camera::C_TILTING_SPEED		= 0.001f;
+const float	Camera::C_ZOOM_SPEED		= 6.0f;
+const float	Camera::C_ZOOM_MIN			= -200.0f;
+const float	Camera::C_ZOOM_MAX			= -10.0f;
+
 Camera::Camera(D3DXVECTOR3 position, D3DXVECTOR3 direction, D3DXVECTOR3 worldUp, const Frustrum& viewFrustrum)
-	: mPosition(position), mDirection(direction), mSpeed(0.05f), mWorldUp(worldUp)
+	: mPosition(position), mDirection(direction), mWorldUp(worldUp), mZoom(-50.0f)
 {
+	mPosition = mPosition - (D3DXVec3Dot(&mPosition, &mWorldUp) * mWorldUp);
+
 	D3DXVec3Normalize(&mDirection, &mDirection);
 	CreateProjectionMatrix(viewFrustrum);
 }
 
-void Camera::Update(const InputState& prevInput, const InputState& currInput)
+void Camera::Update(const InputState& prevInput, const InputState& currInput, const GameTime& gameTime)
 {
-	if(currInput.Keyboard.keyIsPressed['A'])
-		MoveLeft();
-	if(currInput.Keyboard.keyIsPressed['D'])
-		MoveRight();
-	if(currInput.Keyboard.keyIsPressed['W'])
-		MoveForward();
-	if(currInput.Keyboard.keyIsPressed['S'])
-		MoveBack();
+	// Check for movement of the camera.
+	if(currInput.Keyboard.keyIsPressed['Q'])
+		MoveLeft(gameTime);
+	else if(currInput.Keyboard.keyIsPressed['E'])
+		MoveRight(gameTime);
 
-	if(currInput.Keyboard.keyIsPressed['J'])
-		TurnHorizontal(0.001f);
-	if(currInput.Keyboard.keyIsPressed['L'])
-		TurnHorizontal(-0.001f);
-	if(currInput.Keyboard.keyIsPressed['I'])
-		TurnVertical(0.001f);
-	if(currInput.Keyboard.keyIsPressed['K'])
-		TurnVertical(-0.001f);
+	if(currInput.Keyboard.keyIsPressed['W'])
+		MoveForward(gameTime);
+	else if(currInput.Keyboard.keyIsPressed['S'])
+		MoveBack(gameTime);
+
+	if(currInput.Keyboard.keyIsPressed['A'])
+		TurnHorizontal(-gameTime.GetTimeSinceLastTick().Milliseconds * C_TILTING_SPEED);
+	else if(currInput.Keyboard.keyIsPressed['D'])
+		TurnHorizontal(gameTime.GetTimeSinceLastTick().Milliseconds * C_TILTING_SPEED);
+
+	// Check for tilting of camera.
+	//if(currInput.Mouse.buttonIsPressed[C_MOUSE_LEFT])
+	//{
+	//	float dx = prevInput.Mouse.x - currInput.Mouse.x;
+	//	float dy = prevInput.Mouse.y - currInput.Mouse.y;
+	//	//TurnHorizontal(dx * C_TILTING_SPEED);
+	//	//TurnVertical(dy * C_TILTING_SPEED);
+	//}
 }
 
 // Move camera backwards
-void Camera::MoveBack()
+void Camera::MoveBack(const GameTime& gameTime)
 {
 	D3DXVECTOR3 forward;
 	
 	forward = mDirection - (D3DXVec3Dot(&mDirection, &mWorldUp) * mWorldUp);
 	D3DXVec3Normalize(&forward, &forward);
-	mPosition -= forward * mSpeed;
+	mPosition -= forward * C_MOVE_SPEED * gameTime.GetTimeSinceLastTick().Seconds;
 }
 
 // Move camera forwards: walk
-void Camera::MoveForward()
+void Camera::MoveForward(const GameTime& gameTime)
 {
 	D3DXVECTOR3 forward;
 
 	forward = mDirection - (D3DXVec3Dot(&mDirection, &mWorldUp) * mWorldUp);
 	D3DXVec3Normalize(&forward, &forward);
-	mPosition += forward * mSpeed;
+	mPosition += forward * C_MOVE_SPEED * gameTime.GetTimeSinceLastTick().Seconds;
 }
 
 // Move camera to the left: strafe
-void Camera::MoveLeft()
+void Camera::MoveLeft(const GameTime& gameTime)
 {
 	D3DXVECTOR3 right = GetRight();
-	mPosition -= right * mSpeed;
+	mPosition -= right * C_MOVE_SPEED * gameTime.GetTimeSinceLastTick().Seconds;
 }
 
 // Move camera to the right: strafe
-void Camera::MoveRight()
+void Camera::MoveRight(const GameTime& gameTime)
 {
 	D3DXVECTOR3 right = GetRight();
-	mPosition += right * mSpeed;
+	mPosition += right * C_MOVE_SPEED * gameTime.GetTimeSinceLastTick().Seconds;
 }
 
 // Tilt the camera horisontally: look left/right
@@ -89,8 +105,10 @@ void Camera::TurnVertical(float angle)
 // Create and return the view matrix for the camera
 D3DXMATRIX Camera::GetViewMatrix() const
 {
-	D3DXVECTOR3 right, up;
+	D3DXVECTOR3 right, up, eyePos;
 	D3DXMATRIX view;
+
+	eyePos = mPosition + mDirection * mZoom;
 
 	right = GetRight();
 	D3DXVec3Cross(&up, &mDirection, &right);
@@ -112,9 +130,9 @@ D3DXMATRIX Camera::GetViewMatrix() const
 	view.m[2][3] = 0;
 	view.m[3][3] = 1;
 
-	view.m[3][0] = -D3DXVec3Dot(&mPosition, &right);
-	view.m[3][1] = -D3DXVec3Dot(&mPosition, &up);
-	view.m[3][2] = -D3DXVec3Dot(&mPosition, &mDirection);
+	view.m[3][0] = -D3DXVec3Dot(&eyePos, &right);
+	view.m[3][1] = -D3DXVec3Dot(&eyePos, &up);
+	view.m[3][2] = -D3DXVec3Dot(&eyePos, &mDirection);
 
 	return view;
 }
@@ -161,4 +179,18 @@ const D3DXVECTOR3& Camera::GetPos() const
 void Camera::SetHeight(float height)
 {
 	mPosition.y = height;
+}
+
+void Camera::MouseButtonPressed(int index)
+{
+}
+
+void Camera::MouseButtonReleased(int index)
+{
+}
+
+void Camera::MouseWheelMoved(short delta)
+{
+	mZoom += delta * C_ZOOM_SPEED;
+	mZoom = Clamp(mZoom, C_ZOOM_MIN, C_ZOOM_MAX);
 }

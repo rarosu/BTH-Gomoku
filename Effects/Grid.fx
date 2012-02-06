@@ -7,6 +7,7 @@ struct VS_INPUT
 struct PS_INPUT
 {
 	float4		position	: SV_POSITION;
+	float3		worldPos	: POSITION;
 	float4		color		: COLOR;
 };
 
@@ -21,17 +22,15 @@ cbuffer cbEveryFrame
 	//matrix		gWorld;
 };
 
-Texture2D textureGrass;
+int gWidth;
+float gInterval;
 
 PS_INPUT VS(VS_INPUT input)
 {
 	PS_INPUT output;
 
-	float3 temp = float3(input.position.x, input.position.z, input.position.y);
-	//output.position = float4(temp, 1.0);
-	output.position = mul(float4(temp, 1.0), gVP);
-	//output.position = mul(float4(input.position, 1.0), gVP);
-	//output.position = float4(input.position, 1.0);
+	output.position = mul(float4(input.position, 1.0), gVP);
+	output.worldPos = input.position;
 	output.color = input.color;
 
 	return output;
@@ -39,7 +38,17 @@ PS_INPUT VS(VS_INPUT input)
 
 float4 PS(PS_INPUT input) : SV_Target
 {
-	return float4(1.0, 1.0, 1.0, 1.0); //input.color;
+	float x = input.worldPos.x;
+	float z = input.worldPos.z;
+	int roundX = round(x);
+	int roundZ = round(z);
+
+	if(abs(roundX - x) <= gInterval && roundX % gWidth == 0)
+		return float4(0.0, 0.0, 0.0, 1.0);
+	if(abs(roundZ - z) <= gInterval && roundZ % gWidth == 0)
+		return float4(0.0, 0.0, 0.0, 1.0);
+
+	return input.color;
 }
 
 technique10 DrawTechnique

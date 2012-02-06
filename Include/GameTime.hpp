@@ -15,8 +15,8 @@ public:
 	GameTime();
 	~GameTime();
 	void Update();
-	Time GetTimeSinceLastTick();
-	Time GetTimeSinceGameStart();
+	const Time& GetTimeSinceLastTick() const;
+	const Time& GetTimeSinceGameStart() const;
 
 private:
 	__int64 mPrevTimeStamp;

@@ -8,16 +8,16 @@ Scene::Scene(ID3D10Device* device) :
 	GridVertex vertices[4];
 
 	vertices[0].position = D3DXVECTOR3(0, 0, 0);
-	vertices[0].color = D3DXCOLOR(1.0, 1.0, 1.0, 1.0);
+	vertices[0].color = D3DXCOLOR(1.0, 1.0, 0.0, 1.0);
 
-	vertices[1].position = D3DXVECTOR3(0, 0, 1000);
-	vertices[1].color = D3DXCOLOR(1.0, 1.0, 1.0, 1.0);
+	vertices[1].position = D3DXVECTOR3(0, 0, 100);
+	vertices[1].color = D3DXCOLOR(1.0, 0.0, 0.0, 1.0);
 
-	vertices[2].position = D3DXVECTOR3(1000, 0, 0);
-	vertices[2].color = D3DXCOLOR(1.0, 1.0, 1.0, 1.0);
+	vertices[2].position = D3DXVECTOR3(100, 0, 0);
+	vertices[2].color = D3DXCOLOR(0.0, 1.0, 0.0, 1.0);
 
-	vertices[3].position = D3DXVECTOR3(1000, 0, 1000);
-	vertices[3].color = D3DXCOLOR(1.0, 1.0, 1.0, 1.0);
+	vertices[3].position = D3DXVECTOR3(100, 0, 100);
+	vertices[3].color = D3DXCOLOR(0.0, 0.0, 1.0, 1.0);
 
 	BufferInformation bufferDesc;
 	bufferDesc.elementSize				= sizeof(GridVertex);
@@ -31,6 +31,9 @@ Scene::Scene(ID3D10Device* device) :
 
 	CreateEffect();
 	CreateVertexLayout();
+
+	mEffect->GetVariableByName("gWidth")->AsScalar()->SetInt(10);
+	mEffect->GetVariableByName("gInterval")->AsScalar()->SetFloat(0.1f);
 }
 
 Scene::~Scene() 

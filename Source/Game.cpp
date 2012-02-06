@@ -13,9 +13,10 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth,
 	viewFrustrum.farDistance = 1000.0f;
 	viewFrustrum.fovY = (float)D3DX_PI * 0.25f;
 	viewFrustrum.aspectRatio = (float) mScreenWidth / (float) mScreenHeight;
-	mCamera = new Camera(D3DXVECTOR3(0, 0, -15.0f), D3DXVECTOR3(0, 0, 1.0f), D3DXVECTOR3(0, 1.0f, 0), viewFrustrum);
+	mCamera = new Camera(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, -1.0f, 2.0f), D3DXVECTOR3(0, 1.0f, 0), viewFrustrum);
 
 	mInputManager.AddKeyListener(mConsole);
+	mInputManager.AddMouseListener(mCamera);
 }
 
 Game::~Game()
@@ -34,7 +35,7 @@ void Game::ProgramLoop()
 void Game::Update()
 {
 	mGameTime.Update();
-	mCamera->Update(mInputManager.GetPrevious(), mInputManager.GetCurrent());
+	mCamera->Update(mInputManager.GetPrevious(), mInputManager.GetCurrent(), mGameTime);
 	mConsole->Update(mGameTime);
 	mScene->Update(mGrid, *mCamera);
 
@@ -78,12 +79,19 @@ LRESULT Game::HandleAppMessages(UINT message, WPARAM wParam, LPARAM lParam)
 			mInputManager.HandleMousePress(wParam, lParam);
 			return 0;
 		case WM_LBUTTONUP:
+			mInputManager.HandleMouseRelease(C_MOUSE_LEFT, wParam, lParam);
+			return 0;
 		case WM_RBUTTONUP:
+			mInputManager.HandleMouseRelease(C_MOUSE_RIGHT, wParam, lParam);
+			return 0;
 		case WM_MBUTTONUP:
-			mInputManager.HandleMouseRelease(wParam, lParam);
+			mInputManager.HandleMouseRelease(C_MOUSE_MIDDLE, wParam, lParam);
 			return 0;
 		case WM_MOUSEMOVE:
 			mInputManager.HandleMouseMove(wParam, lParam);
+			return 0;
+		case WM_MOUSEWHEEL:
+			mInputManager.HandleMouseWheel(wParam, lParam);
 			return 0;
 	}
 

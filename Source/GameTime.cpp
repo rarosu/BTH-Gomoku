@@ -32,13 +32,13 @@ void GameTime::Update()
 }
 
 // Get the time elapsed since last update
-Time GameTime::GetTimeSinceLastTick()
+const Time& GameTime::GetTimeSinceLastTick() const
 {
 	return mElapsedSinceLastTick;
 }
 
 // Get the time elapsed since the game started
-Time GameTime::GetTimeSinceGameStart()
+const Time& GameTime::GetTimeSinceGameStart() const
 {
 	return mElapsedSinceStart;
 }
