@@ -1,39 +1,15 @@
 #include "Console.hpp"
 #include <string>
 
-const char*	Console::C_FILENAME = "Effects/Console.fx";
 const int Console::C_NUM_VERTICES = 4;
 
-Console::Console(ID3D10Device* device, float screenWidth, float screenHeight)
+Console::Console(ID3D10Device* device, float screenWidth, float screenHeight, D3DXCOLOR bgColor, InputManager* manager)
 	: mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0))
 {
 	mDevice = device;
 
-	D3DXVECTOR2 vertices[C_NUM_VERTICES];
-
-	float screenX1 = -(screenWidth / 2);
-	float screenX2 = screenWidth / 2;
-	float screenY1 = screenHeight / 2;
-	float screenY2 = 0;
-
-	vertices[0] = D3DXVECTOR2(screenX1, screenY1);
-	vertices[1] = D3DXVECTOR2(screenX2, screenY1);
-	vertices[2] = D3DXVECTOR2(screenX1, screenY2);
-	vertices[3] = D3DXVECTOR2(screenX2, screenY2);
-
-	mVertexBuffer = new Buffer();
-	BufferInformation bufferDesc;
-
-	bufferDesc.type = VertexBuffer;
-	bufferDesc.usage = Buffer_Default;
-	bufferDesc.numberOfElements = C_NUM_VERTICES;
-	bufferDesc.firstElementPointer = vertices;
-	bufferDesc.elementSize = sizeof(D3DXVECTOR2);
-
-	mVertexBuffer->Initialize(mDevice, bufferDesc);
-
+	CreateBuffer(screenWidth, screenHeight);
 	CreateEffect();
-	CreateVertexLayout();
 
 	mBounds.left = 0;
 	mBounds.right = (LONG)screenWidth;
@@ -45,69 +21,39 @@ Console::Console(ID3D10Device* device, float screenWidth, float screenHeight)
 	mFont = new GameFont(mDevice, "System", textHeight, false, true);
 	mStream.str("");
 
-	mMaxNumRows = (int)((screenY1 - textHeight) / textHeight);
+	mMaxNumRows = (int)((screenHeight / 2 - textHeight) / textHeight);
+
+	mInputField = new InputField(manager, this, D3DXVECTOR2(10.0f, mBounds.bottom - 20.0f), mFont);
+	mEffect->SetVectorVariable("consoleColor", &(D3DXVECTOR4)bgColor);
 }
 
-// Compile and create the shader/effect
-HRESULT Console::CreateEffect()
+void Console::CreateBuffer(float width, float height)
 {
-	HRESULT result = S_OK;								// Variable that stores the result of the functions
-	UINT shaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;	// Shader flags
-	ID3D10Blob* errors = NULL;							// Variable to store error messages from functions
-	ID3D10Blob* effect = NULL;							// Variable to store compiled (but not created) effect
-	
-	// Compile shader, if failed - show error message and return
-	result = D3DX10CompileFromFileA(C_FILENAME,		// Path and name of the effect file to compile
-								   0,				// Shader macros: none needed
-								   0,				// Include interface: not needed - no #include in shader
-								   "",				// Shader start function, not used when compiling from file
-								   "fx_4_0",		// String specifying shader model (or shader profile)
-								   shaderFlags,		// Shader compile flags - how to compile the shader	
-								   0,				// Effect compile flags - not used when compiling a shader
-								   0,				// Thread pump interface: not needed - return only when finished
-								   &effect,			// Out: Where to put the compiled effect information (pointer)
-								   &errors,			// Out: Where to put the errors, if there are any (pointer)
-								   NULL);			// Out: Result not needed, result is gotten from the return value
-	
-	if(FAILED(result))								// If failed, show error message and return
-	{
-		if(errors)
-		{
-			MessageBox(0, (char*)errors->GetBufferPointer(), "ERROR", 0);
-			SafeRelease(errors);
-		}
-		
+	D3DXVECTOR2 vertices[C_NUM_VERTICES];
 
-		return result;
-	}
+	float screenX1 = -(width / 2);
+	float screenX2 = width / 2;
+	float screenY1 = height / 2;
+	float screenY2 = 0;
 
-	result = D3DX10CreateEffectFromMemory(
-						effect->GetBufferPointer(),	// Pointer to the effect in memory, gotten from the compiled effect
-						effect->GetBufferSize(),	// The effect's size in memory, gotten from the compiled effect
-						C_FILENAME,					// Name of the effect file
-						NULL,						// Shader macros: none needed
-						NULL,						// Include interface: not needed 
-						"fx_4_0",					// String specifying shader model (or shader profile)
-						NULL,						// Shader constants, HLSL compile options						
-						NULL,						// Effect constants, Effect compile options
-						mDevice,					// Pointer to the direct3D device that will use resources
-						NULL,						// Pointer to effect pool for variable sharing between effects
-						NULL,						// Thread pump interface: not needed - return only when finished
-						&mEffect,					// Out: where to put the created effect (pointer)
-						&errors,					// Out: Where to put the errors, if there are any (pointer)
-						NULL);						// Out: Result not needed, result is gotten from the return value
+	vertices[0]	= D3DXVECTOR2(screenX1, screenY1);
+	vertices[1]	= D3DXVECTOR2(screenX2, screenY1);
+	vertices[2]	= D3DXVECTOR2(screenX1, screenY2);
+	vertices[3]	= D3DXVECTOR2(screenX2, screenY2);
 
-	if(FAILED(result))								// If failed, show error message and return
-	{
-		MessageBox(0, "Shader creation failed: Console!", "ERROR", 0);
-		return result;
-	}
+	mVertexBuffer = new Buffer();
+	BufferInformation bufferDesc;
 
-	return result;
+	bufferDesc.type = VertexBuffer;
+	bufferDesc.usage = Buffer_Default;
+	bufferDesc.numberOfElements = C_NUM_VERTICES;
+	bufferDesc.firstElementPointer = vertices;
+	bufferDesc.elementSize = sizeof(D3DXVECTOR2);
+
+	mVertexBuffer->Initialize(mDevice, bufferDesc);
 }
 
-// Build vertex layout
-HRESULT Console::CreateVertexLayout()
+void Console::CreateEffect()
 {
 	// Create an array describing each of the elements of the vertex that are inputs to the vertex shader.
 	D3D10_INPUT_ELEMENT_DESC vertexDesc[] = 
@@ -118,34 +64,12 @@ HRESULT Console::CreateVertexLayout()
 		  0,							// Input slot, of the 0-15 slots, through wich to send vertex data
 		  0,							// AlignedByteOffset, bytes from start of the vertex to this component
 		  D3D10_INPUT_PER_VERTEX_DATA,	// Input data class for this input slot
-		  0 }							// 0 when slot input data class is D3D10_INPUT_PER_VERTEX_DATA
+		  0 } 							// 0 when slot input data class is D3D10_INPUT_PER_VERTEX_DATA
 	};
 
-		D3D10_PASS_DESC passDesc;
-		HRESULT result;
-
-		// Get the effect technique from the effect, and save the descritption of the first pass
-		mTechnique = mEffect->GetTechniqueByName("DrawTechnique");
-		mTechnique->GetPassByIndex(0)->GetDesc(&passDesc);
-
-		// Create the input layout and save it, if failed - show an error message
-		result = mDevice->CreateInputLayout(
-					vertexDesc,						// Description of input structure - array of element descriptions
-					1,								// Number of elements in the input structure description
-					passDesc.pIAInputSignature,		// Get pointer to the compiled shader
-					passDesc.IAInputSignatureSize,	// The size of the compiled shader
-					&mVertexLayout);				// Out: where to put the created input layout 
-
-		if(FAILED(result))							// If layer creation fails, show an error message and return
-		{
-			MessageBox(0, "Input Layout creation failed!", "ERROR", 0);
-			return result;
-		}
-
-		// Bind the input layout to the 3D device
-		mDevice->IASetInputLayout(mVertexLayout);
-
-		return result;
+	mEffect = new Effect();
+	mEffect->Initialize(mDevice, "Effects/Console.fx", D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, vertexDesc,
+		sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
 }
 
 // Update the console
@@ -162,27 +86,22 @@ void Console::Draw()
 		return;
 
 	mVertexBuffer->MakeActive();
+	mEffect->MakeActive();
 
-	mDevice->IASetInputLayout(mVertexLayout);
-	mDevice->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-
-	D3D10_TECHNIQUE_DESC techDesc;
-	mTechnique->GetDesc(&techDesc);
-	for(UINT p = 0; p < techDesc.Passes; ++p)
+	for(UINT p = 0; p < mEffect->GetNumberOfPasses(); ++p)
 	{
-		mTechnique->GetPassByIndex(p)->Apply(0);
+		mEffect->ApplyTechniquePass(p);
 		mDevice->Draw(C_NUM_VERTICES, 0);
 	}
-	
-	POINT position = { 10 , mBounds.bottom - 20 };
-	mFont->WriteText(mStream.str(), position, mTextColor);
 
-	position.y = 0;
+	POINT position = { 10 , 0 };
 	for(UINT i = std::max<int>(0, mOutput.size() - mMaxNumRows); i < mOutput.size(); ++i)
 	{
 		mFont->WriteText(mOutput[i], position, mTextColor);
 		position.y += mFont->GetSize();
 	}
+	
+	mInputField->Draw();
 }
 
 // Toggle showing of the console
@@ -191,36 +110,41 @@ void Console::Toggle()
 	mIsToggled = !mIsToggled;
 }
 
-// When a key is pressed, act on it
-void Console::CharEntered(unsigned char key)
+void Console::RecieveInput(std::string input)
 {
-	if(!mIsToggled)
-		return;
-
-		mStream << key;
+	mOutput.push_back("> " + input);
 }
 
-void Console::KeyPressed(int code)
-{
-	if(code == VK_RETURN)
-	{
-		if(mStream.str() != "")
-		{
-			mOutput.push_back("> " + mStream.str());
-			mStream.str("");
-		}
-	}
-	else if(code == VK_BACK)
-	{
-		std::string temp = mStream.str();
-		temp = temp.substr(0, temp.size() - 1);
-
-		mStream.str("");
-		mStream << temp;
-	}
-}
-
-void Console::KeyReleased(int code)
-{
-}
+//// When a key is pressed, act on it
+//void Console::CharEntered(unsigned char key)
+//{
+//	if(!mIsToggled)
+//		return;
+//
+//		mStream << key;
+//}
+//
+//void Console::KeyPressed(int code)
+//{
+//	if(code == VK_RETURN)
+//	{
+//		if(mStream.str() != "")
+//		{
+//			mOutput.push_back("> " + mStream.str());
+//			mStream.str("");
+//		}
+//	}
+//	else if(code == VK_BACK)
+//	{
+//		std::string temp = mStream.str();
+//		temp = temp.substr(0, temp.size() - 1);
+//
+//		mStream.str("");
+//		mStream << temp;
+//	}
+//}
+//
+//void Console::KeyReleased(int code)
+//{
+//}
 

@@ -14,6 +14,8 @@
     <ClCompile Include="Source\Logic\Row.cpp" />
     <ClCompile Include="Source\Logic\Grid.cpp" />
     <ClCompile Include="Source\Scene.cpp" />
+    <ClCompile Include="Source\InputField.cpp" />
+    <ClCompile Include="Source\Effect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Buffer.hpp" />
@@ -31,6 +33,8 @@
     <ClInclude Include="Include\Logic\Player.hpp" />
     <ClInclude Include="Include\Logic\Row.hpp" />
     <ClInclude Include="Include\Scene.hpp" />
+    <ClInclude Include="Include\InputField.hpp" />
+    <ClInclude Include="Include\Effect.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Effects\Console.fx" />

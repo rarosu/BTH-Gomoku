@@ -4,7 +4,8 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth,
 	D3DApplication(applicationInstance, windowTitle, windowWidth, windowHeight)
 {
 	mDefaultFont = new GameFont(mDeviceD3D, "Times New Roman", 24);
-	mConsole = new Console(mDeviceD3D, (float)mScreenWidth, (float)mScreenHeight);
+	mConsole = new Console(mDeviceD3D, (float)mScreenWidth, (float)mScreenHeight, D3DXCOLOR(0.0, 1.0, 0.0, 1.0),
+		&mInputManager);
 	mGrid = new Logic::Grid();
 	mScene = new Scene(mDeviceD3D);
 	
@@ -15,7 +16,7 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth,
 	viewFrustrum.aspectRatio = (float) mScreenWidth / (float) mScreenHeight;
 	mCamera = new Camera(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, -1.0f, 2.0f), D3DXVECTOR3(0, 1.0f, 0), viewFrustrum);
 
-	mInputManager.AddKeyListener(mConsole);
+	//mInputManager.AddKeyListener(mConsole);
 	mInputManager.AddMouseListener(mCamera);
 }
 
@@ -53,9 +54,9 @@ void Game::Update()
 void Game::Draw()
 {
 	ClearScene();
-
-	//mConsole->Draw();
+	
 	mScene->Draw();
+	mConsole->Draw();
 
 	RenderScene();
 }
