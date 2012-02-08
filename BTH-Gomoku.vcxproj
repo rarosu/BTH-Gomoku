@@ -165,6 +165,7 @@
     <ClCompile Include="Source\Logic\Grid.cpp" />
     <ClCompile Include="Source\Logic\Row.cpp" />
     <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\Marker.cpp" />
     <ClCompile Include="Source\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +185,7 @@
     <ClInclude Include="Include\Logic\Grid.hpp" />
     <ClInclude Include="Include\Logic\Player.hpp" />
     <ClInclude Include="Include\Logic\Row.hpp" />
+    <ClInclude Include="Include\Marker.hpp" />
     <ClInclude Include="Include\Scene.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -191,6 +193,7 @@
     <None Include="Effects\Console.fx" />
     <None Include="Effects\Grid.fx" />
     <None Include="Effects\InputField.fx" />
+    <None Include="Effects\Marker.fx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

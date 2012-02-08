@@ -11,6 +11,7 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth,
 		&mInputManager);
 	mGrid = new Logic::Grid();
 	mScene = new Scene(mDeviceD3D);
+	mMarker = new Marker(mDeviceD3D, 6);
 	
 	Frustrum viewFrustrum;
 	viewFrustrum.nearDistance = 1.0f;
@@ -42,6 +43,7 @@ void Game::Update()
 	mCamera->Update(mInputManager.GetPrevious(), mInputManager.GetCurrent(), mGameTime);
 	mConsole->Update(mGameTime);
 	mScene->Update(mGrid, *mCamera);
+	mMarker->Update(*mCamera);
 
 	if(GetAsyncKeyState(VK_ESCAPE))
 		Quit();
@@ -64,6 +66,7 @@ void Game::Draw()
 	
 	mScene->Draw();
 	mConsole->Draw();
+	mMarker->Draw();
 
 	RenderScene();
 }

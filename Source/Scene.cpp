@@ -5,6 +5,9 @@ Scene::Scene(ID3D10Device* device) :
 {
 	CreateBuffer();
 	CreateEffect();
+
+	mEffect->SetIntVariable("gWidth", 10);
+	mEffect->SetFloatVariable("gInterval", 0.1f);
 }
 
 Scene::~Scene() 
@@ -16,13 +19,13 @@ void Scene::CreateBuffer()
 {
 	GridVertex vertices[4];
 
-	vertices[0].position = D3DXVECTOR3(0, 0, 0);
+	vertices[0].position = D3DXVECTOR3(-100, 0, -100);
 	vertices[0].color = D3DXCOLOR(1.0, 1.0, 0.0, 1.0);
 
-	vertices[1].position = D3DXVECTOR3(0, 0, 100);
+	vertices[1].position = D3DXVECTOR3(-100, 0, 100);
 	vertices[1].color = D3DXCOLOR(1.0, 0.0, 0.0, 1.0);
 
-	vertices[2].position = D3DXVECTOR3(100, 0, 0);
+	vertices[2].position = D3DXVECTOR3(100, 0, -100);
 	vertices[2].color = D3DXCOLOR(0.0, 1.0, 0.0, 1.0);
 
 	vertices[3].position = D3DXVECTOR3(100, 0, 100);
@@ -57,9 +60,6 @@ void Scene::CreateEffect()
 	mEffect = new Effect();
 	mEffect->Initialize(mDevice, "Effects/Grid.fx", D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, vertexDesc,
 		sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
-
-	mEffect->SetIntVariable("gWidth", 10);
-	mEffect->SetFloatVariable("gInterval", 0.1f);
 }
 
 void Scene::Update(const Logic::Grid* grid, const Camera& camera)

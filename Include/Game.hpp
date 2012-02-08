@@ -9,6 +9,7 @@
 #include "Console.hpp"
 #include "Camera.hpp"
 #include "Logic/Grid.hpp"
+#include "Marker.hpp"
 #include "Scene.hpp"
 
 class Game : public D3DApplication
@@ -28,6 +29,7 @@ private:
 	InputManager	mInputManager;
 	Scene*			mScene;
 	Camera*			mCamera;
+	Marker*			mMarker;
 
 	Logic::Grid*	mGrid;
 protected:

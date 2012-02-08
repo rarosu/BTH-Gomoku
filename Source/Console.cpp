@@ -4,7 +4,7 @@
 const int Console::C_NUM_VERTICES = 4;
 
 Console::Console(ID3D10Device* device, RECT position, D3DXCOLOR bgColor, InputManager* manager)
-	: mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0))
+	: mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0)), mIsToggled(false)
 {
 	mDevice = device;
 	mPosition = position;
