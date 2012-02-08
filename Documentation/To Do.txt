@@ -14,3 +14,6 @@
 
 06-02-2012 15:20 - Working camera and grid
 	- The rest of the project
+
+08-02-2012 - Working console and InputField
+	- Commands that the console will react to

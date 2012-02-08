@@ -14,3 +14,6 @@
 06-02-2012 15:20 - Working camera and grid
 	- Grid too small
 	- Camera can scroll to edge
+
+08-02-2012 - Working console and InputField
+	- There is no scrolling in the console

@@ -3,6 +3,7 @@
 
 #include "D3DApplication.hpp"
 #include "InputManager.hpp"
+#include "InputField.hpp"
 #include "GameTime.hpp"
 #include "GameFont.hpp"
 #include "Console.hpp"

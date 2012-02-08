@@ -13,6 +13,11 @@ RasterizerState NoCulling
 	CullMode = None;
 };
 
+cbuffer cbEveryFrame
+{
+	float4		consoleColor;
+}
+
 Texture2D textureGrass;
 
 PS_INPUT VS(VS_INPUT input)
@@ -24,9 +29,9 @@ PS_INPUT VS(VS_INPUT input)
 	return output;
 }
 
-float4 PS(PS_INPUT input) : SV_Target
+float4 PS(PS_INPUT input) : SV_TARGET0
 {
-	return float4(1.0, 0.0, 0.0, 1.0);
+	return consoleColor;
 }
 
 technique10 DrawTechnique

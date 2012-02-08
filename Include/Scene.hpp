@@ -3,6 +3,7 @@
 
 #include "Buffer.hpp"
 #include "Camera.hpp"
+#include "Effect.hpp"
 #include "Logic/Grid.hpp"
 
 /**
@@ -35,15 +36,11 @@ private:
 	};
 
 	ID3D10Device*				mDevice;
-	ID3D10Effect*				mEffect;
-	ID3D10EffectTechnique*		mTechnique;
-	ID3D10InputLayout*			mVertexLayout;
+	Effect*						mEffect;
 	Buffer*						mVertexBuffer;
 
-	static const char*			C_SHADER_FILENAME;
-
-	HRESULT CreateEffect();
-	HRESULT CreateVertexLayout();
+	void CreateBuffer();
+	void CreateEffect();
 };
 
 #endif

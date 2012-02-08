@@ -154,9 +154,12 @@
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\Console.cpp" />
     <ClCompile Include="Source\D3DApplication.cpp" />
+    <ClCompile Include="Source\Effect.cpp" />
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\GameFont.cpp" />
     <ClCompile Include="Source\GameTime.cpp" />
+    <ClCompile Include="Source\Globals.cpp" />
+    <ClCompile Include="Source\InputField.cpp" />
     <ClCompile Include="Source\InputManager.cpp" />
     <ClCompile Include="Source\Logic\Cell.cpp" />
     <ClCompile Include="Source\Logic\Grid.cpp" />
@@ -169,10 +172,12 @@
     <ClInclude Include="Include\Camera.hpp" />
     <ClInclude Include="Include\Console.hpp" />
     <ClInclude Include="Include\D3DApplication.hpp" />
+    <ClInclude Include="Include\Effect.hpp" />
     <ClInclude Include="Include\Game.hpp" />
     <ClInclude Include="Include\GameFont.hpp" />
     <ClInclude Include="Include\GameTime.hpp" />
     <ClInclude Include="Include\Globals.hpp" />
+    <ClInclude Include="Include\InputField.hpp" />
     <ClInclude Include="Include\InputManager.hpp" />
     <ClInclude Include="Include\Logic\Cell.hpp" />
     <ClInclude Include="Include\Logic\Direction.hpp" />
@@ -185,6 +190,7 @@
     <None Include=".gitignore" />
     <None Include="Effects\Console.fx" />
     <None Include="Effects\Grid.fx" />
+    <None Include="Effects\InputField.fx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

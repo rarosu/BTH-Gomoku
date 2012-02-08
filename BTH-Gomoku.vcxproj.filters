@@ -41,5 +41,6 @@
     <None Include="Effects\Console.fx" />
     <None Include=".gitignore" />
     <None Include="Effects\Grid.fx" />
+    <None Include="Effects\InputField.fx" />
   </ItemGroup>
 </Project>
