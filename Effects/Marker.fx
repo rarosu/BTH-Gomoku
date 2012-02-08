@@ -16,18 +16,16 @@ RasterizerState NoCulling
 cbuffer cbEveryFrame
 {
 	matrix		gVP;
-	
+	matrix		gWorld;
 };
 
-float4		gColor		= float4(0.2, 0.2, 0.2, 1.0);
+float4		gColor;
 
 PS_INPUT VS(VS_INPUT input)
 {
 	PS_INPUT output;
 	
-	//float3 temp = float3(input.position.x, input.position.z, input.position.y);
 	output.position = mul(float4(input.position, 1.0), gVP);
-	//output.position = mul(float4(temp, 1.0), gVP);
 
 	return output;
 }

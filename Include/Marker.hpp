@@ -9,7 +9,7 @@
 class Marker
 {
 public:
-	Marker(ID3D10Device* device, int size);
+	Marker(ID3D10Device* device, int size, D3DXVECTOR3 position);
 	void Update(const Camera& camera);
 	void Draw();
 
@@ -19,8 +19,10 @@ private:
 	Effect*						mEffect;
 
 	D3DXMATRIX					mWorldMatrix;
+	D3DXVECTOR3					mPosition;
 
 	void CreateBuffer(int size);
 	void CreateEffect();
+	void UpdateWorldMatrix();
 };
 #endif

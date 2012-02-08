@@ -11,7 +11,7 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth,
 		&mInputManager);
 	mGrid = new Logic::Grid();
 	mScene = new Scene(mDeviceD3D);
-	mMarker = new Marker(mDeviceD3D, 6);
+	mMarker = new Marker(mDeviceD3D, 6, D3DXVECTOR3(5, 1, 5));
 	
 	Frustrum viewFrustrum;
 	viewFrustrum.nearDistance = 1.0f;
