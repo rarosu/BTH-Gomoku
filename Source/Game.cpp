@@ -3,8 +3,11 @@
 Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth, UINT windowHeight) : 
 	D3DApplication(applicationInstance, windowTitle, windowWidth, windowHeight)
 {
+	UpdateViewportMatrix(mScreenWidth, mScreenHeight);
+
 	mDefaultFont = new GameFont(mDeviceD3D, "Times New Roman", 24);
-	mConsole = new Console(mDeviceD3D, (float)mScreenWidth, (float)mScreenHeight, D3DXCOLOR(0.0, 1.0, 0.0, 1.0),
+	RECT consolePos = { 0, 0, mScreenWidth, mScreenHeight / 2 };
+	mConsole = new Console(mDeviceD3D, consolePos, D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.0f),
 		&mInputManager);
 	mGrid = new Logic::Grid();
 	mScene = new Scene(mDeviceD3D);
@@ -46,6 +49,10 @@ void Game::Update()
 	{
 		mConsole->Toggle();
 	}
+	if(GetAsyncKeyState(VK_F7))
+		mConsole->SetTextColor(D3DXCOLOR(1.0, 0.0, 0.0, 1.0));
+	if(GetAsyncKeyState(VK_F8))
+		mConsole->SetTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0));
 
 	mInputManager.Update();
 }

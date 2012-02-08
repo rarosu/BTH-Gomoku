@@ -31,9 +31,9 @@ void Camera::Update(const InputState& prevInput, const InputState& currInput, co
 		MoveBack(gameTime);
 
 	if(currInput.Keyboard.keyIsPressed['A'])
-		TurnHorizontal(-gameTime.GetTimeSinceLastTick().Milliseconds * C_TILTING_SPEED);
+		TurnHorizontal((float)(-gameTime.GetTimeSinceLastTick().Milliseconds) * C_TILTING_SPEED);
 	else if(currInput.Keyboard.keyIsPressed['D'])
-		TurnHorizontal(gameTime.GetTimeSinceLastTick().Milliseconds * C_TILTING_SPEED);
+		TurnHorizontal((float)gameTime.GetTimeSinceLastTick().Milliseconds * C_TILTING_SPEED);
 
 	// Check for tilting of camera.
 	//if(currInput.Mouse.buttonIsPressed[C_MOUSE_LEFT])
@@ -52,7 +52,7 @@ void Camera::MoveBack(const GameTime& gameTime)
 	
 	forward = mDirection - (D3DXVec3Dot(&mDirection, &mWorldUp) * mWorldUp);
 	D3DXVec3Normalize(&forward, &forward);
-	mPosition -= forward * C_MOVE_SPEED * gameTime.GetTimeSinceLastTick().Seconds;
+	mPosition -= forward * C_MOVE_SPEED * (float)gameTime.GetTimeSinceLastTick().Seconds;
 }
 
 // Move camera forwards: walk
@@ -62,21 +62,21 @@ void Camera::MoveForward(const GameTime& gameTime)
 
 	forward = mDirection - (D3DXVec3Dot(&mDirection, &mWorldUp) * mWorldUp);
 	D3DXVec3Normalize(&forward, &forward);
-	mPosition += forward * C_MOVE_SPEED * gameTime.GetTimeSinceLastTick().Seconds;
+	mPosition += forward * C_MOVE_SPEED * (float)gameTime.GetTimeSinceLastTick().Seconds;
 }
 
 // Move camera to the left: strafe
 void Camera::MoveLeft(const GameTime& gameTime)
 {
 	D3DXVECTOR3 right = GetRight();
-	mPosition -= right * C_MOVE_SPEED * gameTime.GetTimeSinceLastTick().Seconds;
+	mPosition -= right * C_MOVE_SPEED * (float)gameTime.GetTimeSinceLastTick().Seconds;
 }
 
 // Move camera to the right: strafe
 void Camera::MoveRight(const GameTime& gameTime)
 {
 	D3DXVECTOR3 right = GetRight();
-	mPosition += right * C_MOVE_SPEED * gameTime.GetTimeSinceLastTick().Seconds;
+	mPosition += right * C_MOVE_SPEED * (float)gameTime.GetTimeSinceLastTick().Seconds;
 }
 
 // Tilt the camera horisontally: look left/right
@@ -149,7 +149,7 @@ void Camera::CreateProjectionMatrix(const Frustrum& viewFrustrum)
 	ZeroMemory(&mProjectionMatrix, sizeof(mProjectionMatrix));
 	
 	float scaleY, scaleX, length;
-	scaleY = 1.0 / std::tan(viewFrustrum.fovY * 0.5);
+	scaleY = 1.0f / std::tan(viewFrustrum.fovY * 0.5f);
 	scaleX = scaleY / viewFrustrum.aspectRatio;
 	length = viewFrustrum.farDistance - viewFrustrum.nearDistance;
 

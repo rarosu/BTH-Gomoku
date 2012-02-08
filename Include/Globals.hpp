@@ -1,7 +1,12 @@
 #ifndef GLOBALS_HPP
 #define GLOBALS_HPP
 
-//#define SafeRelease(x) { if(x) { (x)->Release(); x = NULL; } }
+#include <D3DX10.h>
+
+extern D3DXMATRIX				gViewPortMatrix;
+
+void UpdateViewportMatrix(int newWidth, int newHeight);
+D3DXVECTOR2 TransformToViewport(const D3DXVECTOR2& vector);
 
 template <typename T>
 inline void SafeRelease(T*& resource)

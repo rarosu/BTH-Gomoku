@@ -158,6 +158,7 @@
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\GameFont.cpp" />
     <ClCompile Include="Source\GameTime.cpp" />
+    <ClCompile Include="Source\Globals.cpp" />
     <ClCompile Include="Source\InputField.cpp" />
     <ClCompile Include="Source\InputManager.cpp" />
     <ClCompile Include="Source\Logic\Cell.cpp" />
@@ -189,6 +190,7 @@
     <None Include=".gitignore" />
     <None Include="Effects\Console.fx" />
     <None Include="Effects\Grid.fx" />
+    <None Include="Effects\InputField.fx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

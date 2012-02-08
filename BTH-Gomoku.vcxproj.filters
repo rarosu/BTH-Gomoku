@@ -16,6 +16,7 @@
     <ClCompile Include="Source\Scene.cpp" />
     <ClCompile Include="Source\InputField.cpp" />
     <ClCompile Include="Source\Effect.cpp" />
+    <ClCompile Include="Source\Globals.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Buffer.hpp" />
@@ -40,5 +41,6 @@
     <None Include="Effects\Console.fx" />
     <None Include=".gitignore" />
     <None Include="Effects\Grid.fx" />
+    <None Include="Effects\InputField.fx" />
   </ItemGroup>
 </Project>

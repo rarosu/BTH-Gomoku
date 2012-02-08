@@ -4,6 +4,8 @@
 #include <sstream>
 #include <string>
 #include <D3DX10.h>
+
+#include "Buffer.hpp"
 #include "Effect.hpp"
 #include "GameFont.hpp"
 #include "InputManager.hpp"
@@ -17,7 +19,8 @@ public:
 class InputField : public KeyListener
 {
 public:
-	InputField(InputManager* manager, InputReciever* reciever, D3DXVECTOR2 position, GameFont* font);
+	InputField(ID3D10Device* device, InputManager* manager, InputReciever* reciever, 
+		RECT position, GameFont* font);
 	//void Update();
 	void Draw();
 
@@ -27,16 +30,18 @@ public:
 	void CharEntered(unsigned char symbol);
 
 private:
-	struct FieldVertex
-	{
+	ID3D10Device*				mDevice;
+	Buffer*						mBuffer;
+	Effect*						mEffect;
 
-	};
-
+	RECT						mPosition;
+	GameFont*					mFont;
 	std::stringstream			mStream;
 	InputReciever*				mReciever;
 
-	D3DXVECTOR2					mPosition;
-	GameFont*					mFont;
-	Effect*						mEffect;
+	static const int			C_NUM_VERTICES;
+
+	void CreateBuffer();
+	void CreateEffect();
 };
 #endif

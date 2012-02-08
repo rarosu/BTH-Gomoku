@@ -3,43 +3,42 @@
 
 const int Console::C_NUM_VERTICES = 4;
 
-Console::Console(ID3D10Device* device, float screenWidth, float screenHeight, D3DXCOLOR bgColor, InputManager* manager)
+Console::Console(ID3D10Device* device, RECT position, D3DXCOLOR bgColor, InputManager* manager)
 	: mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0))
 {
 	mDevice = device;
+	mPosition = position;
 
-	CreateBuffer(screenWidth, screenHeight);
+	CreateBuffer();
 	CreateEffect();
 
-	mBounds.left = 0;
-	mBounds.right = (LONG)screenWidth;
-	mBounds.top = 0;
-	mBounds.bottom = (LONG)(screenHeight / 2);
-
 	int textHeight = 18;
-
 	mFont = new GameFont(mDevice, "System", textHeight, false, true);
 	mStream.str("");
 
-	mMaxNumRows = (int)((screenHeight / 2 - textHeight) / textHeight);
+	float height = std::abs((float)mPosition.bottom - (float)mPosition.top);
+	mMaxNumRows = (int)((height - textHeight) / textHeight);
 
-	mInputField = new InputField(manager, this, D3DXVECTOR2(10.0f, mBounds.bottom - 20.0f), mFont);
+	RECT inputFieldPos = position;
+	inputFieldPos.top = inputFieldPos.bottom - 20;
+
+	mInputField = new InputField(mDevice, manager, this, inputFieldPos, mFont);
 	mEffect->SetVectorVariable("consoleColor", &(D3DXVECTOR4)bgColor);
 }
 
-void Console::CreateBuffer(float width, float height)
+void Console::CreateBuffer()
 {
 	D3DXVECTOR2 vertices[C_NUM_VERTICES];
 
-	float screenX1 = -(width / 2);
-	float screenX2 = width / 2;
-	float screenY1 = height / 2;
-	float screenY2 = 0;
+	D3DXVECTOR2 point1 = D3DXVECTOR2((float)mPosition.left, (float)mPosition.top);
+	D3DXVECTOR2 point2 = D3DXVECTOR2((float)mPosition.right, (float)mPosition.top);
+	D3DXVECTOR2 point3 = D3DXVECTOR2((float)mPosition.left, (float)mPosition.bottom);
+	D3DXVECTOR2 point4 = D3DXVECTOR2((float)mPosition.right, (float)mPosition.bottom);
 
-	vertices[0]	= D3DXVECTOR2(screenX1, screenY1);
-	vertices[1]	= D3DXVECTOR2(screenX2, screenY1);
-	vertices[2]	= D3DXVECTOR2(screenX1, screenY2);
-	vertices[3]	= D3DXVECTOR2(screenX2, screenY2);
+	vertices[0]	= TransformToViewport(point1);
+	vertices[1]	= TransformToViewport(point2);
+	vertices[2]	= TransformToViewport(point3);
+	vertices[3]	= TransformToViewport(point4);
 
 	mVertexBuffer = new Buffer();
 	BufferInformation bufferDesc;
@@ -94,10 +93,10 @@ void Console::Draw()
 		mDevice->Draw(C_NUM_VERTICES, 0);
 	}
 
-	POINT position = { 10 , 0 };
+	POINT position = { 3 , 0 };
 	for(UINT i = std::max<int>(0, mOutput.size() - mMaxNumRows); i < mOutput.size(); ++i)
 	{
-		mFont->WriteText(mOutput[i], position, mTextColor);
+		mFont->WriteText("> " + mOutput[i].text, position, mOutput[i].color);
 		position.y += mFont->GetSize();
 	}
 	
@@ -112,7 +111,16 @@ void Console::Toggle()
 
 void Console::RecieveInput(std::string input)
 {
-	mOutput.push_back("> " + input);
+	TextLine text;
+	text.text = input;
+	text.color = mTextColor;
+
+	mOutput.push_back(text);
+}
+
+void Console::SetTextColor(D3DXCOLOR newColor)
+{
+	mTextColor = newColor;
 }
 
 //// When a key is pressed, act on it
