@@ -2,20 +2,34 @@
 
 const int InputField::C_NUM_VERTICES = 4;
 
-InputField::InputField(ID3D10Device* device, InputManager* manager, InputReciever* reciever, 
-	RECT position, GameFont* font)
+InputField::InputField(ID3D10Device* device, 
+					   InputSubscription* inputManager, 
+					   InputReceiver* receiver, 
+					   RECT position, 
+					   GameFont* font)
+	: mDevice(device),
+	  mInputManager(inputManager),
+	  mReceiver(receiver),
+	  mPosition(position),
+	  mFont(font),
+	  mBuffer(NULL),
+	  mEffect(NULL)
+	
 {
-	mDevice = device;
-	mPosition = position;
+	mInputManager->AddKeyListener(this);
 
 	CreateBuffer();
 	CreateEffect();
-
-	manager->AddKeyListener(this);
-	mReciever = reciever;
-	mFont = font;
 	
 	mEffect->SetVectorVariable("consoleColor", &D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
+}
+
+InputField::~InputField() throw()
+{
+	mInputManager->RemoveKeyListener(this);
+
+	SafeDelete(mBuffer);
+	SafeDelete(mEffect);
 }
 
 void InputField::CreateBuffer()
@@ -74,15 +88,15 @@ void InputField::Draw()
 	mFont->WriteText(mStream.str(), position, D3DXCOLOR(0.0, 0.0, 0.0, 1.0));
 }
 
-void InputField::KeyPressed(int code)
+void InputField::KeyPressed(int code, const InputState& currentState)
 {
 	if(code == VK_RETURN)
 	{
 		if(mStream.str() != "")
 		{
-			if(mReciever)
+			if(mReceiver)
 			{
-				mReciever->RecieveInput(mStream.str());
+				mReceiver->RecieveInput(mStream.str());
 				mStream.str("");
 			}
 		}
@@ -97,11 +111,11 @@ void InputField::KeyPressed(int code)
 	}
 }
 
-void InputField::KeyReleased(int code)
+void InputField::KeyReleased(int code, const InputState& currentState)
 {
 }
 
-void InputField::CharEntered(unsigned char symbol)
+void InputField::CharEntered(unsigned char symbol, const InputState& currentState)
 {
 	mStream << symbol;
 }

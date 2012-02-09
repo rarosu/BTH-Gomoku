@@ -31,17 +31,17 @@ private:
 class MouseListener
 {
 public:
-	virtual void MouseButtonPressed(int index) = 0;
-	virtual void MouseButtonReleased(int index) = 0;
-	virtual void MouseWheelMoved(short delta) = 0;
+	virtual void MouseButtonPressed(int index, const InputState& currentState) = 0;
+	virtual void MouseButtonReleased(int index, const InputState& currentState) = 0;
+	virtual void MouseWheelMoved(short delta, const InputState& currentState) = 0;
 };
 
 class KeyListener
 {
 public:
-	virtual void KeyPressed(int code) = 0;
-	virtual void KeyReleased(int code) = 0;
-	virtual void CharEntered(unsigned char symbol) = 0;
+	virtual void KeyPressed(int code, const InputState& currentState) = 0;
+	virtual void KeyReleased(int code, const InputState& currentState) = 0;
+	virtual void CharEntered(unsigned char symbol, const InputState& currentState) = 0;
 };
 
 class InputSubscription

@@ -10,7 +10,7 @@
 #include "GameFont.hpp"
 #include "InputManager.hpp"
 
-class InputReciever
+class InputReceiver
 {
 public:
 	virtual void RecieveInput(std::string input) = 0;
@@ -19,25 +19,31 @@ public:
 class InputField : public KeyListener
 {
 public:
-	InputField(ID3D10Device* device, InputManager* manager, InputReciever* reciever, 
-		RECT position, GameFont* font);
+	InputField(ID3D10Device* device, 
+			   InputSubscription* inputManager, 
+			   InputReceiver* receiver, 
+			   RECT position, 
+			   GameFont* font);
+	~InputField() throw();
+
 	//void Update();
 	void Draw();
 
 	// Methods inherited from KeyListener
-	void KeyPressed(int code);
-	void KeyReleased(int code);
-	void CharEntered(unsigned char symbol);
+	void KeyPressed(int code, const InputState& currentState);
+	void KeyReleased(int code, const InputState& currentState);
+	void CharEntered(unsigned char symbol, const InputState& currentState);
 
 private:
 	ID3D10Device*				mDevice;
+	InputSubscription*			mInputManager;
 	Buffer*						mBuffer;
 	Effect*						mEffect;
 
 	RECT						mPosition;
 	GameFont*					mFont;
 	std::stringstream			mStream;
-	InputReciever*				mReciever;
+	InputReceiver*				mReceiver;
 
 	static const int			C_NUM_VERTICES;
 

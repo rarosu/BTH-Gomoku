@@ -30,6 +30,7 @@ private:
 	Scene*			mScene;
 	Camera*			mCamera;
 	Marker*			mMarker;
+	Marker*			mCenterMarker;
 
 	Logic::Grid*	mGrid;
 protected:

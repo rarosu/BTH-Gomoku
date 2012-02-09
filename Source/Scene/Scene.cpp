@@ -1,18 +1,27 @@
 #include "Scene.hpp"
+#include <sstream>
 
-Scene::Scene(ID3D10Device* device) :
-	mDevice(device)
+Scene::Scene(ID3D10Device* device, InputSubscription* inputManager) :
+	mDevice(device),
+	mInputManager(inputManager),
+	mVertexBuffer(NULL),
+	mEffect(NULL)
 {
 	CreateBuffer();
 	CreateEffect();
 
 	mEffect->SetIntVariable("gWidth", 10);
 	mEffect->SetFloatVariable("gInterval", 0.1f);
+
+	mInputManager->AddMouseListener(this);
 }
 
 Scene::~Scene() 
 {
+	mInputManager->RemoveMouseListener(this);
+
 	SafeDelete(mVertexBuffer);
+	SafeDelete(mEffect);
 }
 
 void Scene::CreateBuffer()
@@ -62,10 +71,56 @@ void Scene::CreateEffect()
 		sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
 }
 
-void Scene::Update(const Logic::Grid* grid, const Camera& camera)
+D3DXVECTOR2 Scene::PickCell(const InputState& currentState)
 {
+	D3DXVECTOR2 normalizedMouseCoordinates = TransformToViewport(D3DXVECTOR2(currentState.Mouse.x, currentState.Mouse.y));
+	D3DXVECTOR3 v;
+	
+	v.x = normalizedMouseCoordinates.x;
+	v.y = normalizedMouseCoordinates.y;
+	v.z = 1.0f;
+
+	v.x /= mDebugRayInput.mCamera->GetProjectionMatrix()._11;
+	v.y /= mDebugRayInput.mCamera->GetProjectionMatrix()._22;
+
+	D3DXMATRIX viewInverse;
+	D3DXMatrixInverse(&viewInverse, NULL, &mDebugRayInput.mCamera->GetViewMatrix());
+
+	D3DXVECTOR4 origin(0.0f, 0.0f, 0.0f, 1.0f);
+	D3DXVECTOR4 direction(v.x, v.y, 1.0f, 0.0f);
+
+	D3DXVec4Transform(&origin, &origin,  &viewInverse);
+	D3DXVec4Transform(&direction, &direction, &viewInverse);
+
+	// We want to know when the ray hits the XZ-plane, thus we want to know when
+	// origin.y - t * direction.y = 0. Which gives the following solution:
+	float t = -origin.y / direction.y;
+
+	D3DXVECTOR3 hit = origin + direction * t;
+	//mDebugRayInput.mMarker->mPosition = D3DXVECTOR3(hit.x, hit.y, hit.z);
+	
+	D3DXVECTOR2 cell = D3DXVECTOR2(((int)hit.x / 10), ((int)hit.z / 10));
+
+	return cell;
+}
+
+void Scene::Update(const Logic::Grid* grid, const Camera& camera, const InputState& currentInput, DebugRayInput debugRayInput)
+{
+	mDebugRayInput = debugRayInput;
+
 	D3DXMATRIX viewProjection = camera.GetViewMatrix() * camera.GetProjectionMatrix();
 	mEffect->SetMatrixVariable("gVP", &viewProjection);
+	D3DXVECTOR2 cell = PickCell(currentInput);
+
+	if (currentInput.Mouse.buttonIsPressed[C_MOUSE_LEFT])
+	{
+		std::stringstream stream;
+		stream << "Cell: (" << cell.x << ", " << cell.y << ")";
+		mDebugRayInput.mConsole->RecieveInput(stream.str());
+		stream.str("");
+	}
+
+	mEffect->SetVectorVariable("gMarkedCell", &D3DXVECTOR4(cell.x, cell.y, 0.0, 0.0));
 }
 
 void Scene::Draw()
@@ -80,3 +135,15 @@ void Scene::Draw()
 		mDevice->Draw(mVertexBuffer->GetNumberOfElements(), 0);
 	}
 }
+
+void Scene::MouseButtonPressed(int index, const InputState& currentState)
+{
+	
+}
+
+void Scene::MouseButtonReleased(int index, const InputState& currentState)
+{
+
+}
+
+void Scene::MouseWheelMoved(short delta, const InputState& currentState) {}

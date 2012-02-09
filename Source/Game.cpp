@@ -6,27 +6,33 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth,
 	UpdateViewportMatrix(mScreenWidth, mScreenHeight);
 
 	mDefaultFont = new GameFont(mDeviceD3D, "Times New Roman", 24);
-	RECT consolePos = { 0, 0, mScreenWidth, mScreenHeight / 2 };
+	RECT consolePos = { 0, 0, mScreenWidth, mScreenHeight / 4 };
 	mConsole = new Console(mDeviceD3D, consolePos, D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.0f),
 		&mInputManager);
 	mGrid = new Logic::Grid();
-	mScene = new Scene(mDeviceD3D);
-	mMarker = new Marker(mDeviceD3D, 6, D3DXVECTOR3(5, 1, 5));
+	mScene = new Scene(mDeviceD3D, &mInputManager);
+	mMarker = new Marker(mDeviceD3D, 6, D3DXVECTOR3(5, 1, 5), D3DXCOLOR(0.0, 0.0, 0.0, 1.0));
+	mCenterMarker = new Marker(mDeviceD3D, 3, D3DXVECTOR3(0.0, 1.0, 0.0), D3DXCOLOR(1.0, 0.0, 0.0, 1.0));
 	
 	Frustrum viewFrustrum;
 	viewFrustrum.nearDistance = 1.0f;
 	viewFrustrum.farDistance = 1000.0f;
 	viewFrustrum.fovY = (float)D3DX_PI * 0.25f;
 	viewFrustrum.aspectRatio = (float) mScreenWidth / (float) mScreenHeight;
-	mCamera = new Camera(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, -1.0f, 2.0f), D3DXVECTOR3(0, 1.0f, 0), viewFrustrum);
-
-	//mInputManager.AddKeyListener(mConsole);
-	mInputManager.AddMouseListener(mCamera);
+	
+	mCamera = new Camera(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, -1.0f, 2.0f), D3DXVECTOR3(0, 1.0f, 0), viewFrustrum, &mInputManager);
 }
 
 Game::~Game()
 {
+	SafeDelete(mDefaultFont);
 	
+	SafeDelete(mConsole);
+	SafeDelete(mScene);
+	SafeDelete(mCamera);
+
+	SafeDelete(mGrid);
+	SafeDelete(mMarker);
 }
 
 //  What happens every loop of the program (ie updating and drawing the game)
@@ -39,11 +45,20 @@ void Game::ProgramLoop()
 // Update the game
 void Game::Update()
 {
+	DebugRayInput rayInput;
+	rayInput.mCamera = mCamera;
+	rayInput.mConsole = mConsole;
+	rayInput.mMarker = mMarker;
+	rayInput.mScreenHeight = mScreenHeight;
+	rayInput.mScreenWidth = mScreenWidth;
+	rayInput.mAspectRatio = (float) mScreenWidth / (float) mScreenHeight;
+
 	mGameTime.Update();
 	mCamera->Update(mInputManager.GetPrevious(), mInputManager.GetCurrent(), mGameTime);
 	mConsole->Update(mGameTime);
-	mScene->Update(mGrid, *mCamera);
+	mScene->Update(mGrid, *mCamera, mInputManager.GetCurrent(), rayInput);
 	mMarker->Update(*mCamera);
+	mCenterMarker->Update(*mCamera);
 
 	if(GetAsyncKeyState(VK_ESCAPE))
 		Quit();
@@ -67,6 +82,7 @@ void Game::Draw()
 	mScene->Draw();
 	mConsole->Draw();
 	mMarker->Draw();
+	mCenterMarker->Draw();
 
 	RenderScene();
 }

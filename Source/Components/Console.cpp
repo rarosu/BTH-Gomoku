@@ -3,12 +3,17 @@
 
 const int Console::C_NUM_VERTICES = 4;
 
-Console::Console(ID3D10Device* device, RECT position, D3DXCOLOR bgColor, InputManager* manager)
-	: mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0)), mIsToggled(false)
+Console::Console(ID3D10Device* device, RECT position, D3DXCOLOR bgColor, InputSubscription* inputManager)
+	: mDevice(device),
+	  mPosition(position),
+	  mVertexBuffer(NULL),
+	  mEffect(NULL),
+	  mFont(NULL),
+	  mInputField(NULL),
+	  mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0)), 
+	  mIsToggled(false),
+	  mMaxNumRows(0)
 {
-	mDevice = device;
-	mPosition = position;
-
 	CreateBuffer();
 	CreateEffect();
 
@@ -22,8 +27,15 @@ Console::Console(ID3D10Device* device, RECT position, D3DXCOLOR bgColor, InputMa
 	RECT inputFieldPos = position;
 	inputFieldPos.top = inputFieldPos.bottom - 20;
 
-	mInputField = new InputField(mDevice, manager, this, inputFieldPos, mFont);
+	mInputField = new InputField(mDevice, inputManager, this, inputFieldPos, mFont);
 	mEffect->SetVectorVariable("consoleColor", &(D3DXVECTOR4)bgColor);
+}
+
+Console::~Console() throw()
+{
+	SafeDelete(mVertexBuffer);
+	SafeDelete(mEffect);
+	SafeDelete(mFont);
 }
 
 void Console::CreateBuffer()

@@ -11,10 +11,12 @@
 #include "Globals.hpp"
 #include "InputField.hpp"
 
-class Console : public InputReciever /*: public KeyListener*/
+class Console : public InputReceiver /*: public KeyListener*/
 {
 public:
-	Console(ID3D10Device* device, RECT position, D3DXCOLOR bgColor, InputManager* manager);
+	Console(ID3D10Device* device, RECT position, D3DXCOLOR bgColor, InputSubscription* inputManager);
+	~Console() throw();
+
 	void Update(GameTime gameTime);
 	void Draw();
 	void Toggle();
@@ -34,6 +36,7 @@ private:
 	};
 
 	ID3D10Device*				mDevice;
+
 	Effect*						mEffect;
 	Buffer*						mVertexBuffer;
 	GameFont*					mFont;
