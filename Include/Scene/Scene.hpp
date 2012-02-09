@@ -4,7 +4,7 @@
 #include "Buffer.hpp"
 #include "Camera.hpp"
 #include "Effect.hpp"
-#include "Logic/Grid.hpp"
+#include "Grid.hpp"
 
 /**
 	The scene will render a view of the grid and is able to determine

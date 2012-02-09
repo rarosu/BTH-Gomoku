@@ -19,16 +19,16 @@ void Scene::CreateBuffer()
 {
 	GridVertex vertices[4];
 
-	vertices[0].position = D3DXVECTOR3(-100, 0, -100);
+	vertices[0].position = D3DXVECTOR3(-1000, 0, -1000);
 	vertices[0].color = D3DXCOLOR(1.0, 1.0, 0.0, 1.0);
 
-	vertices[1].position = D3DXVECTOR3(-100, 0, 100);
+	vertices[1].position = D3DXVECTOR3(-1000, 0, 1000);
 	vertices[1].color = D3DXCOLOR(1.0, 0.0, 0.0, 1.0);
 
-	vertices[2].position = D3DXVECTOR3(100, 0, -100);
+	vertices[2].position = D3DXVECTOR3(1000, 0, -1000);
 	vertices[2].color = D3DXCOLOR(0.0, 1.0, 0.0, 1.0);
 
-	vertices[3].position = D3DXVECTOR3(100, 0, 100);
+	vertices[3].position = D3DXVECTOR3(1000, 0, 1000);
 	vertices[3].color = D3DXCOLOR(0.0, 0.0, 1.0, 1.0);
 
 	BufferInformation bufferDesc;

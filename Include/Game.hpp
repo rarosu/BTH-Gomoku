@@ -8,7 +8,7 @@
 #include "GameFont.hpp"
 #include "Console.hpp"
 #include "Camera.hpp"
-#include "Logic/Grid.hpp"
+#include "Grid.hpp"
 #include "Marker.hpp"
 #include "Scene.hpp"
 
