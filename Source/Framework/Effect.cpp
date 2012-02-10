@@ -5,11 +5,9 @@ Effect::Effect()
 {
 }
 
-void Effect::Initialize(ID3D10Device* device, char* filename, D3D_PRIMITIVE_TOPOLOGY topology,
-	D3D10_INPUT_ELEMENT_DESC* vertexDesc, int size)
+void Effect::Initialize(ID3D10Device* device, char* filename, D3D10_INPUT_ELEMENT_DESC* vertexDesc, int size)
 {
 	mDevice = device;
-	mTopology = topology;
 
 	CreateEffect(mDevice, filename);
 	CreateVertexLayout(vertexDesc, size);
@@ -106,7 +104,6 @@ HRESULT Effect::CreateVertexLayout(D3D10_INPUT_ELEMENT_DESC* vertexDesc, int siz
 void Effect::MakeActive()
 {
 	mDevice->IASetInputLayout(mVertexLayout);
-	mDevice->IASetPrimitiveTopology(mTopology);
 }
 
 void Effect::ApplyTechniquePass(int index)

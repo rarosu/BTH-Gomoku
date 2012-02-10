@@ -154,6 +154,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Components\Button.cpp" />
     <ClCompile Include="Source\Framework\Buffer.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\Components\Console.cpp" />
@@ -173,6 +174,7 @@
     <ClCompile Include="Source\Scene\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Components\Button.hpp" />
     <ClInclude Include="Include\Framework\Buffer.hpp" />
     <ClInclude Include="Include\Camera.hpp" />
     <ClInclude Include="Include\Components\Console.hpp" />

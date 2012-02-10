@@ -8,8 +8,7 @@ class Effect
 {
 public:
 	Effect();
-	void Initialize(ID3D10Device* device, char* filename, D3D_PRIMITIVE_TOPOLOGY topology, 
-		D3D10_INPUT_ELEMENT_DESC* vertexDesc, int size);
+	void Initialize(ID3D10Device* device, char* filename, D3D10_INPUT_ELEMENT_DESC* vertexDesc, int size);
 	void MakeActive();
 	void ApplyTechniquePass(int index);
 	UINT GetNumberOfPasses();
@@ -25,7 +24,6 @@ private:
 	ID3D10Effect*				mEffect;
 	ID3D10EffectTechnique*		mTechnique;
 	ID3D10InputLayout*			mVertexLayout;
-	D3D_PRIMITIVE_TOPOLOGY		mTopology;
 
 	HRESULT CreateEffect(ID3D10Device* device, char* filename);
 	HRESULT CreateVertexLayout(D3D10_INPUT_ELEMENT_DESC* vertexDesc, int size);

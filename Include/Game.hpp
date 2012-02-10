@@ -2,6 +2,7 @@
 #define GAME_HPP
 
 #include "D3DApplication.hpp"
+#include "Button.hpp"
 #include "InputManager.hpp"
 #include "InputField.hpp"
 #include "GameTime.hpp"
@@ -30,6 +31,7 @@ private:
 	Scene*			mScene;
 	Camera*			mCamera;
 	Marker*			mMarker;
+	Button*			mButton;
 
 	Logic::Grid*	mGrid;
 protected:

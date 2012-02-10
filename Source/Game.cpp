@@ -22,6 +22,10 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth,
 
 	//mInputManager.AddKeyListener(mConsole);
 	mInputManager.AddMouseListener(mCamera);
+
+	RECT buttonPos = { mScreenWidth - 100, mScreenHeight - 100, mScreenWidth - 10, mScreenHeight - 50 };
+	mButton = new Button();
+	mButton->Initialize(mDeviceD3D, buttonPos);
 }
 
 Game::~Game()
@@ -65,8 +69,9 @@ void Game::Draw()
 	ClearScene();
 	
 	mScene->Draw();
-	mConsole->Draw();
 	mMarker->Draw();
+	mConsole->Draw();
+	mButton->Draw();
 
 	RenderScene();
 }

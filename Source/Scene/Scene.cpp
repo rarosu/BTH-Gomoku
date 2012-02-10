@@ -37,6 +37,7 @@ void Scene::CreateBuffer()
 	bufferDesc.firstElementPointer		= vertices;
 	bufferDesc.type						= VertexBuffer;
 	bufferDesc.usage					= Buffer_Default;
+	bufferDesc.topology =				D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
 
 	mVertexBuffer = new Buffer();
 	mVertexBuffer->Initialize(mDevice, bufferDesc);
@@ -58,7 +59,7 @@ void Scene::CreateEffect()
 	};
 
 	mEffect = new Effect();
-	mEffect->Initialize(mDevice, "Effects/Grid.fx", D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, vertexDesc,
+	mEffect->Initialize(mDevice, "Effects/Grid.fx", vertexDesc,
 		sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
 }
 

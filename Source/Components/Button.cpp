@@ -1,26 +1,23 @@
-#include "InputField.hpp"
+#include "Button.hpp"
 
-const int InputField::C_NUM_VERTICES = 4;
+Button::Button()
+	: mDevice(NULL), mBuffer(NULL), mEffect(NULL), mFont (NULL)
+{
+}
 
-InputField::InputField(ID3D10Device* device, InputManager* manager, InputReciever* reciever, 
-	RECT position, GameFont* font)
+void Button::Initialize(ID3D10Device* device, RECT position)
 {
 	mDevice = device;
 	mPosition = position;
 
 	CreateBuffer();
 	CreateEffect();
-
-	manager->AddKeyListener(this);
-	mReciever = reciever;
-	mFont = font;
-	
-	mEffect->SetVectorVariable("consoleColor", &D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
-void InputField::CreateBuffer()
+void Button::CreateBuffer()
 {
-	D3DXVECTOR2 vertices[C_NUM_VERTICES];
+	const int numVertices = 4;
+	D3DXVECTOR2 vertices[numVertices];
 
 	vertices[0]	= TransformToViewport(D3DXVECTOR2((float)mPosition.left, (float)mPosition.top));
 	vertices[1]	= TransformToViewport(D3DXVECTOR2((float)mPosition.right, (float)mPosition.top));
@@ -32,7 +29,7 @@ void InputField::CreateBuffer()
 
 	bufferDesc.type =					VertexBuffer;
 	bufferDesc.usage =					Buffer_Default;
-	bufferDesc.numberOfElements =		C_NUM_VERTICES;
+	bufferDesc.numberOfElements =		numVertices;
 	bufferDesc.firstElementPointer =	vertices;
 	bufferDesc.elementSize =			sizeof(D3DXVECTOR2);
 	bufferDesc.topology =				D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
@@ -40,7 +37,7 @@ void InputField::CreateBuffer()
 	mBuffer->Initialize(mDevice, bufferDesc);
 }
 
-void InputField::CreateEffect()
+void Button::CreateEffect()
 {
 	// Create an array describing each of the elements of the vertex that are inputs to the vertex shader.
 	D3D10_INPUT_ELEMENT_DESC vertexDesc[] = 
@@ -59,7 +56,7 @@ void InputField::CreateEffect()
 		sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
 }
 
-void InputField::Draw()
+void Button::Draw()
 {
 	mBuffer->MakeActive();
 	mEffect->MakeActive();
@@ -69,40 +66,4 @@ void InputField::Draw()
 		mEffect->ApplyTechniquePass(p);
 		mDevice->Draw(mBuffer->GetNumberOfElements(), 0);
 	}
-
-	int offset = 10;
-	POINT position = { mPosition.left + offset, mPosition.top };
-	mFont->WriteText(mStream.str(), position, D3DXCOLOR(0.0, 0.0, 0.0, 1.0));
-}
-
-void InputField::KeyPressed(int code)
-{
-	if(code == VK_RETURN)
-	{
-		if(mStream.str() != "")
-		{
-			if(mReciever)
-			{
-				mReciever->RecieveInput(mStream.str());
-				mStream.str("");
-			}
-		}
-	}
-	else if(code == VK_BACK)
-	{
-		std::string temp = mStream.str();
-		temp = temp.substr(0, temp.size() - 1);
-
-		mStream.str("");
-		mStream << temp;
-	}
-}
-
-void InputField::KeyReleased(int code)
-{
-}
-
-void InputField::CharEntered(unsigned char symbol)
-{
-	mStream << symbol;
 }
