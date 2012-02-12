@@ -18,6 +18,7 @@ public:
 	void SetFloatVariable(char* variableName, float value);
 	void SetVectorVariable(char* variableName, D3DXVECTOR4* value);
 	void SetMatrixVariable(char* variableName, D3DXMATRIX* matrix);
+	void SetResourceVariable(char* variableName, ID3D10ShaderResourceView* resource);
 
 private:
 	ID3D10Device*				mDevice;

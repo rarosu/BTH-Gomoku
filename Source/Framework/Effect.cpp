@@ -143,3 +143,8 @@ void Effect::SetMatrixVariable(char* variableName, D3DXMATRIX* matrix)
 {
 	mEffect->GetVariableByName(variableName)->AsMatrix()->SetMatrix((float*)matrix);
 }
+
+void Effect::SetResourceVariable(char* variableName, ID3D10ShaderResourceView* resource)
+{
+	mEffect->GetVariableByName(variableName)->AsShaderResource()->SetResource(resource);
+}

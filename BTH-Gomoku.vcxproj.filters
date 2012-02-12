@@ -47,5 +47,7 @@
     <None Include="Effects\InputField.fx" />
     <None Include="Effects\Grid.fx" />
     <None Include="Effects\Marker.fx" />
+    <None Include="Resources\button.png" />
+    <None Include="Effects\Button.fx" />
   </ItemGroup>
 </Project>

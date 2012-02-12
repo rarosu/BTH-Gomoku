@@ -23,9 +23,9 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth,
 	//mInputManager.AddKeyListener(mConsole);
 	mInputManager.AddMouseListener(mCamera);
 
-	RECT buttonPos = { mScreenWidth - 100, mScreenHeight - 100, mScreenWidth - 10, mScreenHeight - 50 };
+	RECT buttonPos = { mScreenWidth - 228, mScreenHeight - 82, mScreenWidth - 100, mScreenHeight - 50 };
 	mButton = new Button();
-	mButton->Initialize(mDeviceD3D, buttonPos);
+	mButton->Initialize(mDeviceD3D, buttonPos, "Exit", D3DXCOLOR(1.0, 1.0, 1.0, 1.0));
 }
 
 Game::~Game()
@@ -48,6 +48,7 @@ void Game::Update()
 	mConsole->Update(mGameTime);
 	mScene->Update(mGrid, *mCamera);
 	mMarker->Update(*mCamera);
+	mButton->Update(mInputManager.GetCurrent());
 
 	if(GetAsyncKeyState(VK_ESCAPE))
 		Quit();
@@ -67,6 +68,9 @@ void Game::Update()
 void Game::Draw()
 {
 	ClearScene();
+
+	float blendFactors[] = {0.0f, 0.0f, 0.0f, 0.0f};
+	mDeviceD3D->OMSetBlendState(NULL, blendFactors, 0xffffffff);
 	
 	mScene->Draw();
 	mMarker->Draw();

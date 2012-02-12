@@ -1,28 +1,46 @@
 #include "Button.hpp"
 
 Button::Button()
-	: mDevice(NULL), mBuffer(NULL), mEffect(NULL), mFont (NULL)
+	: mDevice(NULL), mBuffer(NULL), mEffect(NULL), mFont (NULL), mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0))
 {
 }
 
-void Button::Initialize(ID3D10Device* device, RECT position)
+void Button::Initialize(ID3D10Device* device, RECT position, std::string caption, D3DXCOLOR color)
 {
 	mDevice = device;
 	mPosition = position;
+	mCaption = caption;
+	mIdleColor = color;
+	mHoverColor = mIdleColor * 0.8f;
+	mHoverColor.a = 1.0f;
 
 	CreateBuffer();
 	CreateEffect();
+
+	mFont = new GameFont(mDevice, "Comic Sans", 18);
+
+	ID3D10ShaderResourceView* resource = NULL;
+	D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/button.png", NULL, NULL, &resource, NULL );
+	mEffect->SetResourceVariable("textureButton", resource);
+	mEffect->SetVectorVariable("buttonColor", &(D3DXVECTOR4)mIdleColor);
 }
 
 void Button::CreateBuffer()
 {
 	const int numVertices = 4;
-	D3DXVECTOR2 vertices[numVertices];
+	ButtonVertex vertices[numVertices];
 
-	vertices[0]	= TransformToViewport(D3DXVECTOR2((float)mPosition.left, (float)mPosition.top));
-	vertices[1]	= TransformToViewport(D3DXVECTOR2((float)mPosition.right, (float)mPosition.top));
-	vertices[2]	= TransformToViewport(D3DXVECTOR2((float)mPosition.left, (float)mPosition.bottom));
-	vertices[3]	= TransformToViewport(D3DXVECTOR2((float)mPosition.right, (float)mPosition.bottom));
+	vertices[0].position	= TransformToViewport(D3DXVECTOR2((float)mPosition.left, (float)mPosition.top));
+	vertices[0].uv			= D3DXVECTOR2(0, 0);
+
+	vertices[1].position	= TransformToViewport(D3DXVECTOR2((float)mPosition.right, (float)mPosition.top));
+	vertices[1].uv			= D3DXVECTOR2(1, 0);
+
+	vertices[2].position	= TransformToViewport(D3DXVECTOR2((float)mPosition.left, (float)mPosition.bottom));
+	vertices[2].uv			= D3DXVECTOR2(0, 1);
+
+	vertices[3].position	= TransformToViewport(D3DXVECTOR2((float)mPosition.right, (float)mPosition.bottom));
+	vertices[3].uv			= D3DXVECTOR2(1, 1);
 
 	mBuffer = new Buffer();
 	BufferInformation bufferDesc;
@@ -31,7 +49,7 @@ void Button::CreateBuffer()
 	bufferDesc.usage =					Buffer_Default;
 	bufferDesc.numberOfElements =		numVertices;
 	bufferDesc.firstElementPointer =	vertices;
-	bufferDesc.elementSize =			sizeof(D3DXVECTOR2);
+	bufferDesc.elementSize =			sizeof(ButtonVertex);
 	bufferDesc.topology =				D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
 
 	mBuffer->Initialize(mDevice, bufferDesc);
@@ -48,12 +66,26 @@ void Button::CreateEffect()
 		  0,							// Input slot, of the 0-15 slots, through wich to send vertex data
 		  0,							// AlignedByteOffset, bytes from start of the vertex to this component
 		  D3D10_INPUT_PER_VERTEX_DATA,	// Input data class for this input slot
-		  0 } 							// 0 when slot input data class is D3D10_INPUT_PER_VERTEX_DATA
+		  0 }, 							// 0 when slot input data class is D3D10_INPUT_PER_VERTEX_DATA
+		{ "UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(D3DXVECTOR2), D3D10_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
 	mEffect = new Effect();
-	mEffect->Initialize(mDevice, "Effects/Console.fx", vertexDesc,
+	mEffect->Initialize(mDevice, "Effects/Button.fx", vertexDesc,
 		sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
+}
+
+void Button::Update(InputState currInputState)
+{
+	if(currInputState.Mouse.x > mPosition.left && currInputState.Mouse.x < mPosition.right)
+	{
+		if(currInputState.Mouse.y > mPosition.top && currInputState.Mouse.y < mPosition.bottom)
+		{
+			mEffect->SetVectorVariable("buttonColor", &(D3DXVECTOR4)mHoverColor);
+			return;
+		}
+	}
+	mEffect->SetVectorVariable("buttonColor", &(D3DXVECTOR4)mIdleColor);
 }
 
 void Button::Draw()
@@ -66,4 +98,6 @@ void Button::Draw()
 		mEffect->ApplyTechniquePass(p);
 		mDevice->Draw(mBuffer->GetNumberOfElements(), 0);
 	}
+
+	mFont->WriteText(mCaption, &mPosition, mTextColor, GameFont::Center, GameFont::Middle);
 }

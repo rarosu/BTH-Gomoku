@@ -18,8 +18,6 @@ cbuffer cbEveryFrame
 	float4		consoleColor;
 }
 
-Texture2D textureGrass;
-
 PS_INPUT VS(VS_INPUT input)
 {
 	PS_INPUT output;

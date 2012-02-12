@@ -196,10 +196,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+    <None Include="Effects\Button.fx" />
     <None Include="Effects\Console.fx" />
     <None Include="Effects\Grid.fx" />
     <None Include="Effects\InputField.fx" />
     <None Include="Effects\Marker.fx" />
+    <None Include="Resources\button.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
