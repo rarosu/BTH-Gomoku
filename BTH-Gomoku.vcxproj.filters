@@ -20,6 +20,8 @@
     <ClCompile Include="Source\Framework\InputManager.cpp" />
     <ClCompile Include="Source\Components\Clickable.cpp" />
     <ClCompile Include="Source\Components\StandardButton.cpp" />
+    <ClCompile Include="Source\Components\Component.cpp" />
+    <ClCompile Include="Source\Components\ComponentGroup.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -42,6 +44,8 @@
     <ClInclude Include="Include\Framework\InputManager.hpp" />
     <ClInclude Include="Include\Components\Clickable.hpp" />
     <ClInclude Include="Include\Components\StandardButton.hpp" />
+    <ClInclude Include="Include\Components\Component.hpp" />
+    <ClInclude Include="Include\Components\ComponentGroup.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

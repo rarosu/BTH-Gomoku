@@ -7,7 +7,7 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth,
 
 	mDefaultFont = new GameFont(mDeviceD3D, "Times New Roman", 24);
 	RECT consolePos = { 0, 0, mScreenWidth, mScreenHeight / 2 };
-	mConsole = new Console(mDeviceD3D, consolePos, D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.0f),
+	mConsole = new Components::Console(mDeviceD3D, consolePos, D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.0f),
 		&mInputManager);
 	mGrid = new Logic::Grid();
 	mScene = new Scene(mDeviceD3D);
@@ -41,7 +41,7 @@ void Game::Update()
 {
 	mGameTime.Update();
 	mCamera->Update(mInputManager.GetPrevious(), mInputManager.GetCurrent(), mGameTime);
-	mConsole->Update(mGameTime);
+	mConsole->Update(mGameTime, mInputManager.GetCurrent(), mInputManager.GetPrevious());
 	mScene->Update(mGrid, *mCamera);
 	mMarker->Update(*mCamera);
 

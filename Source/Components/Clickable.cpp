@@ -1,68 +1,70 @@
 #include "Clickable.hpp"
 
-Clickable::Clickable(InputSubscription* manager)
-	: mHovered(false), mPressed(false), mManager(manager)
+namespace Components
 {
-	mManager->AddMouseListener(this);
-	ZeroMemory(&mPosition, sizeof(mPosition));
-}
-
-Clickable::~Clickable() throw()
-{
-	mManager->RemoveMouseListener(this);
-}
-
-void Clickable::Update(const InputState& previousState, const InputState& currentState)
-{
-	if(currentState.Mouse.x > mPosition.left && currentState.Mouse.x < mPosition.right &&
-	   currentState.Mouse.y > mPosition.top && currentState.Mouse.y < mPosition.bottom)
+	Clickable::Clickable(InputSubscription* manager)
+		: mHovered(false), mPressed(false), mManager(manager)
 	{
-		if(!mHovered)
+		mManager->AddMouseListener(this);
+	}
+
+	Clickable::~Clickable() throw()
+	{
+		mManager->RemoveMouseListener(this);
+	}
+
+	void Clickable::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
+	{
+		if(currInputState.Mouse.x > mPositionRect.left && currInputState.Mouse.x < mPositionRect.right &&
+		   currInputState.Mouse.y > mPositionRect.top && currInputState.Mouse.y < mPositionRect.bottom)
 		{
-			mHovered = true;
-			MouseEntered();
+			if(!mHovered)
+			{
+				mHovered = true;
+				MouseEntered();
+			}
+		}
+		else
+		{
+			if(mHovered)
+			{
+				mHovered = false;
+				MouseExited();
+			}
 		}
 	}
-	else
+
+	bool Clickable::IsPressed() const
+	{
+		return mPressed;
+	}
+
+	bool Clickable::IsHovered() const
+	{
+		return mHovered;
+	}
+
+	void Clickable::MouseButtonPressed(int index)
 	{
 		if(mHovered)
 		{
-			mHovered = false;
-			MouseExited();
+			mPressed = true;
+			MousePressed(index);
 		}
 	}
-}
 
-bool Clickable::IsPressed() const
-{
-	return mPressed;
-}
-
-bool Clickable::IsHovered() const
-{
-	return mHovered;
-}
-
-void Clickable::MouseButtonPressed(int index)
-{
-	if(mHovered)
+	void Clickable::MouseButtonReleased(int index)
 	{
-		mPressed = true;
-		MousePressed(index);
-	}
-}
+		if(mPressed)
+		{
+			mPressed = false;
 
-void Clickable::MouseButtonReleased(int index)
-{
-	if(mPressed)
+			if(mHovered)
+				MouseReleased(index);	
+		}
+	}
+
+	void Clickable::MouseWheelMoved(short delta)
 	{
-		mPressed = false;
-
-		if(mHovered)
-			MouseReleased(index);	
 	}
-}
-
-void Clickable::MouseWheelMoved(short delta)
-{
 }

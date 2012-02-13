@@ -154,6 +154,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Components\Component.cpp" />
+    <ClCompile Include="Source\Components\ComponentGroup.cpp" />
     <ClCompile Include="Source\Components\StandardButton.cpp" />
     <ClCompile Include="Source\Components\Clickable.cpp" />
     <ClCompile Include="Source\Framework\Buffer.cpp" />
@@ -175,6 +177,8 @@
     <ClCompile Include="Source\Scene\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Components\Component.hpp" />
+    <ClInclude Include="Include\Components\ComponentGroup.hpp" />
     <ClInclude Include="Include\Components\StandardButton.hpp" />
     <ClInclude Include="Include\Components\Clickable.hpp" />
     <ClInclude Include="Include\Framework\Buffer.hpp" />

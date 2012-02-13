@@ -24,13 +24,13 @@ public:
 	virtual LRESULT HandleAppMessages(UINT message, WPARAM wParam, LPARAM lParam);
 
 private:
-	GameTime			mGameTime;
-	GameFont*			mDefaultFont;
-	Console*			mConsole;
-	InputManager		mInputManager;
-	Scene*				mScene;
-	Camera*				mCamera;
-	Marker*				mMarker;
+	GameTime					mGameTime;
+	GameFont*					mDefaultFont;
+	Components::Console*		mConsole;
+	InputManager				mInputManager;
+	Scene*						mScene;
+	Camera*						mCamera;
+	Marker*						mMarker;
 
 	Logic::Grid*	mGrid;
 protected:

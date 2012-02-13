@@ -1,39 +1,43 @@
 #ifndef CLICKABLE_HPP
 #define CLICKABLE_HPP
 
+#include "Component.hpp"
 #include "InputManager.hpp"
 
-class Clickable : public MouseListener
+namespace Components
 {
-public:
-	Clickable(InputSubscription* manager);
-	~Clickable() throw();
+	class Clickable : public Component, public MouseListener
+	{
+	public:
+		Clickable(InputSubscription* manager);
+		~Clickable() throw();
 
-	void Update(const InputState& previousState, const InputState& currentState);
-	virtual void Draw() = 0;
+		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
+		virtual void Draw() = 0;
 
-	bool IsPressed() const;
-	bool IsHovered() const;
+		bool IsPressed() const;
+		bool IsHovered() const;
 
-	void MouseButtonPressed(int index);
-	void MouseButtonReleased(int index);
-	void MouseWheelMoved(short delta);
+		void MouseButtonPressed(int index);
+		void MouseButtonReleased(int index);
+		void MouseWheelMoved(short delta);
 
-protected:
-	RECT			mPosition;
+	protected:
+		//RECT			mPosition;
 
-	virtual void MouseEntered() = 0;
-	virtual void MouseExited() = 0;
-	virtual void MousePressed(int buttonIndex) = 0;
-	virtual void MouseReleased(int buttonIndex) = 0;
+		virtual void MouseEntered() = 0;
+		virtual void MouseExited() = 0;
+		virtual void MousePressed(int buttonIndex) = 0;
+		virtual void MouseReleased(int buttonIndex) = 0;
 
-private:
-	Clickable(const Clickable& copy) {}
-	Clickable& operator=(const Clickable& copy) {}
+	private:
+		Clickable(const Clickable& copy) {}
+		Clickable& operator=(const Clickable& copy) {}
 
-	bool				mHovered;
-	bool				mPressed;
+		bool				mHovered;
+		bool				mPressed;
 
-	InputSubscription*	mManager;
-};
+		InputSubscription*	mManager;
+	};
+}
 #endif
