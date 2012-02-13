@@ -59,7 +59,7 @@ void Scene::CreateEffect()
 	};
 
 	mEffect = new Effect();
-	mEffect->Initialize(mDevice, "Effects/Grid.fx", vertexDesc,
+	mEffect->Initialize(mDevice, "Resources/Effects/Grid.fx", vertexDesc,
 		sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
 }
 

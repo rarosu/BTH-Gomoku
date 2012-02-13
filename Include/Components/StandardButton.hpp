@@ -4,28 +4,18 @@
 #include <string>
 
 #include "Buffer.hpp"
+#include "Clickable.hpp"
 #include "Effect.hpp"
 #include "GameFont.hpp"
 #include "InputManager.hpp"
 
-//class ButtonBackground
-//{
-//
-//}
-//
-//class BgColor : public ButtonBackground
-//{
-//
-//}
-
-class Button
+class StandardButton : public Clickable
 {
 public:
-	Button();
+	StandardButton(InputSubscription* manager);
 	
-	void Initialize(ID3D10Device* device, RECT position, std::string caption, 
-					D3DXCOLOR color = D3DXCOLOR(0.0, 0.0, 0.0, 0.0));
-	void Update(InputState currInputState);
+	void Initialize(ID3D10Device* device, RECT position, std::string caption);
+	void Update(const InputState& currInputState, const InputState& prevInputState);
 	void Draw();
 
 private:
@@ -39,14 +29,19 @@ private:
 	Buffer*						mBuffer;
 	Effect*						mEffect;
 
-	RECT						mPosition;
 	GameFont*					mFont;
 	std::string					mCaption;
 	D3DXCOLOR					mTextColor;
 	D3DXCOLOR					mIdleColor;
 	D3DXCOLOR					mHoverColor;
+	D3DXCOLOR					mActiveColor;
+
 
 	void CreateBuffer();
 	void CreateEffect();
+	void MouseEntered();
+	void MouseExited();
+	void MousePressed(int buttonIndex);
+	void MouseReleased(int buttonIndex);
 };
 #endif

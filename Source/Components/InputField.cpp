@@ -55,7 +55,7 @@ void InputField::CreateEffect()
 	};
 
 	mEffect = new Effect();
-	mEffect->Initialize(mDevice, "Effects/Console.fx", vertexDesc,
+	mEffect->Initialize(mDevice, "Resources/Effects/Console.fx", vertexDesc,
 		sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
 }
 

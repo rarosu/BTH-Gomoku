@@ -317,6 +317,10 @@ void D3DApplication::ClearScene()
 {
 	mDeviceD3D->ClearRenderTargetView(mRenderTarget, mClearColor);
 	mDeviceD3D->ClearDepthStencilView(mDepthStencilView, D3D10_CLEAR_DEPTH | D3D10_CLEAR_STENCIL, 1.0f, 0);
+
+	// Reset blending
+	float blendFactors[] = {0.0f, 0.0f, 0.0f, 0.0f};
+	mDeviceD3D->OMSetBlendState(NULL, blendFactors, 0xffffffff);
 }
 
 // Show the drawn image on the screen (switch the front buffer and back buffer)

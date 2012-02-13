@@ -2,7 +2,7 @@
 #define GAME_HPP
 
 #include "D3DApplication.hpp"
-#include "Button.hpp"
+#include "StandardButton.hpp"
 #include "InputManager.hpp"
 #include "InputField.hpp"
 #include "GameTime.hpp"
@@ -24,14 +24,13 @@ public:
 	virtual LRESULT HandleAppMessages(UINT message, WPARAM wParam, LPARAM lParam);
 
 private:
-	GameTime		mGameTime;
-	GameFont*		mDefaultFont;
-	Console*		mConsole;
-	InputManager	mInputManager;
-	Scene*			mScene;
-	Camera*			mCamera;
-	Marker*			mMarker;
-	Button*			mButton;
+	GameTime			mGameTime;
+	GameFont*			mDefaultFont;
+	Console*			mConsole;
+	InputManager		mInputManager;
+	Scene*				mScene;
+	Camera*				mCamera;
+	Marker*				mMarker;
 
 	Logic::Grid*	mGrid;
 protected:

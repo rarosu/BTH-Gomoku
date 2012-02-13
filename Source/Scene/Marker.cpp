@@ -71,7 +71,7 @@ void Marker::CreateEffect()
 	};
 
 	mEffect = new Effect();
-	mEffect->Initialize(mDevice, "Effects/Marker.fx", vertexDesc,
+	mEffect->Initialize(mDevice, "Resources/Effects/Marker.fx", vertexDesc,
 		sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
 }
 

@@ -1,18 +1,20 @@
-#include "Button.hpp"
+#include "StandardButton.hpp"
 
-Button::Button()
-	: mDevice(NULL), mBuffer(NULL), mEffect(NULL), mFont (NULL), mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0))
+StandardButton::StandardButton(InputSubscription* manager)
+	: Clickable(manager),
+	mDevice(NULL), mBuffer(NULL), mEffect(NULL), mFont (NULL), mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0))
 {
 }
 
-void Button::Initialize(ID3D10Device* device, RECT position, std::string caption, D3DXCOLOR color)
+void StandardButton::Initialize(ID3D10Device* device, RECT position, std::string caption)
 {
 	mDevice = device;
 	mPosition = position;
 	mCaption = caption;
-	mIdleColor = color;
+	mIdleColor = D3DXCOLOR(0.5, 0.5, 0.2, 1.0);
 	mHoverColor = mIdleColor * 0.8f;
-	mHoverColor.a = 1.0f;
+	mHoverColor.a = mIdleColor.a;
+	mActiveColor = D3DXCOLOR(1.0, 1.0, 0.0, mIdleColor.a);
 
 	CreateBuffer();
 	CreateEffect();
@@ -20,12 +22,12 @@ void Button::Initialize(ID3D10Device* device, RECT position, std::string caption
 	mFont = new GameFont(mDevice, "Comic Sans", 18);
 
 	ID3D10ShaderResourceView* resource = NULL;
-	D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/button.png", NULL, NULL, &resource, NULL );
-	mEffect->SetResourceVariable("textureButton", resource);
+	D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/button.png", NULL, NULL, &resource, NULL );
+	mEffect->SetResourceVariable("textureBase", resource);
 	mEffect->SetVectorVariable("buttonColor", &(D3DXVECTOR4)mIdleColor);
 }
 
-void Button::CreateBuffer()
+void StandardButton::CreateBuffer()
 {
 	const int numVertices = 4;
 	ButtonVertex vertices[numVertices];
@@ -55,7 +57,7 @@ void Button::CreateBuffer()
 	mBuffer->Initialize(mDevice, bufferDesc);
 }
 
-void Button::CreateEffect()
+void StandardButton::CreateEffect()
 {
 	// Create an array describing each of the elements of the vertex that are inputs to the vertex shader.
 	D3D10_INPUT_ELEMENT_DESC vertexDesc[] = 
@@ -71,24 +73,16 @@ void Button::CreateEffect()
 	};
 
 	mEffect = new Effect();
-	mEffect->Initialize(mDevice, "Effects/Button.fx", vertexDesc,
+	mEffect->Initialize(mDevice, "Resources/Effects/Button.fx", vertexDesc,
 		sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
 }
 
-void Button::Update(InputState currInputState)
+void StandardButton::Update(const InputState& currInputState, const InputState& prevInputState)
 {
-	if(currInputState.Mouse.x > mPosition.left && currInputState.Mouse.x < mPosition.right)
-	{
-		if(currInputState.Mouse.y > mPosition.top && currInputState.Mouse.y < mPosition.bottom)
-		{
-			mEffect->SetVectorVariable("buttonColor", &(D3DXVECTOR4)mHoverColor);
-			return;
-		}
-	}
-	mEffect->SetVectorVariable("buttonColor", &(D3DXVECTOR4)mIdleColor);
+	Clickable::Update(currInputState, prevInputState);
 }
 
-void Button::Draw()
+void StandardButton::Draw()
 {
 	mBuffer->MakeActive();
 	mEffect->MakeActive();
@@ -100,4 +94,28 @@ void Button::Draw()
 	}
 
 	mFont->WriteText(mCaption, &mPosition, mTextColor, GameFont::Center, GameFont::Middle);
+}
+
+void StandardButton::MouseEntered()
+{
+	if(IsPressed())
+		mEffect->SetVectorVariable("buttonColor", &(D3DXVECTOR4)mActiveColor);
+	else
+		mEffect->SetVectorVariable("buttonColor", &(D3DXVECTOR4)mHoverColor);
+}
+
+void StandardButton::MouseExited()
+{
+	mEffect->SetVectorVariable("buttonColor", &(D3DXVECTOR4)mIdleColor);
+}
+
+void StandardButton::MousePressed(int buttonIndex)
+{
+	mEffect->SetVectorVariable("buttonColor", &(D3DXVECTOR4)mActiveColor);
+}
+
+void StandardButton::MouseReleased(int buttonIndex)
+{
+	mEffect->SetVectorVariable("buttonColor", &(D3DXVECTOR4)mHoverColor);
+	MessageBox(NULL, "Clicked!", "Test", 0);
 }
