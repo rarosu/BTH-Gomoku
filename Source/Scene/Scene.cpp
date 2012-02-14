@@ -147,3 +147,8 @@ void Scene::MouseButtonReleased(int index, const InputState& currentState)
 }
 
 void Scene::MouseWheelMoved(short delta, const InputState& currentState) {}
+
+RECT Scene::GetVisibleGrid(const Camera& camera) const
+{
+
+}

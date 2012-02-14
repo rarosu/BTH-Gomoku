@@ -64,6 +64,7 @@ private:
 	void CreateBuffer();
 	void CreateEffect();
 	D3DXVECTOR2 PickCell(const InputState& currentState);
+	RECT GetVisibleGrid(const Camera& camera) const;
 };
 
 #endif
