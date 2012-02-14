@@ -40,15 +40,6 @@ void Camera::Update(const InputState& prevInput, const InputState& currInput, co
 		TurnHorizontal((float)(-gameTime.GetTimeSinceLastTick().Milliseconds) * C_TILTING_SPEED);
 	else if(currInput.Keyboard.keyIsPressed['D'])
 		TurnHorizontal((float)gameTime.GetTimeSinceLastTick().Milliseconds * C_TILTING_SPEED);
-
-	// Check for tilting of camera.
-	//if(currInput.Mouse.buttonIsPressed[C_MOUSE_LEFT])
-	//{
-	//	float dx = prevInput.Mouse.x - currInput.Mouse.x;
-	//	float dy = prevInput.Mouse.y - currInput.Mouse.y;
-	//	//TurnHorizontal(dx * C_TILTING_SPEED);
-	//	//TurnVertical(dy * C_TILTING_SPEED);
-	//}
 }
 
 // Move camera backwards

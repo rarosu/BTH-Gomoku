@@ -3,14 +3,15 @@
 
 namespace State
 {
-	InGameState::InGameState(StateID id, ID3D10Device* device, const Frustrum& viewFrustrum) :
+	InGameState::InGameState(StateID id, ID3D10Device* device, const Frustrum& viewFrustrum, InputSubscription* inputSubscription) :
 		ApplicationState(id),
 		mDevice(device),
 		mGrid(NULL),
 		mScene(NULL),
 		mCamera(NULL),
 		mMarker(NULL),
-		mViewFrustrum(viewFrustrum)
+		mViewFrustrum(viewFrustrum),
+		mInputSubscription(inputSubscription)
 	{
 		
 	}
@@ -26,12 +27,13 @@ namespace State
 	void InGameState::OnStatePushed()
 	{
 		mGrid = new Logic::Grid();
-		mScene = new Scene(mDevice);
+		mScene = new Scene(mDevice, mInputSubscription);
 		mCamera = new Camera(D3DXVECTOR3(0, 0, 0), 
 							 D3DXVECTOR3(0, -1.0f, 2.0f), 
 							 D3DXVECTOR3(0, 1.0f, 0), 
-							 mViewFrustrum);
-		mMarker = new Marker(mDevice, 32, D3DXVECTOR3(0, 1.0f, 0));
+							 mViewFrustrum,
+							 mInputSubscription);
+		mMarker = new Marker(mDevice, 32, D3DXVECTOR3(0, 1.0f, 0), D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
 	}
 
 	void InGameState::OnStatePopped()
@@ -48,7 +50,7 @@ namespace State
 			QuitApplication();
 
 		mCamera->Update(input.GetPrevious(), input.GetCurrent(), gameTime);
-		mScene->Update(mGrid, *mCamera);
+		mScene->Update(mGrid, *mCamera, input.GetCurrent());
 		mMarker->Update(*mCamera);
 	}
 

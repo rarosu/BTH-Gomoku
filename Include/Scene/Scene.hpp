@@ -10,16 +10,6 @@
 #include "Console.hpp"
 #include "Globals.hpp"
 
-struct DebugRayInput
-{
-	int mScreenWidth;
-	int mScreenHeight;
-	Marker* mMarker;
-	Console* mConsole;
-	Camera* mCamera;
-	float mAspectRatio;
-};
-
 /**
 	The scene will render a view of the grid and is able to determine
 	what cell the mouse is hovering over
@@ -27,20 +17,18 @@ struct DebugRayInput
 class Scene : public MouseListener
 {
 public:
-	Scene(ID3D10Device* device, InputSubscription* inputManager);
-	~Scene();
+	Scene(ID3D10Device* device, InputSubscription* inputSubscription);
+	~Scene() throw();
 
 	/**
 		Create a texture of the grid from the model
-
-		Needs only be called when the grid has been updated
 	*/
-	void Update(const Logic::Grid* grid, const Camera& camera, const InputState& currentInput, DebugRayInput debugRayInput);
+	void Update(const Logic::Grid* grid, const Camera& camera, const InputState& currentInput);
 
 	/**
 		Render the grid, through the given camera
 	*/
-	void Draw();
+	void Draw(const Camera& camera);
 
 
 	virtual void MouseButtonPressed(int index, const InputState& currentState);
@@ -54,17 +42,28 @@ private:
 	};
 
 	ID3D10Device*				mDevice;
-	InputSubscription*			mInputManager;
+	InputSubscription*			mInputSubscription;
 
 	Effect*						mEffect;
 	Buffer*						mVertexBuffer;
 
-	DebugRayInput				mDebugRayInput;
-
+	/**
+		Methods for creating the buffer- and effect objects, for rendering.
+	*/
 	void CreateBuffer();
 	void CreateEffect();
-	D3DXVECTOR2 PickCell(const InputState& currentState);
-	RECT GetVisibleGrid(const Camera& camera) const;
+
+	/**
+		Given the position of the mouse and the orientation of the camera,
+		this method will return the cell the mouse is hovering over.
+	*/
+	D3DXVECTOR2 PickCell(int mouseX, int mouseY, const Camera& camera) const;
+
+	/**
+		Get the rectangle which completely encompasses the visible area
+		on the grid.
+	*/
+	RECT GetVisibleRectangle(const Camera& camera) const;
 };
 
 #endif

@@ -3,7 +3,7 @@
 
 Scene::Scene(ID3D10Device* device, InputSubscription* inputManager) :
 	mDevice(device),
-	mInputManager(inputManager),
+	mInputSubscription(inputManager),
 	mVertexBuffer(NULL),
 	mEffect(NULL)
 {
@@ -13,12 +13,12 @@ Scene::Scene(ID3D10Device* device, InputSubscription* inputManager) :
 	mEffect->SetIntVariable("gWidth", 10);
 	mEffect->SetFloatVariable("gInterval", 0.1f);
 
-	mInputManager->AddMouseListener(this);
+	mInputSubscription->AddMouseListener(this);
 }
 
-Scene::~Scene() 
+Scene::~Scene() throw()
 {
-	mInputManager->RemoveMouseListener(this);
+	mInputSubscription->RemoveMouseListener(this);
 
 	SafeDelete(mVertexBuffer);
 	SafeDelete(mEffect);
@@ -72,20 +72,48 @@ void Scene::CreateEffect()
 		sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
 }
 
-D3DXVECTOR2 Scene::PickCell(const InputState& currentState)
+void Scene::Update(const Logic::Grid* grid, const Camera& camera, const InputState& currentInput)
 {
-	D3DXVECTOR2 normalizedMouseCoordinates = TransformToViewport(D3DXVECTOR2(currentState.Mouse.x, currentState.Mouse.y));
+	// Pick cell
+	D3DXVECTOR2 cell = PickCell(currentInput.Mouse.x, currentInput.Mouse.y, camera);
+	mEffect->SetVectorVariable("gMarkedCell", &D3DXVECTOR4(cell.x, cell.y, 0.0, 0.0));
+}
+
+void Scene::Draw(const Camera& camera)
+{
+	// Create View-Projection-matrix
+	D3DXMATRIX viewProjection = camera.GetViewMatrix() * camera.GetProjectionMatrix();
+	mEffect->SetMatrixVariable("gVP", &viewProjection);
+
+	// Render the buffer
+	mVertexBuffer->MakeActive();
+	mEffect->MakeActive();
+
+	for(UINT p = 0; p < mEffect->GetNumberOfPasses(); ++p)
+	{
+		mEffect->ApplyTechniquePass(p);
+		mDevice->Draw(mVertexBuffer->GetNumberOfElements(), 0);
+	}
+}
+
+void Scene::MouseButtonPressed(int index, const InputState& currentState) {}
+void Scene::MouseButtonReleased(int index, const InputState& currentState) {}
+void Scene::MouseWheelMoved(short delta, const InputState& currentState) {}
+
+D3DXVECTOR2 Scene::PickCell(int mouseX, int mouseY, const Camera& camera) const
+{
+	D3DXVECTOR2 normalizedMouseCoordinates = TransformToViewport(D3DXVECTOR2(mouseX, mouseY));
 	D3DXVECTOR3 v;
 	
 	v.x = normalizedMouseCoordinates.x;
 	v.y = normalizedMouseCoordinates.y;
 	v.z = 1.0f;
 
-	v.x /= mDebugRayInput.mCamera->GetProjectionMatrix()._11;
-	v.y /= mDebugRayInput.mCamera->GetProjectionMatrix()._22;
+	v.x /= camera.GetProjectionMatrix()._11;
+	v.y /= camera.GetProjectionMatrix()._22;
 
 	D3DXMATRIX viewInverse;
-	D3DXMatrixInverse(&viewInverse, NULL, &mDebugRayInput.mCamera->GetViewMatrix());
+	D3DXMatrixInverse(&viewInverse, NULL, &camera.GetViewMatrix());
 
 	D3DXVECTOR4 origin(0.0f, 0.0f, 0.0f, 1.0f);
 	D3DXVECTOR4 direction(v.x, v.y, 1.0f, 0.0f);
@@ -98,58 +126,17 @@ D3DXVECTOR2 Scene::PickCell(const InputState& currentState)
 	float t = -origin.y / direction.y;
 
 	D3DXVECTOR3 hit = origin + direction * t;
-	//mDebugRayInput.mMarker->mPosition = D3DXVECTOR3(hit.x, hit.y, hit.z);
-	
 	D3DXVECTOR2 cell = D3DXVECTOR2(((int)hit.x / 10), ((int)hit.z / 10));
 
 	return cell;
 }
 
-void Scene::Update(const Logic::Grid* grid, const Camera& camera, const InputState& currentInput, DebugRayInput debugRayInput)
+RECT Scene::GetVisibleRectangle(const Camera& camera) const
 {
-	mDebugRayInput = debugRayInput;
-
-	D3DXMATRIX viewProjection = camera.GetViewMatrix() * camera.GetProjectionMatrix();
-	mEffect->SetMatrixVariable("gVP", &viewProjection);
-	D3DXVECTOR2 cell = PickCell(currentInput);
-
-	if (currentInput.Mouse.buttonIsPressed[C_MOUSE_LEFT])
-	{
-		std::stringstream stream;
-		stream << "Cell: (" << cell.x << ", " << cell.y << ")";
-		mDebugRayInput.mConsole->RecieveInput(stream.str());
-		stream.str("");
-	}
-
-	mEffect->SetVectorVariable("gMarkedCell", &D3DXVECTOR4(cell.x, cell.y, 0.0, 0.0));
-}
-
-void Scene::Draw()
-{
-	mVertexBuffer->MakeActive();
-
-	mEffect->MakeActive();
-
-	for(UINT p = 0; p < mEffect->GetNumberOfPasses(); ++p)
-	{
-		mEffect->ApplyTechniquePass(p);
-		mDevice->Draw(mVertexBuffer->GetNumberOfElements(), 0);
-	}
-}
-
-void Scene::MouseButtonPressed(int index, const InputState& currentState)
-{
+	RECT result;
 	
-}
 
-void Scene::MouseButtonReleased(int index, const InputState& currentState)
-{
 
-}
-
-void Scene::MouseWheelMoved(short delta, const InputState& currentState) {}
-
-RECT Scene::GetVisibleGrid(const Camera& camera) const
-{
-
+	
+	return result;
 }
