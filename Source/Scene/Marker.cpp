@@ -22,7 +22,6 @@ void Marker::Update(const Camera& camera)
 void Marker::Draw()
 {
 	mBuffer->MakeActive();
-
 	mEffect->MakeActive();
 
 	for(UINT p = 0; p < mEffect->GetNumberOfPasses(); ++p)

@@ -71,11 +71,18 @@ namespace State
 	std::vector<T> OrderedDifference(const std::vector<T>& lhs, const std::vector<T>& rhs)
 	{
 		std::vector<T> result;
-		for (int i = 0; i < std::min<int>(lhs.size(), rhs.size()); ++i)
+		for (int i = 0; i < lhs.size(); ++i)
 		{
-			if (lhs[i] != rhs[i])
+			if (i >= rhs.size())
 			{
 				result.push_back(lhs[i]);
+			}
+			else
+			{
+				if (lhs[i] != rhs[i])
+				{
+					result.push_back(lhs[i]);
+				}
 			}
 		}
 
@@ -85,7 +92,6 @@ namespace State
 	void StateStack::UpdateStack()
 	{
 		// Compare the changes made to NextStack, and call OnPop/OnPush appropriately
-
 		StateVector movedElements(mStack.size());
 		StateVector removedElements(mStack.size());
 		StateVector addedElements(mStack.size());

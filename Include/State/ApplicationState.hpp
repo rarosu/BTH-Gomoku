@@ -14,6 +14,13 @@ class InputManager;
 namespace State
 {
 	/**
+		Constants for all states in Gomoku
+	*/
+	const StateID C_STATE_MENU = 1;
+	const StateID C_STATE_LOCAL_LOBBY = 2;
+	const StateID C_STATE_IN_GAME = 3;
+
+	/**
 		Abstract class for an application state
 
 		Every state the application can be in should
@@ -64,6 +71,7 @@ namespace State
 		static void PushState(StateID id);
 		static void PopState();
 		static void ChangeState(StateID id);
+		static void QuitApplication();
 	private:
 		/**
 			One instance of a registry and a stack

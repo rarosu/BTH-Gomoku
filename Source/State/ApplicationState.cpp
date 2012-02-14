@@ -53,4 +53,9 @@ namespace State
 		sStack.ChangeState(sRegistry.GetState(id));
 	}
 
+	void ApplicationState::QuitApplication()
+	{
+		sStack.ChangeState(NULL);
+	}
+
 }
