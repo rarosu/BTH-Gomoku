@@ -12,6 +12,9 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth,
 	mGrid = new Logic::Grid();
 	mScene = new Scene(mDeviceD3D);
 	mMarker = new Marker(mDeviceD3D, 6, D3DXVECTOR3(5, 1, 5));
+	mButton =  new Components::StandardButton(&mInputManager);
+	RECT pos = { 10, 300, 138, 332 };
+	mButton->Initialize(mDeviceD3D, pos, "Exit");
 	
 	Frustrum viewFrustrum;
 	viewFrustrum.nearDistance = 1.0f;
@@ -44,10 +47,13 @@ void Game::Update()
 	mConsole->Update(mGameTime, mInputManager.GetCurrent(), mInputManager.GetPrevious());
 	mScene->Update(mGrid, *mCamera);
 	mMarker->Update(*mCamera);
+	mButton->Update(mGameTime, mInputManager.GetCurrent(), mInputManager.GetPrevious());
 
-	if(GetAsyncKeyState(VK_ESCAPE))
+	if(mInputManager.GetCurrent().Keyboard.keyIsPressed[VK_ESCAPE]) // GetAsyncKeyState(VK_ESCAPE))
 		Quit();
-	if(GetAsyncKeyState(VK_CONTROL) && GetAsyncKeyState('T'))
+	if(mInputManager.GetCurrent().Keyboard.keyIsPressed[VK_CONTROL] && 
+		mInputManager.GetCurrent().Keyboard.keyIsPressed['T'] &&
+		!mInputManager.GetPrevious().Keyboard.keyIsPressed['T'])
 	{
 		mConsole->Toggle();
 	}
@@ -67,6 +73,7 @@ void Game::Draw()
 	mScene->Draw();
 	mMarker->Draw();
 	mConsole->Draw();
+	mButton->Draw();
 
 	RenderScene();
 }

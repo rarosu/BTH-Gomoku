@@ -22,6 +22,7 @@
     <ClCompile Include="Source\Components\StandardButton.cpp" />
     <ClCompile Include="Source\Components\Component.cpp" />
     <ClCompile Include="Source\Components\ComponentGroup.cpp" />
+    <ClCompile Include="Source\Components\Button.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -46,6 +47,7 @@
     <ClInclude Include="Include\Components\StandardButton.hpp" />
     <ClInclude Include="Include\Components\Component.hpp" />
     <ClInclude Include="Include\Components\ComponentGroup.hpp" />
+    <ClInclude Include="Include\Components\Button.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

@@ -28,6 +28,9 @@ namespace Components
 		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		void Draw();
 
+		void LostFocus();
+		void GotFocus();
+
 		// Methods inherited from KeyListener
 		void KeyPressed(int code);
 		void KeyReleased(int code);

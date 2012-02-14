@@ -81,6 +81,14 @@ namespace Components
 		mFont->WriteText(mStream.str(), position, D3DXCOLOR(0.0, 0.0, 0.0, 1.0));
 	}
 
+	void InputField::LostFocus()
+	{
+	}
+
+	void InputField::GotFocus()
+	{
+	}
+
 	void InputField::KeyPressed(int code)
 	{
 		if(code == VK_RETURN)

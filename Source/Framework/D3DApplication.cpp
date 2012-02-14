@@ -47,6 +47,8 @@ D3DApplication::~D3DApplication()
 // Create an application window and initialize it returning true if success, else false
 bool D3DApplication::InitWindowsApplication(HINSTANCE applicationHandle, LPCTSTR title, int showSetting)
 {
+	showSetting = SW_MAXIMIZE;
+
 	// Create a new window and specify its settings
 	WNDCLASSEX window;
 
@@ -60,7 +62,7 @@ bool D3DApplication::InitWindowsApplication(HINSTANCE applicationHandle, LPCTSTR
 	window.hIcon			= LoadIcon(0, IDI_APPLICATION);		// Window icon
 	window.hIconSm			= 0;								// No small icon version is needed
 	window.lpfnWndProc		= WindowProc;						// The window procedure to handle window messages
-	window.lpszClassName	= "GameWindow";					// Name of the window, used for identification
+	window.lpszClassName	= "GameWindow";						// Name of the window, used for identification
 	window.lpszMenuName		= 0;								// Since there are no menu for the window, value is 0
 
 	// Try to register the window "mold" with windows: if failed, show an error message and return false

@@ -124,6 +124,14 @@ namespace Components
 		mIsToggled = !mIsToggled;
 	}
 
+	void Console::LostFocus()
+	{
+	}
+
+	void Console::GotFocus()
+	{
+	}
+
 	void Console::RecieveInput(std::string input)
 	{
 		TextLine text;

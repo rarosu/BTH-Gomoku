@@ -31,4 +31,20 @@ namespace Components
 		for(it = mComponents.begin(); it != mComponents.end(); it++)
 			(*it)->Draw();
 	}
+
+	void ComponentGroup::LostFocus()
+	{
+		std::vector<Component*>::iterator it;
+		
+		for(it = mComponents.begin(); it != mComponents.end(); it++)
+			(*it)->LostFocus();
+	}
+
+	void ComponentGroup::GotFocus()
+	{
+		std::vector<Component*>::iterator it;
+		
+		for(it = mComponents.begin(); it != mComponents.end(); it++)
+			(*it)->GotFocus();
+	}
 }

@@ -22,6 +22,9 @@ namespace Components
 		void Draw();
 		void Toggle();
 
+		void LostFocus();
+		void GotFocus();
+
 		void RecieveInput(std::string input);
 		void SetTextColor(D3DXCOLOR newColor);
 

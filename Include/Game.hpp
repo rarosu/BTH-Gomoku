@@ -2,7 +2,6 @@
 #define GAME_HPP
 
 #include "D3DApplication.hpp"
-#include "StandardButton.hpp"
 #include "InputManager.hpp"
 #include "InputField.hpp"
 #include "GameTime.hpp"
@@ -12,6 +11,7 @@
 #include "Grid.hpp"
 #include "Marker.hpp"
 #include "Scene.hpp"
+#include "StandardButton.hpp"
 
 class Game : public D3DApplication
 {
@@ -31,6 +31,7 @@ private:
 	Scene*						mScene;
 	Camera*						mCamera;
 	Marker*						mMarker;
+	Components::StandardButton*	mButton;
 
 	Logic::Grid*	mGrid;
 protected:

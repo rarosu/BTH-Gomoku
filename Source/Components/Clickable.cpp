@@ -60,7 +60,10 @@ namespace Components
 			mPressed = false;
 
 			if(mHovered)
-				MouseReleased(index);	
+			{
+				SetFocusThis();
+				MouseReleased(index);
+			}
 		}
 	}
 

@@ -14,6 +14,8 @@ namespace Components
 
 		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		virtual void Draw() = 0;
+		virtual void LostFocus() = 0;
+		virtual void GotFocus() = 0;
 
 		bool IsPressed() const;
 		bool IsHovered() const;
@@ -31,13 +33,13 @@ namespace Components
 		virtual void MouseReleased(int buttonIndex) = 0;
 
 	private:
-		Clickable(const Clickable& copy) {}
-		Clickable& operator=(const Clickable& copy) {}
-
 		bool				mHovered;
 		bool				mPressed;
 
 		InputSubscription*	mManager;
+
+		Clickable(const Clickable& copy) {}
+		Clickable& operator=(const Clickable& copy) {}
 	};
 }
 #endif
