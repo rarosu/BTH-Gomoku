@@ -14,8 +14,6 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth,
 	RECT consolePos = { 0, 0, mScreenWidth, mScreenHeight / 2 };
 	mConsole = new Console(mDeviceD3D, consolePos, D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.0f), &mInputManager);
 
-
-
 	mViewFrustrum.nearDistance =	1.0f;
 	mViewFrustrum.farDistance =		1000.0f;
 	mViewFrustrum.fovY =			(float)D3DX_PI * 0.25f;
@@ -32,6 +30,9 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth,
 
 Game::~Game()
 {
+	SafeDelete(mConsole);
+	SafeDelete(mDefaultFont);
+
 	SafeDelete(mMenuState);
 	SafeDelete(mLocalLobbyState);
 	SafeDelete(mInGameState);
