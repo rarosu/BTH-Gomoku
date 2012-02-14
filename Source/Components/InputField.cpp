@@ -3,21 +3,29 @@
 namespace Components
 {
 	const int InputField::C_NUM_VERTICES = 4;
+	const float InputField::C_MARKER_SPEED = 500;
 
 	InputField::InputField(ID3D10Device* device, InputManager* manager, InputReciever* reciever, 
 		RECT position, GameFont* font)
+		: mDevice(device), mManager(manager), mBuffer(NULL), mEffect(NULL), mFont(NULL), 
+		  mReciever(NULL), mShowMarker(true), mMSSinceBlink(0.0f)
 	{
-		mDevice = device;
 		mPositionRect = position;
 
 		CreateBuffer();
 		CreateEffect();
 
-		manager->AddKeyListener(this);
+		mManager->AddKeyListener(this);
 		mReciever = reciever;
 		mFont = font;
 	
 		mEffect->SetVectorVariable("bgColor", &D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
+	}
+	
+	InputField::~InputField()
+	{
+		SafeDelete(mBuffer);
+		SafeDelete(mEffect);
 	}
 
 	void InputField::CreateBuffer()
@@ -63,6 +71,13 @@ namespace Components
 
 	void InputField::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
 	{
+		mMSSinceBlink += (float)gameTime.GetTimeSinceLastTick().Milliseconds;
+
+		if(mMSSinceBlink >= C_MARKER_SPEED)
+		{
+			mShowMarker = !mShowMarker;
+			mMSSinceBlink -= C_MARKER_SPEED;
+		}
 	}
 
 	void InputField::Draw()
@@ -78,7 +93,13 @@ namespace Components
 
 		int offset = 10;
 		POINT position = { mPositionRect.left + offset, mPositionRect.top };
-		mFont->WriteText(mStream.str(), position, D3DXCOLOR(0.0, 0.0, 0.0, 1.0));
+
+		std::string marker = " ";
+		if(mShowMarker)
+			marker = "|";
+		//mFont->WriteText(mStream.str() + marker, position, D3DXCOLOR(0.0, 0.0, 0.0, 1.0));
+		mFont->WriteText(mFirstString.str() + marker + mLastString.str(), 
+						 position, D3DXCOLOR(0.0, 0.0, 0.0, 1.0));
 	}
 
 	void InputField::LostFocus()
@@ -91,25 +112,89 @@ namespace Components
 
 	void InputField::KeyPressed(int code)
 	{
-		if(code == VK_RETURN)
-		{
-			if(mStream.str() != "")
-			{
-				if(mReciever)
-				{
-					mReciever->RecieveInput(mStream.str());
-					mStream.str("");
-				}
-			}
-		}
-		else if(code == VK_BACK)
-		{
-			std::string temp = mStream.str();
-			temp = temp.substr(0, temp.size() - 1);
+		std::string first, letter, last;
 
-			mStream.str("");
-			mStream << temp;
+		switch(code)
+		{
+			case VK_RETURN:
+				if(mFirstString.str() != "" || mLastString.str() != "")
+				{
+					if(mReciever)
+					{
+						//mReciever->RecieveInput(mStream.str());
+						//mStream.str("");
+						mReciever->RecieveInput(mFirstString.str() + mLastString.str());
+						mFirstString.str("");
+						mLastString.str("");
+					}
+				}
+				break;
+			case VK_BACK:
+				first = mFirstString.str();
+				first = first.substr(0, first.size() - 1);
+
+				mFirstString.str("");
+				mFirstString << first;
+				break;
+			case VK_LEFT:
+				if(mFirstString.str() != "")
+				{
+					first = mFirstString.str();
+					last = mLastString.str();
+					letter = first.substr(first.size() - 1, first.size());
+					first = first.substr(0, first.size() - 1);
+
+					mFirstString.str("");
+					mFirstString << first;
+					mLastString.str("");
+					mLastString << letter << last;
+				}
+				break;
+			case VK_RIGHT:
+				if(mLastString.str() != "")
+				{
+					first = mFirstString.str();
+					last = mLastString.str();
+					letter = last.substr(0, 1);
+					last = last.substr(1, last.size());
+
+					mFirstString.str("");
+					mFirstString << first << letter;
+					mLastString.str("");
+					mLastString << last;
+				}
+				break;
 		}
+
+		//if(code == VK_RETURN)
+		//{
+		//	//if(mStream.str() != "")
+		//	if(mFirstString.str() != "" || mLastString.str() != "")
+		//	{
+		//		if(mReciever)
+		//		{
+		//			//mReciever->RecieveInput(mStream.str());
+		//			//mStream.str("");
+		//			mReciever->RecieveInput(mFirstString.str() + mLastString.str());
+		//			mFirstString.str("");
+		//			
+		//		}
+		//	}
+		//}
+		//else if(code == VK_BACK)
+		//{
+		//	/*std::string temp = mStream.str();
+		//	temp = temp.substr(0, temp.size() - 1);*/
+
+		//	/*mStream.str("");
+		//	mStream << temp;*/
+
+		//	std::string temp = mFirstString.str();
+		//	temp = temp.substr(0, temp.size() - 1);
+
+		//	mFirstString.str("");
+		//	mFirstString << temp;
+		//}
 	}
 
 	void InputField::KeyReleased(int code)
@@ -118,6 +203,7 @@ namespace Components
 
 	void InputField::CharEntered(unsigned char symbol)
 	{
-		mStream << symbol;
+		//mStream << symbol;
+		mFirstString << symbol;
 	}
 }

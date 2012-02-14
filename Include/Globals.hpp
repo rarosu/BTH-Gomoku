@@ -4,6 +4,8 @@
 #include <D3DX10.h>
 
 extern D3DXMATRIX				gViewPortMatrix;
+extern const D3DXCOLOR			C_COLOR_WINDOW_BG;
+extern const D3DXCOLOR			C_COLOR_COMPONENT_BG;
 
 void UpdateViewportMatrix(int newWidth, int newHeight);
 D3DXVECTOR2 TransformToViewport(const D3DXVECTOR2& vector);

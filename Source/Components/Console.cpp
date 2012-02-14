@@ -30,7 +30,15 @@ namespace Components
 		mScrollbar->Initialize(mDevice, scrollbarPos);
 
 		mInputField = new InputField(mDevice, manager, this, inputFieldPos, mFont);
-		mEffect->SetVectorVariable("bgColor", &D3DXVECTOR4(0.85f, 0.75f, 0.65f, 1.0));
+		mEffect->SetVectorVariable("bgColor", &(D3DXVECTOR4)C_COLOR_WINDOW_BG);
+	}
+
+	Console::~Console() throw()
+	{
+		SafeDelete(mEffect);
+		SafeDelete(mVertexBuffer);
+		SafeDelete(mInputField);
+		SafeDelete(mScrollbar);
 	}
 
 	void Console::CreateBuffer()
@@ -94,6 +102,7 @@ namespace Components
 			Scroll(false);
 		}
 
+		mInputField->Update(gameTime, currInputState, prevInputState);
 		mScrollbar->Update(gameTime, currInputState, prevInputState);
 	}
 

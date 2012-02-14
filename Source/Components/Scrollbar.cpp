@@ -10,12 +10,21 @@ namespace Components
 		manager->AddMouseListener(this);
 	}
 
+	Scrollbar::~Scrollbar() throw()
+	{
+		SafeDelete(mBuffer);
+		SafeDelete(mEffect);
+		SafeDelete(mBtnUp);
+		SafeDelete(mBtnDown);
+	}
+
 	void Scrollbar::Initialize(ID3D10Device* device, RECT position)
 	{
 		mDevice = device;
 		mPositionRect = position;
+		LONG buttonHeight = position.right - position.left;	// Button height is same as its width
 
-		CreateBuffer();
+		CreateBuffer((float)buttonHeight / 2);
 		CreateEffect();
 
 		Button::Graphics graphics1, graphics2;
@@ -28,25 +37,25 @@ namespace Components
 		D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/btnDPressed.png", NULL, NULL, 
 											   &graphics2.textureDown, NULL);
 
-		RECT pos1 = { position.left, position.top, position.right, position.top + (position.right - position.left) };
+		RECT pos1 = { position.left, position.top, position.right, position.top + buttonHeight };
 
-		RECT pos2 = { position.left, position.bottom - (position.right - position.left), position.right, position.bottom };
+		RECT pos2 = { position.left, position.bottom - buttonHeight, position.right, position.bottom };
 		
 		mBtnUp->Initialize(device, pos1, graphics1);
 		mBtnDown->Initialize(device, pos2, graphics2);
 
-		mEffect->SetVectorVariable("bgColor", &D3DXVECTOR4(0.8f, 0.7f, 0.6f, 1.0));
+		mEffect->SetVectorVariable("bgColor", &(D3DXVECTOR4)C_COLOR_COMPONENT_BG);
 	}
 
-	void Scrollbar::CreateBuffer()
+	void Scrollbar::CreateBuffer(float offset)
 	{
 		const int numVertices = 4;
 		D3DXVECTOR2 vertices[numVertices];
 
-		D3DXVECTOR2 point1 = D3DXVECTOR2((float)mPositionRect.left, (float)mPositionRect.top);
-		D3DXVECTOR2 point2 = D3DXVECTOR2((float)mPositionRect.right, (float)mPositionRect.top);
-		D3DXVECTOR2 point3 = D3DXVECTOR2((float)mPositionRect.left, (float)mPositionRect.bottom);
-		D3DXVECTOR2 point4 = D3DXVECTOR2((float)mPositionRect.right, (float)mPositionRect.bottom);
+		D3DXVECTOR2 point1 = D3DXVECTOR2((float)mPositionRect.left, (float)mPositionRect.top + offset);
+		D3DXVECTOR2 point2 = D3DXVECTOR2((float)mPositionRect.right, (float)mPositionRect.top + offset);
+		D3DXVECTOR2 point3 = D3DXVECTOR2((float)mPositionRect.left, (float)mPositionRect.bottom - offset);
+		D3DXVECTOR2 point4 = D3DXVECTOR2((float)mPositionRect.right, (float)mPositionRect.bottom - offset);
 
 		vertices[0]	= TransformToViewport(point1);
 		vertices[1]	= TransformToViewport(point2);
@@ -130,9 +139,9 @@ namespace Components
 
 	void Scrollbar::MouseReleased(int buttonIndex)
 	{
-		if(mBtnUp->IsHovered())
+		if(mBtnUp->IsHovered() && mScrollable)
 			mScrollable->Scroll(true);
-		else if(mBtnDown->IsHovered())
+		else if(mBtnDown->IsHovered() && mScrollable)
 			mScrollable->Scroll(false);
 	}
 }

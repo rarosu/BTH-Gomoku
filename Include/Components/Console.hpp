@@ -19,6 +19,7 @@ namespace Components
 	{
 	public:
 		Console(ID3D10Device* device, RECT position, D3DXCOLOR bgColor, InputManager* manager, UINT size = 100);
+		~Console() throw();
 
 		void Toggle();
 		void SetTextColor(D3DXCOLOR newColor);
@@ -55,7 +56,6 @@ namespace Components
 		Scrollbar*					mScrollbar;
 
 		bool						mIsToggled;
-		//RECT						mPosition;
 		std::stringstream			mStream;
 		std::deque<TextLine>		mOutput;
 		int							mMaxNumRows;

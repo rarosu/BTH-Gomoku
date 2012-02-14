@@ -16,6 +16,8 @@ namespace Components
 	{
 	public:
 		Scrollbar(InputSubscription* manager, Scrollable* scrollable);
+		~Scrollbar() throw();
+
 		void Initialize(ID3D10Device* device, RECT position);
 		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		void Draw();
@@ -37,7 +39,7 @@ namespace Components
 		Button*						mBtnDown;
 		Scrollable*					mScrollable;
 
-		void CreateBuffer();
+		void CreateBuffer(float offset);
 		void CreateEffect();
 	};
 }

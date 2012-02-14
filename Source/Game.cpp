@@ -49,7 +49,7 @@ void Game::Update()
 	mMarker->Update(*mCamera);
 	mButton->Update(mGameTime, mInputManager.GetCurrent(), mInputManager.GetPrevious());
 
-	if(mInputManager.GetCurrent().Keyboard.keyIsPressed[VK_ESCAPE]) // GetAsyncKeyState(VK_ESCAPE))
+	if(mInputManager.GetCurrent().Keyboard.keyIsPressed[VK_ESCAPE])
 		Quit();
 	if(mInputManager.GetCurrent().Keyboard.keyIsPressed[VK_CONTROL] && 
 		mInputManager.GetCurrent().Keyboard.keyIsPressed['T'] &&

@@ -25,6 +25,8 @@ namespace Components
 	public:
 		InputField(ID3D10Device* device, InputManager* manager, InputReciever* reciever, 
 			RECT position, GameFont* font);
+		~InputField() throw();
+
 		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		void Draw();
 
@@ -41,11 +43,16 @@ namespace Components
 		Buffer*						mBuffer;
 		Effect*						mEffect;
 
-		//RECT						mPosition;
 		GameFont*					mFont;
-		std::stringstream			mStream;
+		//std::stringstream			mStream;
+		std::stringstream			mFirstString;
+		std::stringstream			mLastString;
 		InputReciever*				mReciever;
-
+		InputManager*				mManager;
+		bool						mShowMarker;
+		float						mMSSinceBlink;
+		
+		static const float			C_MARKER_SPEED;
 		static const int			C_NUM_VERTICES;
 
 		void CreateBuffer();
