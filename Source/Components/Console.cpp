@@ -20,11 +20,17 @@ namespace Components
 
 		mMaxNumRows = (int)((GetHeight() - textHeight) / textHeight);
 
-		RECT inputFieldPos = position;
+		RECT inputFieldPos = mPositionRect;
 		inputFieldPos.top = inputFieldPos.bottom - 20;
 
+		int scrollWidth = 20;
+		RECT scrollbarPos = { mPositionRect.right - scrollWidth, mPositionRect.top, 
+							  mPositionRect.right, mPositionRect.bottom };
+		mScrollbar = new Scrollbar(manager, this);
+		mScrollbar->Initialize(mDevice, scrollbarPos);
+
 		mInputField = new InputField(mDevice, manager, this, inputFieldPos, mFont);
-		mEffect->SetVectorVariable("consoleColor", &(D3DXVECTOR4)bgColor);
+		mEffect->SetVectorVariable("bgColor", &D3DXVECTOR4(0.85f, 0.75f, 0.65f, 1.0));
 	}
 
 	void Console::CreateBuffer()
@@ -44,12 +50,12 @@ namespace Components
 		mVertexBuffer = new Buffer();
 		BufferInformation bufferDesc;
 
-		bufferDesc.type =					VertexBuffer;
-		bufferDesc.usage =					Buffer_Default;
-		bufferDesc.numberOfElements =		C_NUM_VERTICES;
-		bufferDesc.firstElementPointer =	vertices;
-		bufferDesc.elementSize =			sizeof(D3DXVECTOR2);
-		bufferDesc.topology =				D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+		bufferDesc.type						= VertexBuffer;
+		bufferDesc.usage					= Buffer_Default;
+		bufferDesc.numberOfElements			= C_NUM_VERTICES;
+		bufferDesc.firstElementPointer		= vertices;
+		bufferDesc.elementSize				= sizeof(D3DXVECTOR2);
+		bufferDesc.topology					= D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
 
 		mVertexBuffer->Initialize(mDevice, bufferDesc);
 	}
@@ -69,7 +75,7 @@ namespace Components
 		};
 
 		mEffect = new Effect();
-		mEffect->Initialize(mDevice, "Resources/Effects/Console.fx", vertexDesc,
+		mEffect->Initialize(mDevice, "Resources/Effects/Basic2D.fx", vertexDesc,
 			sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
 	}
 
@@ -81,14 +87,14 @@ namespace Components
 
 		if(currInputState.Keyboard.keyIsPressed[VK_UP] && !prevInputState.Keyboard.keyIsPressed[VK_UP])
 		{
-			--mFirstShowRow;
-			mFirstShowRow = Clamp<int>(mFirstShowRow, 0, mOutput.size());
+			Scroll(true);
 		}
 		else if(currInputState.Keyboard.keyIsPressed[VK_DOWN] && !prevInputState.Keyboard.keyIsPressed[VK_DOWN])
 		{
-			++mFirstShowRow;
-			mFirstShowRow = Clamp<int>(mFirstShowRow, 0, std::max<int>(0, mOutput.size() - mMaxNumRows));
+			Scroll(false);
 		}
+
+		mScrollbar->Update(gameTime, currInputState, prevInputState);
 	}
 
 	// Draw the console
@@ -116,6 +122,7 @@ namespace Components
 		}
 	
 		mInputField->Draw();
+		mScrollbar->Draw();
 	}
 
 	// Toggle showing of the console
@@ -130,6 +137,20 @@ namespace Components
 
 	void Console::GotFocus()
 	{
+	}
+
+	void Console::Scroll(bool isUp)
+	{
+		if(isUp)
+		{
+			--mFirstShowRow;
+			mFirstShowRow = Clamp<int>(mFirstShowRow, 0, mOutput.size());
+		}
+		else
+		{
+			++mFirstShowRow;
+			mFirstShowRow = Clamp<int>(mFirstShowRow, 0, std::max<int>(0, mOutput.size() - mMaxNumRows));
+		}
 	}
 
 	void Console::RecieveInput(std::string input)

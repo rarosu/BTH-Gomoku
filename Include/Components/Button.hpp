@@ -53,15 +53,6 @@ namespace Components
 		void MouseExited();
 		void MousePressed(int buttonIndex);
 		void MouseReleased(int buttonIndex);
-
-		/*GameFont*					mFont;
-		std::string					mCaption;
-		D3DXCOLOR					mTextColor;
-		D3DXCOLOR					mIdleColor;
-		D3DXCOLOR					mHoverColor;
-		D3DXCOLOR					mActiveColor;*/
-
-		
 	};
 }
 #endif

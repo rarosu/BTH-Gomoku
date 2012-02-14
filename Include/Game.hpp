@@ -11,7 +11,7 @@
 #include "Grid.hpp"
 #include "Marker.hpp"
 #include "Scene.hpp"
-#include "StandardButton.hpp"
+#include "TextButton.hpp"
 
 class Game : public D3DApplication
 {
@@ -31,7 +31,7 @@ private:
 	Scene*						mScene;
 	Camera*						mCamera;
 	Marker*						mMarker;
-	Components::StandardButton*	mButton;
+	Components::TextButton*		mButton;
 
 	Logic::Grid*	mGrid;
 protected:

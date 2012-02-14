@@ -157,7 +157,8 @@
     <ClCompile Include="Source\Components\Button.cpp" />
     <ClCompile Include="Source\Components\Component.cpp" />
     <ClCompile Include="Source\Components\ComponentGroup.cpp" />
-    <ClCompile Include="Source\Components\StandardButton.cpp" />
+    <ClCompile Include="Source\Components\Scrollbar.cpp" />
+    <ClCompile Include="Source\Components\TextButton.cpp" />
     <ClCompile Include="Source\Components\Clickable.cpp" />
     <ClCompile Include="Source\Framework\Buffer.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
@@ -181,7 +182,8 @@
     <ClInclude Include="Include\Components\Button.hpp" />
     <ClInclude Include="Include\Components\Component.hpp" />
     <ClInclude Include="Include\Components\ComponentGroup.hpp" />
-    <ClInclude Include="Include\Components\StandardButton.hpp" />
+    <ClInclude Include="Include\Components\Scrollbar.hpp" />
+    <ClInclude Include="Include\Components\TextButton.hpp" />
     <ClInclude Include="Include\Components\Clickable.hpp" />
     <ClInclude Include="Include\Framework\Buffer.hpp" />
     <ClInclude Include="Include\Camera.hpp" />
@@ -205,11 +207,17 @@
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="Resources\Effects\Button.fx" />
-    <None Include="Resources\Effects\Console.fx" />
+    <None Include="Resources\Effects\Basic2D.fx" />
     <None Include="Resources\Effects\Grid.fx" />
     <None Include="Effects\InputField.fx" />
     <None Include="Resources\Effects\Marker.fx" />
+    <None Include="Resources\Textures\btnDIdle.png" />
+    <None Include="Resources\Textures\btnDPressed.png" />
+    <None Include="Resources\Textures\btnUIdle.png" />
+    <None Include="Resources\Textures\btnUPressed.png" />
     <None Include="Resources\Textures\button.png" />
+    <None Include="Resources\Textures\buttonDown.png" />
+    <None Include="Resources\Textures\buttonUp.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

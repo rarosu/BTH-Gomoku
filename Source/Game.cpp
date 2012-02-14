@@ -12,10 +12,10 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth,
 	mGrid = new Logic::Grid();
 	mScene = new Scene(mDeviceD3D);
 	mMarker = new Marker(mDeviceD3D, 6, D3DXVECTOR3(5, 1, 5));
-	mButton =  new Components::StandardButton(&mInputManager);
-	RECT pos = { 10, 300, 138, 332 };
-	mButton->Initialize(mDeviceD3D, pos, "Exit");
-	
+	mButton =  new Components::TextButton(&mInputManager);
+	RECT posB = { 10, 400, 138, 432 };
+	mButton->Initialize(mDeviceD3D, posB, "Exit");
+
 	Frustrum viewFrustrum;
 	viewFrustrum.nearDistance = 1.0f;
 	viewFrustrum.farDistance = 1000.0f;

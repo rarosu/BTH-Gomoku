@@ -25,8 +25,6 @@ namespace Components
 		void MouseWheelMoved(short delta);
 
 	protected:
-		//RECT			mPosition;
-
 		virtual void MouseEntered() = 0;
 		virtual void MouseExited() = 0;
 		virtual void MousePressed(int buttonIndex) = 0;

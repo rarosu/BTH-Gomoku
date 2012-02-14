@@ -15,7 +15,7 @@ RasterizerState NoCulling
 
 cbuffer cbEveryFrame
 {
-	float4		consoleColor;
+	float4		bgColor;
 }
 
 PS_INPUT VS(VS_INPUT input)
@@ -29,7 +29,7 @@ PS_INPUT VS(VS_INPUT input)
 
 float4 PS(PS_INPUT input) : SV_TARGET0
 {
-	return consoleColor;
+	return bgColor;
 }
 
 technique10 DrawTechnique

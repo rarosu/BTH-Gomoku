@@ -1,14 +1,14 @@
-#include "StandardButton.hpp"
+#include "TextButton.hpp"
 
 namespace Components
 {
-	StandardButton::StandardButton(InputSubscription* manager)
+	TextButton::TextButton(InputSubscription* manager)
 		: Button(manager),
 		mFont (NULL), mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0))
 	{
 	}
 
-	void StandardButton::Initialize(ID3D10Device* device, RECT position, std::string caption)
+	void TextButton::Initialize(ID3D10Device* device, RECT position, std::string caption)
 	{
 		Graphics buttonGraphics;
 		buttonGraphics.hoverColor = D3DXCOLOR(0.8f, 0.8f, 0.0f, 1.0f);
@@ -23,7 +23,7 @@ namespace Components
 		mCaption = caption;
 	}
 
-	void StandardButton::Draw()
+	void TextButton::Draw()
 	{
 		Button::Draw();
 		mFont->WriteText(mCaption, &mPositionRect, mTextColor, GameFont::Center, GameFont::Middle);

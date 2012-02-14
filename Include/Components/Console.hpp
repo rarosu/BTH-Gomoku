@@ -11,22 +11,29 @@
 #include "GameTime.hpp"
 #include "Globals.hpp"
 #include "InputField.hpp"
+#include "Scrollbar.hpp"
 
 namespace Components
 {
-	class Console : public Component, public InputReciever /*: public KeyListener*/
+	class Console : public Component, public Scrollable, public InputReciever /*: public KeyListener*/
 	{
 	public:
 		Console(ID3D10Device* device, RECT position, D3DXCOLOR bgColor, InputManager* manager, UINT size = 100);
+
+		void Toggle();
+		void SetTextColor(D3DXCOLOR newColor);
+
+		// Methods inherited from Component
 		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		void Draw();
-		void Toggle();
-
 		void LostFocus();
 		void GotFocus();
 
+		// Methods inherited from Scrollable
+		void Scroll(bool isUp);
+
+		// Methods inherited from InputReciever
 		void RecieveInput(std::string input);
-		void SetTextColor(D3DXCOLOR newColor);
 
 		/*void KeyPressed(int code);
 		void KeyReleased(int code);
@@ -45,6 +52,7 @@ namespace Components
 		GameFont*					mFont;
 		D3DXCOLOR					mTextColor;
 		InputField*					mInputField;
+		Scrollbar*					mScrollbar;
 
 		bool						mIsToggled;
 		//RECT						mPosition;

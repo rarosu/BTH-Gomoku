@@ -138,6 +138,6 @@ namespace Components
 	void Button::MouseReleased(int buttonIndex)
 	{
 		mEffect->SetVectorVariable("buttonColor", &(D3DXVECTOR4)mGraphics.hoverColor);
-		MessageBox(NULL, "Clicked!", "Test", 0);
+		mEffect->SetResourceVariable("textureBase", mGraphics.textureUp);
 	}
 }

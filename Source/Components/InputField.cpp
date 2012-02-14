@@ -17,7 +17,7 @@ namespace Components
 		mReciever = reciever;
 		mFont = font;
 	
-		mEffect->SetVectorVariable("consoleColor", &D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
+		mEffect->SetVectorVariable("bgColor", &D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 
 	void InputField::CreateBuffer()
@@ -57,7 +57,7 @@ namespace Components
 		};
 
 		mEffect = new Effect();
-		mEffect->Initialize(mDevice, "Resources/Effects/Console.fx", vertexDesc,
+		mEffect->Initialize(mDevice, "Resources/Effects/Basic2D.fx", vertexDesc,
 			sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
 	}
 

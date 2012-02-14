@@ -1,5 +1,5 @@
-#ifndef STANDARDBUTTON_HPP
-#define STANDARDBUTTON_HPP
+#ifndef TEXTBUTTON_HPP
+#define TEXTBUTTON_HPP
 
 #include <string>
 
@@ -11,10 +11,10 @@
 
 namespace Components
 {
-	class StandardButton : public Button
+	class TextButton : public Button
 	{
 	public:
-		StandardButton(InputSubscription* manager);
+		TextButton(InputSubscription* manager);
 	
 		void Initialize(ID3D10Device* device, RECT position, std::string caption);
 		//void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
