@@ -2,6 +2,7 @@
 #define GAME_HPP
 
 #include "D3DApplication.hpp"
+#include "StandardButton.hpp"
 #include "InputManager.hpp"
 #include "InputField.hpp"
 #include "GameTime.hpp"
@@ -12,27 +13,32 @@
 #include "Marker.hpp"
 #include "Scene.hpp"
 
+#include "MenuState.hpp"
+#include "LocalLobbyState.hpp"
+#include "InGameState.hpp"
+
 class Game : public D3DApplication
 {
 public:
 	Game(HINSTANCE applicationInstance, LPCTSTR windowTitle = "GameWindow", 
 		UINT windowWidth = CW_USEDEFAULT, UINT windowHeight = CW_USEDEFAULT);
 	virtual ~Game();
+
 	virtual void Update();
 	virtual void Draw();
 	virtual LRESULT HandleAppMessages(UINT message, WPARAM wParam, LPARAM lParam);
 
 private:
-	GameTime		mGameTime;
-	GameFont*		mDefaultFont;
-	Console*		mConsole;
-	InputManager	mInputManager;
-	Scene*			mScene;
-	Camera*			mCamera;
-	Marker*			mMarker;
-	Marker*			mCenterMarker;
+	GameTime			mGameTime;
+	GameFont*			mDefaultFont;
+	Console*			mConsole;
+	InputManager		mInputManager;
 
-	Logic::Grid*	mGrid;
+	State::MenuState*			mMenuState;
+	State::LocalLobbyState*		mLocalLobbyState;
+	State::InGameState*			mInGameState;
+
+	Frustrum mViewFrustrum;
 protected:
 	virtual void ProgramLoop();
 };

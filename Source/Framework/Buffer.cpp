@@ -76,6 +76,7 @@ void Buffer::MakeActive()
 	{
 		case VertexBuffer:
 			mDevice->IASetVertexBuffers(0, 1, &mBuffer, &mDescription.elementSize, &offset);
+			mDevice->IASetPrimitiveTopology(mDescription.topology);
 			break;
 		case IndexBuffer:
 			mDevice->IASetIndexBuffer(mBuffer, DXGI_FORMAT_R32_UINT, offset);

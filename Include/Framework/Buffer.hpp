@@ -19,11 +19,12 @@ enum BufferUsage
 
 struct BufferInformation
 {
-	BufferType		type;
-	UINT			elementSize;
-	int				numberOfElements;
-	void*			firstElementPointer;
-	BufferUsage		usage;
+	BufferType					type;
+	UINT						elementSize;
+	int							numberOfElements;
+	void*						firstElementPointer;
+	BufferUsage					usage;
+	D3D_PRIMITIVE_TOPOLOGY		topology;
 };
 
 class Buffer

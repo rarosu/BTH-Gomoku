@@ -44,11 +44,12 @@ void InputField::CreateBuffer()
 	mBuffer = new Buffer();
 	BufferInformation bufferDesc;
 
-	bufferDesc.type = VertexBuffer;
-	bufferDesc.usage = Buffer_Default;
-	bufferDesc.numberOfElements = C_NUM_VERTICES;
-	bufferDesc.firstElementPointer = vertices;
-	bufferDesc.elementSize = sizeof(D3DXVECTOR2);
+	bufferDesc.type =					VertexBuffer;
+	bufferDesc.usage =					Buffer_Default;
+	bufferDesc.numberOfElements =		C_NUM_VERTICES;
+	bufferDesc.firstElementPointer =	vertices;
+	bufferDesc.elementSize =			sizeof(D3DXVECTOR2);
+	bufferDesc.topology =				D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
 
 	mBuffer->Initialize(mDevice, bufferDesc);
 }
@@ -68,7 +69,7 @@ void InputField::CreateEffect()
 	};
 
 	mEffect = new Effect();
-	mEffect->Initialize(mDevice, "Effects/Console.fx", D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, vertexDesc,
+	mEffect->Initialize(mDevice, "Resources/Effects/Console.fx", vertexDesc,
 		sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
 }
 
@@ -80,7 +81,7 @@ void InputField::Draw()
 	for(UINT p = 0; p < mEffect->GetNumberOfPasses(); ++p)
 	{
 		mEffect->ApplyTechniquePass(p);
-		mDevice->Draw(C_NUM_VERTICES, 0);
+		mDevice->Draw(mBuffer->GetNumberOfElements(), 0);
 	}
 
 	int offset = 10;

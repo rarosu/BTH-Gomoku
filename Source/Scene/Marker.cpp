@@ -23,7 +23,6 @@ void Marker::Update(const Camera& camera)
 void Marker::Draw()
 {
 	mBuffer->MakeActive();
-
 	mEffect->MakeActive();
 
 	for(UINT p = 0; p < mEffect->GetNumberOfPasses(); ++p)
@@ -47,11 +46,12 @@ void Marker::CreateBuffer(int size)
 	mBuffer = new Buffer();
 	BufferInformation bufferDesc;
 
-	bufferDesc.type = VertexBuffer;
-	bufferDesc.usage = Buffer_Default;
-	bufferDesc.numberOfElements = 4;
-	bufferDesc.firstElementPointer = vertices;
-	bufferDesc.elementSize = sizeof(D3DXVECTOR3);
+	bufferDesc.type =					VertexBuffer;
+	bufferDesc.usage =					Buffer_Default;
+	bufferDesc.numberOfElements =		4;
+	bufferDesc.firstElementPointer =	vertices;
+	bufferDesc.elementSize =			sizeof(D3DXVECTOR3);
+	bufferDesc.topology =				D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
 
 	mBuffer->Initialize(mDevice, bufferDesc);
 }
@@ -71,7 +71,7 @@ void Marker::CreateEffect()
 	};
 
 	mEffect = new Effect();
-	mEffect->Initialize(mDevice, "Effects/Marker.fx", D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP, vertexDesc,
+	mEffect->Initialize(mDevice, "Resources/Effects/Marker.fx", vertexDesc,
 		sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
 }
 

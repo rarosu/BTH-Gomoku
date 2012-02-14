@@ -1,65 +1,79 @@
 #include "Game.hpp"
 
 Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth, UINT windowHeight) : 
-	D3DApplication(applicationInstance, windowTitle, windowWidth, windowHeight)
+	D3DApplication(applicationInstance, windowTitle, windowWidth, windowHeight),
+	mMenuState(NULL),
+	mLocalLobbyState(NULL),
+	mInGameState(NULL),
+	mDefaultFont(NULL),
+	mConsole(NULL)
 {
 	UpdateViewportMatrix(mScreenWidth, mScreenHeight);
 
 	mDefaultFont = new GameFont(mDeviceD3D, "Times New Roman", 24);
-	RECT consolePos = { 0, 0, mScreenWidth, mScreenHeight / 4 };
-	mConsole = new Console(mDeviceD3D, consolePos, D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.0f),
-		&mInputManager);
-	mGrid = new Logic::Grid();
-	mScene = new Scene(mDeviceD3D, &mInputManager);
-	mMarker = new Marker(mDeviceD3D, 6, D3DXVECTOR3(5, 1, 5), D3DXCOLOR(0.0, 0.0, 0.0, 1.0));
-	mCenterMarker = new Marker(mDeviceD3D, 3, D3DXVECTOR3(0.0, 1.0, 0.0), D3DXCOLOR(1.0, 0.0, 0.0, 1.0));
-	
-	Frustrum viewFrustrum;
-	viewFrustrum.nearDistance = 1.0f;
-	viewFrustrum.farDistance = 1000.0f;
-	viewFrustrum.fovY = (float)D3DX_PI * 0.25f;
-	viewFrustrum.aspectRatio = (float) mScreenWidth / (float) mScreenHeight;
-	
-	mCamera = new Camera(D3DXVECTOR3(0, 0, 0), D3DXVECTOR3(0, -1.0f, 2.0f), D3DXVECTOR3(0, 1.0f, 0), viewFrustrum, &mInputManager);
+	RECT consolePos = { 0, 0, mScreenWidth, mScreenHeight / 2 };
+	mConsole = new Console(mDeviceD3D, consolePos, D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.0f), &mInputManager);
+
+	mViewFrustrum.nearDistance =	1.0f;
+	mViewFrustrum.farDistance =		1000.0f;
+	mViewFrustrum.fovY =			(float)D3DX_PI * 0.25f;
+	mViewFrustrum.aspectRatio =		(float) mScreenWidth / (float) mScreenHeight;
+
+	mMenuState = new State::MenuState(State::C_STATE_MENU);
+	mLocalLobbyState = new State::LocalLobbyState(State::C_STATE_LOCAL_LOBBY);
+	mInGameState = new State::InGameState(State::C_STATE_IN_GAME, mDeviceD3D, mViewFrustrum);
+
+	// Start the application in InGameState
+	State::ApplicationState::sStack.ChangeState(mInGameState);
+	State::ApplicationState::sStack.UpdateStack();
 }
 
 Game::~Game()
 {
-	SafeDelete(mDefaultFont);
-	
 	SafeDelete(mConsole);
-	SafeDelete(mScene);
-	SafeDelete(mCamera);
+	SafeDelete(mDefaultFont);
 
-	SafeDelete(mGrid);
-	SafeDelete(mMarker);
+	SafeDelete(mMenuState);
+	SafeDelete(mLocalLobbyState);
+	SafeDelete(mInGameState);
 }
 
 //  What happens every loop of the program (ie updating and drawing the game)
 void Game::ProgramLoop()
 {
-	Update();
-	Draw();
+	// Make sure the next state is valid - if a NULL state has been specified,
+	// the program will exit
+	if (State::ApplicationState::sStack.GetNextState() != NULL)
+	{
+		Update();
+		Draw();
+	}
+	else
+	{
+		Quit();
+	}
 }
 
 // Update the game
 void Game::Update()
 {
-	DebugRayInput rayInput;
-	rayInput.mCamera = mCamera;
-	rayInput.mConsole = mConsole;
-	rayInput.mMarker = mMarker;
-	rayInput.mScreenHeight = mScreenHeight;
-	rayInput.mScreenWidth = mScreenWidth;
-	rayInput.mAspectRatio = (float) mScreenWidth / (float) mScreenHeight;
+	// Update the state stack
+	State::ApplicationState::sStack.UpdateStack();
 
+	// Update game time, input and console
 	mGameTime.Update();
-	mCamera->Update(mInputManager.GetPrevious(), mInputManager.GetCurrent(), mGameTime);
+	mInputManager.Update();
 	mConsole->Update(mGameTime);
-	mScene->Update(mGrid, *mCamera, mInputManager.GetCurrent(), rayInput);
-	mMarker->Update(*mCamera);
-	mCenterMarker->Update(*mCamera);
 
+	// Update the topmost state
+	State::ApplicationState::sStack.UpdateState(mInputManager, mGameTime);
+
+
+
+	/**
+		TODO: Change this to use input manager instead of async checks
+	*/
+	/*
 	if(GetAsyncKeyState(VK_ESCAPE))
 		Quit();
 	if(GetAsyncKeyState(VK_CONTROL) && GetAsyncKeyState('T'))
@@ -70,8 +84,9 @@ void Game::Update()
 		mConsole->SetTextColor(D3DXCOLOR(1.0, 0.0, 0.0, 1.0));
 	if(GetAsyncKeyState(VK_F8))
 		mConsole->SetTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0));
-
-	mInputManager.Update();
+	*/
+	/**
+	*/
 }
 
 // Draw the scene
@@ -79,11 +94,13 @@ void Game::Draw()
 {
 	ClearScene();
 	
-	mScene->Draw();
-	mConsole->Draw();
-	mMarker->Draw();
-	mCenterMarker->Draw();
+	// Draw the topmost state
+	State::ApplicationState::sStack.DrawState();
 
+	// Draw the console on top of everything else
+	mConsole->Draw();
+	
+	// Swap backbuffer
 	RenderScene();
 }
 

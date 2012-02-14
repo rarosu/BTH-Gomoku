@@ -89,12 +89,12 @@ void InputManager::HandleCharPress(WPARAM wParam, LPARAM lParam)
 		(*it)->CharEntered((unsigned char)wParam, mCurrentState);
 }
 
-const InputState& InputManager::GetPrevious()
+const InputState& InputManager::GetPrevious() const
 {
 	return mPreviousState;
 }
 
-const InputState& InputManager::GetCurrent()
+const InputState& InputManager::GetCurrent() const
 {
 	return mCurrentState;
 }

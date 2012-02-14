@@ -67,7 +67,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(SolutionDir)\Build\x86\$(Configuration)\</IntDir>
     <ExecutablePath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Utilities\Bin\x86;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>Include\Scene;Include\Framework;Include\Components;Include;Include\Logic;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>Include;Include\Scene;Include\Framework;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -76,7 +76,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(SolutionDir)\Build\x86\$(Configuration)\</IntDir>
     <ExecutablePath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Utilities\Bin\x86;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>Include\Scene;Include\Framework;Include\Components;Include;Include\Logic;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>Include;Include\Scene;Include\Framework;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -85,7 +85,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>$(SolutionDir)\Build\x64\$(Configuration)\</IntDir>
     <ExecutablePath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Utilities\Bin\x64;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>Include\Scene;Include\Framework;Include\Components;Include;Include\Logic;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>Include;Include\Scene;Include\Framework;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -94,7 +94,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>$(SolutionDir)\Build\x64\$(Configuration)\</IntDir>
     <ExecutablePath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Utilities\Bin\x64;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>Include\Scene;Include\Framework;Include\Components;Include;Include\Logic;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>Include;Include\Scene;Include\Framework;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -102,7 +102,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
-      <AdditionalIncludeDirectories>Include\Scene;Include\Framework;Include\Components;Include;Include\Logic;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include;Include\Scene;Include\Framework;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -114,7 +114,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
-      <AdditionalIncludeDirectories>Include\Scene;Include\Framework;Include\Components;Include;Include\Logic;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include;Include\Scene;Include\Framework;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -128,7 +128,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
-      <AdditionalIncludeDirectories>Include\Scene;Include\Framework;Include\Components;Include;Include\Logic;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include;Include\Scene;Include\Framework;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -144,7 +144,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
-      <AdditionalIncludeDirectories>Include\Scene;Include\Framework;Include\Components;Include;Include\Logic;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include;Include\Scene;Include\Framework;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -154,6 +154,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Components\StandardButton.cpp" />
+    <ClCompile Include="Source\Components\Clickable.cpp" />
     <ClCompile Include="Source\Framework\Buffer.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\Components\Console.cpp" />
@@ -171,8 +173,16 @@
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Scene\Marker.cpp" />
     <ClCompile Include="Source\Scene\Scene.cpp" />
+    <ClCompile Include="Source\State\ApplicationState.cpp" />
+    <ClCompile Include="Source\State\InGameState.cpp" />
+    <ClCompile Include="Source\State\LocalLobbyState.cpp" />
+    <ClCompile Include="Source\State\MenuState.cpp" />
+    <ClCompile Include="Source\State\StateRegistry.cpp" />
+    <ClCompile Include="Source\State\StateStack.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\Components\StandardButton.hpp" />
+    <ClInclude Include="Include\Components\Clickable.hpp" />
     <ClInclude Include="Include\Framework\Buffer.hpp" />
     <ClInclude Include="Include\Camera.hpp" />
     <ClInclude Include="Include\Components\Console.hpp" />
@@ -191,13 +201,21 @@
     <ClInclude Include="Include\Logic\Row.hpp" />
     <ClInclude Include="Include\Scene\Marker.hpp" />
     <ClInclude Include="Include\Scene\Scene.hpp" />
+    <ClInclude Include="Include\State\ApplicationState.hpp" />
+    <ClInclude Include="Include\State\InGameState.hpp" />
+    <ClInclude Include="Include\State\LocalLobbyState.hpp" />
+    <ClInclude Include="Include\State\MenuState.hpp" />
+    <ClInclude Include="Include\State\StateRegistry.hpp" />
+    <ClInclude Include="Include\State\StateStack.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
-    <None Include="Effects\Console.fx" />
-    <None Include="Effects\Grid.fx" />
+    <None Include="Resources\Effects\Button.fx" />
+    <None Include="Resources\Effects\Console.fx" />
+    <None Include="Resources\Effects\Grid.fx" />
     <None Include="Effects\InputField.fx" />
-    <None Include="Effects\Marker.fx" />
+    <None Include="Resources\Effects\Marker.fx" />
+    <None Include="Resources\Textures\button.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
