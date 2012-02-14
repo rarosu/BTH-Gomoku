@@ -22,11 +22,11 @@ class Game : public D3DApplication
 public:
 	Game(HINSTANCE applicationInstance, LPCTSTR windowTitle = "GameWindow", 
 		UINT windowWidth = CW_USEDEFAULT, UINT windowHeight = CW_USEDEFAULT);
-	virtual ~Game();
+	~Game() throw();
 
-	virtual void Update();
-	virtual void Draw();
-	virtual LRESULT HandleAppMessages(UINT message, WPARAM wParam, LPARAM lParam);
+	void Update();
+	void Draw();
+	LRESULT HandleAppMessages(UINT message, WPARAM wParam, LPARAM lParam);
 
 private:
 	GameTime			mGameTime;
@@ -40,6 +40,6 @@ private:
 
 	Frustrum mViewFrustrum;
 protected:
-	virtual void ProgramLoop();
+	void ProgramLoop();
 };
 #endif
