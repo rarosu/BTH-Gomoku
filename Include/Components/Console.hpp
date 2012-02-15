@@ -16,10 +16,10 @@
 
 namespace Components
 {
-	class Console : public Component, public Scrollable, public InputReciever /*: public KeyListener*/
+	class Console : public Component, public Scrollable, public InputReceiver /*: public KeyListener*/
 	{
 	public:
-		Console(ID3D10Device* device, RECT position, D3DXCOLOR bgColor, InputManager* manager, UINT size = 100);
+		Console(ID3D10Device* device, RECT position, D3DXCOLOR bgColor, InputSubscription* manager, UINT size = 100);
 		~Console() throw();
 
 		void Toggle();
@@ -34,7 +34,7 @@ namespace Components
 		// Methods inherited from Scrollable
 		void Scroll(bool isUp);
 
-		// Methods inherited from InputReciever
+		// Methods inherited from InputReceiver
 		void RecieveInput(std::string input);
 
 		/*void KeyPressed(int code);
@@ -54,6 +54,7 @@ namespace Components
 		GameFont*					mFont;
 		D3DXCOLOR					mTextColor;
 		InputField*					mInputField;
+		InputSubscription*			mInputManager;
 		Scrollbar*					mScrollbar;
 
 		bool						mIsToggled;

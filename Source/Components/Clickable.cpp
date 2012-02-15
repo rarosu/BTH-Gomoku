@@ -44,7 +44,7 @@ namespace Components
 		return mHovered;
 	}
 
-	void Clickable::MouseButtonPressed(int index)
+	void Clickable::MouseButtonPressed(int index, const InputState& currentState)
 	{
 		if(mHovered)
 		{
@@ -53,7 +53,7 @@ namespace Components
 		}
 	}
 
-	void Clickable::MouseButtonReleased(int index)
+	void Clickable::MouseButtonReleased(int index, const InputState& currentState)
 	{
 		if(mPressed)
 		{
@@ -67,7 +67,7 @@ namespace Components
 		}
 	}
 
-	void Clickable::MouseWheelMoved(short delta)
+	void Clickable::MouseWheelMoved(short delta, const InputState& currentState)
 	{
 	}
 }

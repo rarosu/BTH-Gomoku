@@ -7,7 +7,8 @@ namespace Components
 	const int Console::C_NUM_VERTICES = 4;
 
 	Console::Console(ID3D10Device* device, RECT position, D3DXCOLOR bgColor, InputSubscription* manager, UINT size)
-		: mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0)), mIsToggled(true), mFirstShowRow(0), C_HISTORY_SIZE(size)
+		: mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0)), mInputManager(manager), mIsToggled(false), mFirstShowRow(0), 
+		C_HISTORY_SIZE(size)
 	{
 		mDevice = device;
 		mPositionRect = position;
@@ -24,13 +25,13 @@ namespace Components
 		RECT inputFieldPos = mPositionRect;
 		inputFieldPos.top = inputFieldPos.bottom - 20;
 
-		int scrollWidth = 20;
+		int scrollWidth = 50;
 		RECT scrollbarPos = { mPositionRect.right - scrollWidth, mPositionRect.top, 
 							  mPositionRect.right, mPositionRect.bottom };
-		mScrollbar = new Scrollbar(manager, this);
+		mScrollbar = new Scrollbar(mInputManager, this);
 		mScrollbar->Initialize(mDevice, scrollbarPos);
-		mInputField = new InputField(mDevice, inputManager, this, inputFieldPos, mFont);
-		mEffect->SetVectorVariable("consoleColor", &(D3DXVECTOR4)bgColor);
+		mInputField = new InputField(mDevice, mInputManager, this, inputFieldPos, mFont);
+		mEffect->SetVectorVariable("bgColor", &(D3DXVECTOR4)C_COLOR_WINDOW_BG);
 }
 
 

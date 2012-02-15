@@ -5,10 +5,10 @@ namespace Components
 	const int InputField::C_NUM_VERTICES = 4;
 	const float InputField::C_MARKER_SPEED = 500;
 
-	InputField::InputField(ID3D10Device* device, InputSubscription* manager, InputReciever* reciever, 
+	InputField::InputField(ID3D10Device* device, InputSubscription* manager, InputReceiver* receiver, 
 		RECT position, GameFont* font)
-		: mDevice(device), mManager(manager), mBuffer(NULL), mEffect(NULL), mFont(NULL), 
-		  mReciever(NULL), mShowMarker(true), mMSSinceBlink(0.0f)
+		: mDevice(device), mManager(manager), mBuffer(NULL), mEffect(NULL), mFont(font), 
+		  mReceiver(receiver), mShowMarker(true), mMSSinceBlink(0.0f)
 	{
 		mPositionRect = position;
 
@@ -16,29 +16,21 @@ namespace Components
 		CreateEffect();
 
 		mManager->AddKeyListener(this);
-		mReciever = reciever;
-		mFont = font;
 	
 		mEffect->SetVectorVariable("bgColor", &D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
 	}
-	
-	InputField::~InputField()
+
+	InputField::~InputField() throw()
 	{
+		mManager->RemoveKeyListener(this);
+
 		SafeDelete(mBuffer);
 		SafeDelete(mEffect);
 	}
 
-InputField::~InputField() throw()
-{
-	mInputManager->RemoveKeyListener(this);
-
-	SafeDelete(mBuffer);
-	SafeDelete(mEffect);
-}
-
-void InputField::CreateBuffer()
-{
-	D3DXVECTOR2 vertices[C_NUM_VERTICES];
+	void InputField::CreateBuffer()
+	{
+		D3DXVECTOR2 vertices[C_NUM_VERTICES];
 		vertices[0]	= TransformToViewport(D3DXVECTOR2((float)mPositionRect.left, (float)mPositionRect.top));
 		vertices[1]	= TransformToViewport(D3DXVECTOR2((float)mPositionRect.right, (float)mPositionRect.top));
 		vertices[2]	= TransformToViewport(D3DXVECTOR2((float)mPositionRect.left, (float)mPositionRect.bottom));
@@ -87,7 +79,7 @@ void InputField::CreateBuffer()
 		}
 	}
 
-void InputField::Draw()
+	void InputField::Draw()
 	{
 		mBuffer->MakeActive();
 		mEffect->MakeActive();
@@ -117,7 +109,7 @@ void InputField::Draw()
 	{
 	}
 
-void InputField::KeyPressed(int code)
+	void InputField::KeyPressed(int code, const InputState& currentState)
 	{
 		std::string first, letter, last;
 
@@ -126,11 +118,11 @@ void InputField::KeyPressed(int code)
 			case VK_RETURN:
 				if(mFirstString.str() != "" || mLastString.str() != "")
 				{
-					if(mReciever)
+					if(mReceiver)
 					{
-						//mReciever->RecieveInput(mStream.str());
+						//mReceiver->RecieveInput(mStream.str());
 						//mStream.str("");
-						mReciever->RecieveInput(mFirstString.str() + mLastString.str());
+						mReceiver->RecieveInput(mFirstString.str() + mLastString.str());
 						mFirstString.str("");
 						mLastString.str("");
 					}
@@ -174,11 +166,11 @@ void InputField::KeyPressed(int code)
 		}
 	}
 
-	void InputField::KeyReleased(int code)
+	void InputField::KeyReleased(int code, const InputState& currentState)
 	{
 	}
 
-	void InputField::CharEntered(unsigned char symbol)
+	void InputField::CharEntered(unsigned char symbol, const InputState& currentState)
 	{
 		//mStream << symbol;
 		mFirstString << symbol;

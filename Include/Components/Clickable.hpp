@@ -13,16 +13,13 @@ namespace Components
 		~Clickable() throw();
 
 		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
-		virtual void Draw() = 0;
-		virtual void LostFocus() = 0;
-		virtual void GotFocus() = 0;
 
 		bool IsPressed() const;
 		bool IsHovered() const;
 
-		void MouseButtonPressed(int index);
-		void MouseButtonReleased(int index);
-		void MouseWheelMoved(short delta);
+		void MouseButtonPressed(int index, const InputState& currentState);
+		void MouseButtonReleased(int index, const InputState& currentState);
+		void MouseWheelMoved(short delta, const InputState& currentState);
 
 	protected:
 		virtual void MouseEntered() = 0;

@@ -64,34 +64,19 @@ void Game::Update()
 
 	// Update game time, input and console
 	mGameTime.Update();
+	
 
-	mInputManager.Update();
+	if(mInputManager.GetCurrent().Keyboard.keyIsPressed[VK_CONTROL])
+		if(mInputManager.GetCurrent().Keyboard.keyIsPressed['T'])
+			if(!(mInputManager.GetPrevious().Keyboard.keyIsPressed['T']))
+				mConsole->Toggle();
+
 	mConsole->Update(mGameTime, mInputManager.GetCurrent(), mInputManager.GetPrevious());
 
 	// Update the topmost state
 	State::ApplicationState::sStack.UpdateState(mInputManager, mGameTime);
 
-
-
-	/**
-		TODO: Change this to use input manager instead of async checks
-	*/
-	/*
-	if(GetAsyncKeyState(VK_ESCAPE))
-		Quit();
-	if(mInputManager.GetCurrent().Keyboard.keyIsPressed[VK_CONTROL] && 
-		mInputManager.GetCurrent().Keyboard.keyIsPressed['T'] &&
-		!mInputManager.GetPrevious().Keyboard.keyIsPressed['T'])
-	{
-		mConsole->Toggle();
-	}
-	if(GetAsyncKeyState(VK_F7))
-		mConsole->SetTextColor(D3DXCOLOR(1.0, 0.0, 0.0, 1.0));
-	if(GetAsyncKeyState(VK_F8))
-		mConsole->SetTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0));
-	*/
-	/**
-	*/
+	mInputManager.Update();					// Keep last
 }
 
 // Draw the scene

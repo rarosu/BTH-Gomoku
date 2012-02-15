@@ -56,7 +56,7 @@ namespace State
 
 	void InGameState::Draw()
 	{
-		mScene->Draw();
+		mScene->Draw(*mCamera);
 		mMarker->Draw();
 	}
 
