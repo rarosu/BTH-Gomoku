@@ -5,7 +5,7 @@ namespace Components
 	const int InputField::C_NUM_VERTICES = 4;
 	const float InputField::C_MARKER_SPEED = 500;
 
-	InputField::InputField(ID3D10Device* device, InputManager* manager, InputReciever* reciever, 
+	InputField::InputField(ID3D10Device* device, InputSubscription* manager, InputReciever* reciever, 
 		RECT position, GameFont* font)
 		: mDevice(device), mManager(manager), mBuffer(NULL), mEffect(NULL), mFont(NULL), 
 		  mReciever(NULL), mShowMarker(true), mMSSinceBlink(0.0f)
@@ -28,10 +28,17 @@ namespace Components
 		SafeDelete(mEffect);
 	}
 
-	void InputField::CreateBuffer()
-	{
-		D3DXVECTOR2 vertices[C_NUM_VERTICES];
+InputField::~InputField() throw()
+{
+	mInputManager->RemoveKeyListener(this);
 
+	SafeDelete(mBuffer);
+	SafeDelete(mEffect);
+}
+
+void InputField::CreateBuffer()
+{
+	D3DXVECTOR2 vertices[C_NUM_VERTICES];
 		vertices[0]	= TransformToViewport(D3DXVECTOR2((float)mPositionRect.left, (float)mPositionRect.top));
 		vertices[1]	= TransformToViewport(D3DXVECTOR2((float)mPositionRect.right, (float)mPositionRect.top));
 		vertices[2]	= TransformToViewport(D3DXVECTOR2((float)mPositionRect.left, (float)mPositionRect.bottom));
@@ -80,7 +87,7 @@ namespace Components
 		}
 	}
 
-	void InputField::Draw()
+void InputField::Draw()
 	{
 		mBuffer->MakeActive();
 		mEffect->MakeActive();
@@ -110,7 +117,7 @@ namespace Components
 	{
 	}
 
-	void InputField::KeyPressed(int code)
+void InputField::KeyPressed(int code)
 	{
 		std::string first, letter, last;
 
@@ -165,36 +172,6 @@ namespace Components
 				}
 				break;
 		}
-
-		//if(code == VK_RETURN)
-		//{
-		//	//if(mStream.str() != "")
-		//	if(mFirstString.str() != "" || mLastString.str() != "")
-		//	{
-		//		if(mReciever)
-		//		{
-		//			//mReciever->RecieveInput(mStream.str());
-		//			//mStream.str("");
-		//			mReciever->RecieveInput(mFirstString.str() + mLastString.str());
-		//			mFirstString.str("");
-		//			
-		//		}
-		//	}
-		//}
-		//else if(code == VK_BACK)
-		//{
-		//	/*std::string temp = mStream.str();
-		//	temp = temp.substr(0, temp.size() - 1);*/
-
-		//	/*mStream.str("");
-		//	mStream << temp;*/
-
-		//	std::string temp = mFirstString.str();
-		//	temp = temp.substr(0, temp.size() - 1);
-
-		//	mFirstString.str("");
-		//	mFirstString << temp;
-		//}
 	}
 
 	void InputField::KeyReleased(int code)

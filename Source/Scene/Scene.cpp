@@ -1,18 +1,27 @@
 #include "Scene.hpp"
+#include <sstream>
 
-Scene::Scene(ID3D10Device* device) :
-	mDevice(device)
+Scene::Scene(ID3D10Device* device, InputSubscription* inputManager) :
+	mDevice(device),
+	mInputSubscription(inputManager),
+	mVertexBuffer(NULL),
+	mEffect(NULL)
 {
 	CreateBuffer();
 	CreateEffect();
 
 	mEffect->SetIntVariable("gWidth", 10);
 	mEffect->SetFloatVariable("gInterval", 0.1f);
+
+	mInputSubscription->AddMouseListener(this);
 }
 
-Scene::~Scene() 
+Scene::~Scene() throw()
 {
+	mInputSubscription->RemoveMouseListener(this);
+
 	SafeDelete(mVertexBuffer);
+	SafeDelete(mEffect);
 }
 
 void Scene::CreateBuffer()
@@ -63,16 +72,21 @@ void Scene::CreateEffect()
 		sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
 }
 
-void Scene::Update(const Logic::Grid* grid, const Camera& camera)
+void Scene::Update(const Logic::Grid* grid, const Camera& camera, const InputState& currentInput)
 {
-	D3DXMATRIX viewProjection = camera.GetViewMatrix() * camera.GetProjectionMatrix();
-	mEffect->SetMatrixVariable("gVP", &viewProjection);
+	// Pick cell
+	D3DXVECTOR2 cell = PickCell(currentInput.Mouse.x, currentInput.Mouse.y, camera);
+	mEffect->SetVectorVariable("gMarkedCell", &D3DXVECTOR4(cell.x, cell.y, 0.0, 0.0));
 }
 
-void Scene::Draw()
+void Scene::Draw(const Camera& camera)
 {
-	mVertexBuffer->MakeActive();
+	// Create View-Projection-matrix
+	D3DXMATRIX viewProjection = camera.GetViewMatrix() * camera.GetProjectionMatrix();
+	mEffect->SetMatrixVariable("gVP", &viewProjection);
 
+	// Render the buffer
+	mVertexBuffer->MakeActive();
 	mEffect->MakeActive();
 
 	for(UINT p = 0; p < mEffect->GetNumberOfPasses(); ++p)
@@ -80,4 +94,49 @@ void Scene::Draw()
 		mEffect->ApplyTechniquePass(p);
 		mDevice->Draw(mVertexBuffer->GetNumberOfElements(), 0);
 	}
+}
+
+void Scene::MouseButtonPressed(int index, const InputState& currentState) {}
+void Scene::MouseButtonReleased(int index, const InputState& currentState) {}
+void Scene::MouseWheelMoved(short delta, const InputState& currentState) {}
+
+D3DXVECTOR2 Scene::PickCell(int mouseX, int mouseY, const Camera& camera) const
+{
+	D3DXVECTOR2 normalizedMouseCoordinates = TransformToViewport(D3DXVECTOR2(mouseX, mouseY));
+	D3DXVECTOR3 v;
+	
+	v.x = normalizedMouseCoordinates.x;
+	v.y = normalizedMouseCoordinates.y;
+	v.z = 1.0f;
+
+	v.x /= camera.GetProjectionMatrix()._11;
+	v.y /= camera.GetProjectionMatrix()._22;
+
+	D3DXMATRIX viewInverse;
+	D3DXMatrixInverse(&viewInverse, NULL, &camera.GetViewMatrix());
+
+	D3DXVECTOR4 origin(0.0f, 0.0f, 0.0f, 1.0f);
+	D3DXVECTOR4 direction(v.x, v.y, 1.0f, 0.0f);
+
+	D3DXVec4Transform(&origin, &origin,  &viewInverse);
+	D3DXVec4Transform(&direction, &direction, &viewInverse);
+
+	// We want to know when the ray hits the XZ-plane, thus we want to know when
+	// origin.y - t * direction.y = 0. Which gives the following solution:
+	float t = -origin.y / direction.y;
+
+	D3DXVECTOR3 hit = origin + direction * t;
+	D3DXVECTOR2 cell = D3DXVECTOR2(((int)hit.x / 10), ((int)hit.z / 10));
+
+	return cell;
+}
+
+RECT Scene::GetVisibleRectangle(const Camera& camera) const
+{
+	RECT result;
+	
+
+
+	
+	return result;
 }

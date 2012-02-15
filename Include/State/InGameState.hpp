@@ -11,7 +11,7 @@ namespace State
 	class InGameState : public ApplicationState
 	{
 	public:
-		InGameState(StateID id, ID3D10Device* device, const Frustrum& viewFrustrum);
+		InGameState(StateID id, ID3D10Device* device, const Frustrum& viewFrustrum, InputSubscription* inputSubscription);
 		~InGameState() throw();
 
 		void OnStatePushed();					// Initialize
@@ -23,7 +23,8 @@ namespace State
 		void SetViewFrustrum(const Frustrum& viewFrustrum);
 
 	private:
-		ID3D10Device*	mDevice;
+		ID3D10Device*		mDevice;
+		InputSubscription*	mInputSubscription;
 
 		Logic::Grid*	mGrid;
 

@@ -12,6 +12,7 @@
 #include "GameTime.hpp"
 #include "InputManager.hpp"
 
+
 namespace Components
 {
 	class InputReciever
@@ -48,7 +49,7 @@ namespace Components
 		std::stringstream			mFirstString;
 		std::stringstream			mLastString;
 		InputReciever*				mReciever;
-		InputManager*				mManager;
+		InputSubscription*				mManager;
 		bool						mShowMarker;
 		float						mMSSinceBlink;
 		
@@ -59,4 +60,3 @@ namespace Components
 		void CreateEffect();
 	};
 }
-#endif

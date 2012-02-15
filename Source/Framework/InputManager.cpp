@@ -20,7 +20,7 @@ void InputManager::HandleKeyPress(WPARAM wParam, LPARAM lParam)
 
 	std::vector<KeyListener*>::iterator it;
 	for(it = mKeyListeners.begin(); it != mKeyListeners.end(); it++)
-		(*it)->KeyPressed((int)wParam);
+		(*it)->KeyPressed((int)wParam, mCurrentState);
 }
 
 void InputManager::HandleKeyRelease(WPARAM wParam, LPARAM lParam)
@@ -29,7 +29,7 @@ void InputManager::HandleKeyRelease(WPARAM wParam, LPARAM lParam)
 
 	std::vector<KeyListener*>::iterator it;
 	for(it = mKeyListeners.begin(); it != mKeyListeners.end(); it++)
-		(*it)->KeyReleased((int)wParam);
+		(*it)->KeyReleased((int)wParam, mCurrentState);
 }
 
 void InputManager::HandleMousePress(WPARAM wParam, LPARAM lParam)
@@ -49,7 +49,7 @@ void InputManager::HandleMousePress(WPARAM wParam, LPARAM lParam)
 
 	std::vector<MouseListener*>::iterator it;
 	for(it = mMouseListeners.begin(); it != mMouseListeners.end(); it++)
-		(*it)->MouseButtonPressed((int)wParam);
+		(*it)->MouseButtonPressed((int)wParam, mCurrentState);
 }
 
 void InputManager::HandleMouseRelease(int buttonIndex, WPARAM wParam, LPARAM lParam)
@@ -58,7 +58,7 @@ void InputManager::HandleMouseRelease(int buttonIndex, WPARAM wParam, LPARAM lPa
 
 	std::vector<MouseListener*>::iterator it;
 	for(it = mMouseListeners.begin(); it != mMouseListeners.end(); it++)
-		(*it)->MouseButtonReleased((int)wParam);
+		(*it)->MouseButtonReleased((int)wParam, mCurrentState);
 }
 
 void InputManager::HandleMouseMove(WPARAM wParam, LPARAM lParam)
@@ -74,7 +74,7 @@ void InputManager::HandleMouseWheel(WPARAM wParam, LPARAM lParam)
 
 	std::vector<MouseListener*>::iterator it;
 	for(it = mMouseListeners.begin(); it != mMouseListeners.end(); it++)
-		(*it)->MouseWheelMoved(delta);
+		(*it)->MouseWheelMoved(delta, mCurrentState);
 }
 
 void InputManager::HandleCharPress(WPARAM wParam, LPARAM lParam)
@@ -86,7 +86,7 @@ void InputManager::HandleCharPress(WPARAM wParam, LPARAM lParam)
 
 	std::vector<KeyListener*>::iterator it;
 	for(it = mKeyListeners.begin(); it != mKeyListeners.end(); it++)
-		(*it)->CharEntered((unsigned char)wParam);
+		(*it)->CharEntered((unsigned char)wParam, mCurrentState);
 }
 
 const InputState& InputManager::GetPrevious() const

@@ -16,19 +16,24 @@ struct Frustrum
 class Camera : public MouseListener
 {
 public:
-	Camera(D3DXVECTOR3 position, D3DXVECTOR3 direction, D3DXVECTOR3 worldUp, const Frustrum& viewFrustrum);
+	Camera(D3DXVECTOR3 position, D3DXVECTOR3 direction, D3DXVECTOR3 worldUp, const Frustrum& viewFrustrum, InputSubscription* inputManager);
+	~Camera() throw();
+
 	void Update(const InputState& prevInput, const InputState& currInput, const GameTime& gameTime);
+
 	D3DXMATRIX GetViewMatrix() const;
 	const D3DXMATRIX& GetProjectionMatrix() const;
 	void CreateProjectionMatrix(const Frustrum& viewFrustrum);
+
 	const D3DXVECTOR3& GetPos() const;
 	void SetHeight(float height);
 	
-	void MouseButtonPressed(int index);
-	void MouseButtonReleased(int index);
-	void MouseWheelMoved(short delta);
-
+	void MouseButtonPressed(int index, const InputState& currentState);
+	void MouseButtonReleased(int index, const InputState& currentState);
+	void MouseWheelMoved(short delta, const InputState& currentState);
 private:
+	InputSubscription*		mInputManager;
+
 	D3DXVECTOR3				mPosition;
 	D3DXVECTOR3				mDirection;
 	D3DXVECTOR3				mWorldUp;

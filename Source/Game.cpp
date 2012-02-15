@@ -22,7 +22,7 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth,
 
 	mMenuState = new State::MenuState(State::C_STATE_MENU);
 	mLocalLobbyState = new State::LocalLobbyState(State::C_STATE_LOCAL_LOBBY);
-	mInGameState = new State::InGameState(State::C_STATE_IN_GAME, mDeviceD3D, mViewFrustrum);
+	mInGameState = new State::InGameState(State::C_STATE_IN_GAME, mDeviceD3D, mViewFrustrum, &mInputManager);
 
 	// Start the application in InGameState
 	State::ApplicationState::sStack.ChangeState(mInGameState);

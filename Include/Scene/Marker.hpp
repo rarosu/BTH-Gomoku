@@ -9,7 +9,7 @@
 class Marker
 {
 public:
-	Marker(ID3D10Device* device, int size, D3DXVECTOR3 position);
+	Marker(ID3D10Device* device, int size, D3DXVECTOR3 position, D3DXCOLOR markerColor);
 	void Update(const Camera& camera);
 	void Draw();
 

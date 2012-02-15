@@ -1,11 +1,12 @@
 #include "Console.hpp"
 #include <string>
 
+
 namespace Components
 {
 	const int Console::C_NUM_VERTICES = 4;
 
-	Console::Console(ID3D10Device* device, RECT position, D3DXCOLOR bgColor, InputManager* manager, UINT size)
+	Console::Console(ID3D10Device* device, RECT position, D3DXCOLOR bgColor, InputSubscription* manager, UINT size)
 		: mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0)), mIsToggled(true), mFirstShowRow(0), C_HISTORY_SIZE(size)
 	{
 		mDevice = device;
@@ -28,10 +29,10 @@ namespace Components
 							  mPositionRect.right, mPositionRect.bottom };
 		mScrollbar = new Scrollbar(manager, this);
 		mScrollbar->Initialize(mDevice, scrollbarPos);
+		mInputField = new InputField(mDevice, inputManager, this, inputFieldPos, mFont);
+		mEffect->SetVectorVariable("consoleColor", &(D3DXVECTOR4)bgColor);
+}
 
-		mInputField = new InputField(mDevice, manager, this, inputFieldPos, mFont);
-		mEffect->SetVectorVariable("bgColor", &(D3DXVECTOR4)C_COLOR_WINDOW_BG);
-	}
 
 	Console::~Console() throw()
 	{

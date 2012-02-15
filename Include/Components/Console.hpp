@@ -13,6 +13,7 @@
 #include "InputField.hpp"
 #include "Scrollbar.hpp"
 
+
 namespace Components
 {
 	class Console : public Component, public Scrollable, public InputReciever /*: public KeyListener*/

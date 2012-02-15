@@ -20,6 +20,7 @@ cbuffer cbEveryFrame
 {
 	matrix		gVP;
 	//matrix		gWorld;
+	float4		gMarkedCell;
 };
 
 int gWidth;
@@ -47,6 +48,9 @@ float4 PS(PS_INPUT input) : SV_TARGET0
 		return float4(0.0, 0.0, 0.0, 1.0);
 	if(abs(roundZ - z) <= gInterval && roundZ % gWidth == 0)
 		return float4(0.0, 0.0, 0.0, 1.0);
+
+	if(roundX / 10 == gMarkedCell.x && roundZ / 10 == gMarkedCell.y)
+		return float4(1.0, 0.0, 0.0, 1.0);
 
 	return input.color;
 }
