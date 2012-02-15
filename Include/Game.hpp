@@ -41,5 +41,6 @@ private:
 	Frustrum mViewFrustrum;
 protected:
 	void ProgramLoop();
+	void OnResize();
 };
 #endif

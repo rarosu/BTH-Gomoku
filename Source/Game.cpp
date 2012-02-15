@@ -141,3 +141,10 @@ LRESULT Game::HandleAppMessages(UINT message, WPARAM wParam, LPARAM lParam)
 
 	return D3DApplication::HandleAppMessages(message, wParam, lParam);
 }
+
+void Game::OnResize()
+{
+	D3DApplication::OnResize();
+
+	// TODO: forward to states
+}
