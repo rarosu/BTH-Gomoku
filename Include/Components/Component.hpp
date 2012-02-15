@@ -19,11 +19,13 @@ namespace Components
 	protected:
 		RECT					mPositionRect;
 
-		static Component*		mHasFocus;
-
 		float GetWidth() const;
 		float GetHeight() const;
 		void SetFocusThis();
+		void LoseFocus();
+
+	private:
+		static Component*		mHasFocus;
 	};
 }
 #endif

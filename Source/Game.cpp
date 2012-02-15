@@ -13,7 +13,7 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth,
 	mDefaultFont = new GameFont(mDeviceD3D, "Times New Roman", 24);
 	RECT consolePos = { 0, 0, mScreenWidth, mScreenHeight / 2 };
 
-	mConsole = new Console(mDeviceD3D, consolePos, D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.0f), &mInputManager);
+	mConsole = new Components::Console(mDeviceD3D, consolePos, D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.0f), &mInputManager);
 
 	mViewFrustrum.nearDistance =	1.0f;
 	mViewFrustrum.farDistance =		1000.0f;
@@ -66,7 +66,7 @@ void Game::Update()
 	mGameTime.Update();
 
 	mInputManager.Update();
-	mConsole->Update(mGameTime);
+	mConsole->Update(mGameTime, mInputManager.GetCurrent(), mInputManager.GetPrevious());
 
 	// Update the topmost state
 	State::ApplicationState::sStack.UpdateState(mInputManager, mGameTime);

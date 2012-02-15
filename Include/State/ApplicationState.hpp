@@ -72,6 +72,7 @@ namespace State
 		static void PopState();
 		static void ChangeState(StateID id);
 		static void QuitApplication();
+
 	private:
 		/**
 			One instance of a registry and a stack

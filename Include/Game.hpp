@@ -3,15 +3,9 @@
 
 #include "D3DApplication.hpp"
 #include "InputManager.hpp"
-#include "InputField.hpp"
 #include "GameTime.hpp"
 #include "GameFont.hpp"
 #include "Console.hpp"
-#include "Camera.hpp"
-#include "Grid.hpp"
-#include "Marker.hpp"
-#include "Scene.hpp"
-#include "TextButton.hpp"
 
 #include "MenuState.hpp"
 #include "LocalLobbyState.hpp"
@@ -29,16 +23,17 @@ public:
 	LRESULT HandleAppMessages(UINT message, WPARAM wParam, LPARAM lParam);
 
 private:
-	GameTime			mGameTime;
-	GameFont*			mDefaultFont;
-	Console*			mConsole;
-	InputManager		mInputManager;
+	GameTime					mGameTime;
+	GameFont*					mDefaultFont;
+	Components::Console*		mConsole;
+	InputManager				mInputManager;
 
 	State::MenuState*			mMenuState;
 	State::LocalLobbyState*		mLocalLobbyState;
 	State::InGameState*			mInGameState;
 
-	Frustrum mViewFrustrum;
+	Frustrum					mViewFrustrum;
+
 protected:
 	void ProgramLoop();
 	void OnResize();

@@ -78,6 +78,7 @@ namespace State
 			that the application should exit.
 		*/
 		ApplicationState* GetNextState() const;
+
 	private:
 		typedef std::vector<ApplicationState*> StateVector;
 

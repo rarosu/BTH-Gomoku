@@ -14,13 +14,14 @@ namespace State
 		InGameState(StateID id, ID3D10Device* device, const Frustrum& viewFrustrum);
 		~InGameState() throw();
 
-		void OnStatePushed();
-		void OnStatePopped();
+		void OnStatePushed();					// Initialize
+		void OnStatePopped();					// Destroy
 
 		void Update(const InputManager& input, const GameTime& gameTime);
 		void Draw();
 
 		void SetViewFrustrum(const Frustrum& viewFrustrum);
+
 	private:
 		ID3D10Device*	mDevice;
 

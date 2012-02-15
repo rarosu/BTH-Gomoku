@@ -27,4 +27,11 @@ namespace Components
 		mHasFocus = this;
 		mHasFocus->GotFocus();
 	}
+
+	void Component::LoseFocus()
+	{
+		if(mHasFocus)
+			mHasFocus->LostFocus();
+		mHasFocus = NULL;
+	}
 }
