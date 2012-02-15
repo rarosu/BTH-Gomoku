@@ -3,7 +3,7 @@
 
 #include <D3DX10.h>
 
-extern D3DXMATRIX				gViewPortMatrix;
+extern D3DXMATRIX				gViewportMatrix;
 extern const D3DXCOLOR			C_COLOR_WINDOW_BG;
 extern const D3DXCOLOR			C_COLOR_COMPONENT_BG;
 
