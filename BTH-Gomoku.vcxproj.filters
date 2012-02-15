@@ -24,7 +24,14 @@
     <ClCompile Include="Source\Components\Button.cpp" />
     <ClCompile Include="Source\Components\Scrollbar.cpp" />
     <ClCompile Include="Source\Components\TextButton.cpp" />
-  </ItemGroup>
+    <ClCompile Include="Source\Components\StandardButton.cpp" />
+    <ClCompile Include="Source\State\ApplicationState.cpp" />
+    <ClCompile Include="Source\State\StateStack.cpp" />
+    <ClCompile Include="Source\State\InGameState.cpp" />
+    <ClCompile Include="Source\State\LocalLobbyState.cpp" />
+    <ClCompile Include="Source\State\MenuState.cpp" />
+    <ClCompile Include="Source\State\StateRegistry.cpp" />
+</ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
     <ClInclude Include="Include\Game.hpp" />
@@ -45,12 +52,19 @@
     <ClInclude Include="Include\Scene\Marker.hpp" />
     <ClInclude Include="Include\Framework\InputManager.hpp" />
     <ClInclude Include="Include\Components\Clickable.hpp" />
-    <ClInclude Include="Include\Components\Component.hpp" />
+<ClInclude Include="Include\Components\Component.hpp" />
     <ClInclude Include="Include\Components\ComponentGroup.hpp" />
     <ClInclude Include="Include\Components\Button.hpp" />
     <ClInclude Include="Include\Components\Scrollbar.hpp" />
     <ClInclude Include="Include\Components\TextButton.hpp" />
-  </ItemGroup>
+<ClInclude Include="Include\Components\StandardButton.hpp" />
+    <ClInclude Include="Include\State\ApplicationState.hpp" />
+    <ClInclude Include="Include\State\StateStack.hpp" />
+    <ClInclude Include="Include\State\InGameState.hpp" />
+    <ClInclude Include="Include\State\LocalLobbyState.hpp" />
+    <ClInclude Include="Include\State\MenuState.hpp" />
+    <ClInclude Include="Include\State\StateRegistry.hpp" />
+</ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="Effects\InputField.fx" />

@@ -72,8 +72,8 @@ public:
 	void HandleMouseWheel(WPARAM wParam, LPARAM lParam);
 	void HandleCharPress(WPARAM wParam, LPARAM lParam);
 
-	const InputState& GetPrevious();
-	const InputState& GetCurrent();
+	const InputState& GetPrevious() const;
+	const InputState& GetCurrent() const;
 	void Update();
 
 	// Inherited methods from InputSubscription
