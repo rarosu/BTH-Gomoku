@@ -66,12 +66,13 @@ namespace Components
 
 	void Button::CreateEffect()
 	{
-		// Create an array describing each of the elements of the vertex that are inputs to the vertex shader.
+		mEffect = new Effect(mDevice, "Resources/Effects/Button.fx");
+
 		InputLayoutVector inputLayout;
 		inputLayout.push_back(InputLayoutElement("POSITION", DXGI_FORMAT_R32G32_FLOAT));
 		inputLayout.push_back(InputLayoutElement("UV", DXGI_FORMAT_R32G32_FLOAT));
 
-		mEffect = new Effect(mDevice, "Resources/Effects/Button.fx");
+		mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
 	}
 
 	void Button::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)

@@ -55,7 +55,7 @@ void Marker::CreateBuffer(int size)
 
 void Marker::CreateEffect()
 {
-	mEffect = new Effect(mDevice, "Resource/Effects/Marker.fx");
+	mEffect = new Effect(mDevice, "Resources/Effects/Marker.fx");
 	
 	InputLayoutVector inputLayout;
 	inputLayout.push_back(InputLayoutElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT));
