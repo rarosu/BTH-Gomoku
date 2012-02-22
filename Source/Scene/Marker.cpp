@@ -10,14 +10,14 @@ Marker::Marker(ID3D10Device* device, int size, D3DXVECTOR3 position, D3DXCOLOR m
 	CreateBuffer(size);
 	CreateEffect();
 
-	mEffect->SetVariable("gColor", &(D3DXVECTOR4)markerColor);
+	mEffect->SetVariable("gColor", (D3DXVECTOR4)markerColor);
 }
 
 void Marker::Update(const Camera& camera)
 {
 	UpdateWorldMatrix();
 	D3DXMATRIX viewProjection = mWorldMatrix * camera.GetViewMatrix() * camera.GetProjectionMatrix();
-	mEffect->SetVariable("gVP", &viewProjection);
+	mEffect->SetVariable("gVP", viewProjection);
 }
 
 void Marker::Draw()

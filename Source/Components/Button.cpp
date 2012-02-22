@@ -28,7 +28,7 @@ namespace Components
 			D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/button.png", NULL, NULL, &mGraphics.textureUp, NULL);
 
 		mEffect->SetVariable("textureBase", mGraphics.textureUp);
-		mEffect->SetVariable("buttonColor", &(D3DXVECTOR4)mGraphics.idleColor);
+		mEffect->SetVariable("buttonColor", (D3DXVECTOR4)mGraphics.idleColor);
 	}
 
 	void Button::CreateBuffer()
@@ -102,30 +102,30 @@ namespace Components
 	{
 		if(IsPressed())
 		{
-			mEffect->SetVariable("buttonColor", &(D3DXVECTOR4)mGraphics.activeColor);
+			mEffect->SetVariable("buttonColor", (D3DXVECTOR4)mGraphics.activeColor);
 			if(mGraphics.textureDown)
 				mEffect->SetVariable("textureBase", mGraphics.textureDown);
 		}
 		else
-			mEffect->SetVariable("buttonColor", &(D3DXVECTOR4)mGraphics.hoverColor);
+			mEffect->SetVariable("buttonColor", (D3DXVECTOR4)mGraphics.hoverColor);
 	}
 
 	void Button::MouseExited()
 	{
-		mEffect->SetVariable("buttonColor", &(D3DXVECTOR4)mGraphics.idleColor);
+		mEffect->SetVariable("buttonColor", (D3DXVECTOR4)mGraphics.idleColor);
 		mEffect->SetVariable("textureBase", mGraphics.textureUp);
 	}
 
 	void Button::MousePressed(int buttonIndex)
 	{
-		mEffect->SetVariable("buttonColor", &(D3DXVECTOR4)mGraphics.activeColor);
+		mEffect->SetVariable("buttonColor", (D3DXVECTOR4)mGraphics.activeColor);
 		if(mGraphics.textureDown)
 			mEffect->SetVariable("textureBase", mGraphics.textureDown);
 	}
 
 	void Button::MouseReleased(int buttonIndex)
 	{
-		mEffect->SetVariable("buttonColor", &(D3DXVECTOR4)mGraphics.hoverColor);
+		mEffect->SetVariable("buttonColor", (D3DXVECTOR4)mGraphics.hoverColor);
 		mEffect->SetVariable("textureBase", mGraphics.textureUp);
 	}
 }

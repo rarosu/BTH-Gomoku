@@ -44,7 +44,7 @@ namespace Components
 		mBtnUp->Initialize(device, pos1, graphics1);
 		mBtnDown->Initialize(device, pos2, graphics2);
 
-		mEffect->SetVariable("bgColor", &(D3DXVECTOR4)C_COLOR_COMPONENT_BG);
+		mEffect->SetVariable("bgColor", (D3DXVECTOR4)C_COLOR_COMPONENT_BG);
 	}
 
 	void Scrollbar::CreateBuffer(float offset)

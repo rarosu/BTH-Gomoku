@@ -67,14 +67,14 @@ void Scene::Update(const Logic::Grid& grid, const Camera& camera, const Viewport
 {
 	// Pick cell
 	D3DXVECTOR2 cell = PickCell(viewport, currentInput.Mouse.x, currentInput.Mouse.y, camera);
-	mEffect->SetVariable("gMarkedCell", &D3DXVECTOR4(cell.x, cell.y, 0.0, 0.0));
+	mEffect->SetVariable("gMarkedCell", D3DXVECTOR4(cell.x, cell.y, 0.0, 0.0));
 }
 
 void Scene::Draw(const Camera& camera)
 {
 	// Create View-Projection-matrix
 	D3DXMATRIX viewProjection = camera.GetViewMatrix() * camera.GetProjectionMatrix();
-	mEffect->SetVariable("gVP", &viewProjection);
+	mEffect->SetVariable("gVP", viewProjection);
 
 	// Render the buffer
 	mVertexBuffer->Bind();

@@ -17,7 +17,7 @@ namespace Components
 
 		mManager->AddKeyListener(this);
 	
-		mEffect->SetVariable("bgColor", &D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
+		mEffect->SetVariable("bgColor", D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 
 	InputField::~InputField() throw()

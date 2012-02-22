@@ -31,7 +31,7 @@ namespace Components
 		mScrollbar = new Scrollbar(mInputManager, this);
 		mScrollbar->Initialize(mDevice, scrollbarPos);
 		mInputField = new InputField(mDevice, mInputManager, this, inputFieldPos, mFont);
-		mEffect->SetVariable("bgColor", &(D3DXVECTOR4)C_COLOR_WINDOW_BG);
+		mEffect->SetVariable("bgColor", (D3DXVECTOR4)C_COLOR_WINDOW_BG);
 }
 
 
