@@ -3,13 +3,19 @@
 
 #include "GameTime.hpp"
 #include "InputManager.hpp"
+#include "Viewport.hpp"
+
+class Game;
 
 namespace Components
 {
 	class Component
 	{
 	public:
+		friend class Game;
+
 		Component();
+		~Component() throw();
 
 		virtual void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState) = 0;
 		virtual void Draw() = 0;
@@ -17,7 +23,8 @@ namespace Components
 		virtual void GotFocus() = 0;
 
 	protected:
-		RECT					mPositionRect;
+		RECT						mPositionRect;
+		static const Viewport*		sViewport;
 
 		float GetWidth() const;
 		float GetHeight() const;
@@ -25,7 +32,7 @@ namespace Components
 		void LoseFocus();
 
 	private:
-		static Component*		mHasFocus;
+		static Component*			sHasFocus;
 	};
 }
 #endif

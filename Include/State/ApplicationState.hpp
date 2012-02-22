@@ -1,24 +1,26 @@
 #ifndef APPLICATION_STATE_HPP
 #define APPLICATION_STATE_HPP
 
-#include "StateStack.hpp"
-#include "StateRegistry.hpp"
 #include "GameTime.hpp"
+#include "StateRegistry.hpp"
+#include "StateStack.hpp"
+#include "Viewport.hpp"
+#include "InputManager.hpp"
 
 /**
 	Forward-declare
 */
 class Game;
-class InputManager;
 
 namespace State
 {
 	/**
 		Constants for all states in Gomoku
 	*/
-	const StateID C_STATE_MENU = 1;
-	const StateID C_STATE_LOCAL_LOBBY = 2;
-	const StateID C_STATE_IN_GAME = 3;
+	const StateID C_STATE_MENU			= 1;
+	const StateID C_STATE_LOCAL_LOBBY	= 2;
+	const StateID C_STATE_NETWORK_LOBBY = 3;
+	const StateID C_STATE_IN_GAME		= 4;
 
 	/**
 		Abstract class for an application state
@@ -50,7 +52,7 @@ namespace State
 		/**
 			Handle update and draw events in extended classes.
 		*/
-		virtual void Update(const InputManager& input, const GameTime& gameTime) = 0;
+		virtual void Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime) = 0;
 		virtual void Draw() = 0; 
 
 		/**
@@ -59,6 +61,9 @@ namespace State
 		virtual bool UpdateStateBeneath();
 		virtual bool DrawStateBeneath();
 	protected:
+		static const Viewport*				sViewport;
+		static InputSubscription*			sInputManager;
+
 		/**
 			Constructor - add this state to the registry
 		*/

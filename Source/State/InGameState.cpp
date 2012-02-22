@@ -33,7 +33,7 @@ namespace State
 							 D3DXVECTOR3(0, 1.0f, 0), 
 							 mViewFrustrum,
 							 mInputSubscription);
-		mMarker = new Marker(mDevice, 32, D3DXVECTOR3(0, 1.0f, 0), D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+		mMarker = new Marker(mDevice, 6, D3DXVECTOR3(5.0f, 1.0f, 5.0f), D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
 	}
 
 	void InGameState::OnStatePopped()
@@ -44,13 +44,13 @@ namespace State
 		SafeDelete(mMarker);
 	}
 
-	void InGameState::Update(const InputManager& input, const GameTime& gameTime)
+	void InGameState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
 	{
-		if (input.GetCurrent().Keyboard.keyIsPressed[VK_ESCAPE])
-			QuitApplication();
+		if(currInput.Keyboard.keyIsPressed[VK_ESCAPE] && !prevInput.Keyboard.keyIsPressed[VK_ESCAPE])
+			ChangeState(C_STATE_MENU);
 
-		mCamera->Update(input.GetPrevious(), input.GetCurrent(), gameTime);
-		mScene->Update(mGrid, *mCamera, input.GetCurrent());
+		mCamera->Update(prevInput, currInput, gameTime);
+		mScene->Update(*mGrid, *mCamera, *sViewport, currInput);
 		mMarker->Update(*mCamera);
 	}
 

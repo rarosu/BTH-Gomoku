@@ -16,6 +16,7 @@ namespace Components
 
 		bool IsPressed() const;
 		bool IsHovered() const;
+		bool GetAndResetClickStatus();
 
 		void MouseButtonPressed(int index, const InputState& currentState);
 		void MouseButtonReleased(int index, const InputState& currentState);
@@ -30,6 +31,7 @@ namespace Components
 	private:
 		bool				mHovered;
 		bool				mPressed;
+		bool				mIsClicked;
 
 		InputSubscription*	mManager;
 

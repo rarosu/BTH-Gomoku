@@ -36,20 +36,20 @@ namespace Components
 		const int numVertices = 4;
 		ButtonVertex vertices[numVertices];
 
-		vertices[0].position	= TransformToViewport(D3DXVECTOR2((float)mPositionRect.left, 
-																  (float)mPositionRect.top));
+		vertices[0].position	= sViewport->TransformToViewport(D3DXVECTOR2((float)mPositionRect.left, 
+																			 (float)mPositionRect.top));
 		vertices[0].uv			= D3DXVECTOR2(0, 0);
 
-		vertices[1].position	= TransformToViewport(D3DXVECTOR2((float)mPositionRect.right, 
-																  (float)mPositionRect.top));
+		vertices[1].position	= sViewport->TransformToViewport(D3DXVECTOR2((float)mPositionRect.right, 
+																			 (float)mPositionRect.top));
 		vertices[1].uv			= D3DXVECTOR2(1, 0);
 
-		vertices[2].position	= TransformToViewport(D3DXVECTOR2((float)mPositionRect.left, 
-																  (float)mPositionRect.bottom));
+		vertices[2].position	= sViewport->TransformToViewport(D3DXVECTOR2((float)mPositionRect.left, 
+																			 (float)mPositionRect.bottom));
 		vertices[2].uv			= D3DXVECTOR2(0, 1);
 
-		vertices[3].position	= TransformToViewport(D3DXVECTOR2((float)mPositionRect.right, 
-																  (float)mPositionRect.bottom));
+		vertices[3].position	= sViewport->TransformToViewport(D3DXVECTOR2((float)mPositionRect.right, 
+																			 (float)mPositionRect.bottom));
 		vertices[3].uv			= D3DXVECTOR2(1, 1);
 
 		mBuffer = new Buffer();

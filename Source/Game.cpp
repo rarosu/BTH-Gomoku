@@ -1,31 +1,36 @@
 #include "Game.hpp"
 
-Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth, UINT windowHeight) : 
-	D3DApplication(applicationInstance, windowTitle, windowWidth, windowHeight),
+Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth, UINT clientHeight) : 
+	D3DApplication(applicationInstance, windowTitle, clientWidth, clientHeight),
 	mMenuState(NULL),
 	mLocalLobbyState(NULL),
 	mInGameState(NULL),
 	mDefaultFont(NULL),
 	mConsole(NULL)
 {
-	UpdateViewportMatrix(mScreenWidth, mScreenHeight);
+	Components::Component::sViewport = &mViewport;
+	State::ApplicationState::sViewport = &mViewport;
+	State::ApplicationState::sInputManager = &mInputManager;
 
 	mDefaultFont = new GameFont(mDeviceD3D, "Times New Roman", 24);
-	RECT consolePos = { 0, 0, mScreenWidth, mScreenHeight / 2 };
+	RECT consolePos = { 0, 0, mViewport.GetWidth(), mViewport.GetHeight() / 2 };
 
 	mConsole = new Components::Console(mDeviceD3D, consolePos, D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.0f), &mInputManager);
 
 	mViewFrustrum.nearDistance =	1.0f;
 	mViewFrustrum.farDistance =		1000.0f;
 	mViewFrustrum.fovY =			(float)D3DX_PI * 0.25f;
-	mViewFrustrum.aspectRatio =		(float) mScreenWidth / (float) mScreenHeight;
+	mViewFrustrum.aspectRatio =		(float) mViewport.GetWidth() / (float) mViewport.GetHeight();
 
-	mMenuState = new State::MenuState(State::C_STATE_MENU);
-	mLocalLobbyState = new State::LocalLobbyState(State::C_STATE_LOCAL_LOBBY);
+	mMenuState = new State::MenuState(State::C_STATE_MENU, mDeviceD3D, mViewport.GetWidth(), mViewport.GetHeight());
+	mLocalLobbyState = new State::LocalLobbyState(State::C_STATE_LOCAL_LOBBY, mDeviceD3D, &mInputManager, 
+												  mViewport.GetWidth(), mViewport.GetHeight());
+	mNetworkLobbyState = new State::NetworkLobbyState(State::C_STATE_NETWORK_LOBBY, mDeviceD3D, &mInputManager, 
+												  mViewport.GetWidth(), mViewport.GetHeight());
 	mInGameState = new State::InGameState(State::C_STATE_IN_GAME, mDeviceD3D, mViewFrustrum, &mInputManager);
 
 	// Start the application in InGameState
-	State::ApplicationState::sStack.ChangeState(mInGameState);
+	State::ApplicationState::sStack.ChangeState(mMenuState);
 	State::ApplicationState::sStack.UpdateStack();
 }
 
@@ -74,7 +79,8 @@ void Game::Update()
 	mConsole->Update(mGameTime, mInputManager.GetCurrent(), mInputManager.GetPrevious());
 
 	// Update the topmost state
-	State::ApplicationState::sStack.UpdateState(mInputManager, mGameTime);
+	State::ApplicationState::sStack.UpdateState(mInputManager.GetCurrent(), 
+		mInputManager.GetPrevious(), mGameTime);
 
 	mInputManager.Update();					// Keep last
 }

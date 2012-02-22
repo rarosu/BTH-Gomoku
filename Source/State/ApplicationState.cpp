@@ -3,10 +3,10 @@
 
 namespace State
 {
-	StateRegistry ApplicationState::sRegistry;
-	StateStack ApplicationState::sStack;
-
-
+	StateRegistry				ApplicationState::sRegistry;
+	StateStack					ApplicationState::sStack;
+	const Viewport*				ApplicationState::sViewport		= NULL;
+	InputSubscription*			ApplicationState::sInputManager	= NULL;
 
 	ApplicationState::ApplicationState(StateID id)
 	{

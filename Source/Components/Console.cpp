@@ -25,7 +25,7 @@ namespace Components
 		RECT inputFieldPos = mPositionRect;
 		inputFieldPos.top = inputFieldPos.bottom - 20;
 
-		int scrollWidth = 50;
+		int scrollWidth = 20;
 		RECT scrollbarPos = { mPositionRect.right - scrollWidth, mPositionRect.top, 
 							  mPositionRect.right, mPositionRect.bottom };
 		mScrollbar = new Scrollbar(mInputManager, this);
@@ -52,10 +52,10 @@ namespace Components
 		D3DXVECTOR2 point3 = D3DXVECTOR2((float)mPositionRect.left, (float)mPositionRect.bottom);
 		D3DXVECTOR2 point4 = D3DXVECTOR2((float)mPositionRect.right, (float)mPositionRect.bottom);
 
-		vertices[0]	= TransformToViewport(point1);
-		vertices[1]	= TransformToViewport(point2);
-		vertices[2]	= TransformToViewport(point3);
-		vertices[3]	= TransformToViewport(point4);
+		vertices[0]	= sViewport->TransformToViewport(point1);
+		vertices[1]	= sViewport->TransformToViewport(point2);
+		vertices[2]	= sViewport->TransformToViewport(point3);
+		vertices[3]	= sViewport->TransformToViewport(point4);
 
 		mVertexBuffer = new Buffer();
 		BufferInformation bufferDesc;

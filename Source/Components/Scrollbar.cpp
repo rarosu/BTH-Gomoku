@@ -57,10 +57,10 @@ namespace Components
 		D3DXVECTOR2 point3 = D3DXVECTOR2((float)mPositionRect.left, (float)mPositionRect.bottom - offset);
 		D3DXVECTOR2 point4 = D3DXVECTOR2((float)mPositionRect.right, (float)mPositionRect.bottom - offset);
 
-		vertices[0]	= TransformToViewport(point1);
-		vertices[1]	= TransformToViewport(point2);
-		vertices[2]	= TransformToViewport(point3);
-		vertices[3]	= TransformToViewport(point4);
+		vertices[0]	= sViewport->TransformToViewport(point1);
+		vertices[1]	= sViewport->TransformToViewport(point2);
+		vertices[2]	= sViewport->TransformToViewport(point3);
+		vertices[3]	= sViewport->TransformToViewport(point4);
 
 		mBuffer = new Buffer();
 		BufferInformation bufferDesc;

@@ -19,9 +19,10 @@ LRESULT CALLBACK WindowProc(HWND windowHandle, UINT message, WPARAM wParam, LPAR
 }
 
 // Constructor
-D3DApplication::D3DApplication(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT windowWidth, UINT windowHeight)
-	: mWindowHandle(NULL), mScreenWidth(windowWidth), mScreenHeight(windowHeight), mSwapChain(NULL), mRenderTarget(NULL),
-		mDepthStencilBuffer(NULL), mDepthStencilView(NULL), mClearColor(0, 0, 0, 0), mDeviceD3D(NULL)
+D3DApplication::D3DApplication(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth, UINT clientHeight)
+	: mWindowHandle(NULL), /*mScreenWidth(windowWidth), mScreenHeight(windowHeight),*/ mSwapChain(NULL), mRenderTarget(NULL),
+		mDepthStencilBuffer(NULL), mDepthStencilView(NULL), mClearColor(0, 0, 0, 0), mDeviceD3D(NULL),
+		mViewport(clientWidth, clientHeight, 0.0f, 1.0f)
 {
 	// Try to create and initialize the application window, if failed - return with code 0
 	if(!InitWindowsApplication(applicationInstance, windowTitle, SW_SHOW))
@@ -34,9 +35,6 @@ D3DApplication::D3DApplication(HINSTANCE applicationInstance, LPCTSTR windowTitl
 
 D3DApplication::~D3DApplication()
 {
-	mWindowHandle = NULL;
-	mScreenWidth = 0;
-	mScreenHeight = 0;
 	SafeRelease(mDeviceD3D);
 	SafeRelease(mSwapChain);
 	SafeRelease(mRenderTarget);
@@ -72,14 +70,20 @@ bool D3DApplication::InitWindowsApplication(HINSTANCE applicationHandle, LPCTSTR
 		return false;
 	}
 
+	// Calculate the window size of the window based on its requested client size
+	RECT outerSize = { 0, 0, mViewport.GetWidth(), mViewport.GetHeight() };
+	AdjustWindowRect(&outerSize, WS_OVERLAPPEDWINDOW, FALSE);
+	int width = outerSize.right - outerSize.left;
+	int height = outerSize.bottom - outerSize.top;
+
 	// Try to create the window, if success the handle will be stored in gWindowHandle, if failed 0 will be stored
 	mWindowHandle = CreateWindow("GameWindow",				// The name of the registered window "mold" to use
 								title,						// Title of the window
 								WS_OVERLAPPEDWINDOW,		// Window style
 								CW_USEDEFAULT,				// X-position
 								CW_USEDEFAULT,				// Y-position
-								mScreenWidth,				// Window width
-								mScreenHeight,				// Window height
+								width,						// Window width
+								height,						// Window height
 								0,							// Parent window, 0 because there is no parent
 								0,							// Menu handle, 0 because there is no menu
 								applicationHandle,			// Application instance handle
@@ -94,8 +98,6 @@ bool D3DApplication::InitWindowsApplication(HINSTANCE applicationHandle, LPCTSTR
 	// Show and update the created window and return true indicating successful creation
 	ShowWindow(mWindowHandle, showSetting);
 	UpdateWindow(mWindowHandle);
-
-	CalculateWindowSize();
 
 	return true;
 }
@@ -112,18 +114,20 @@ HRESULT D3DApplication::InitializeDirect3D()
 		return result;
 	}
 
+	mViewport.Recalculate(mDeviceD3D);
+
 	return SetUpView();
 }
 
 // Update the window size variables based on the actual client area of the window
-void D3DApplication::CalculateWindowSize()
-{
-	// Get and save the window size
-	RECT clientRect;
-	GetClientRect(mWindowHandle, &clientRect);
-	mScreenWidth = clientRect.right - clientRect.left;
-	mScreenHeight = clientRect.bottom - clientRect.top;
-}
+//void D3DApplication::CalculateWindowSize()
+//{
+//	// Get and save the window size
+//	RECT clientRect;
+//	GetClientRect(mWindowHandle, &clientRect);
+//	mScreenWidth = clientRect.right - clientRect.left;
+//	mScreenHeight = clientRect.bottom - clientRect.top;
+//}
 
 // Set up render target, depth and stencil buffers and viewport
 HRESULT D3DApplication::SetUpView()
@@ -145,8 +149,6 @@ HRESULT D3DApplication::SetUpView()
 	mDeviceD3D->OMSetRenderTargets(1,					// Only one render target needs to be bound
 								&mRenderTarget,			// First element in an array of render targets to bind
 								mDepthStencilView);		// The depth stencil view to bind
-
-	SetUpViewport();
 
 	return result;
 }
@@ -182,7 +184,8 @@ LRESULT D3DApplication::HandleAppMessages(UINT message, WPARAM wParam, LPARAM lP
 			PostQuitMessage(0);		// Post quit message (= WM_QUIT), will terminate the program loop
 			return 0;
 		case WM_SIZE:
-			CalculateWindowSize();
+			mViewport.SetWidth(LOWORD(lParam));
+			mViewport.SetHeight(HIWORD(lParam));
 			return 0;
 		case WM_EXITSIZEMOVE:
 			OnResize();
@@ -197,8 +200,8 @@ HRESULT D3DApplication::CreateSwapChain()
 {
 	// Describe the swap chain
 	DXGI_SWAP_CHAIN_DESC swapDesc;
-	swapDesc.BufferDesc.Width					= mScreenWidth;					// Width of the buffer is equal to the screen width
-	swapDesc.BufferDesc.Height					= mScreenHeight;				// Height of the buffer is equal to the screen height
+	swapDesc.BufferDesc.Width					= mViewport.GetWidth();			// Width of the buffer is equal to the screen width
+	swapDesc.BufferDesc.Height					= mViewport.GetHeight();		// Height of the buffer is equal to the screen height
 	swapDesc.BufferDesc.RefreshRate.Numerator	= 60;							// The refresh ratio is 60/1
 	swapDesc.BufferDesc.RefreshRate.Denominator	= 1;							// The refresh ratio is 60/1
 	swapDesc.BufferDesc.Format					= DXGI_FORMAT_R8G8B8A8_UNORM;	// Display format of the swap chain
@@ -260,8 +263,8 @@ HRESULT D3DApplication::CreateDepthStencil()
 
 	// Describe the depth stencil
 	D3D10_TEXTURE2D_DESC depthStencilDesc;
-	depthStencilDesc.Width				= mScreenWidth;				// The width of the depth stencil texture
-	depthStencilDesc.Height				= mScreenHeight;			// The height of the depth stencil texture
+	depthStencilDesc.Width				= mViewport.GetWidth();		// The width of the depth stencil texture
+	depthStencilDesc.Height				= mViewport.GetHeight();	// The height of the depth stencil texture
 	depthStencilDesc.ArraySize			= 1;						// Only one texture in the texture array
 	depthStencilDesc.BindFlags			= D3D10_BIND_DEPTH_STENCIL;	// The part of the pipeline to bind the resource to
 	depthStencilDesc.CPUAccessFlags		= 0;						// Only the GPU will access the resource
@@ -286,19 +289,19 @@ HRESULT D3DApplication::CreateDepthStencil()
 }
 
 // Set up viewport and bind to the Direct3D device
-void D3DApplication::SetUpViewport()
-{
-	D3D10_VIEWPORT viewportSettings;
-	viewportSettings.TopLeftX		= 0;				// Relative to the client area, 0 to start to the left
-	viewportSettings.TopLeftY		= 0;				// Relative to the client area, 0 to start at the top
-	viewportSettings.Width			= mScreenWidth;		// Relative to the client area, same width means cover
-	viewportSettings.Height			= mScreenHeight;	// Relative to the client area, same height means cover
-	viewportSettings.MinDepth		= 0;				// Minimum depth buffer value (0 is standard)
-	viewportSettings.MaxDepth		= 1;				// Maximum depth buffer value (1 is standard)
-
-	mDeviceD3D->RSSetViewports(1,						// Number of viewports
-							&viewportSettings);			// First element of array with viewports to bind
-}
+//void D3DApplication::SetUpViewport()
+//{
+//	D3D10_VIEWPORT viewportSettings;
+//	viewportSettings.TopLeftX		= 0;				// Relative to the client area, 0 to start to the left
+//	viewportSettings.TopLeftY		= 0;				// Relative to the client area, 0 to start at the top
+//	viewportSettings.Width			= mScreenWidth;		// Relative to the client area, same width means cover
+//	viewportSettings.Height			= mScreenHeight;	// Relative to the client area, same height means cover
+//	viewportSettings.MinDepth		= 0;				// Minimum depth buffer value (0 is standard)
+//	viewportSettings.MaxDepth		= 1;				// Maximum depth buffer value (1 is standard)
+//
+//	mDeviceD3D->RSSetViewports(1,						// Number of viewports
+//							&viewportSettings);			// First element of array with viewports to bind
+//}
 
 // Show a messagebox with the error message
 void D3DApplication::ShowErrorMessage(LPCSTR message)
@@ -338,7 +341,9 @@ void D3DApplication::OnResize()
 	SafeRelease(mDepthStencilBuffer);
 	SafeRelease(mDepthStencilView);
 
-	mSwapChain->ResizeBuffers(1, mScreenWidth, mScreenHeight, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+	mViewport.Recalculate(mDeviceD3D);
+
+	mSwapChain->ResizeBuffers(0, mViewport.GetWidth(), mViewport.GetHeight(), DXGI_FORMAT_UNKNOWN, 0);
 
 	HRESULT result = SetUpView();
 }

@@ -9,13 +9,14 @@
 
 #include "MenuState.hpp"
 #include "LocalLobbyState.hpp"
+#include "NetworkLobbyState.hpp"
 #include "InGameState.hpp"
 
 class Game : public D3DApplication
 {
 public:
 	Game(HINSTANCE applicationInstance, LPCTSTR windowTitle = "GameWindow", 
-		UINT windowWidth = CW_USEDEFAULT, UINT windowHeight = CW_USEDEFAULT);
+		UINT clientWidth = 640, UINT clientHeight = 480);
 	~Game() throw();
 
 	void Update();
@@ -30,6 +31,7 @@ private:
 
 	State::MenuState*			mMenuState;
 	State::LocalLobbyState*		mLocalLobbyState;
+	State::NetworkLobbyState*	mNetworkLobbyState;
 	State::InGameState*			mInGameState;
 
 	Frustrum					mViewFrustrum;

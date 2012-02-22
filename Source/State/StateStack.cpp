@@ -39,10 +39,10 @@ namespace State
 	}
 
 		
-	void StateStack::UpdateState(const InputManager& input, const GameTime& gameTime)
+	void StateStack::UpdateState(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
 	{
 		// TODO: Need to update states below top state, if it allows for it
-		mStack.back()->Update(input, gameTime);
+		mStack.back()->Update(currInput, prevInput, gameTime);
 	}
 
 	void StateStack::DrawState()
@@ -71,7 +71,7 @@ namespace State
 	std::vector<T> OrderedDifference(const std::vector<T>& lhs, const std::vector<T>& rhs)
 	{
 		std::vector<T> result;
-		for (int i = 0; i < lhs.size(); ++i)
+		for (unsigned int i = 0; i < lhs.size(); ++i)
 		{
 			if (i >= rhs.size())
 			{

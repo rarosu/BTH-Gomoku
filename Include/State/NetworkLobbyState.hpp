@@ -1,35 +1,27 @@
-#ifndef MENU_STATE_HPP
-#define MENU_STATE_HPP
-
-#include <D3DX10.h>
-#include <vector>
+#ifndef NETWORK_STATE_HPP
+#define NETWORK_STATE_HPP
 
 #include "ApplicationState.hpp"
-#include "Buffer.hpp"
-#include "Effect.hpp"
+#include "Globals.hpp"
 #include "TextButton.hpp"
 
 namespace State
 {
-	namespace MenuButton
+	namespace NLobbyButton
 	{
 		enum Button
 		{
-			Local,
-			Network,
-			Options,
-			Exit,
+			Game,
+			Back,
 			Count
 		};
 	}
-
-	class MenuState : public ApplicationState
+	class NetworkLobbyState : public ApplicationState
 	{
 	public:
-		MenuState(StateID id, ID3D10Device* device, int width, int height);
-		~MenuState() throw();
-		
-		
+		NetworkLobbyState(StateID id, ID3D10Device* device, InputSubscription* manager, int width, int height);
+		~NetworkLobbyState() throw();
+
 		// Inherited from Application State
 		void Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime);
 		void Draw();
@@ -50,6 +42,7 @@ namespace State
 
 		void CreateBuffer(float width, float height);
 		void CreateEffect();
+
 	};
 }
 

@@ -3,9 +3,9 @@
 namespace Components
 {
 	Clickable::Clickable(InputSubscription* manager)
-		: mHovered(false), mPressed(false), mManager(manager)
+		: mHovered(false), mPressed(false), mManager(manager), mIsClicked(false)
 	{
-		mManager->AddMouseListener(this);
+		//mManager->AddMouseListener(this);
 	}
 
 	Clickable::~Clickable() throw()
@@ -44,6 +44,13 @@ namespace Components
 		return mHovered;
 	}
 
+	bool Clickable::GetAndResetClickStatus()
+	{
+		bool result = mIsClicked;
+		mIsClicked = false;
+		return result;
+	}
+
 	void Clickable::MouseButtonPressed(int index, const InputState& currentState)
 	{
 		if(mHovered)
@@ -63,6 +70,7 @@ namespace Components
 			{
 				SetFocusThis();
 				MouseReleased(index);
+				mIsClicked = true;
 			}
 		}
 	}

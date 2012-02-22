@@ -3,6 +3,7 @@
 
 #include <D3DX10.h>
 #include "Globals.hpp"
+#include "Viewport.hpp"
 
 #pragma comment(lib, "d3d10.lib")
 
@@ -10,7 +11,7 @@ class D3DApplication
 {
 public:
 	D3DApplication(HINSTANCE applicationInstance, LPCTSTR windowTitle = "ApplicationWindow", 
-	UINT windowWidth = CW_USEDEFAULT, UINT windowHeight = CW_USEDEFAULT);
+	UINT clientWidth = 640, UINT clientHeight = 480);
 	virtual ~D3DApplication();
 	int Run();
 	virtual LRESULT HandleAppMessages(UINT message, WPARAM wParam, LPARAM lParam);
@@ -30,17 +31,16 @@ private:
 	D3DApplication(); // Default contstructor is private, the other constructor must be used
 	bool InitWindowsApplication(HINSTANCE applicationHandle, LPCTSTR title, int showSetting);
 	HRESULT InitializeDirect3D();
-	void CalculateWindowSize();
+	/*void CalculateWindowSize();*/
 	HRESULT SetUpView();
 	HRESULT CreateSwapChain();
 	HRESULT CreateRenderTargetView();
 	HRESULT CreateDepthStencil();
-	void SetUpViewport();
+	/*void SetUpViewport();*/
 
 protected:
 	ID3D10Device*			mDeviceD3D;
-	UINT					mScreenWidth;
-	UINT					mScreenHeight;
+	Viewport				mViewport;
 
 	void ShowErrorMessage(LPCSTR message);
 	virtual void ProgramLoop();

@@ -2,11 +2,18 @@
 
 namespace Components
 {
-	Component* Component::mHasFocus = NULL;
+	Component*			Component::sHasFocus = NULL;
+	const Viewport*		Component::sViewport = NULL;
 
 	Component::Component()
 	{
 		ZeroMemory(&mPositionRect, sizeof(mPositionRect));
+	}
+
+	Component::~Component() throw()
+	{
+		if(sHasFocus == this)
+			sHasFocus = NULL;
 	}
 
 	float Component::GetWidth() const
@@ -21,17 +28,17 @@ namespace Components
 
 	void Component::SetFocusThis()
 	{
-		if(mHasFocus)
-			mHasFocus->LostFocus();
+		if(sHasFocus)
+			sHasFocus->LostFocus();
 
-		mHasFocus = this;
-		mHasFocus->GotFocus();
+		sHasFocus = this;
+		sHasFocus->GotFocus();
 	}
 
 	void Component::LoseFocus()
 	{
-		if(mHasFocus)
-			mHasFocus->LostFocus();
-		mHasFocus = NULL;
+		if(sHasFocus)
+			sHasFocus->LostFocus();
+		sHasFocus = NULL;
 	}
 }

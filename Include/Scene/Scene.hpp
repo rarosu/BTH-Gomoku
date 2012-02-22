@@ -9,6 +9,7 @@
 #include "Marker.hpp"
 #include "Console.hpp"
 #include "Globals.hpp"
+#include "Viewport.hpp"
 
 /**
 	The scene will render a view of the grid and is able to determine
@@ -23,7 +24,7 @@ public:
 	/**
 		Create a texture of the grid from the model
 	*/
-	void Update(const Logic::Grid* grid, const Camera& camera, const InputState& currentInput);
+	void Update(const Logic::Grid& grid, const Camera& camera, const Viewport& viewport, const InputState& currentInput);
 
 	/**
 		Render the grid, through the given camera
@@ -57,7 +58,7 @@ private:
 		Given the position of the mouse and the orientation of the camera,
 		this method will return the cell the mouse is hovering over.
 	*/
-	D3DXVECTOR2 PickCell(int mouseX, int mouseY, const Camera& camera) const;
+	D3DXVECTOR2 PickCell(const Viewport& viewport, int mouseX, int mouseY, const Camera& camera) const;
 
 	/**
 		Get the rectangle which completely encompasses the visible area

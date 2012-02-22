@@ -72,10 +72,10 @@ void Scene::CreateEffect()
 		sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
 }
 
-void Scene::Update(const Logic::Grid* grid, const Camera& camera, const InputState& currentInput)
+void Scene::Update(const Logic::Grid& grid, const Camera& camera, const Viewport& viewport, const InputState& currentInput)
 {
 	// Pick cell
-	D3DXVECTOR2 cell = PickCell(currentInput.Mouse.x, currentInput.Mouse.y, camera);
+	D3DXVECTOR2 cell = PickCell(viewport, currentInput.Mouse.x, currentInput.Mouse.y, camera);
 	mEffect->SetVectorVariable("gMarkedCell", &D3DXVECTOR4(cell.x, cell.y, 0.0, 0.0));
 }
 
@@ -100,9 +100,9 @@ void Scene::MouseButtonPressed(int index, const InputState& currentState) {}
 void Scene::MouseButtonReleased(int index, const InputState& currentState) {}
 void Scene::MouseWheelMoved(short delta, const InputState& currentState) {}
 
-D3DXVECTOR2 Scene::PickCell(int mouseX, int mouseY, const Camera& camera) const
+D3DXVECTOR2 Scene::PickCell(const Viewport& viewport, int mouseX, int mouseY, const Camera& camera) const
 {
-	D3DXVECTOR2 normalizedMouseCoordinates = TransformToViewport(D3DXVECTOR2(mouseX, mouseY));
+	D3DXVECTOR2 normalizedMouseCoordinates = viewport.TransformToViewport(D3DXVECTOR2((float)mouseX, (float)mouseY));
 	D3DXVECTOR3 v;
 	
 	v.x = normalizedMouseCoordinates.x;
@@ -126,7 +126,7 @@ D3DXVECTOR2 Scene::PickCell(int mouseX, int mouseY, const Camera& camera) const
 	float t = -origin.y / direction.y;
 
 	D3DXVECTOR3 hit = origin + direction * t;
-	D3DXVECTOR2 cell = D3DXVECTOR2(((int)hit.x / 10), ((int)hit.z / 10));
+	D3DXVECTOR2 cell = D3DXVECTOR2(float((int)hit.x / 10), float((int)hit.z / 10));
 
 	return cell;
 }

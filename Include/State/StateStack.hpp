@@ -3,12 +3,7 @@
 
 #include <vector>
 #include "GameTime.hpp"
-
-/**
-	Forward-declare
-*/
-class InputManager;
-
+#include "InputManager.hpp"
 
 namespace State
 {
@@ -57,7 +52,7 @@ namespace State
 		/**
 			Update the topmost state
 		*/
-		void UpdateState(const InputManager& input, const GameTime& gameTime);
+		void UpdateState(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime);
 
 		/**
 			Draw the topmost state

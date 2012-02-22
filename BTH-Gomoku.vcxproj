@@ -165,6 +165,7 @@
     <ClCompile Include="Source\Components\Console.cpp" />
     <ClCompile Include="Source\Framework\D3DApplication.cpp" />
     <ClCompile Include="Source\Framework\Effect.cpp" />
+    <ClCompile Include="Source\Framework\Viewport.cpp" />
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\Framework\GameFont.cpp" />
     <ClCompile Include="Source\Framework\GameTime.cpp" />
@@ -181,6 +182,7 @@
     <ClCompile Include="Source\State\InGameState.cpp" />
     <ClCompile Include="Source\State\LocalLobbyState.cpp" />
     <ClCompile Include="Source\State\MenuState.cpp" />
+    <ClCompile Include="Source\State\NetworkLobbyState.cpp" />
     <ClCompile Include="Source\State\StateRegistry.cpp" />
     <ClCompile Include="Source\State\StateStack.cpp" />
   </ItemGroup>
@@ -196,6 +198,7 @@
     <ClInclude Include="Include\Components\Console.hpp" />
     <ClInclude Include="Include\Framework\D3DApplication.hpp" />
     <ClInclude Include="Include\Framework\Effect.hpp" />
+    <ClInclude Include="Include\Framework\Viewport.hpp" />
     <ClInclude Include="Include\Game.hpp" />
     <ClInclude Include="Include\Framework\GameFont.hpp" />
     <ClInclude Include="Include\Framework\GameTime.hpp" />
@@ -213,11 +216,13 @@
     <ClInclude Include="Include\State\InGameState.hpp" />
     <ClInclude Include="Include\State\LocalLobbyState.hpp" />
     <ClInclude Include="Include\State\MenuState.hpp" />
+    <ClInclude Include="Include\State\NetworkLobbyState.hpp" />
     <ClInclude Include="Include\State\StateRegistry.hpp" />
     <ClInclude Include="Include\State\StateStack.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+    <None Include="Resources\Effects\Background.fx" />
     <None Include="Resources\Effects\Button.fx" />
     <None Include="Resources\Effects\Basic2D.fx" />
     <None Include="Resources\Effects\Grid.fx" />
@@ -230,6 +235,7 @@
     <None Include="Resources\Textures\button.png" />
     <None Include="Resources\Textures\buttonDown.png" />
     <None Include="Resources\Textures\buttonUp.png" />
+    <None Include="Resources\Textures\titleScreenBig.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

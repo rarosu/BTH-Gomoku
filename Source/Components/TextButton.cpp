@@ -19,7 +19,8 @@ namespace Components
 		
 		Button::Initialize(device, position, buttonGraphics);
 
-		mFont = new GameFont(device, "Comic Sans", 18, false, true);
+		int textSize = (mPositionRect.bottom - mPositionRect.top) / 2;
+		mFont = new GameFont(device, "Comic Sans", textSize, false, true);
 		mCaption = caption;
 	}
 

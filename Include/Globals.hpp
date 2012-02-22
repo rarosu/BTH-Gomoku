@@ -7,8 +7,8 @@ extern D3DXMATRIX				gViewportMatrix;
 extern const D3DXCOLOR			C_COLOR_WINDOW_BG;
 extern const D3DXCOLOR			C_COLOR_COMPONENT_BG;
 
-void UpdateViewportMatrix(int newWidth, int newHeight);
-D3DXVECTOR2 TransformToViewport(const D3DXVECTOR2& vector);
+//void UpdateViewportMatrix(int newWidth, int newHeight);
+//D3DXVECTOR2 TransformToViewport(const D3DXVECTOR2& vector);
 
 template <typename T>
 inline void SafeRelease(T*& resource)

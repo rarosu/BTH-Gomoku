@@ -17,7 +17,7 @@ namespace State
 		void OnStatePushed();					// Initialize
 		void OnStatePopped();					// Destroy
 
-		void Update(const InputManager& input, const GameTime& gameTime);
+		void Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime);
 		void Draw();
 
 		void SetViewFrustrum(const Frustrum& viewFrustrum);

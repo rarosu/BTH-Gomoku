@@ -1,8 +1,8 @@
-#include "LocalLobbyState.hpp"
+#include "NetworkLobbyState.hpp"
 
 namespace State
 {
-	LocalLobbyState::LocalLobbyState(StateID id, ID3D10Device* device, InputSubscription* manager, int width, int height) 
+	NetworkLobbyState::NetworkLobbyState(StateID id, ID3D10Device* device, InputSubscription* manager, int width, int height) 
 		: ApplicationState(id), mDevice(device), mEffect(NULL), mBuffer(NULL)
 	{
 		CreateBuffer((float)width, (float)height);
@@ -18,7 +18,7 @@ namespace State
 		LONG centerY = (LONG)height / 2;
 		const int padding = 20;
 
-		for(int i = 0; i < LLobbyButton::Count; ++i)
+		for(int i = 0; i < NLobbyButton::Count; ++i)
 		{
 			mButtons.push_back(new Components::TextButton(manager));
 		
@@ -28,7 +28,7 @@ namespace State
 		}
 	}
 
-	LocalLobbyState::~LocalLobbyState() throw()
+	NetworkLobbyState::~NetworkLobbyState() throw()
 	{
 		for(UINT i = 0; i < mButtons.size(); ++i)
 		{
@@ -36,7 +36,7 @@ namespace State
 		}
 	}
 
-	void LocalLobbyState::CreateBuffer(float width, float height)
+	void NetworkLobbyState::CreateBuffer(float width, float height)
 	{
 		const int numVertices = 4;
 		bgVertex vertices[numVertices];
@@ -63,7 +63,7 @@ namespace State
 		mBuffer->Initialize(mDevice, bufferDesc);
 	}
 	
-	void LocalLobbyState::CreateEffect()
+	void NetworkLobbyState::CreateEffect()
 	{
 		// Create an array describing each of the elements of the vertex that are inputs to the vertex shader.
 		D3D10_INPUT_ELEMENT_DESC vertexDesc[] = 
@@ -83,31 +83,31 @@ namespace State
 			sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
 	}
 
-	void LocalLobbyState::OnStatePushed()
+	void NetworkLobbyState::OnStatePushed()
 	{
-		for(int i = 0; i < LLobbyButton::Count; ++i)
+		for(int i = 0; i < NLobbyButton::Count; ++i)
 		{
 			sInputManager->AddMouseListener(mButtons[i]);
 		}
 	}
 
-	void LocalLobbyState::OnStatePopped()
+	void NetworkLobbyState::OnStatePopped()
 	{
-		for(int i = 0; i < LLobbyButton::Count; ++i)
+		for(int i = 0; i < NLobbyButton::Count; ++i)
 		{
 			sInputManager->RemoveMouseListener(mButtons[i]);
 		}
 	}
 
-	void LocalLobbyState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
+	void NetworkLobbyState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
 	{
 
 		if(currInput.Keyboard.keyIsPressed[VK_ESCAPE])
 			QuitApplication();
 
-		if(mButtons.at(LLobbyButton::Game)->GetAndResetClickStatus())
+		if(mButtons.at(NLobbyButton::Game)->GetAndResetClickStatus())
 			ChangeState(C_STATE_IN_GAME);
-		if(mButtons.at(LLobbyButton::Back)->GetAndResetClickStatus())
+		if(mButtons.at(NLobbyButton::Back)->GetAndResetClickStatus())
 			ChangeState(C_STATE_MENU);
 
 		for(UINT i = 0; i < mButtons.size(); ++i)
@@ -116,7 +116,7 @@ namespace State
 		}
 	}
 
-	void LocalLobbyState::Draw()
+	void NetworkLobbyState::Draw()
 	{
 		mBuffer->MakeActive();
 		mEffect->MakeActive();

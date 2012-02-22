@@ -31,10 +31,10 @@ namespace Components
 	void InputField::CreateBuffer()
 	{
 		D3DXVECTOR2 vertices[C_NUM_VERTICES];
-		vertices[0]	= TransformToViewport(D3DXVECTOR2((float)mPositionRect.left, (float)mPositionRect.top));
-		vertices[1]	= TransformToViewport(D3DXVECTOR2((float)mPositionRect.right, (float)mPositionRect.top));
-		vertices[2]	= TransformToViewport(D3DXVECTOR2((float)mPositionRect.left, (float)mPositionRect.bottom));
-		vertices[3]	= TransformToViewport(D3DXVECTOR2((float)mPositionRect.right, (float)mPositionRect.bottom));
+		vertices[0]	= sViewport->TransformToViewport(D3DXVECTOR2((float)mPositionRect.left, (float)mPositionRect.top));
+		vertices[1]	= sViewport->TransformToViewport(D3DXVECTOR2((float)mPositionRect.right, (float)mPositionRect.top));
+		vertices[2]	= sViewport->TransformToViewport(D3DXVECTOR2((float)mPositionRect.left, (float)mPositionRect.bottom));
+		vertices[3]	= sViewport->TransformToViewport(D3DXVECTOR2((float)mPositionRect.right, (float)mPositionRect.bottom));
 
 		mBuffer = new Buffer();
 		BufferInformation bufferDesc;
