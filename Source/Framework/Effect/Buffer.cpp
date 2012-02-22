@@ -116,12 +116,14 @@ void VertexBuffer::SetAccessAndUsageFlags(D3D10_BUFFER_DESC& description, Usage:
 			description.CPUAccessFlags = D3D10_CPU_ACCESS_READ;
 			break;
 		case Usage::CPUWrite:
-			description.Usage = D3D10_USAGE_STAGING;
+			//description.Usage = D3D10_USAGE_STAGING;
+			description.Usage = D3D10_USAGE_DYNAMIC;
 			description.CPUAccessFlags = D3D10_CPU_ACCESS_WRITE;
 			break;
 		case Usage::Default:
 		default:
-			description.Usage = D3D10_USAGE_DEFAULT;
+			//description.Usage = D3D10_USAGE_DEFAULT;
+			description.Usage = D3D10_USAGE_IMMUTABLE;
 			description.CPUAccessFlags = 0;
 	}
 }

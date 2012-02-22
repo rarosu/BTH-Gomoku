@@ -11,7 +11,7 @@ namespace State
 		ID3D10ShaderResourceView* texture;
 		D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/titleScreenBig.png", NULL, NULL, 
 											   &texture, NULL);
-		mEffect->SetResourceVariable("textureBG", texture);
+		mEffect->SetVariable("textureBG", texture);
 
 		const std::string btnCaptions[] = { "Start Game", "Back To Menu" };
 		LONG centerX = (LONG)width / 4 + 100;
