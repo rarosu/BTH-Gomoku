@@ -3,9 +3,9 @@
 
 #include <D3DX10.h>
 #include "Buffer.hpp"
+#include "Effect.hpp"
 #include "Component.hpp"
 #include "Clickable.hpp"
-#include "Effect.hpp"
 
 namespace Components
 {
@@ -40,7 +40,7 @@ namespace Components
 		};
 
 		ID3D10Device*				mDevice;
-		Buffer*						mBuffer;
+		VertexBuffer*				mBuffer;
 		Effect*						mEffect;
 
 		Graphics					mGraphics;

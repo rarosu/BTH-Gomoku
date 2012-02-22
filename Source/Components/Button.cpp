@@ -27,8 +27,8 @@ namespace Components
 		if(mGraphics.textureUp == NULL)
 			D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/button.png", NULL, NULL, &mGraphics.textureUp, NULL);
 
-		mEffect->SetResourceVariable("textureBase", mGraphics.textureUp);
-		mEffect->SetVectorVariable("buttonColor", &(D3DXVECTOR4)mGraphics.idleColor);
+		mEffect->SetVariable("textureBase", mGraphics.textureUp);
+		mEffect->SetVariable("buttonColor", &(D3DXVECTOR4)mGraphics.idleColor);
 	}
 
 	void Button::CreateBuffer()
@@ -52,37 +52,25 @@ namespace Components
 																			 (float)mPositionRect.bottom));
 		vertices[3].uv			= D3DXVECTOR2(1, 1);
 
-		mBuffer = new Buffer();
-		BufferInformation bufferDesc;
+		mBuffer = new VertexBuffer(mDevice);
+		Buffer::Data bufferDesc;
 
-		bufferDesc.type =					VertexBuffer;
-		bufferDesc.usage =					Buffer_Default;
-		bufferDesc.numberOfElements =		numVertices;
-		bufferDesc.firstElementPointer =	vertices;
-		bufferDesc.elementSize =			sizeof(ButtonVertex);
-		bufferDesc.topology =				D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+		bufferDesc.mUsage =					Usage::Default;
+		bufferDesc.mElementCount =			numVertices;
+		bufferDesc.mElementSize =			sizeof(ButtonVertex);
+		bufferDesc.mFirstElementPointer	=	vertices;
 
-		mBuffer->Initialize(mDevice, bufferDesc);
+		mBuffer->SetBufferData(bufferDesc, Topology::TriangleStrip);
 	}
 
 	void Button::CreateEffect()
 	{
 		// Create an array describing each of the elements of the vertex that are inputs to the vertex shader.
-		D3D10_INPUT_ELEMENT_DESC vertexDesc[] = 
-		{
-			{ "POSITION",					// Semantic name, must be same as the vertex shader input semantic name
-			  0,							// Semantic index, if one semantic name exists for more than one element
-			  DXGI_FORMAT_R32G32_FLOAT,		// Format of the element, R32G32_FLOAT is a 32-bit 2D float vector
-			  0,							// Input slot, of the 0-15 slots, through wich to send vertex data
-			  0,							// AlignedByteOffset, bytes from start of the vertex to this component
-			  D3D10_INPUT_PER_VERTEX_DATA,	// Input data class for this input slot
-			  0 }, 							// 0 when slot input data class is D3D10_INPUT_PER_VERTEX_DATA
-			{ "UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(D3DXVECTOR2), D3D10_INPUT_PER_VERTEX_DATA, 0 }
-		};
+		InputLayoutVector inputLayout;
+		inputLayout.push_back(InputLayoutElement("POSITION", DXGI_FORMAT_R32G32_FLOAT));
+		inputLayout.push_back(InputLayoutElement("UV", DXGI_FORMAT_R32G32_FLOAT));
 
-		mEffect = new Effect();
-		mEffect->Initialize(mDevice, "Resources/Effects/Button.fx", vertexDesc,
-			sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
+		mEffect = new Effect(mDevice, "Resources/Effects/Button.fx");
 	}
 
 	void Button::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
@@ -92,10 +80,8 @@ namespace Components
 
 	void Button::Draw()
 	{
-		mBuffer->MakeActive();
-		mEffect->MakeActive();
-
-		for(UINT p = 0; p < mEffect->GetNumberOfPasses(); ++p)
+		mBuffer->Bind();
+		for(UINT p = 0; p < mEffect->GetTechniqueByIndex(0).GetPassCount(); ++p)
 		{
 			mEffect->ApplyTechniquePass(p);
 			mDevice->Draw(mBuffer->GetNumberOfElements(), 0);

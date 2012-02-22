@@ -41,19 +41,16 @@ bool Pass::RecalculateLayout(ID3D10Device* device)
 
 	D3D10_INPUT_ELEMENT_DESC* vertexDescription = new D3D10_INPUT_ELEMENT_DESC[mInputLayout.size()];
 	
-	unsigned int offset = 0;
 	for (int i = 0; i < mInputLayout.size(); ++i)
 	{
 		vertexDescription[i].SemanticName = mInputLayout[i].mName.c_str();
 		vertexDescription[i].SemanticIndex = mInputLayout[i].mSemanticIndex;
 		vertexDescription[i].Format = mInputLayout[i].mFormat;
 
-		vertexDescription[i].AlignedByteOffset = offset;
+		vertexDescription[i].AlignedByteOffset = D3D10_APPEND_ALIGNED_ELEMENT;
 		vertexDescription[i].InputSlot = 0;
 		vertexDescription[i].InputSlotClass = D3D10_INPUT_PER_VERTEX_DATA;
 		vertexDescription[i].InstanceDataStepRate = 0;
-		
-		offset += mInputLayout[i].mSize;
 	}
 
 	

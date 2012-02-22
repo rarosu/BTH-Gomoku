@@ -1,21 +1,91 @@
 #include "Buffer.hpp"
 
-Buffer::Buffer(ID3D10Device* device) :
-	mBuffer(NULL),
-	mElementCount(0),
+VertexBuffer::VertexBuffer(ID3D10Device* device) :
+	mDevice(device), 
+	mVertexBuffer(NULL),
+	mIndexBuffer(NULL),
+	mTopology(Topology::PointList),
 	mElementSize(0),
-	mDevice(device)
+	mElementCount(0),
+	mIndexCount(0)
 {}
 
-Buffer::~Buffer() throw()
+VertexBuffer::~VertexBuffer() throw()
 {
-	SafeRelease(mBuffer);
+	SafeRelease(mVertexBuffer);
+	SafeRelease(mIndexBuffer);
 }
 
-bool Buffer::SetBufferData(const Data& data, UINT bindFlags)
+bool VertexBuffer::SetData(const Data& data, IndexVector* indices)
 {
-	SafeRelease(mBuffer);
+	if (indices != NULL)
+	{
+		if (!SetupIndexBuffer(indices, data.mUsage))
+		{
+			MessageBox(NULL, "Failed to create index buffer", "Error", MB_OK | MB_ICONERROR);
+			return false;
+		}
+	}
 
+	if (!CreateBuffer(&mVertexBuffer, data, D3D10_BIND_VERTEX_BUFFER))
+	{
+		MessageBox(NULL, "Failed to create vertex buffer", "Error", MB_OK | MB_ICONERROR);
+		return false;
+	}
+
+	mElementCount = data.mElementCount;
+	mElementSize = data.mElementSize;
+	mTopology = data.mTopology;
+
+	return true;
+}
+
+void VertexBuffer::Bind()
+{
+	// Don't bind unless we've set the buffer data
+	if (mVertexBuffer == NULL)
+		return;
+
+	// Bind the index buffer if it exists
+	if (mIndexBuffer != NULL)
+		mDevice->IASetIndexBuffer(mIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	
+	// Bind the vertex buffer and set the topology state
+	unsigned int offset = 0;
+	mDevice->IASetVertexBuffers(0, 1, &mVertexBuffer, &mElementSize, &offset);
+	mDevice->IASetPrimitiveTopology(GetTopologyFlag(mTopology));
+}
+
+void VertexBuffer::Draw()
+{
+	if (mIndexBuffer != NULL)
+	{
+		mDevice->DrawIndexed(mIndexCount, 0, 0);
+	}
+	else
+	{
+		mDevice->Draw(mElementCount, 0);
+	}
+}
+
+bool VertexBuffer::SetupIndexBuffer(IndexVector* indices, Usage::Usage usage)
+{
+	Data data;
+	data.mElementCount = indices->size();
+	data.mElementSize = sizeof(unsigned int);
+	data.mUsage = usage;
+	data.mFirstElementPointer = &(indices->front());
+
+	if (!CreateBuffer(&mIndexBuffer, data, D3D10_BIND_INDEX_BUFFER))
+		return false;
+
+	mIndexCount = indices->size();
+
+	return true;
+}
+
+bool VertexBuffer::CreateBuffer(ID3D10Buffer** buffer, const Data& data, UINT bindFlags)
+{
 	D3D10_BUFFER_DESC d3dBufferDescription;
 	d3dBufferDescription.BindFlags = bindFlags;
 	d3dBufferDescription.ByteWidth = data.mElementSize * data.mElementCount;
@@ -27,17 +97,13 @@ bool Buffer::SetBufferData(const Data& data, UINT bindFlags)
 	d3dData.SysMemPitch = 0;
 	d3dData.SysMemSlicePitch = 0;
 
-	HRESULT result = mDevice->CreateBuffer(&d3dBufferDescription, &d3dData, &mBuffer);
+	HRESULT result = mDevice->CreateBuffer(&d3dBufferDescription, &d3dData, buffer);
 	if (FAILED(result))
 		return false;
-
-	mElementCount = data.mElementCount;
-	mElementSize = data.mElementSize;
-
 	return true;
 }
 
-void Buffer::SetAccessAndUsageFlags(D3D10_BUFFER_DESC& description, Usage::Usage usage)
+void VertexBuffer::SetAccessAndUsageFlags(D3D10_BUFFER_DESC& description, Usage::Usage usage)
 {
 	switch (usage)
 	{
@@ -58,28 +124,6 @@ void Buffer::SetAccessAndUsageFlags(D3D10_BUFFER_DESC& description, Usage::Usage
 			description.Usage = D3D10_USAGE_DEFAULT;
 			description.CPUAccessFlags = 0;
 	}
-}
-
-
-
-/**
-	Vertex Buffer
-*/
-
-VertexBuffer::VertexBuffer(ID3D10Device* device) :
-	Buffer(device) {}
-
-bool VertexBuffer::SetBufferData(const Data& data, Topology::Topology topology)
-{
-	mTopology = topology;
-	return Buffer::SetBufferData(data, D3D10_BIND_VERTEX_BUFFER);
-}
-
-void VertexBuffer::Bind()
-{
-	UINT offset = 0;
-	mDevice->IASetVertexBuffers(0, 1, &mBuffer, &mElementSize, &offset);
-	mDevice->IASetPrimitiveTopology(GetTopologyFlag(mTopology));
 }
 
 D3D10_PRIMITIVE_TOPOLOGY VertexBuffer::GetTopologyFlag(Topology::Topology topology)
@@ -110,21 +154,3 @@ D3D10_PRIMITIVE_TOPOLOGY VertexBuffer::GetTopologyFlag(Topology::Topology topolo
 }
 
 
-
-/**
-	Index Buffer
-*/
-
-IndexBuffer::IndexBuffer(ID3D10Device* device) :
-	Buffer(device) {}
-
-bool IndexBuffer::SetBufferData(const Data& data)
-{
-	return Buffer::SetBufferData(data, D3D10_BIND_INDEX_BUFFER);
-}
-
-void IndexBuffer::Bind()
-{
-	UINT offset = 0;
-	mDevice->IASetIndexBuffer(mBuffer, DXGI_FORMAT_R32_UINT, offset);
-}

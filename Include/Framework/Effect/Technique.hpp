@@ -1,7 +1,7 @@
 #ifndef TECHNIQUE_HPP
 #define TECHNIQUE_HPP
 
-#include "Global.hpp"
+#include "Globals.hpp"
 #include <vector>
 #include <d3d10.h>
 #include "Pass.hpp"

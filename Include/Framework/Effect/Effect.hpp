@@ -1,7 +1,7 @@
 #ifndef EFFECT_HPP
 #define EFFECT_HPP
 
-#include "Global.hpp"
+#include "Globals.hpp"
 #include <vector>
 #include <d3d10.h>
 #include <d3dx10.h>

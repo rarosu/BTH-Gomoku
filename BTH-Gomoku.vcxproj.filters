@@ -10,11 +10,9 @@
     <ClCompile Include="Source\Globals.cpp" />
     <ClCompile Include="Source\Components\Console.cpp" />
     <ClCompile Include="Source\Components\InputField.cpp" />
-    <ClCompile Include="Source\Framework\Buffer.cpp" />
     <ClCompile Include="Source\Framework\D3DApplication.cpp" />
     <ClCompile Include="Source\Framework\GameFont.cpp" />
     <ClCompile Include="Source\Framework\GameTime.cpp" />
-    <ClCompile Include="Source\Framework\Effect.cpp" />
     <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\Scene\Marker.cpp" />
     <ClCompile Include="Source\Framework\InputManager.cpp" />
@@ -32,6 +30,10 @@
     <ClCompile Include="Source\State\StateRegistry.cpp" />
     <ClCompile Include="Source\Framework\Viewport.cpp" />
     <ClCompile Include="Source\State\NetworkLobbyState.cpp" />
+    <ClCompile Include="Source\Framework\Effect\Buffer.cpp" />
+    <ClCompile Include="Source\Framework\Effect\Effect.cpp" />
+    <ClCompile Include="Source\Framework\Effect\Pass.cpp" />
+    <ClCompile Include="Source\Framework\Effect\Technique.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -46,9 +48,7 @@
     <ClInclude Include="Include\Components\Console.hpp" />
     <ClInclude Include="Include\Framework\GameTime.hpp" />
     <ClInclude Include="Include\Framework\GameFont.hpp" />
-    <ClInclude Include="Include\Framework\Effect.hpp" />
     <ClInclude Include="Include\Framework\D3DApplication.hpp" />
-    <ClInclude Include="Include\Framework\Buffer.hpp" />
     <ClInclude Include="Include\Scene\Scene.hpp" />
     <ClInclude Include="Include\Scene\Marker.hpp" />
     <ClInclude Include="Include\Framework\InputManager.hpp" />
@@ -66,6 +66,10 @@
     <ClInclude Include="Include\State\StateRegistry.hpp" />
     <ClInclude Include="Include\Framework\Viewport.hpp" />
     <ClInclude Include="Include\State\NetworkLobbyState.hpp" />
+    <ClInclude Include="Include\Framework\Effect\Buffer.hpp" />
+    <ClInclude Include="Include\Framework\Effect\Effect.hpp" />
+    <ClInclude Include="Include\Framework\Effect\Pass.hpp" />
+    <ClInclude Include="Include\Framework\Effect\Technique.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

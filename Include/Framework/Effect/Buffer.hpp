@@ -1,7 +1,8 @@
 #ifndef BUFFER_HPP
 #define BUFFER_HPP
 
-#include "Global.hpp"
+#include "Globals.hpp"
+#include <vector>
 #include <d3d10.h>
 
 /**
@@ -31,17 +32,19 @@ namespace Topology
 	enum Topology { PointList, LineStrip, LineList, TriangleStrip, TriangleList };
 }
 
-
-
+/**
+	A vector for holding an index buffer
+*/
+typedef std::vector<unsigned int> IndexVector;
 
 /**
-	Contains data to be sent to the GPU
+	A class for holding vertex buffer data.
 */
-class Buffer
+class VertexBuffer
 {
 public:
 	/**
-		A structure describing the buffer array.
+		A struct for defining the data inside a vertex buffer, and how it should be interpreted.
 	*/
 	struct Data
 	{
@@ -51,59 +54,45 @@ public:
 		unsigned int mElementCount;
 		void* mFirstElementPointer;
 		Usage::Usage mUsage;
+		Topology::Topology mTopology;
 	};
 
 	/**
-		Virtual destructor
+		Constructor & Destructor
 	*/
-	virtual ~Buffer() throw();
+	VertexBuffer(ID3D10Device* device);
+	~VertexBuffer() throw();
 
 	/**
-		Bind the buffer to an input slot in the device.
-		This is necessary to feed the buffer into the pipeline.
+		Set the actual data of the buffer and decide how
+		it should be interpreted
 	*/
-	virtual void Bind() = 0;
-protected:
-	Buffer(ID3D10Device* device);
+	bool SetData(const Data& data, IndexVector* indices);
 
-	bool SetBufferData(const Data& data, UINT bindFlags);
+	/**
+		Bind the buffer(s) to an input slot.
+	*/
+	void Bind();
 
+	/**
+		Draw the vertices in the buffer - a pass should have
+		been applied before this one is called.
+	*/
+	void Draw();
+private:
 	ID3D10Device* mDevice;
-	ID3D10Buffer* mBuffer;
+	ID3D10Buffer* mVertexBuffer;
+	ID3D10Buffer* mIndexBuffer;
+	Topology::Topology mTopology;
 	unsigned int mElementSize;
 	unsigned int mElementCount;
-private:
+	unsigned int mIndexCount;
+
+	bool SetupIndexBuffer(IndexVector* indices, Usage::Usage usage);
+	bool CreateBuffer(ID3D10Buffer** buffer, const Data& data, UINT bindFlags);
+
 	static void SetAccessAndUsageFlags(D3D10_BUFFER_DESC& description, Usage::Usage usage);
-};
-
-/**
-	A buffer containing vertex data (vertices of geometry, along with their properties)
-*/
-class VertexBuffer : public Buffer
-{
-public:
-	
-
-	VertexBuffer(ID3D10Device* device);
-
-	bool SetBufferData(const Data& data, Topology::Topology topology);
-	void Bind();
-private:
-	Topology::Topology mTopology;
-
 	static D3D10_PRIMITIVE_TOPOLOGY GetTopologyFlag(Topology::Topology topology);
-};
-
-/**
-	A buffer containing indices into a vertex buffer, specifying which order to connect the primitives.
-*/
-class IndexBuffer : public Buffer
-{
-public:
-	IndexBuffer(ID3D10Device* device);
-
-	bool SetBufferData(const Data& data);
-	void Bind();
 };
 
 #endif

@@ -67,7 +67,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(SolutionDir)\Build\x86\$(Configuration)\</IntDir>
     <ExecutablePath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Utilities\Bin\x86;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>Include;Include\Scene;Include\Framework;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -76,7 +76,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(SolutionDir)\Build\x86\$(Configuration)\</IntDir>
     <ExecutablePath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Utilities\Bin\x86;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>Include;Include\Scene;Include\Framework;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -85,7 +85,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>$(SolutionDir)\Build\x64\$(Configuration)\</IntDir>
     <ExecutablePath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Utilities\Bin\x64;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>Include;Include\Scene;Include\Framework;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -94,7 +94,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>$(SolutionDir)\Build\x64\$(Configuration)\</IntDir>
     <ExecutablePath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Utilities\Bin\x64;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>Include;Include\Scene;Include\Framework;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
+    <IncludePath>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -102,7 +102,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
-      <AdditionalIncludeDirectories>Include;Include\Scene;Include\Framework;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -114,7 +114,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
-      <AdditionalIncludeDirectories>Include;Include\Scene;Include\Framework;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -128,7 +128,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
-      <AdditionalIncludeDirectories>Include;Include\Scene;Include\Framework;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -144,7 +144,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
-      <AdditionalIncludeDirectories>Include;Include\Scene;Include\Framework;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\State;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -160,11 +160,13 @@
     <ClCompile Include="Source\Components\Scrollbar.cpp" />
     <ClCompile Include="Source\Components\TextButton.cpp" />
     <ClCompile Include="Source\Components\Clickable.cpp" />
-    <ClCompile Include="Source\Framework\Buffer.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\Components\Console.cpp" />
     <ClCompile Include="Source\Framework\D3DApplication.cpp" />
-    <ClCompile Include="Source\Framework\Effect.cpp" />
+    <ClCompile Include="Source\Framework\Effect\Buffer.cpp" />
+    <ClCompile Include="Source\Framework\Effect\Effect.cpp" />
+    <ClCompile Include="Source\Framework\Effect\Pass.cpp" />
+    <ClCompile Include="Source\Framework\Effect\Technique.cpp" />
     <ClCompile Include="Source\Framework\Viewport.cpp" />
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\Framework\GameFont.cpp" />
@@ -193,11 +195,13 @@
     <ClInclude Include="Include\Components\Scrollbar.hpp" />
     <ClInclude Include="Include\Components\TextButton.hpp" />
     <ClInclude Include="Include\Components\Clickable.hpp" />
-    <ClInclude Include="Include\Framework\Buffer.hpp" />
     <ClInclude Include="Include\Camera.hpp" />
     <ClInclude Include="Include\Components\Console.hpp" />
     <ClInclude Include="Include\Framework\D3DApplication.hpp" />
-    <ClInclude Include="Include\Framework\Effect.hpp" />
+    <ClInclude Include="Include\Framework\Effect\Buffer.hpp" />
+    <ClInclude Include="Include\Framework\Effect\Effect.hpp" />
+    <ClInclude Include="Include\Framework\Effect\Pass.hpp" />
+    <ClInclude Include="Include\Framework\Effect\Technique.hpp" />
     <ClInclude Include="Include\Framework\Viewport.hpp" />
     <ClInclude Include="Include\Game.hpp" />
     <ClInclude Include="Include\Framework\GameFont.hpp" />

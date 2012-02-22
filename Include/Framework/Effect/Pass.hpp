@@ -1,7 +1,7 @@
 #ifndef PASS_HPP
 #define PASS_HPP
 
-#include "Global.hpp"
+#include "Globals.hpp"
 #include <d3d10.h>
 #include <string>
 #include <vector>
@@ -13,12 +13,11 @@
 struct InputLayoutElement
 {
 public:
-	InputLayoutElement(const std::string& name, DXGI_FORMAT format, unsigned int size, unsigned int semanticIndex = 0) :
-		mName(name), mFormat(format), mSize(size), mSemanticIndex(semanticIndex) {}
+	InputLayoutElement(const std::string& name, DXGI_FORMAT format, unsigned int semanticIndex = 0) :
+		mName(name), mFormat(format), mSemanticIndex(semanticIndex) {}
 
 	std::string mName;				// The name of the variable, specified after the : in the effect file
 	DXGI_FORMAT mFormat;			// The format of the variable, what size and how it should be interpreted.
-	unsigned int mSize;				// The size of the variable (in bytes)
 	unsigned int mSemanticIndex;	// In case two variables have the same name, this index will separate them (start at 0).
 };
 
