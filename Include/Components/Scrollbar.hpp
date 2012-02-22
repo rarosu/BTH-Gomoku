@@ -2,6 +2,7 @@
 #define SCROLLBAR_HPP
 
 #include "Button.hpp"
+#include "Effect.hpp"
 #include "Clickable.hpp"
 
 namespace Components
@@ -32,7 +33,7 @@ namespace Components
 
 	private:
 		ID3D10Device*				mDevice;
-		Buffer*						mBuffer;
+		VertexBuffer*				mBuffer;
 		Effect*						mEffect;
 
 		Button*						mBtnUp;

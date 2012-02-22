@@ -11,7 +11,7 @@ namespace State
 		ID3D10ShaderResourceView* texture;
 		D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/titleScreenBig.png", NULL, NULL, 
 											   &texture, NULL);
-		mEffect->SetResourceVariable("textureBG", texture);
+		mEffect->SetVariable("textureBG", texture);
 
 		const std::string btnCaptions[] = { "Start Game", "Back To Menu" };
 		LONG centerX = (LONG)width / 4 + 100;
@@ -50,17 +50,16 @@ namespace State
 		vertices[3].position = sViewport->TransformToViewport(D3DXVECTOR2(width, height));
 		vertices[3].uv = D3DXVECTOR2(1, 1);
 
-		mBuffer = new Buffer();
-		BufferInformation bufferDesc;
+		mBuffer = new VertexBuffer(mDevice);
+		VertexBuffer::Data bufferDesc;
 
-		bufferDesc.type						= VertexBuffer;
-		bufferDesc.usage					= Buffer_Default;
-		bufferDesc.numberOfElements			= numVertices;
-		bufferDesc.firstElementPointer		= vertices;
-		bufferDesc.elementSize				= sizeof(bgVertex);
-		bufferDesc.topology					= D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+		bufferDesc.mUsage					= Usage::Default;
+		bufferDesc.mTopology				= Topology::TriangleStrip;
+		bufferDesc.mElementCount			= numVertices;
+		bufferDesc.mFirstElementPointer		= vertices;
+		bufferDesc.mElementSize				= sizeof(bgVertex);
 
-		mBuffer->Initialize(mDevice, bufferDesc);
+		mBuffer->SetData(bufferDesc, NULL);
 	}
 	
 	void NetworkLobbyState::CreateEffect()
@@ -78,9 +77,11 @@ namespace State
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D10_APPEND_ALIGNED_ELEMENT, D3D10_INPUT_PER_VERTEX_DATA, 0 }
 		};
 
-		mEffect = new Effect();
-		mEffect->Initialize(mDevice, "Resources/Effects/Background.fx", vertexDesc,
-			sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
+		mEffect = new Effect(mDevice, "Resources/Effects/Background.fx");
+		
+		InputLayoutVector inputLayout;
+		inputLayout.push_back(InputLayoutElement("POSITION", DXGI_FORMAT_R32G32_FLOAT));
+		//inputLayout.push_back(InputLayoutElement(
 	}
 
 	void NetworkLobbyState::OnStatePushed()

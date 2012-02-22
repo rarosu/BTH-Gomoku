@@ -10,25 +10,23 @@ Marker::Marker(ID3D10Device* device, int size, D3DXVECTOR3 position, D3DXCOLOR m
 	CreateBuffer(size);
 	CreateEffect();
 
-	mEffect->SetVectorVariable("gColor", &(D3DXVECTOR4)markerColor);
+	mEffect->SetVariable("gColor", &(D3DXVECTOR4)markerColor);
 }
 
 void Marker::Update(const Camera& camera)
 {
 	UpdateWorldMatrix();
 	D3DXMATRIX viewProjection = mWorldMatrix * camera.GetViewMatrix() * camera.GetProjectionMatrix();
-	mEffect->SetMatrixVariable("gVP", &viewProjection);
+	mEffect->SetVariable("gVP", &viewProjection);
 }
 
 void Marker::Draw()
 {
-	mBuffer->MakeActive();
-	mEffect->MakeActive();
-
-	for(UINT p = 0; p < mEffect->GetNumberOfPasses(); ++p)
+	mBuffer->Bind();
+	for(UINT p = 0; p < mEffect->GetTechniqueByIndex(0).GetPassCount(); ++p)
 	{
-		mEffect->ApplyTechniquePass(p);
-		mDevice->Draw(mBuffer->GetNumberOfElements(), 0);
+		mEffect->GetTechniqueByIndex(0).GetPassByIndex(p).Apply(mDevice);
+		mBuffer->Draw();
 	}
 }
 
@@ -43,36 +41,26 @@ void Marker::CreateBuffer(int size)
 	vertices[2] = D3DXVECTOR3(-halfsize, 0, halfsize);
 	vertices[3] = D3DXVECTOR3(halfsize, 0, halfsize);
 
-	mBuffer = new Buffer();
-	BufferInformation bufferDesc;
+	mBuffer = new VertexBuffer(mDevice);
+	VertexBuffer::Data bufferDesc;
 
-	bufferDesc.type =					VertexBuffer;
-	bufferDesc.usage =					Buffer_Default;
-	bufferDesc.numberOfElements =		4;
-	bufferDesc.firstElementPointer =	vertices;
-	bufferDesc.elementSize =			sizeof(D3DXVECTOR3);
-	bufferDesc.topology =				D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+	bufferDesc.mUsage =					Usage::Default;
+	bufferDesc.mTopology =				Topology::TriangleStrip;
+	bufferDesc.mElementCount =			4;
+	bufferDesc.mElementSize =			sizeof(D3DXVECTOR3);
+	bufferDesc.mFirstElementPointer =	vertices;
 
-	mBuffer->Initialize(mDevice, bufferDesc);
+	mBuffer->SetData(bufferDesc, NULL);
 }
 
 void Marker::CreateEffect()
 {
-	// Create an array describing each of the elements of the vertex that are inputs to the vertex shader.
-	D3D10_INPUT_ELEMENT_DESC vertexDesc[] = 
-	{
-		{ "POSITION",					// Semantic name, must be same as the vertex shader input semantic name
-		  0,							// Semantic index, if one semantic name exists for more than one element
-		  DXGI_FORMAT_R32G32B32_FLOAT,	// Format of the element, R32G32B32_FLOAT is a 32-bit 3D float vector
-		  0,							// Input slot, of the 0-15 slots, through wich to send vertex data
-		  0,							// AlignedByteOffset, bytes from start of the vertex to this component
-		  D3D10_INPUT_PER_VERTEX_DATA,	// Input data class for this input slot
-		  0 } 							// 0 when slot input data class is D3D10_INPUT_PER_VERTEX_DATA
-	};
+	mEffect = new Effect(mDevice, "Resource/Effects/Marker.fx");
+	
+	InputLayoutVector inputLayout;
+	inputLayout.push_back(InputLayoutElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT));
 
-	mEffect = new Effect();
-	mEffect->Initialize(mDevice, "Resources/Effects/Marker.fx", vertexDesc,
-		sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
+	mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
 }
 
 

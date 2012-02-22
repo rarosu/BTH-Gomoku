@@ -4,6 +4,8 @@
 #include "ApplicationState.hpp"
 #include "Globals.hpp"
 #include "TextButton.hpp"
+#include "Buffer.hpp"
+#include "Effect.hpp"
 
 namespace State
 {
@@ -37,7 +39,7 @@ namespace State
 
 		ID3D10Device*							mDevice;
 		Effect*									mEffect;
-		Buffer*									mBuffer;
+		VertexBuffer*							mBuffer;
 		std::vector<Components::TextButton*>	mButtons;
 
 		void CreateBuffer(float width, float height);

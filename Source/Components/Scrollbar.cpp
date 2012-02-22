@@ -44,7 +44,7 @@ namespace Components
 		mBtnUp->Initialize(device, pos1, graphics1);
 		mBtnDown->Initialize(device, pos2, graphics2);
 
-		mEffect->SetVectorVariable("bgColor", &(D3DXVECTOR4)C_COLOR_COMPONENT_BG);
+		mEffect->SetVariable("bgColor", &(D3DXVECTOR4)C_COLOR_COMPONENT_BG);
 	}
 
 	void Scrollbar::CreateBuffer(float offset)
@@ -62,36 +62,26 @@ namespace Components
 		vertices[2]	= sViewport->TransformToViewport(point3);
 		vertices[3]	= sViewport->TransformToViewport(point4);
 
-		mBuffer = new Buffer();
-		BufferInformation bufferDesc;
+		mBuffer = new VertexBuffer(mDevice);
+		VertexBuffer::Data bufferDesc;
 
-		bufferDesc.type						= VertexBuffer;
-		bufferDesc.usage					= Buffer_Default;
-		bufferDesc.numberOfElements			= numVertices;
-		bufferDesc.firstElementPointer		= vertices;
-		bufferDesc.elementSize				= sizeof(D3DXVECTOR2);
-		bufferDesc.topology					= D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+		bufferDesc.mUsage					= Usage::Default;
+		bufferDesc.mTopology				= Topology::TriangleStrip;
+		bufferDesc.mElementSize				= sizeof(D3DXVECTOR2);
+		bufferDesc.mElementCount			= numVertices;
+		bufferDesc.mFirstElementPointer		= vertices;
 
-		mBuffer->Initialize(mDevice, bufferDesc);
+		mBuffer->SetData(bufferDesc, NULL);
 	}
 	
 	void Scrollbar::CreateEffect()
 	{
-		// Create an array describing each of the elements of the vertex that are inputs to the vertex shader.
-		D3D10_INPUT_ELEMENT_DESC vertexDesc[] = 
-		{
-			{ "POSITION",					// Semantic name, must be same as the vertex shader input semantic name
-			  0,							// Semantic index, if one semantic name exists for more than one element
-			  DXGI_FORMAT_R32G32_FLOAT,		// Format of the element, R32G32_FLOAT is a 32-bit 2D float vector
-			  0,							// Input slot, of the 0-15 slots, through wich to send vertex data
-			  0,							// AlignedByteOffset, bytes from start of the vertex to this component
-			  D3D10_INPUT_PER_VERTEX_DATA,	// Input data class for this input slot
-			  0 } 							// 0 when slot input data class is D3D10_INPUT_PER_VERTEX_DATA
-		};
+		mEffect = new Effect(mDevice, "Resources/Effects/Basic2D.fx");
+		
+		InputLayoutVector inputLayout;
+		inputLayout.push_back(InputLayoutElement("POSITION", DXGI_FORMAT_R32G32_FLOAT));
 
-		mEffect = new Effect();
-		mEffect->Initialize(mDevice, "Resources/Effects/Basic2D.fx", vertexDesc,
-			sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
+		mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
 	}
 
 	void Scrollbar::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
@@ -104,13 +94,11 @@ namespace Components
 
 	void Scrollbar::Draw()
 	{
-		mBuffer->MakeActive();
-		mEffect->MakeActive();
-
-		for(UINT p = 0; p < mEffect->GetNumberOfPasses(); ++p)
+		mBuffer->Bind();
+		for(UINT p = 0; p < mEffect->GetTechniqueByIndex(0).GetPassCount(); ++p)
 		{
-			mEffect->ApplyTechniquePass(p);
-			mDevice->Draw(mBuffer->GetNumberOfElements(), 0);
+			mEffect->GetTechniqueByIndex(0).GetPassByIndex(p).Apply(mDevice);
+			mBuffer->Draw();
 		}
 
 		mBtnUp->Draw();

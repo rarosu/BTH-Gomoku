@@ -45,7 +45,7 @@ namespace State
 
 		ID3D10Device*							mDevice;
 		Effect*									mEffect;
-		Buffer*									mBuffer;
+		VertexBuffer*							mBuffer;
 		std::vector<Components::TextButton*>	mButtons;
 
 		void CreateBuffer(float width, float height);

@@ -10,8 +10,8 @@ Scene::Scene(ID3D10Device* device, InputSubscription* inputManager) :
 	CreateBuffer();
 	CreateEffect();
 
-	mEffect->SetIntVariable("gWidth", 10);
-	mEffect->SetFloatVariable("gInterval", 0.1f);
+	mEffect->SetVariable("gWidth", 10);
+	mEffect->SetVariable("gInterval", 0.1f);
 
 	mInputSubscription->AddMouseListener(this);
 }
@@ -40,59 +40,48 @@ void Scene::CreateBuffer()
 	vertices[3].position = D3DXVECTOR3(1000, 0, 1000);
 	vertices[3].color = D3DXCOLOR(0.0, 0.0, 1.0, 1.0);
 
-	BufferInformation bufferDesc;
-	bufferDesc.elementSize				= sizeof(GridVertex);
-	bufferDesc.numberOfElements			= 4;
-	bufferDesc.firstElementPointer		= vertices;
-	bufferDesc.type						= VertexBuffer;
-	bufferDesc.usage					= Buffer_Default;
-	bufferDesc.topology =				D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+	mVertexBuffer = new VertexBuffer(mDevice);
 
-	mVertexBuffer = new Buffer();
-	mVertexBuffer->Initialize(mDevice, bufferDesc);
+	VertexBuffer::Data bufferDesc;
+	bufferDesc.mUsage =					Usage::Default;
+	bufferDesc.mTopology =				Topology::TriangleStrip;
+	bufferDesc.mElementCount =			4;
+	bufferDesc.mElementSize	=			sizeof(GridVertex);
+	bufferDesc.mFirstElementPointer	=	vertices;
+	
+	mVertexBuffer->SetData(bufferDesc, NULL);
 }
 
 void Scene::CreateEffect()
 {
-	// Create an array describing each of the elements of the vertex that are inputs to the vertex shader.
-	D3D10_INPUT_ELEMENT_DESC vertexDesc[] = 
-	{
-		{ "POSITION",					// Semantic name, must be same as the vertex shader input semantic name
-		  0,							// Semantic index, if one semantic name exists for more than one element
-		  DXGI_FORMAT_R32G32B32_FLOAT,	// Format of the element, R32G32_FLOAT is a 32-bit 2D float vector
-		  0,							// Input slot, of the 0-15 slots, through wich to send vertex data
-		  0,							// AlignedByteOffset, bytes from start of the vertex to this component
-		  D3D10_INPUT_PER_VERTEX_DATA,	// Input data class for this input slot
-		  0 },							// 0 when slot input data class is D3D10_INPUT_PER_VERTEX_DATA
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, sizeof(D3DXVECTOR3), D3D10_INPUT_PER_VERTEX_DATA, 0 }
-	};
+	mEffect = new Effect(mDevice, "Resources/Effects/Grid.fx");
 
-	mEffect = new Effect();
-	mEffect->Initialize(mDevice, "Resources/Effects/Grid.fx", vertexDesc,
-		sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
+	InputLayoutVector inputLayout;
+	inputLayout.push_back(InputLayoutElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT));
+	inputLayout.push_back(InputLayoutElement("COLOR", DXGI_FORMAT_R32G32B32A32_FLOAT));
+
+	mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
 }
 
 void Scene::Update(const Logic::Grid& grid, const Camera& camera, const Viewport& viewport, const InputState& currentInput)
 {
 	// Pick cell
 	D3DXVECTOR2 cell = PickCell(viewport, currentInput.Mouse.x, currentInput.Mouse.y, camera);
-	mEffect->SetVectorVariable("gMarkedCell", &D3DXVECTOR4(cell.x, cell.y, 0.0, 0.0));
+	mEffect->SetVariable("gMarkedCell", &D3DXVECTOR4(cell.x, cell.y, 0.0, 0.0));
 }
 
 void Scene::Draw(const Camera& camera)
 {
 	// Create View-Projection-matrix
 	D3DXMATRIX viewProjection = camera.GetViewMatrix() * camera.GetProjectionMatrix();
-	mEffect->SetMatrixVariable("gVP", &viewProjection);
+	mEffect->SetVariable("gVP", &viewProjection);
 
 	// Render the buffer
-	mVertexBuffer->MakeActive();
-	mEffect->MakeActive();
-
-	for(UINT p = 0; p < mEffect->GetNumberOfPasses(); ++p)
+	mVertexBuffer->Bind();
+	for(UINT p = 0; p < mEffect->GetTechniqueByIndex(0).GetPassCount(); ++p)
 	{
-		mEffect->ApplyTechniquePass(p);
-		mDevice->Draw(mVertexBuffer->GetNumberOfElements(), 0);
+		mEffect->GetTechniqueByIndex(0).GetPassByIndex(p).Apply(mDevice);
+		mVertexBuffer->Draw();
 	}
 }
 
@@ -134,7 +123,6 @@ D3DXVECTOR2 Scene::PickCell(const Viewport& viewport, int mouseX, int mouseY, co
 RECT Scene::GetVisibleRectangle(const Camera& camera) const
 {
 	RECT result;
-	
 
 
 	

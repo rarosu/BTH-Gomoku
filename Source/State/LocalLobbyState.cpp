@@ -50,37 +50,27 @@ namespace State
 		vertices[3].position = sViewport->TransformToViewport(D3DXVECTOR2(width, height));
 		vertices[3].uv = D3DXVECTOR2(1, 1);
 
-		mBuffer = new Buffer();
-		BufferInformation bufferDesc;
+		mBuffer = new VertexBuffer(mDevice);
+		VertexBuffer::Data bufferDesc;
 
-		bufferDesc.type						= VertexBuffer;
-		bufferDesc.usage					= Buffer_Default;
-		bufferDesc.numberOfElements			= numVertices;
-		bufferDesc.firstElementPointer		= vertices;
-		bufferDesc.elementSize				= sizeof(bgVertex);
-		bufferDesc.topology					= D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+		bufferDesc.mUsage					= Usage::Default;
+		bufferDesc.mTopology				= Topology::TriangleStrip;
+		bufferDesc.mElementCount			= numVertices;
+		bufferDesc.mElementSize				= sizeof(bgVertex);
+		bufferDesc.mFirstElementPointer		= vertices;
 
-		mBuffer->Initialize(mDevice, bufferDesc);
+		mBuffer->SetData(bufferDesc, NULL);
 	}
 	
 	void LocalLobbyState::CreateEffect()
 	{
-		// Create an array describing each of the elements of the vertex that are inputs to the vertex shader.
-		D3D10_INPUT_ELEMENT_DESC vertexDesc[] = 
-		{
-			{ "POSITION",					// Semantic name, must be same as the vertex shader input semantic name
-			  0,							// Semantic index, if one semantic name exists for more than one element
-			  DXGI_FORMAT_R32G32_FLOAT,		// Format of the element, R32G32_FLOAT is a 32-bit 2D float vector
-			  0,							// Input slot, of the 0-15 slots, through wich to send vertex data
-			  0,							// AlignedByteOffset, bytes from start of the vertex to this component
-			  D3D10_INPUT_PER_VERTEX_DATA,	// Input data class for this input slot
-			  0 }, 							// 0 when slot input data class is D3D10_INPUT_PER_VERTEX_DATA
-			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D10_APPEND_ALIGNED_ELEMENT, D3D10_INPUT_PER_VERTEX_DATA, 0 }
-		};
+		mEffect = new Effect(mDevice, "Resources/Effects/Background.fx");
+		
+		InputLayoutVector inputLayout;
+		inputLayout.push_back(InputLayoutElement("POSITION", DXGI_FORMAT_R32G32_FLOAT));
+		inputLayout.push_back(InputLayoutElement("TEXCOORD", DXGI_FORMAT_R32G32_FLOAT));
 
-		mEffect = new Effect();
-		mEffect->Initialize(mDevice, "Resources/Effects/Background.fx", vertexDesc,
-			sizeof(vertexDesc) / sizeof(D3D10_INPUT_ELEMENT_DESC));
+		mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
 	}
 
 	void LocalLobbyState::OnStatePushed()
@@ -118,13 +108,11 @@ namespace State
 
 	void LocalLobbyState::Draw()
 	{
-		mBuffer->MakeActive();
-		mEffect->MakeActive();
-
-		for(UINT p = 0; p < mEffect->GetNumberOfPasses(); ++p)
+		mBuffer->Bind();
+		for(UINT p = 0; p < mEffect->GetTechniqueByIndex(0).GetPassCount(); ++p)
 		{
-			mEffect->ApplyTechniquePass(p);
-			mDevice->Draw(mBuffer->GetNumberOfElements(), 0);
+			mEffect->GetTechniqueByIndex(0).GetPassByIndex(p).Apply(mDevice);
+			mBuffer->Draw();
 		}
 
 		for(UINT i = 0; i < mButtons.size(); ++i)

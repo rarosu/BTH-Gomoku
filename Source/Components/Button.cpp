@@ -53,14 +53,15 @@ namespace Components
 		vertices[3].uv			= D3DXVECTOR2(1, 1);
 
 		mBuffer = new VertexBuffer(mDevice);
-		Buffer::Data bufferDesc;
+		VertexBuffer::Data bufferDesc;
 
 		bufferDesc.mUsage =					Usage::Default;
+		bufferDesc.mTopology =				Topology::TriangleStrip;
 		bufferDesc.mElementCount =			numVertices;
 		bufferDesc.mElementSize =			sizeof(ButtonVertex);
 		bufferDesc.mFirstElementPointer	=	vertices;
 
-		mBuffer->SetBufferData(bufferDesc, Topology::TriangleStrip);
+		mBuffer->SetData(bufferDesc, NULL);
 	}
 
 	void Button::CreateEffect()
@@ -83,8 +84,8 @@ namespace Components
 		mBuffer->Bind();
 		for(UINT p = 0; p < mEffect->GetTechniqueByIndex(0).GetPassCount(); ++p)
 		{
-			mEffect->ApplyTechniquePass(p);
-			mDevice->Draw(mBuffer->GetNumberOfElements(), 0);
+			mEffect->GetTechniqueByIndex(0).GetPassByIndex(p).Apply(mDevice);
+			mBuffer->Draw();
 		}
 	}
 	
@@ -100,30 +101,30 @@ namespace Components
 	{
 		if(IsPressed())
 		{
-			mEffect->SetVectorVariable("buttonColor", &(D3DXVECTOR4)mGraphics.activeColor);
+			mEffect->SetVariable("buttonColor", &(D3DXVECTOR4)mGraphics.activeColor);
 			if(mGraphics.textureDown)
-				mEffect->SetResourceVariable("textureBase", mGraphics.textureDown);
+				mEffect->SetVariable("textureBase", mGraphics.textureDown);
 		}
 		else
-			mEffect->SetVectorVariable("buttonColor", &(D3DXVECTOR4)mGraphics.hoverColor);
+			mEffect->SetVariable("buttonColor", &(D3DXVECTOR4)mGraphics.hoverColor);
 	}
 
 	void Button::MouseExited()
 	{
-		mEffect->SetVectorVariable("buttonColor", &(D3DXVECTOR4)mGraphics.idleColor);
-		mEffect->SetResourceVariable("textureBase", mGraphics.textureUp);
+		mEffect->SetVariable("buttonColor", &(D3DXVECTOR4)mGraphics.idleColor);
+		mEffect->SetVariable("textureBase", mGraphics.textureUp);
 	}
 
 	void Button::MousePressed(int buttonIndex)
 	{
-		mEffect->SetVectorVariable("buttonColor", &(D3DXVECTOR4)mGraphics.activeColor);
+		mEffect->SetVariable("buttonColor", &(D3DXVECTOR4)mGraphics.activeColor);
 		if(mGraphics.textureDown)
-			mEffect->SetResourceVariable("textureBase", mGraphics.textureDown);
+			mEffect->SetVariable("textureBase", mGraphics.textureDown);
 	}
 
 	void Button::MouseReleased(int buttonIndex)
 	{
-		mEffect->SetVectorVariable("buttonColor", &(D3DXVECTOR4)mGraphics.hoverColor);
-		mEffect->SetResourceVariable("textureBase", mGraphics.textureUp);
+		mEffect->SetVariable("buttonColor", &(D3DXVECTOR4)mGraphics.hoverColor);
+		mEffect->SetVariable("textureBase", mGraphics.textureUp);
 	}
 }

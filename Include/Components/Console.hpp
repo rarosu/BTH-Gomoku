@@ -5,8 +5,8 @@
 #include <deque>
 
 #include "Buffer.hpp"
-#include "Component.hpp"
 #include "Effect.hpp"
+#include "Component.hpp"
 #include "GameFont.hpp"
 #include "GameTime.hpp"
 #include "Globals.hpp"
@@ -50,7 +50,7 @@ namespace Components
 
 		ID3D10Device*				mDevice;
 		Effect*						mEffect;
-		Buffer*						mVertexBuffer;
+		VertexBuffer*				mVertexBuffer;
 		GameFont*					mFont;
 		D3DXCOLOR					mTextColor;
 		InputField*					mInputField;

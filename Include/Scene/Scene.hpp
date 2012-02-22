@@ -2,8 +2,8 @@
 #define SCENE_HPP
 
 #include "Buffer.hpp"
-#include "Camera.hpp"
 #include "Effect.hpp"
+#include "Camera.hpp"
 #include "Grid.hpp"
 #include "InputManager.hpp"
 #include "Marker.hpp"
@@ -46,7 +46,7 @@ private:
 	InputSubscription*			mInputSubscription;
 
 	Effect*						mEffect;
-	Buffer*						mVertexBuffer;
+	VertexBuffer*				mVertexBuffer;
 
 	/**
 		Methods for creating the buffer- and effect objects, for rendering.

@@ -6,8 +6,8 @@
 #include <D3DX10.h>
 
 #include "Buffer.hpp"
-#include "Component.hpp"
 #include "Effect.hpp"
+#include "Component.hpp"
 #include "GameFont.hpp"
 #include "GameTime.hpp"
 #include "InputManager.hpp"
@@ -41,7 +41,7 @@ namespace Components
 
 	private:
 		ID3D10Device*				mDevice;
-		Buffer*						mBuffer;
+		VertexBuffer*				mBuffer;
 		Effect*						mEffect;
 
 		GameFont*					mFont;

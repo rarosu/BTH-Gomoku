@@ -3,8 +3,9 @@
 
 #include <D3DX10.h>
 #include "Buffer.hpp"
-#include "Camera.hpp"
 #include "Effect.hpp"
+#include "Camera.hpp"
+
 
 class Marker
 {
@@ -15,7 +16,7 @@ public:
 
 private:
 	ID3D10Device*				mDevice;
-	Buffer*						mBuffer;
+	VertexBuffer*				mBuffer;
 	Effect*						mEffect;
 
 	D3DXMATRIX					mWorldMatrix;
