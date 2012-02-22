@@ -5,6 +5,7 @@
 #include "Grid.hpp"
 #include "Scene.hpp"
 #include "Marker.hpp"
+#include "Menu.hpp"
 
 namespace State
 {
@@ -26,12 +27,15 @@ namespace State
 		ID3D10Device*		mDevice;
 		InputSubscription*	mInputSubscription;
 
-		Logic::Grid*	mGrid;
+		Logic::Grid*		mGrid;
 
-		Scene*			mScene;
-		Camera*			mCamera;
-		Marker*			mMarker;		// Debug
-		Frustrum		mViewFrustrum;
+		Scene*				mScene;
+		Camera*				mCamera;
+		Marker*				mMarker;		// Debug
+		Frustrum			mViewFrustrum;
+
+		Components::Menu*	mDragonAgeMenu;
+		bool				mShowMenu;
 	};
 }
 

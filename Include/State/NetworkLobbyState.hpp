@@ -3,6 +3,7 @@
 
 #include "ApplicationState.hpp"
 #include "Globals.hpp"
+#include "Label.hpp"
 #include "TextButton.hpp"
 
 namespace State
@@ -39,6 +40,7 @@ namespace State
 		Effect*									mEffect;
 		Buffer*									mBuffer;
 		std::vector<Components::TextButton*>	mButtons;
+		Components::Label*						mTitle;
 
 		void CreateBuffer(float width, float height);
 		void CreateEffect();

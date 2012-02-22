@@ -11,9 +11,11 @@ namespace State
 		mCamera(NULL),
 		mMarker(NULL),
 		mViewFrustrum(viewFrustrum),
-		mInputSubscription(inputSubscription)
+		mInputSubscription(inputSubscription),
+		mShowMenu(false)
 	{
-		
+		RECT menuPos = { 100, 100, 200, 200 };
+		mDragonAgeMenu = new Components::Menu(mDevice, sInputManager, menuPos);
 	}
 
 	InGameState::~InGameState() throw()
@@ -52,12 +54,28 @@ namespace State
 		mCamera->Update(prevInput, currInput, gameTime);
 		mScene->Update(*mGrid, *mCamera, *sViewport, currInput);
 		mMarker->Update(*mCamera);
+
+		if(currInput.Mouse.buttonIsPressed[C_MOUSE_RIGHT] && !prevInput.Mouse.buttonIsPressed[C_MOUSE_RIGHT])
+		{
+			mShowMenu = true;
+			RECT menuPos = { currInput.Mouse.x - 50, currInput.Mouse.y - 50, 
+							 currInput.Mouse.x + 50, currInput.Mouse.y + 50 };
+			mDragonAgeMenu->SetPosition(menuPos);
+		}
+		else if (!currInput.Mouse.buttonIsPressed[C_MOUSE_RIGHT] && prevInput.Mouse.buttonIsPressed[C_MOUSE_RIGHT])
+			mShowMenu = false;
+
+		if(mShowMenu)
+			mDragonAgeMenu->Update(gameTime, currInput, prevInput);
 	}
 
 	void InGameState::Draw()
 	{
 		mScene->Draw(*mCamera);
 		mMarker->Draw();
+
+		if(mShowMenu)
+			mDragonAgeMenu->Draw();
 	}
 
 	void InGameState::SetViewFrustrum(const Frustrum& viewFrustrum)

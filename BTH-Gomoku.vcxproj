@@ -157,6 +157,8 @@
     <ClCompile Include="Source\Components\Button.cpp" />
     <ClCompile Include="Source\Components\Component.cpp" />
     <ClCompile Include="Source\Components\ComponentGroup.cpp" />
+    <ClCompile Include="Source\Components\Label.cpp" />
+    <ClCompile Include="Source\Components\Menu.cpp" />
     <ClCompile Include="Source\Components\Scrollbar.cpp" />
     <ClCompile Include="Source\Components\TextButton.cpp" />
     <ClCompile Include="Source\Components\Clickable.cpp" />
@@ -190,6 +192,8 @@
     <ClInclude Include="Include\Components\Button.hpp" />
     <ClInclude Include="Include\Components\Component.hpp" />
     <ClInclude Include="Include\Components\ComponentGroup.hpp" />
+    <ClInclude Include="Include\Components\Label.hpp" />
+    <ClInclude Include="Include\Components\Menu.hpp" />
     <ClInclude Include="Include\Components\Scrollbar.hpp" />
     <ClInclude Include="Include\Components\TextButton.hpp" />
     <ClInclude Include="Include\Components\Clickable.hpp" />
@@ -235,6 +239,20 @@
     <None Include="Resources\Textures\button.png" />
     <None Include="Resources\Textures\buttonDown.png" />
     <None Include="Resources\Textures\buttonUp.png" />
+    <None Include="Resources\Textures\exclamation.png" />
+    <None Include="Resources\Textures\exclamationL.png" />
+    <None Include="Resources\Textures\hint.png" />
+    <None Include="Resources\Textures\hintL.png" />
+    <None Include="Resources\Textures\marbleBG1024x836.png" />
+    <None Include="Resources\Textures\marbleBG1422x800.png" />
+    <None Include="Resources\Textures\other.png" />
+    <None Include="Resources\Textures\otherL.png" />
+    <None Include="Resources\Textures\question.png" />
+    <None Include="Resources\Textures\questionL.png" />
+    <None Include="Resources\Textures\titleScreen1024x576.png" />
+    <None Include="Resources\Textures\titleScreen1024x768.png" />
+    <None Include="Resources\Textures\titleScreen1024x836.png" />
+    <None Include="Resources\Textures\titleScreen1422x800.png" />
     <None Include="Resources\Textures\titleScreenBig.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,8 +1,9 @@
 #include "Globals.hpp"
 
 D3DXMATRIX gViewportMatrix;
-const D3DXCOLOR	C_COLOR_WINDOW_BG = D3DXCOLOR(0.85f, 0.75f, 0.65f, 1.0);
-const D3DXCOLOR	C_COLOR_COMPONENT_BG = D3DXCOLOR(0.8f, 0.7f, 0.6f, 1.0);
+const D3DXCOLOR		C_COLOR_WINDOW_BG		= D3DXCOLOR(0.85f, 0.75f, 0.65f, 1.0);
+const D3DXCOLOR		C_COLOR_COMPONENT_BG	= D3DXCOLOR(0.8f, 0.7f, 0.6f, 1.0);
+const D3DXCOLOR		C_COLOR_TEXT			= D3DXCOLOR(0.4f, 0.3f, 0.2f, 1.0f);
 
 //D3DXVECTOR2 TransformToViewport(const D3DXVECTOR2& vector)
 //{

@@ -3,13 +3,13 @@
 namespace State
 {
 	MenuState::MenuState(StateID id, ID3D10Device* device, int width, int height) 
-		: ApplicationState(id), mDevice(device),  mEffect(NULL), mBuffer(NULL)
+		: ApplicationState(id), mDevice(device),  mEffect(NULL), mBuffer(NULL), mDragonAgeMenu(NULL)
 	{
 		CreateBuffer((float)width, (float)height);
 		CreateEffect();
 
 		ID3D10ShaderResourceView* texture;
-		D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/titleScreenBig.png", NULL, NULL, 
+		D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/titleScreen1422x800.png", NULL, NULL, 
 											   &texture, NULL);
 		mEffect->SetResourceVariable("textureBG", texture);
 
@@ -26,6 +26,9 @@ namespace State
 			mButtons[i]->Initialize(mDevice, buttonPos, btnCaptions[i]);
 			centerY += 48 + padding;
 		}
+
+		RECT menuPos = { 100, 100, 200, 200 };
+		mDragonAgeMenu = new Components::Menu(mDevice, sInputManager, menuPos);
 	}
 
 	MenuState::~MenuState() throw()

@@ -9,12 +9,12 @@ namespace State
 		CreateEffect();
 
 		ID3D10ShaderResourceView* texture;
-		D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/titleScreenBig.png", NULL, NULL, 
+		D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/marbleBG1422x800.png", NULL, NULL, 
 											   &texture, NULL);
 		mEffect->SetResourceVariable("textureBG", texture);
 
 		const std::string btnCaptions[] = { "Start Game", "Back To Menu" };
-		LONG centerX = (LONG)width / 4 + 100;
+		LONG centerX = (LONG)width / 2;
 		LONG centerY = (LONG)height / 2;
 		const int padding = 20;
 
@@ -26,6 +26,10 @@ namespace State
 			mButtons.at(i)->Initialize(mDevice, buttonPos, btnCaptions[i]);
 			centerY += 48 + padding;
 		}
+
+		int lableX = sViewport->GetWidth() / 2;
+		RECT labelPos = { lableX - 420, 100, lableX + 420, 200 };
+		mTitle = new Components::Label(mDevice, "CREATE A NETWORK GAME", labelPos);
 	}
 
 	NetworkLobbyState::~NetworkLobbyState() throw()
@@ -131,5 +135,7 @@ namespace State
 		{
 			mButtons.at(i)->Draw();
 		}
+
+		mTitle->Draw();
 	}
 }
