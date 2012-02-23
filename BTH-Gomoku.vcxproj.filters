@@ -82,6 +82,7 @@
     <ClInclude Include="Include\Network\ListenSocket.hpp" />
     <ClInclude Include="Include\Network\Message.hpp" />
     <ClInclude Include="Include\Network\Server.hpp" />
+    <ClInclude Include="Include\WinInclude.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

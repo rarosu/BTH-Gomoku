@@ -1,11 +1,8 @@
 #ifndef GAMEFONT_H
 #define GAMEFONT_H
 
-#include <D3DX10.h>
-#include <string>
 #include "Globals.hpp"
-
-#pragma comment(lib, "d3dx10.lib")
+#include <string>
 
 class GameFont
 {

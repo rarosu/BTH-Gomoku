@@ -1,8 +1,7 @@
 #ifndef COMSOCKET_HPP
 #define COMSOCKET_HPP
 
-#include <WinSock2.h>
-#include <WS2tcpip.h>
+#include "WinInclude.hpp"
 #include <vector>
 #include "Message.hpp"
 

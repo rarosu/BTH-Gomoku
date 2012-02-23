@@ -1,7 +1,7 @@
 #ifndef BUTTON_HPP
 #define BUTTON_HPP
 
-#include <D3DX10.h>
+#include "WinInclude.hpp"
 #include "Buffer.hpp"
 #include "Effect.hpp"
 #include "Component.hpp"

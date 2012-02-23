@@ -1,8 +1,8 @@
 #ifndef NETWORK_STATE_HPP
 #define NETWORK_STATE_HPP
 
-#include "ApplicationState.hpp"
 #include "Globals.hpp"
+#include "ApplicationState.hpp"
 #include "TextButton.hpp"
 #include "Buffer.hpp"
 #include "Effect.hpp"

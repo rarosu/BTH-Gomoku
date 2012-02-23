@@ -1,7 +1,7 @@
 #ifndef INPUTMANAGER_HPP
 #define INPUTMANAGER_HPP
 
-#include <windows.h>
+#include "WinInclude.hpp"
 #include <vector>
 
 const int			C_MOUSE_LEFT		= 0;

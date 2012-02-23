@@ -1,7 +1,7 @@
 #ifndef MENU_STATE_HPP
 #define MENU_STATE_HPP
 
-#include <D3DX10.h>
+#include "WinInclude.hpp"
 #include <vector>
 
 #include "ApplicationState.hpp"

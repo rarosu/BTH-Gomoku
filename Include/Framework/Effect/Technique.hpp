@@ -3,7 +3,6 @@
 
 #include "Globals.hpp"
 #include <vector>
-#include <d3d10.h>
 #include "Pass.hpp"
 
 /**

@@ -1,7 +1,7 @@
 #ifndef GLOBALS_HPP
 #define GLOBALS_HPP
 
-#include <D3DX10.h>
+#include "WinInclude.hpp"
 
 extern D3DXMATRIX				gViewportMatrix;
 extern const D3DXCOLOR			C_COLOR_WINDOW_BG;

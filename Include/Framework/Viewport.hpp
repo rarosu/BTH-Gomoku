@@ -1,7 +1,7 @@
 #ifndef VIEWPORT_HPP
 #define VIEWPORT_HPP
 
-#include <D3DX10.h>
+#include "WinInclude.hpp"
 
 class Viewport
 {

@@ -1,8 +1,8 @@
 #ifndef LISTENSOCKET_HPP
 #define LISTENSOCKET_HPP
 
-#include <WinSock2.h>
-#include <WS2tcpip.h>
+#include "WinInclude.hpp"
+
 
 namespace Network
 {

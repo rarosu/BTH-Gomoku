@@ -1,9 +1,9 @@
 #ifndef INPUTFIELD_HPP
 #define INPUTFIELD_HPP
 
+#include "WinInclude.hpp"
 #include <sstream>
 #include <string>
-#include <D3DX10.h>
 
 #include "Buffer.hpp"
 #include "Effect.hpp"
