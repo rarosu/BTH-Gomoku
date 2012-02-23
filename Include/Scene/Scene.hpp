@@ -1,6 +1,7 @@
 #ifndef SCENE_HPP
 #define SCENE_HPP
 
+#include "Globals.hpp"
 #include "Buffer.hpp"
 #include "Effect.hpp"
 #include "Camera.hpp"
@@ -8,7 +9,6 @@
 #include "InputManager.hpp"
 #include "Marker.hpp"
 #include "Console.hpp"
-#include "Globals.hpp"
 #include "Viewport.hpp"
 
 /**

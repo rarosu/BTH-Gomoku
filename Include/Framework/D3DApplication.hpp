@@ -1,11 +1,9 @@
 #ifndef D3DAPPLICATION_HPP
 #define D3DAPPLICATION_HPP
 
-#include <D3DX10.h>
 #include "Globals.hpp"
 #include "Viewport.hpp"
 
-#pragma comment(lib, "d3d10.lib")
 
 class D3DApplication
 {

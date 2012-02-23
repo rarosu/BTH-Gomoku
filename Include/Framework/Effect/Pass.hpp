@@ -2,7 +2,6 @@
 #define PASS_HPP
 
 #include "Globals.hpp"
-#include <d3d10.h>
 #include <string>
 #include <vector>
 

@@ -1,7 +1,7 @@
 #ifndef MARKER_HPP
 #define MARKER_HPP
 
-#include <D3DX10.h>
+#include "WinInclude.hpp"
 #include "Buffer.hpp"
 #include "Effect.hpp"
 #include "Camera.hpp"

@@ -13,10 +13,9 @@ namespace State
 	{
 		mViewFrustrum.nearDistance = 1.0f;
 		mViewFrustrum.farDistance = 1000.0f;
-		mViewFrustrum.fovY = D3DX_PI * 0.25f;
+		mViewFrustrum.fovY = (float)D3DX_PI * 0.25f;
 		mViewFrustrum.aspectRatio = static_cast<float>(sViewport->GetWidth()) / static_cast<float>(sViewport->GetHeight());
-		
-	{
+
 		RECT menuPos = { 100, 100, 200, 200 };
 		mDragonAgeMenu = new Components::Menu(mDevice, sInputManager, menuPos);
 	}

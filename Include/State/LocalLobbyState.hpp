@@ -1,9 +1,11 @@
 #ifndef LOCAL_STATE_HPP
 #define LOCAL_STATE_HPP
 
-#include "ApplicationState.hpp"
 #include "Globals.hpp"
+
 #include "Label.hpp"
+
+#include "ApplicationState.hpp"
 #include "TextButton.hpp"
 #include "Buffer.hpp"
 #include "Effect.hpp"

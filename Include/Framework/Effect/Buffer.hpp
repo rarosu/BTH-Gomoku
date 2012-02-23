@@ -3,7 +3,6 @@
 
 #include "Globals.hpp"
 #include <vector>
-#include <d3d10.h>
 
 /**
 	Determine what access will be given to the buffer from the CPU/GPU.

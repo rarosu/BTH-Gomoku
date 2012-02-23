@@ -1,7 +1,7 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
-#include <D3DX10.h>
+#include "WinInclude.hpp"
 #include "InputManager.hpp"
 #include "GameTime.hpp"
 
