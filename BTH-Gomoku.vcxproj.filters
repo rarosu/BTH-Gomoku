@@ -34,6 +34,12 @@
     <ClCompile Include="Source\Framework\Effect\Effect.cpp" />
     <ClCompile Include="Source\Framework\Effect\Pass.cpp" />
     <ClCompile Include="Source\Framework\Effect\Technique.cpp" />
+    <ClCompile Include="Source\Network\ChatMessage.cpp" />
+    <ClCompile Include="Source\Network\Client.cpp" />
+    <ClCompile Include="Source\Network\ComSocket.cpp" />
+    <ClCompile Include="Source\Network\ListenSocket.cpp" />
+    <ClCompile Include="Source\Network\Message.cpp" />
+    <ClCompile Include="Source\Network\Server.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -70,6 +76,12 @@
     <ClInclude Include="Include\Framework\Effect\Effect.hpp" />
     <ClInclude Include="Include\Framework\Effect\Pass.hpp" />
     <ClInclude Include="Include\Framework\Effect\Technique.hpp" />
+    <ClInclude Include="Include\Network\ChatMessage.hpp" />
+    <ClInclude Include="Include\Network\Client.hpp" />
+    <ClInclude Include="Include\Network\ComSocket.hpp" />
+    <ClInclude Include="Include\Network\ListenSocket.hpp" />
+    <ClInclude Include="Include\Network\Message.hpp" />
+    <ClInclude Include="Include\Network\Server.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
