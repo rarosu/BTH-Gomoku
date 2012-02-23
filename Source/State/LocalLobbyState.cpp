@@ -3,18 +3,18 @@
 namespace State
 {
 	LocalLobbyState::LocalLobbyState(StateID id, ID3D10Device* device, InputSubscription* manager, int width, int height) 
-		: ApplicationState(id), mDevice(device), mEffect(NULL), mBuffer(NULL)
+		: ApplicationState(id), mDevice(device), mEffect(NULL), mBuffer(NULL), mTitle(NULL)
 	{
 		CreateBuffer((float)width, (float)height);
 		CreateEffect();
 
 		ID3D10ShaderResourceView* texture;
-		D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/titleScreenBig.png", NULL, NULL, 
+		D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/marbleBG1422x800.png", NULL, NULL, 
 											   &texture, NULL);
 		mEffect->SetVariable("textureBG", texture);
 
 		const std::string btnCaptions[] = { "Start Game", "Back To Menu" };
-		LONG centerX = (LONG)width / 4 + 100;
+		LONG centerX = (LONG)width / 2;
 		LONG centerY = (LONG)height / 2;
 		const int padding = 20;
 
@@ -26,6 +26,10 @@ namespace State
 			mButtons.at(i)->Initialize(mDevice, buttonPos, btnCaptions[i]);
 			centerY += 48 + padding;
 		}
+
+		int lableX = sViewport->GetWidth() / 2;
+		RECT labelPos = { lableX - 360, 100, lableX + 360, 200 };
+		mTitle = new Components::Label(mDevice, "CREATE A LOCAL GAME", labelPos);
 	}
 
 	LocalLobbyState::~LocalLobbyState() throw()
@@ -119,5 +123,7 @@ namespace State
 		{
 			mButtons.at(i)->Draw();
 		}
+
+		mTitle->Draw();
 	}
 }

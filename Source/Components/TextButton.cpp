@@ -20,7 +20,7 @@ namespace Components
 		Button::Initialize(device, position, buttonGraphics);
 
 		int textSize = (mPositionRect.bottom - mPositionRect.top) / 2;
-		mFont = new GameFont(device, "Comic Sans", textSize, false, true);
+		mFont = new GameFont(device, "Jing Jing", textSize, false, true);
 		mCaption = caption;
 	}
 
