@@ -9,7 +9,8 @@ namespace State
 		mGrid(NULL),
 		mScene(NULL),
 		mCamera(NULL),
-		mMarker(NULL),
+		mMarkerBlue(NULL),
+		mMarkerGreen(NULL),
 		mShowMenu(false)
 	{
 		mViewFrustrum.nearDistance = 1.0f;
@@ -26,7 +27,7 @@ namespace State
 		SafeDelete(mGrid);
 		SafeDelete(mScene);
 		SafeDelete(mCamera);
-		SafeDelete(mMarker);
+		SafeDelete(mMarkerBlue);
 	}
 
 	void InGameState::OnStatePushed()
@@ -38,7 +39,8 @@ namespace State
 							 D3DXVECTOR3(0, 1.0f, 0), 
 							 mViewFrustrum,
 							 sInputManager);
-		mMarker = new Marker(mDevice, 6, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+		mMarkerBlue = new Marker(mDevice, 6, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+		mMarkerGreen = new Marker(mDevice, 6, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
 
 		mCamera->CreateProjectionMatrix(mViewFrustrum);
 	}
@@ -48,7 +50,8 @@ namespace State
 		SafeDelete(mGrid);
 		SafeDelete(mScene);
 		SafeDelete(mCamera);
-		SafeDelete(mMarker);
+		SafeDelete(mMarkerBlue);
+		SafeDelete(mMarkerGreen);
 	}
 
 	void InGameState::OnResize()
@@ -84,8 +87,9 @@ namespace State
 	void InGameState::Draw()
 	{
 		mScene->Draw(*mCamera);
-		mMarker->Draw(*mCamera, D3DXVECTOR3(5.0f, 1.0f, 5.0f));
-		mMarker->Draw(*mCamera, D3DXVECTOR3(-5.0f, 1.0f, -5.0f));
+		mMarkerBlue->Draw(*mCamera, D3DXVECTOR3(5.0f, 1.0f, 5.0f));
+		mMarkerBlue->Draw(*mCamera, D3DXVECTOR3(-5.0f, 1.0f, -5.0f));
+		mMarkerGreen->Draw(*mCamera, D3DXVECTOR3(-5.0f, 1.0f, 5.0f));
 
 		if(mShowMenu)
 			mDragonAgeMenu->Draw();

@@ -15,7 +15,7 @@ RasterizerState NoCulling
 
 cbuffer cbEveryFrame
 {
-	matrix		gVP;
+	matrix		gWVP;
 	matrix		gWorld;
 };
 
@@ -25,7 +25,7 @@ PS_INPUT VS(VS_INPUT input)
 {
 	PS_INPUT output;
 	
-	output.position = mul(float4(input.position, 1.0), gVP);
+	output.position = mul(float4(input.position, 1.0), gWVP);
 
 	return output;
 }

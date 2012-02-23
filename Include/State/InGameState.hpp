@@ -29,7 +29,8 @@ namespace State
 
 		Scene*				mScene;
 		Camera*				mCamera;
-		Marker*				mMarker;		// Debug
+		Marker*				mMarkerBlue;		// Debug
+		Marker*				mMarkerGreen;
 		Frustrum			mViewFrustrum;
 
 		Components::Menu*	mDragonAgeMenu;

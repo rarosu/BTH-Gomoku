@@ -20,7 +20,7 @@ void Marker::Draw(const Camera& camera, D3DXVECTOR3 drawPosition)
 {
 	UpdateWorldMatrix(drawPosition);
 	D3DXMATRIX worldViewProjection = mWorldMatrix * camera.GetViewMatrix() * camera.GetProjectionMatrix();
-	mEffect->SetVariable("gVP", worldViewProjection);
+	mEffect->SetVariable("gWVP", worldViewProjection);
 
 	mBuffer->Bind();
 	for(UINT p = 0; p < mEffect->GetTechniqueByIndex(0).GetPassCount(); ++p)
