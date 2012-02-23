@@ -119,12 +119,3 @@ D3DXVECTOR2 Scene::PickCell(const Viewport& viewport, int mouseX, int mouseY, co
 
 	return cell;
 }
-
-RECT Scene::GetVisibleRectangle(const Camera& camera) const
-{
-	RECT result;
-
-
-	
-	return result;
-}

@@ -21,7 +21,7 @@ namespace Network
 	Server::~Server()
 	{
 		mListenSocket.Shutdown();
-		for (int i = 0; i < mClients.size(); ++i)
+		for (unsigned int i = 0; i < mClients.size(); ++i)
 			mClients[i].Shutdown();
 
 		WSACleanup();
@@ -47,7 +47,7 @@ namespace Network
 		
 
 	
-		for (int i = 0; i < mClients.size(); ++i)
+		for (unsigned int i = 0; i < mClients.size(); ++i)
 		{
 			mClients[i].Update();
 			std::string m;
@@ -61,7 +61,7 @@ namespace Network
 	{
 		if (!mClients.empty())
 		{
-			for (int i = 0; i < mClients.size(); ++i)
+			for (unsigned int i = 0; i < mClients.size(); ++i)
 				mClients[i].Send(message.Flatten());
 		}
 	}

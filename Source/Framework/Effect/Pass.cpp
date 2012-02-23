@@ -41,7 +41,7 @@ bool Pass::RecalculateLayout(ID3D10Device* device)
 
 	D3D10_INPUT_ELEMENT_DESC* vertexDescription = new D3D10_INPUT_ELEMENT_DESC[mInputLayout.size()];
 	
-	for (int i = 0; i < mInputLayout.size(); ++i)
+	for (unsigned int i = 0; i < mInputLayout.size(); ++i)
 	{
 		vertexDescription[i].SemanticName = mInputLayout[i].mName.c_str();
 		vertexDescription[i].SemanticIndex = mInputLayout[i].mSemanticIndex;

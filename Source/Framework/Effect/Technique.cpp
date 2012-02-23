@@ -33,7 +33,7 @@ const Pass& Technique::GetPassByIndex(unsigned int index) const
 
 Pass& Technique::GetPassByName(const std::string& name)
 {
-	for (int i = 0; i < mPasses.size(); ++i)
+	for (unsigned int i = 0; i < mPasses.size(); ++i)
 	{
 		if (mPasses[i].GetName() == name)
 			return mPasses[i];
@@ -44,7 +44,7 @@ Pass& Technique::GetPassByName(const std::string& name)
 
 const Pass& Technique::GetPassByName(const std::string& name) const
 {
-	for (int i = 0; i < mPasses.size(); ++i)
+	for (unsigned int i = 0; i < mPasses.size(); ++i)
 	{
 		if (mPasses[i].GetName() == name)
 			return mPasses[i];

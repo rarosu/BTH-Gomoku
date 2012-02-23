@@ -91,7 +91,7 @@ const Technique& Effect::GetTechniqueByIndex(unsigned int index) const
 
 Technique& Effect::GetTechniqueByName(const std::string& name)
 {
-	for (int i = 0; i < mTechniques.size(); ++i)
+	for (unsigned int i = 0; i < mTechniques.size(); ++i)
 	{
 		if (mTechniques[i].GetName() == name)
 			return mTechniques[i];
@@ -102,7 +102,7 @@ Technique& Effect::GetTechniqueByName(const std::string& name)
 
 const Technique& Effect::GetTechniqueByName(const std::string& name) const
 {
-	for (int i = 0; i < mTechniques.size(); ++i)
+	for (unsigned int i = 0; i < mTechniques.size(); ++i)
 	{
 		if (mTechniques[i].GetName() == name)
 			return mTechniques[i];

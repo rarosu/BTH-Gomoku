@@ -59,12 +59,6 @@ private:
 		this method will return the cell the mouse is hovering over.
 	*/
 	D3DXVECTOR2 PickCell(const Viewport& viewport, int mouseX, int mouseY, const Camera& camera) const;
-
-	/**
-		Get the rectangle which completely encompasses the visible area
-		on the grid.
-	*/
-	RECT GetVisibleRectangle(const Camera& camera) const;
 };
 
 #endif

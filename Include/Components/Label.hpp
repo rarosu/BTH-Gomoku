@@ -1,9 +1,9 @@
 #ifndef LABEL_HPP
 #define LABEL_HPP
 
-#include <D3DX10.h>
 #include <string>
 
+#include "WinInclude.hpp"
 #include "Component.hpp"
 #include "GameFont.hpp"
 

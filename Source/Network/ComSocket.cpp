@@ -176,7 +176,7 @@ namespace Network
 	{
 		std::string s;
 		
-		for (int i = 0; i < mReceiveBuffer.size(); ++i)
+		for (unsigned int i = 0; i < mReceiveBuffer.size(); ++i)
 		{
 			if (mReceiveBuffer[i] == '\n')
 			{
