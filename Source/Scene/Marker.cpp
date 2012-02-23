@@ -1,11 +1,10 @@
 #include "Marker.hpp"
 
-Marker::Marker(ID3D10Device* device, int size, D3DXVECTOR3 position, D3DXCOLOR markerColor)
+Marker::Marker(ID3D10Device* device, int size, D3DXCOLOR markerColor)
 {
 	mDevice = device;
-	mPosition = position;
 	D3DXMatrixIdentity(&mWorldMatrix);
-	UpdateWorldMatrix();
+	UpdateWorldMatrix(D3DXVECTOR3(0.0, 0.0, 0.0));
 
 	CreateBuffer(size);
 	CreateEffect();
@@ -15,13 +14,14 @@ Marker::Marker(ID3D10Device* device, int size, D3DXVECTOR3 position, D3DXCOLOR m
 
 void Marker::Update(const Camera& camera)
 {
-	UpdateWorldMatrix();
-	D3DXMATRIX viewProjection = mWorldMatrix * camera.GetViewMatrix() * camera.GetProjectionMatrix();
-	mEffect->SetVariable("gVP", viewProjection);
 }
 
-void Marker::Draw()
+void Marker::Draw(const Camera& camera, D3DXVECTOR3 drawPosition)
 {
+	UpdateWorldMatrix(drawPosition);
+	D3DXMATRIX worldViewProjection = mWorldMatrix * camera.GetViewMatrix() * camera.GetProjectionMatrix();
+	mEffect->SetVariable("gVP", worldViewProjection);
+
 	mBuffer->Bind();
 	for(UINT p = 0; p < mEffect->GetTechniqueByIndex(0).GetPassCount(); ++p)
 	{
@@ -63,8 +63,7 @@ void Marker::CreateEffect()
 	mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
 }
 
-
-void Marker::UpdateWorldMatrix()
+void Marker::UpdateWorldMatrix(D3DXVECTOR3 position)
 {
 	// Update rotation in matrix
 	/*float cosA = std::cos(mRotation);
@@ -76,7 +75,7 @@ void Marker::UpdateWorldMatrix()
 	mWorldMatrix.m[2][2] = cosA;*/
 
 	// Update position in matrix
-	mWorldMatrix.m[3][0] = mPosition.x;
-	mWorldMatrix.m[3][1] = mPosition.y;
-	mWorldMatrix.m[3][2] = mPosition.z;
+	mWorldMatrix.m[3][0] = position.x;
+	mWorldMatrix.m[3][1] = position.y;
+	mWorldMatrix.m[3][2] = position.z;
 }
