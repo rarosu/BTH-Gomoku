@@ -33,9 +33,6 @@ private:
 	State::LocalLobbyState*		mLocalLobbyState;
 	State::NetworkLobbyState*	mNetworkLobbyState;
 	State::InGameState*			mInGameState;
-
-	Frustrum					mViewFrustrum;
-
 protected:
 	void ProgramLoop();
 	void OnResize();

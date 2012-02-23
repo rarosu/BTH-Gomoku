@@ -8,26 +8,24 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth,
 	mDefaultFont(NULL),
 	mConsole(NULL)
 {
+	// Setup static access variables
 	Components::Component::sViewport = &mViewport;
 	State::ApplicationState::sViewport = &mViewport;
 	State::ApplicationState::sInputManager = &mInputManager;
 
+	// Create general objects
 	mDefaultFont = new GameFont(mDeviceD3D, "Times New Roman", 24);
 	RECT consolePos = { 0, 0, mViewport.GetWidth(), mViewport.GetHeight() / 2 };
 
 	mConsole = new Components::Console(mDeviceD3D, consolePos, D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.0f), &mInputManager);
 
-	mViewFrustrum.nearDistance =	1.0f;
-	mViewFrustrum.farDistance =		1000.0f;
-	mViewFrustrum.fovY =			(float)D3DX_PI * 0.25f;
-	mViewFrustrum.aspectRatio =		(float) mViewport.GetWidth() / (float) mViewport.GetHeight();
-
+	// Create the states
 	mMenuState = new State::MenuState(State::C_STATE_MENU, mDeviceD3D, mViewport.GetWidth(), mViewport.GetHeight());
 	mLocalLobbyState = new State::LocalLobbyState(State::C_STATE_LOCAL_LOBBY, mDeviceD3D, &mInputManager, 
 												  mViewport.GetWidth(), mViewport.GetHeight());
 	mNetworkLobbyState = new State::NetworkLobbyState(State::C_STATE_NETWORK_LOBBY, mDeviceD3D, &mInputManager, 
 												  mViewport.GetWidth(), mViewport.GetHeight());
-	mInGameState = new State::InGameState(State::C_STATE_IN_GAME, mDeviceD3D, mViewFrustrum, &mInputManager);
+	mInGameState = new State::InGameState(State::C_STATE_IN_GAME, mDeviceD3D);
 
 	// Start the application in InGameState
 	State::ApplicationState::sStack.ChangeState(mMenuState);
@@ -90,7 +88,6 @@ void Game::Draw()
 {
 	ClearScene();
 	
-
 	// Draw the topmost state
 	State::ApplicationState::sStack.DrawState();
 	// Draw the console on top of everything else
