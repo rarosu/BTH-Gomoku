@@ -142,5 +142,6 @@ void Game::OnResize()
 {
 	D3DApplication::OnResize();
 
-	// TODO: forward to states
+	if (State::ApplicationState::sStack.Top() != NULL)
+		State::ApplicationState::sStack.Top()->OnResize();
 }

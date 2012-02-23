@@ -53,7 +53,13 @@ namespace State
 			Handle update and draw events in extended classes.
 		*/
 		virtual void Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime) = 0;
-		virtual void Draw() = 0; 
+		virtual void Draw() = 0;
+
+		/**
+			This will be called when the application has been resized, and the Viewport has
+			been updated.
+		*/
+		virtual void OnResize();
 
 		/**
 			These can be used to override default behaviour

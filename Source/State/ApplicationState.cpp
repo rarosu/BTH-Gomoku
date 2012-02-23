@@ -26,6 +26,8 @@ namespace State
 	void ApplicationState::OnStatePushed() {}
 	void ApplicationState::OnStatePopped() {}
 
+	void ApplicationState::OnResize() {}
+
 	bool ApplicationState::UpdateStateBeneath()
 	{
 		return false;
