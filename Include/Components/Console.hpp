@@ -7,6 +7,7 @@
 #include "Buffer.hpp"
 #include "Effect.hpp"
 #include "Component.hpp"
+#include "ComponentGroup.hpp"
 #include "GameFont.hpp"
 #include "GameTime.hpp"
 #include "Globals.hpp"
@@ -16,10 +17,11 @@
 
 namespace Components
 {
-	class Console : public Component, public Scrollable, public InputReceiver /*: public KeyListener*/
+	class Console : public ComponentGroup, public Scrollable, public InputReceiver
 	{
 	public:
-		Console(ID3D10Device* device, RECT position, D3DXCOLOR bgColor, InputSubscription* manager, UINT size = 100);
+		Console(ID3D10Device* device, ComponentGroup* ownerGroup, RECT position, D3DXCOLOR bgColor,
+			/*InputSubscription* manager,*/ UINT size = 100);
 		~Console() throw();
 
 		void Toggle();
@@ -30,16 +32,14 @@ namespace Components
 		void Draw();
 		void LostFocus();
 		void GotFocus();
+		// DEBUG
+		virtual std::string GetName();
 
 		// Methods inherited from Scrollable
 		void Scroll(bool isUp);
 
 		// Methods inherited from InputReceiver
 		void RecieveInput(std::string input);
-
-		/*void KeyPressed(int code);
-		void KeyReleased(int code);
-		void CharEntered(unsigned char symbol);*/
 
 	private:
 		struct TextLine
@@ -54,10 +54,9 @@ namespace Components
 		GameFont*					mFont;
 		D3DXCOLOR					mTextColor;
 		InputField*					mInputField;
-		InputSubscription*			mInputManager;
 		Scrollbar*					mScrollbar;
 
-		bool						mIsToggled;
+		//bool						mIsToggled;
 		std::stringstream			mStream;
 		std::deque<TextLine>		mOutput;
 		int							mMaxNumRows;

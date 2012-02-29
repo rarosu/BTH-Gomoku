@@ -7,6 +7,7 @@
 #include "ApplicationState.hpp"
 #include "Buffer.hpp"
 #include "Effect.hpp"
+#include "ComponentGroup.hpp"
 #include "TextButton.hpp"
 #include "Menu.hpp"
 
@@ -27,7 +28,7 @@ namespace State
 	class MenuState : public ApplicationState
 	{
 	public:
-		MenuState(StateID id, ID3D10Device* device, int width, int height);
+		MenuState(StateID id, ID3D10Device* device);
 		~MenuState() throw();
 		
 		
@@ -48,11 +49,11 @@ namespace State
 		Effect*									mEffect;
 		VertexBuffer*							mBuffer;
 		std::vector<Components::TextButton*>	mButtons;
-		Components::Menu*						mDragonAgeMenu;
-		bool									mShowMenu;
+		Components::ComponentGroup*				mComponents;
 
 		void CreateBuffer(float width, float height);
 		void CreateEffect();
+		void CreateComponents();
 	};
 }
 

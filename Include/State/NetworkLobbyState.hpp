@@ -2,12 +2,10 @@
 #define NETWORK_STATE_HPP
 
 #include "Globals.hpp"
-
-#include "Label.hpp"
-
 #include "ApplicationState.hpp"
-
+#include "ComponentGroup.hpp"
 #include "TextButton.hpp"
+#include "Label.hpp"
 #include "Buffer.hpp"
 #include "Effect.hpp"
 
@@ -25,7 +23,7 @@ namespace State
 	class NetworkLobbyState : public ApplicationState
 	{
 	public:
-		NetworkLobbyState(StateID id, ID3D10Device* device, InputSubscription* manager, int width, int height);
+		NetworkLobbyState(StateID id, ID3D10Device* device);
 		~NetworkLobbyState() throw();
 
 		// Inherited from Application State
@@ -46,10 +44,11 @@ namespace State
 		VertexBuffer*							mBuffer;
 		std::vector<Components::TextButton*>	mButtons;
 		Components::Label*						mTitle;
+		Components::ComponentGroup*				mComponents;
 
 		void CreateBuffer(float width, float height);
 		void CreateEffect();
-
+		void CreateComponents();
 	};
 }
 

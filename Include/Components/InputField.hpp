@@ -21,18 +21,20 @@ namespace Components
 		virtual void RecieveInput(std::string input) = 0;
 	};
 
-	class InputField : public Component, public KeyListener
+	class InputField : public Component
 	{
 	public:
-		InputField(ID3D10Device* device, InputSubscription* manager, InputReceiver* receiver, 
+		InputField(ID3D10Device* device, ComponentGroup* ownerGroup, InputReceiver* receiver, 
 		RECT position, GameFont* font);
 		~InputField() throw();
 
+		// Methods inherited from Component
 		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		void Draw();
-
 		void LostFocus();
 		void GotFocus();
+		// DEBUG
+		virtual std::string GetName();
 
 		// Methods inherited from KeyListener
 		void KeyPressed(int code, const InputState& currentState);
@@ -49,7 +51,7 @@ namespace Components
 		std::stringstream			mFirstString;
 		std::stringstream			mLastString;
 		InputReceiver*				mReceiver;
-		InputSubscription*				mManager;
+
 		bool						mShowMarker;
 		float						mMSSinceBlink;
 		

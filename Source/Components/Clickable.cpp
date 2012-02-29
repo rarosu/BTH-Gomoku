@@ -2,15 +2,14 @@
 
 namespace Components
 {
-	Clickable::Clickable(InputSubscription* manager)
-		: mHovered(false), mPressed(false), mManager(manager), mIsClicked(false)
+	Clickable::Clickable(ComponentGroup* ownerGroup)
+		: Component(ownerGroup),
+		  mHovered(false), mPressed(false), mIsClicked(false)
 	{
-		//mManager->AddMouseListener(this);
 	}
 
 	Clickable::~Clickable() throw()
 	{
-		mManager->RemoveMouseListener(this);
 	}
 
 	void Clickable::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)

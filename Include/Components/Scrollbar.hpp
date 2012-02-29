@@ -16,16 +16,21 @@ namespace Components
 	class Scrollbar : public Clickable
 	{
 	public:
-		Scrollbar(InputSubscription* manager, Scrollable* scrollable);
+		Scrollbar(ComponentGroup* ownerGroup, Scrollable* scrollable);
 		~Scrollbar() throw();
 
 		void Initialize(ID3D10Device* device, RECT position);
+
+		// Methods inherited from Component
 		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		void Draw();
 		virtual void LostFocus();
 		virtual void GotFocus();
+		// DEBUG
+		virtual std::string GetName();
 
 	protected:
+		// Methods inherited from Clickable
 		void MouseEntered();
 		void MouseExited();
 		void MousePressed(int buttonIndex);

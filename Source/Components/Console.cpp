@@ -6,9 +6,10 @@ namespace Components
 {
 	const int Console::C_NUM_VERTICES = 4;
 
-	Console::Console(ID3D10Device* device, RECT position, D3DXCOLOR bgColor, InputSubscription* manager, UINT size)
-		: mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0)), mInputManager(manager), mIsToggled(false), mFirstShowRow(0), 
-		C_HISTORY_SIZE(size)
+	Console::Console(ID3D10Device* device, ComponentGroup* ownerGroup, RECT position, D3DXCOLOR bgColor, UINT size)
+		: ComponentGroup(ownerGroup, "Console"),
+		  mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0)), mFirstShowRow(0), 
+		  C_HISTORY_SIZE(size)
 	{
 		mDevice = device;
 		mPositionRect = position;
@@ -28,10 +29,12 @@ namespace Components
 		int scrollWidth = 20;
 		RECT scrollbarPos = { mPositionRect.right - scrollWidth, mPositionRect.top, 
 							  mPositionRect.right, mPositionRect.bottom };
-		mScrollbar = new Scrollbar(mInputManager, this);
+		mScrollbar = new Scrollbar(this, this);
 		mScrollbar->Initialize(mDevice, scrollbarPos);
-		mInputField = new InputField(mDevice, mInputManager, this, inputFieldPos, mFont);
+		mInputField = new InputField(mDevice, this, this, inputFieldPos, mFont);
 		mEffect->SetVariable("bgColor", (D3DXVECTOR4)C_COLOR_WINDOW_BG);
+
+		SetFocus(mInputField);
 }
 
 
@@ -39,8 +42,6 @@ namespace Components
 	{
 		SafeDelete(mEffect);
 		SafeDelete(mVertexBuffer);
-		SafeDelete(mInputField);
-		SafeDelete(mScrollbar);
 	}
 
 	void Console::CreateBuffer()
@@ -82,7 +83,7 @@ namespace Components
 	// Update the console
 	void Console::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
 	{
-		if(!mIsToggled)
+		if(!IsVisible())
 			return;
 
 		if(currInputState.Keyboard.keyIsPressed[VK_UP] && !prevInputState.Keyboard.keyIsPressed[VK_UP])
@@ -94,14 +95,13 @@ namespace Components
 			Scroll(false);
 		}
 
-		mInputField->Update(gameTime, currInputState, prevInputState);
-		mScrollbar->Update(gameTime, currInputState, prevInputState);
+		ComponentGroup::Update(gameTime, currInputState, prevInputState);
 	}
 
 	// Draw the console
 	void Console::Draw()
 	{
-		if(!mIsToggled)
+		if(!IsVisible())
 			return;
 
 		mVertexBuffer->Bind();
@@ -119,15 +119,23 @@ namespace Components
 			mFont->WriteText("> " + mOutput[i].text, position, mOutput[i].color);
 			position.y += mFont->GetSize();
 		}
-	
-		mInputField->Draw();
-		mScrollbar->Draw();
+
+		ComponentGroup::Draw();
 	}
 
 	// Toggle showing of the console
 	void Console::Toggle()
 	{
-		mIsToggled = !mIsToggled;
+		if(IsVisible())
+		{
+			SetVisible(false);
+			LoseFocus();
+		}
+		else
+		{
+			SetVisible(true);
+			SetFocusThis();
+		}
 	}
 
 	void Console::LostFocus()
@@ -172,36 +180,9 @@ namespace Components
 		mTextColor = newColor;
 	}
 
-	//// When a key is pressed, act on it
-	//void Console::CharEntered(unsigned char key)
-	//{
-	//	if(!mIsToggled)
-	//		return;
-	//
-	//		mStream << key;
-	//}
-	//
-	//void Console::KeyPressed(int code)
-	//{
-	//	if(code == VK_RETURN)
-	//	{
-	//		if(mStream.str() != "")
-	//		{
-	//			mOutput.push_back("> " + mStream.str());
-	//			mStream.str("");
-	//		}
-	//	}
-	//	else if(code == VK_BACK)
-	//	{
-	//		std::string temp = mStream.str();
-	//		temp = temp.substr(0, temp.size() - 1);
-	//
-	//		mStream.str("");
-	//		mStream << temp;
-	//	}
-	//}
-	//
-	//void Console::KeyReleased(int code)
-	//{
-	//}
+	// DEBUG
+	std::string Console::GetName()
+	{
+		return "Console";
+	}
 }

@@ -2,6 +2,7 @@
 #define APPLICATION_STATE_HPP
 
 #include "GameTime.hpp"
+#include "ComponentGroup.hpp"
 #include "StateRegistry.hpp"
 #include "StateStack.hpp"
 #include "Viewport.hpp"
@@ -69,6 +70,7 @@ namespace State
 	protected:
 		static const Viewport*				sViewport;
 		static InputSubscription*			sInputManager;
+		static Components::ComponentGroup*	sRootComponentGroup;
 
 		/**
 			Constructor - add this state to the registry

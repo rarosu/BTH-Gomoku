@@ -13,6 +13,7 @@ namespace Components
 	{
 	public:
 		Label(ID3D10Device* device,
+			  ComponentGroup* ownerGroup,
 			  std::string caption, 
 			  RECT position, 
 			  GameFont::AlignHorizontal alignHorizontal = GameFont::Center, 
@@ -24,6 +25,8 @@ namespace Components
 		virtual void Draw();
 		void LostFocus();
 		void GotFocus();
+		// DEBUG
+		virtual std::string GetName();
 
 	private:
 		GameFont*					mFont;

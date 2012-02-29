@@ -2,41 +2,15 @@
 
 namespace State
 {
-	MenuState::MenuState(StateID id, ID3D10Device* device, int width, int height) 
-		: ApplicationState(id), mDevice(device),  mEffect(NULL), mBuffer(NULL), mDragonAgeMenu(NULL)
+	MenuState::MenuState(StateID id, ID3D10Device* device) 
+		: ApplicationState(id), mDevice(device),  mEffect(NULL), mBuffer(NULL), mComponents(NULL)
 	{
-		CreateBuffer((float)width, (float)height);
+		CreateBuffer((float)sViewport->GetWidth(), (float)sViewport->GetHeight());
 		CreateEffect();
-
-		ID3D10ShaderResourceView* texture;
-		D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/titleScreen1422x800.png", NULL, NULL, 
-											   &texture, NULL);
-		mEffect->SetVariable("textureBG", texture);
-
-		const std::string btnCaptions[] = { "Local Game", "Network Game", "Options", "Exit" };
-		LONG centerX = (LONG)width / 4;
-		LONG centerY = (LONG)height / 2;
-		const int padding = 20;
-
-		for(int i = 0; i < MenuButton::Count; ++i)
-		{
-			mButtons.push_back(new Components::TextButton(sInputManager));
-		
-			RECT buttonPos = { centerX - 96, centerY - 24, centerX + 96, centerY + 24 };
-			mButtons[i]->Initialize(mDevice, buttonPos, btnCaptions[i]);
-			centerY += 48 + padding;
-		}
-
-		RECT menuPos = { 100, 100, 200, 200 };
-		mDragonAgeMenu = new Components::Menu(mDevice, sInputManager, menuPos);
 	}
 
 	MenuState::~MenuState() throw()
 	{
-		for(UINT i = 0; i < mButtons.size(); ++i)
-		{
-			SafeDelete(mButtons.at(i));
-		}
 	}
 
 	void MenuState::CreateBuffer(float width, float height)
@@ -76,20 +50,41 @@ namespace State
 		mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
 	}
 
-	void MenuState::OnStatePushed()
+	void MenuState::CreateComponents()
 	{
+		mComponents = new Components::ComponentGroup(sRootComponentGroup, "MenuState Group");
+
+		ID3D10ShaderResourceView* texture;
+		D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/titleScreen1422x800.png", NULL, NULL, 
+											   &texture, NULL);
+		mEffect->SetVariable("textureBG", texture);
+
+		const std::string btnCaptions[] = { "Local Game", "Network Game", "Options", "Exit" };
+		LONG centerX = (LONG)sViewport->GetWidth() / 4;
+		LONG centerY = (LONG)sViewport->GetHeight() / 2;
+		const int padding = 20;
+
 		for(int i = 0; i < MenuButton::Count; ++i)
 		{
-			sInputManager->AddMouseListener(mButtons[i]);
+			mButtons.push_back(new Components::TextButton(mComponents));
+		
+			RECT buttonPos = { centerX - 96, centerY - 24, centerX + 96, centerY + 24 };
+			mButtons[i]->Initialize(mDevice, buttonPos, btnCaptions[i]);
+			centerY += 48 + padding;
 		}
+	}
+
+	void MenuState::OnStatePushed()
+	{
+		CreateComponents();
+		mComponents->GiveFocus();
 	}
 
 	void MenuState::OnStatePopped()
 	{
-		for(int i = 0; i < MenuButton::Count; ++i)
-		{
-			sInputManager->RemoveMouseListener(mButtons[i]);
-		}
+		sRootComponentGroup->RemoveComponent(mComponents);
+		mComponents = NULL;
+		mButtons.clear();
 	}
 
 	void MenuState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
@@ -106,10 +101,7 @@ namespace State
 		if(mButtons[MenuButton::Exit]->GetAndResetClickStatus())
 			QuitApplication();
 
-		for(UINT i = 0; i < mButtons.size(); ++i)
-		{
-			mButtons.at(i)->Update(gameTime, currInput, prevInput);
-		}
+		mComponents->Update(gameTime, currInput, prevInput);
 	}
 
 	void MenuState::Draw()
@@ -121,9 +113,6 @@ namespace State
 			mBuffer->Draw();
 		}
 
-		for(UINT i = 0; i < mButtons.size(); ++i)
-		{
-			mButtons[i]->Draw();
-		}
+		mComponents->Draw();
 	}
 }

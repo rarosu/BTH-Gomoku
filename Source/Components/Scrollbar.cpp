@@ -2,20 +2,18 @@
 
 namespace Components
 {
-	Scrollbar::Scrollbar(InputSubscription* manager, Scrollable* scrollable)
-		: Clickable(manager), mScrollable(scrollable)
+	Scrollbar::Scrollbar(ComponentGroup* ownerGroup, Scrollable* scrollable)
+		: Clickable(ownerGroup), 
+		  mScrollable(scrollable)
 	{
-		mBtnUp = new Button(manager);
-		mBtnDown = new Button(manager);
-		manager->AddMouseListener(this);
+		mBtnUp = new Button(ownerGroup);
+		mBtnDown = new Button(ownerGroup);
 	}
 
 	Scrollbar::~Scrollbar() throw()
 	{
 		SafeDelete(mBuffer);
 		SafeDelete(mEffect);
-		SafeDelete(mBtnUp);
-		SafeDelete(mBtnDown);
 	}
 
 	void Scrollbar::Initialize(ID3D10Device* device, RECT position)
@@ -131,5 +129,11 @@ namespace Components
 			mScrollable->Scroll(true);
 		else if(mBtnDown->IsHovered() && mScrollable)
 			mScrollable->Scroll(false);
+	}
+
+	// DEBUG
+	std::string Scrollbar::GetName()
+	{
+		return "Scrollbar";
 	}
 }

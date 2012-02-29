@@ -6,10 +6,10 @@
 
 namespace Components
 {
-	class Clickable : public Component, public MouseListener
+	class Clickable : public Component
 	{
 	public:
-		Clickable(InputSubscription* manager);
+		Clickable(/*InputSubscription* manager*/ComponentGroup* ownerGroup);
 		~Clickable() throw();
 
 		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
@@ -18,11 +18,12 @@ namespace Components
 		bool IsHovered() const;
 		bool GetAndResetClickStatus();
 
+		// Methods inherited from MouseListener
 		void MouseButtonPressed(int index, const InputState& currentState);
 		void MouseButtonReleased(int index, const InputState& currentState);
 		void MouseWheelMoved(short delta, const InputState& currentState);
 
-	protected:
+	protected:	
 		virtual void MouseEntered() = 0;
 		virtual void MouseExited() = 0;
 		virtual void MousePressed(int buttonIndex) = 0;
@@ -33,10 +34,10 @@ namespace Components
 		bool				mPressed;
 		bool				mIsClicked;
 
-		InputSubscription*	mManager;
+		//InputSubscription*	mManager;
 
-		Clickable(const Clickable& copy) {}
-		Clickable& operator=(const Clickable& copy) {}
+		/*Clickable(const Clickable& copy) {}
+		Clickable& operator=(const Clickable& copy) {}*/
 	};
 }
 #endif
