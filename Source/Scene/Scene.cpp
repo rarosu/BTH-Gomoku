@@ -6,7 +6,7 @@ const int Scene::C_GRID_HEIGHT = 64;
 const int Scene::C_CELL_SIZE = 32;
 const float Scene::C_BORDER_SIZE = 0.2f;
 
-Scene::Scene(ID3D10Device* device) :
+Scene::Scene(ID3D10Device* device, float aspectRatio) :
 	mDevice(device),
 	mVertexBuffer(NULL),
 	mEffect(NULL)
@@ -30,6 +30,13 @@ Scene::Scene(ID3D10Device* device) :
 
 	D3DXMatrixTranslation(&mModelMatrix, translation.x, 0.0f, translation.y);
 
+	mFrustum.nearDistance = 1.0f;
+	mFrustum.farDistance = 1000.0f;
+	mFrustum.fovY = D3DX_PI * 0.25f;
+	mFrustum.aspectRatio = aspectRatio;
+
+	mCamera = new Camera(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1.0f, -1.0f, 1.0f), D3DXVECTOR3(0.0f, 1.0f, 0.0f), mFrustum);
+
 	mFile.open("grid.txt", std::ios::trunc);
 }
 
@@ -37,6 +44,7 @@ Scene::~Scene() throw()
 {
 	SafeDelete(mVertexBuffer);
 	SafeDelete(mEffect);
+	SafeDelete(mCamera);
 }
 
 void Scene::CreateBuffer()
@@ -99,34 +107,30 @@ void Scene::CreateEffect()
 	mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
 }
 
-void Scene::Update(const Logic::Grid& grid, const Camera& camera, const Viewport& viewport, const InputState& currentInput)
+void Scene::Update(const Logic::Grid& grid, const Viewport& viewport, const InputState& currentInput)
 {
 	// Pick cell
-	mHoveredCell = PickCell(viewport, currentInput.Mouse.x, currentInput.Mouse.y, camera);
+	mHoveredCell = PickCell(viewport, currentInput.Mouse.x, currentInput.Mouse.y);
 }
 
-void Scene::Draw(const Camera& camera)
+void Scene::Draw()
 {
-	// Create View-Projection-matrix
-	D3DXMATRIX modelViewProjection = mModelMatrix * camera.GetViewMatrix() * camera.GetProjectionMatrix();
+	// Create Model-View-Projection-matrix
+	D3DXMATRIX modelViewProjection = mModelMatrix * mCamera->GetViewMatrix() * mCamera->GetProjectionMatrix();
 	
-	int c = C_CELL_SIZE / 2;																	//TEST
-	/*D3DXVECTOR4 upLeft = D3DXVECTOR4(mHoveredCell.x - c, 0.0f, mHoveredCell.y + c, 1.0f);		
-	D3DXVECTOR4 upRight = D3DXVECTOR4(mHoveredCell.x + c, 0.0f, mHoveredCell.y + c, 1.0f);
-	D3DXVECTOR4 downRight = D3DXVECTOR4(mHoveredCell.x + c, 0.0f, mHoveredCell.y - c, 1.0f);
-	D3DXVECTOR4 downLeft = D3DXVECTOR4(mHoveredCell.x - c, 0.0f, mHoveredCell.y - c, 1.0f);	*/
+	int c = C_CELL_SIZE / 2;
 	float left = mHoveredCell.x * C_CELL_SIZE - c;
 	float up = mHoveredCell.y * C_CELL_SIZE + c;
 	float right = mHoveredCell.x * C_CELL_SIZE + c;
 	float down = mHoveredCell.y * C_CELL_SIZE - c;
 
-	mFile << "(" << mHoveredCell.x << ", " << mHoveredCell.y << ")" << std::endl;
+	//mFile << "(" << mHoveredCell.x << ", " << mHoveredCell.y << ")" << std::endl;
 	//mFile << "(" << left << ", " << right << ") (" << down << ", " << up << ")" << std::endl;
 
 	mEffect->SetVariable("gLeft", left);
 	mEffect->SetVariable("gUp", up);
 	mEffect->SetVariable("gRight", right);
-	mEffect->SetVariable("gDown", down);												//END TEST
+	mEffect->SetVariable("gDown", down);
 
 	mEffect->SetVariable("gModel", mModelMatrix);
 	mEffect->SetVariable("gMVP", modelViewProjection);
@@ -141,17 +145,45 @@ void Scene::Draw(const Camera& camera)
 	}
 }
 
-Logic::Cell Scene::PickCell(const Viewport& viewport, int mouseX, int mouseY, const Camera& camera) const
+void Scene::ResizeFrustum(float aspectRatio)
+{
+	mFrustum.aspectRatio = aspectRatio;
+	mCamera->CreateProjectionMatrix(mFrustum);
+}
+
+Logic::Cell Scene::PickCell(const Viewport& viewport, int mouseX, int mouseY) const
 {
 	D3DXVECTOR2 normalizedMouseCoordinates = viewport.TransformToViewport(D3DXVECTOR2((float)mouseX, (float)mouseY));
+	D3DXVECTOR2 frustumCoordinates;
+
+	frustumCoordinates.x = normalizedMouseCoordinates.x / mCamera->GetProjectionMatrix()._22;
+	frustumCoordinates.y = normalizedMouseCoordinates.y / mCamera->GetProjectionMatrix()._11;
+	
+	D3DXMATRIX viewInverse = mCamera->GetViewMatrix();
+	D3DXMatrixInverse(&viewInverse, NULL, &viewInverse);
+
+	D3DXVECTOR4 p1 = D3DXVECTOR4(frustumCoordinates.x * mFrustum.nearDistance, frustumCoordinates.y * mFrustum.nearDistance, mFrustum.nearDistance, 1.0f);
+	D3DXVECTOR4 p2 = D3DXVECTOR4(frustumCoordinates.x * mFrustum.farDistance, frustumCoordinates.y * mFrustum.farDistance, mFrustum.farDistance, 1.0f);
+
+	D3DXVec4Transform(&p1, &p1, &viewInverse);
+	D3DXVec4Transform(&p2, &p2, &viewInverse);
+
+	/*
+	D3DXVECTOR3 direction = D3DXVECTOR3(p2.x - p1.x, p2.
+	float t = -p1.y / (p2 - p1).y;
+	*/
+
+	/*
 	D3DXVECTOR3 v;
 	
 	v.x = normalizedMouseCoordinates.x;
 	v.y = normalizedMouseCoordinates.y;
 	v.z = 1.0f;
+	*/
+
 
 	/*v.x /= camera.GetProjectionMatrix()._11;
-	v.y /= camera.GetProjectionMatrix()._22;*/
+	v.y /= camera.GetProjectionMatrix()._22;
 
 	D3DXMATRIX viewProjInverse;
 	D3DXMatrixInverse(&viewProjInverse, NULL, &(mModelMatrix * camera.GetViewMatrix() * camera.GetProjectionMatrix()));
@@ -169,6 +201,7 @@ Logic::Cell Scene::PickCell(const Viewport& viewport, int mouseX, int mouseY, co
 
 	D3DXVECTOR3 hit = origin + direction * t;
 	Logic::Cell cell = Logic::Cell(static_cast<int>(hit.x) / 10, static_cast<int>(hit.z) / 10);
+	*/
 
-	return cell;
+	//return cell;
 }

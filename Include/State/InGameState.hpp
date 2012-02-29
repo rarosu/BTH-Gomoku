@@ -26,11 +26,7 @@ namespace State
 		ID3D10Device*		mDevice;
 
 		Logic::Grid*		mGrid;
-
 		Scene*				mScene;
-		Camera*				mCamera;
-		Marker*				mMarker;		// Debug
-		Frustum				mViewFrustum;
 
 		Components::Menu*	mDragonAgeMenu;
 		bool				mShowMenu;

@@ -8,10 +8,9 @@ const float	Camera::C_ZOOM_SPEED		= 6.0f;
 const float	Camera::C_ZOOM_MIN			= -200.0f;
 const float	Camera::C_ZOOM_MAX			= -10.0f;
 
-Camera::Camera(D3DXVECTOR3 position, D3DXVECTOR3 direction, D3DXVECTOR3 worldUp, const Frustum& viewFrustum, InputSubscription* inputManager)
-	: mPosition(position), mDirection(direction), mWorldUp(worldUp), mZoom(-50.0f), mInputManager(inputManager)
+Camera::Camera(D3DXVECTOR3 position, D3DXVECTOR3 direction, D3DXVECTOR3 worldUp, const Frustum& viewFrustum)
+	: mPosition(position), mDirection(direction), mWorldUp(worldUp), mZoom(-50.0f)
 {
-	mInputManager->AddMouseListener(this);
 	mPosition = mPosition - (D3DXVec3Dot(&mPosition, &mWorldUp) * mWorldUp);
 
 	D3DXVec3Normalize(&mDirection, &mDirection);
@@ -20,7 +19,7 @@ Camera::Camera(D3DXVECTOR3 position, D3DXVECTOR3 direction, D3DXVECTOR3 worldUp,
 
 Camera::~Camera() throw()
 {
-	mInputManager->RemoveMouseListener(this);
+
 }
 
 void Camera::Update(const InputState& prevInput, const InputState& currInput, const GameTime& gameTime)
@@ -178,6 +177,7 @@ void Camera::SetHeight(float height)
 	mPosition.y = height;
 }
 
+/*
 void Camera::MouseButtonPressed(int index, const InputState& currentState)
 {
 }
@@ -191,3 +191,4 @@ void Camera::MouseWheelMoved(short delta, const InputState& currentState)
 	mZoom += delta * C_ZOOM_SPEED;
 	mZoom = Clamp(mZoom, C_ZOOM_MIN, C_ZOOM_MAX);
 }
+*/
