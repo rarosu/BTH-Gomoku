@@ -1,10 +1,10 @@
-BTH-Gomoku Network Protocol v 0.0.1
+BTH-Gomoku Network Protocol v 0.0.3
 
-
+DEFAULT FOR ID = -1;
 <ID>
 1		Chat message		SOURCE_ID (int), TARGET_ID(int), RECIPIENT (BROADCAST, TEAM, PRIVATE), MESSAGE (string) 		BOTH
 2		Accept				NUMBER_OF_PLAYERS (int), SELF_ID (int)															SERVER TO CLIENT
-3		Add player			PLAYER_ID (int), NAME (string), TEAM (int), MARKER_ID (int)										SERVER TO CLIENT
+3		Add player			PLAYER_ID (int), TEAM (int), MARKER_ID (int), NAME (string)										SERVER TO CLIENT
 4		Remove player		PLAYER_ID (int), REASON (TIME_OUT, LEFT, BOOT)													SERVER TO CLIENT
 5		Set team			PLAYER_ID (int), TEAM (int)																		BOTH
 6		Set marker			PLAYER_ID (int), MARKER_ID (int)																BOTH

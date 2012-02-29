@@ -1,23 +1,24 @@
-#ifndef ACCEPT_MESSAGE_HPP
-#define ACCEPT_MESSAGE_HPP
+#ifndef SET_TEAM_MESSAGE_HPP
+#define SET_TEAM_MESSAGE_HPP
 
 #include "Message.hpp"
 
 namespace Network
 {
-	class AcceptMessage : public Message
+	class SetTeamMessage : public Message
 	{
 	public:
-		AcceptMessage();
-		AcceptMessage(int numberOfPlayers, int selfID);
+		SetTeamMessage();
+		SetTeamMessage(int playerID, int team);
 		static Message* Inflate(const std::string& args);
 
-		int mNumberOfPlayers;
-		int mSelfID;
+		int mPlayerID;
+		int mTeam;
 	protected:
 		int ID() const;
 		std::string FlattenArguments() const;
 	};
 }
+
 
 #endif

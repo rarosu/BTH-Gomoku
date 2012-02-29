@@ -1,19 +1,18 @@
-#ifndef ACCEPT_MESSAGE_HPP
-#define ACCEPT_MESSAGE_HPP
+#ifndef LEAVE_GAME_MESSAGE_HPP
+#define LEAVE_GAME_MESSAGE_HPP
 
 #include "Message.hpp"
 
 namespace Network
 {
-	class AcceptMessage : public Message
+	class LeaveGameMessage : public Message
 	{
 	public:
-		AcceptMessage();
-		AcceptMessage(int numberOfPlayers, int selfID);
+		LeaveGameMessage();
+		LeaveGameMessage(int playerID);
 		static Message* Inflate(const std::string& args);
 
-		int mNumberOfPlayers;
-		int mSelfID;
+		int mPlayerID;
 	protected:
 		int ID() const;
 		std::string FlattenArguments() const;

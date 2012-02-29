@@ -1,5 +1,5 @@
 #include "Message.hpp"
-#include "ChatMessage.hpp"
+#include "MessageInclude.hpp"
 #include <sstream>
 
 namespace Network
@@ -32,16 +32,40 @@ namespace Network
 		switch(id)
 		{
 			case C_MESSAGE_CHAT:
-				int sourceID;
-				int targetID;
-				int recipient;
-
-				s >> sourceID;
-				s >> targetID;
-				s >> recipient;
-
-				m = new ChatMessage(sourceID, targetID, static_cast<Recipient::Recipient>(recipient), s.str());
-			
+				m = ChatMessage::Inflate(s.str());
+				break;
+			case C_MESSAGE_ACCEPT:
+				m = AcceptMessage::Inflate(s.str());
+				break;
+			case C_MESSAGE_ADD_PLAYER:
+				m = AddPlayerMessage::Inflate(s.str());
+				break;
+			case C_MESSAGE_REMOVE_PLAYER:
+				m = RemovePlayerMessage::Inflate(s.str());
+				break;
+			case C_MESSAGE_SET_TEAM:
+				m = SetTeamMessage::Inflate(s.str());
+				break;
+			case C_MESSAGE_SET_MARKER:
+				m = SetMarkerMessage::Inflate(s.str());
+				break;
+			case C_MESSAGE_PLACE_PIECE:
+				m = PlacePieceMessage::Inflate(s.str());
+				break;
+			case C_MESSAGE_REMOVE_PIECE:
+				m = RemovePieceMessage::Inflate(s.str());
+				break;
+			case C_MESSAGE_TURN:
+				m = TurnMessage::Inflate(s.str());
+				break;
+			case C_MESSAGE_START_GAME:
+				m = new StartGameMessage();
+				break;
+			case C_MESSAGE_LEAVE_GAME:
+				m = LeaveGameMessage::Inflate(s.str());
+				break;
+			case C_MESSAGE_STAY_ALIVE:
+				m = StayAliveMessage::Inflate(s.str());
 				break;
 		}
 

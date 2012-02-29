@@ -15,6 +15,7 @@ namespace Network
 	public:
 		ChatMessage();
 		ChatMessage(int sourceID, int targetID, Recipient::Recipient recipient, const std::string& message);
+		static Message* Inflate(const std::string& args);
 
 		int mSourceID;
 		int mTargetID;
