@@ -1,9 +1,8 @@
 #include "Scene.hpp"
 #include <sstream>
 
-Scene::Scene(ID3D10Device* device, InputSubscription* inputManager) :
+Scene::Scene(ID3D10Device* device) :
 	mDevice(device),
-	mInputSubscription(inputManager),
 	mVertexBuffer(NULL),
 	mEffect(NULL)
 {
@@ -12,14 +11,11 @@ Scene::Scene(ID3D10Device* device, InputSubscription* inputManager) :
 
 	mEffect->SetVariable("gWidth", 10);
 	mEffect->SetVariable("gInterval", 0.1f);
-
-	mInputSubscription->AddMouseListener(this);
+	mEffect->SetVariable("gGridColor", D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
 Scene::~Scene() throw()
 {
-	mInputSubscription->RemoveMouseListener(this);
-
 	SafeDelete(mVertexBuffer);
 	SafeDelete(mEffect);
 }
@@ -58,7 +54,7 @@ void Scene::CreateEffect()
 
 	InputLayoutVector inputLayout;
 	inputLayout.push_back(InputLayoutElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT));
-	inputLayout.push_back(InputLayoutElement("COLOR", DXGI_FORMAT_R32G32B32A32_FLOAT));
+	//inputLayout.push_back(InputLayoutElement("COLOR", DXGI_FORMAT_R32G32B32A32_FLOAT));
 
 	mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
 }
@@ -66,8 +62,7 @@ void Scene::CreateEffect()
 void Scene::Update(const Logic::Grid& grid, const Camera& camera, const Viewport& viewport, const InputState& currentInput)
 {
 	// Pick cell
-	D3DXVECTOR2 cell = PickCell(viewport, currentInput.Mouse.x, currentInput.Mouse.y, camera);
-	mEffect->SetVariable("gMarkedCell", D3DXVECTOR4(cell.x, cell.y, 0.0, 0.0));
+	mHoveredCell = PickCell(viewport, currentInput.Mouse.x, currentInput.Mouse.y, camera);
 }
 
 void Scene::Draw(const Camera& camera)
@@ -75,6 +70,7 @@ void Scene::Draw(const Camera& camera)
 	// Create View-Projection-matrix
 	D3DXMATRIX viewProjection = camera.GetViewMatrix() * camera.GetProjectionMatrix();
 	mEffect->SetVariable("gVP", viewProjection);
+	mEffect->SetVariable("gMarkedCell", D3DXVECTOR4(mHoveredCell.x, mHoveredCell.y, 0.0, 0.0));
 
 	// Render the buffer
 	mVertexBuffer->Bind();
@@ -85,11 +81,7 @@ void Scene::Draw(const Camera& camera)
 	}
 }
 
-void Scene::MouseButtonPressed(int index, const InputState& currentState) {}
-void Scene::MouseButtonReleased(int index, const InputState& currentState) {}
-void Scene::MouseWheelMoved(short delta, const InputState& currentState) {}
-
-D3DXVECTOR2 Scene::PickCell(const Viewport& viewport, int mouseX, int mouseY, const Camera& camera) const
+Logic::Cell Scene::PickCell(const Viewport& viewport, int mouseX, int mouseY, const Camera& camera) const
 {
 	D3DXVECTOR2 normalizedMouseCoordinates = viewport.TransformToViewport(D3DXVECTOR2((float)mouseX, (float)mouseY));
 	D3DXVECTOR3 v;
@@ -110,12 +102,13 @@ D3DXVECTOR2 Scene::PickCell(const Viewport& viewport, int mouseX, int mouseY, co
 	D3DXVec4Transform(&origin, &origin,  &viewInverse);
 	D3DXVec4Transform(&direction, &direction, &viewInverse);
 
+	// TODO: Fix this description
 	// We want to know when the ray hits the XZ-plane, thus we want to know when
 	// origin.y - t * direction.y = 0. Which gives the following solution:
 	float t = -origin.y / direction.y;
 
 	D3DXVECTOR3 hit = origin + direction * t;
-	D3DXVECTOR2 cell = D3DXVECTOR2(float((int)hit.x / 10), float((int)hit.z / 10));
+	Logic::Cell cell = Logic::Cell(static_cast<int>(hit.x) / 10, static_cast<int>(hit.z) / 10);
 
 	return cell;
 }

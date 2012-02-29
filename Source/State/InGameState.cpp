@@ -31,7 +31,7 @@ namespace State
 	void InGameState::OnStatePushed()
 	{
 		mGrid = new Logic::Grid();
-		mScene = new Scene(mDevice, sInputManager);
+		mScene = new Scene(mDevice);
 		mCamera = new Camera(D3DXVECTOR3(0, 0, 0), 
 							 D3DXVECTOR3(0, -1.0f, 2.0f), 
 							 D3DXVECTOR3(0, 1.0f, 0), 

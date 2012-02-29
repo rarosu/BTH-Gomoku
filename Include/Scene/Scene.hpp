@@ -6,19 +6,17 @@
 #include "Effect.hpp"
 #include "Camera.hpp"
 #include "Grid.hpp"
-#include "InputManager.hpp"
 #include "Marker.hpp"
-#include "Console.hpp"
 #include "Viewport.hpp"
 
 /**
 	The scene will render a view of the grid and is able to determine
 	what cell the mouse is hovering over
 */
-class Scene : public MouseListener
+class Scene
 {
 public:
-	Scene(ID3D10Device* device, InputSubscription* inputSubscription);
+	Scene(ID3D10Device* device);
 	~Scene() throw();
 
 	/**
@@ -30,11 +28,6 @@ public:
 		Render the grid, through the given camera
 	*/
 	void Draw(const Camera& camera);
-
-
-	virtual void MouseButtonPressed(int index, const InputState& currentState);
-	virtual void MouseButtonReleased(int index, const InputState& currentState);
-	virtual void MouseWheelMoved(short delta, const InputState& currentState);
 private:
 	struct GridVertex
 	{
@@ -43,10 +36,10 @@ private:
 	};
 
 	ID3D10Device*				mDevice;
-	InputSubscription*			mInputSubscription;
-
 	Effect*						mEffect;
 	VertexBuffer*				mVertexBuffer;
+
+	Logic::Cell					mHoveredCell;
 
 	/**
 		Methods for creating the buffer- and effect objects, for rendering.
@@ -58,7 +51,7 @@ private:
 		Given the position of the mouse and the orientation of the camera,
 		this method will return the cell the mouse is hovering over.
 	*/
-	D3DXVECTOR2 PickCell(const Viewport& viewport, int mouseX, int mouseY, const Camera& camera) const;
+	Logic::Cell PickCell(const Viewport& viewport, int mouseX, int mouseY, const Camera& camera) const;
 };
 
 #endif
