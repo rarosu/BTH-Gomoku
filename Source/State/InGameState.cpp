@@ -11,10 +11,10 @@ namespace State
 		mCamera(NULL),
 		mShowMenu(false)
 	{
-		mViewFrustrum.nearDistance = 1.0f;
-		mViewFrustrum.farDistance = 1000.0f;
-		mViewFrustrum.fovY = (float)D3DX_PI * 0.25f;
-		mViewFrustrum.aspectRatio = static_cast<float>(sViewport->GetWidth()) / static_cast<float>(sViewport->GetHeight());
+		mViewFrustum.nearDistance = 1.0f;
+		mViewFrustum.farDistance = 1000.0f;
+		mViewFrustum.fovY = (float)D3DX_PI * 0.25f;
+		mViewFrustum.aspectRatio = static_cast<float>(sViewport->GetWidth()) / static_cast<float>(sViewport->GetHeight());
 
 		RECT menuPos = { 100, 100, 200, 200 };
 		mDragonAgeMenu = new Components::Menu(mDevice, sInputManager, menuPos);
@@ -35,11 +35,11 @@ namespace State
 		mCamera = new Camera(D3DXVECTOR3(0, 0, 0), 
 							 D3DXVECTOR3(0, -1.0f, 2.0f), 
 							 D3DXVECTOR3(0, 1.0f, 0), 
-							 mViewFrustrum,
+							 mViewFrustum,
 							 sInputManager);
 		mMarker = new Marker(mDevice, 6, D3DXVECTOR3(5.0f, 1.0f, 5.0f), D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
 
-		mCamera->CreateProjectionMatrix(mViewFrustrum);
+		mCamera->CreateProjectionMatrix(mViewFrustum);
 	}
 
 	void InGameState::OnStatePopped()
@@ -52,10 +52,10 @@ namespace State
 
 	void InGameState::OnResize()
 	{
-		mViewFrustrum.aspectRatio = static_cast<float>(sViewport->GetWidth()) / static_cast<float>(sViewport->GetHeight());
+		mViewFrustum.aspectRatio = static_cast<float>(sViewport->GetWidth()) / static_cast<float>(sViewport->GetHeight());
 
 		if (mCamera != NULL)
-			mCamera->CreateProjectionMatrix(mViewFrustrum);
+			mCamera->CreateProjectionMatrix(mViewFrustum);
 	}
 
 	void InGameState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)

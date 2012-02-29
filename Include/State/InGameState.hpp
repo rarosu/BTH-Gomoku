@@ -30,7 +30,7 @@ namespace State
 		Scene*				mScene;
 		Camera*				mCamera;
 		Marker*				mMarker;		// Debug
-		Frustrum			mViewFrustrum;
+		Frustum			mViewFrustum;
 
 		Components::Menu*	mDragonAgeMenu;
 		bool				mShowMenu;

@@ -5,7 +5,7 @@
 #include "InputManager.hpp"
 #include "GameTime.hpp"
 
-struct Frustrum
+struct Frustum
 {
 	float		nearDistance;
 	float		farDistance;
@@ -16,14 +16,14 @@ struct Frustrum
 class Camera : public MouseListener
 {
 public:
-	Camera(D3DXVECTOR3 position, D3DXVECTOR3 direction, D3DXVECTOR3 worldUp, const Frustrum& viewFrustrum, InputSubscription* inputManager);
+	Camera(D3DXVECTOR3 position, D3DXVECTOR3 direction, D3DXVECTOR3 worldUp, const Frustum& viewFrustum, InputSubscription* inputManager);
 	~Camera() throw();
 
 	void Update(const InputState& prevInput, const InputState& currInput, const GameTime& gameTime);
 
 	D3DXMATRIX GetViewMatrix() const;
 	const D3DXMATRIX& GetProjectionMatrix() const;
-	void CreateProjectionMatrix(const Frustrum& viewFrustrum);
+	void CreateProjectionMatrix(const Frustum& viewFrustum);
 
 	const D3DXVECTOR3& GetPos() const;
 	void SetHeight(float height);
