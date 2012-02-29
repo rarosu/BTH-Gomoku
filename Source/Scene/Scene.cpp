@@ -1,6 +1,11 @@
 #include "Scene.hpp"
 #include <sstream>
 
+const int Scene::C_GRID_WIDTH = 32;
+const int Scene::C_GRID_HEIGHT = 32;
+const int Scene::C_CELL_SIZE = 32;
+const float Scene::C_BORDER_SIZE = 0.2f;
+
 Scene::Scene(ID3D10Device* device) :
 	mDevice(device),
 	mVertexBuffer(NULL),
@@ -9,8 +14,8 @@ Scene::Scene(ID3D10Device* device) :
 	CreateBuffer();
 	CreateEffect();
 
-	mEffect->SetVariable("gWidth", 10);
-	mEffect->SetVariable("gInterval", 0.1f);
+	mEffect->SetVariable("gWidth", C_CELL_SIZE);
+	mEffect->SetVariable("gInterval", C_BORDER_SIZE * 0.5f);
 	mEffect->SetVariable("gGridColor", D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
@@ -22,26 +27,33 @@ Scene::~Scene() throw()
 
 void Scene::CreateBuffer()
 {
-	GridVertex vertices[4];
+	const int C_VERTEX_COUNT_X = C_GRID_WIDTH + 1;
+	const int C_VERTEX_COUNT_Z = C_GRID_HEIGHT + 1;
+	const int C_VERTEX_COUNT = C_VERTEX_COUNT_X * C_VERTEX_COUNT_Z;
+	GridVertex vertices[C_VERTEX_COUNT];
 
-	vertices[0].position = D3DXVECTOR3(-1000, 0, -1000);
-	vertices[0].color = D3DXCOLOR(1.0, 1.0, 0.0, 1.0);
+	for (int z = 0; z < C_VERTEX_COUNT_Z; ++z)
+	{
+		for (int x = 0; x < C_VERTEX_COUNT_X; ++x)
+		{
+			vertices[z * C_VERTEX_COUNT_Z + x].position = D3DXVECTOR3(x * C_CELL_SIZE, 0.0f, z * C_CELL_SIZE);
+		}
+	}
 
-	vertices[1].position = D3DXVECTOR3(-1000, 0, 1000);
-	vertices[1].color = D3DXCOLOR(1.0, 0.0, 0.0, 1.0);
+	for (int z = 0; z < C_VERTEX_COUNT_Z; ++z)
+	{
+		for (int x = 0; x < C_VERTEX_COUNT_X; ++x)
+		{
 
-	vertices[2].position = D3DXVECTOR3(1000, 0, -1000);
-	vertices[2].color = D3DXCOLOR(0.0, 1.0, 0.0, 1.0);
-
-	vertices[3].position = D3DXVECTOR3(1000, 0, 1000);
-	vertices[3].color = D3DXCOLOR(0.0, 0.0, 1.0, 1.0);
+		}
+	}
 
 	mVertexBuffer = new VertexBuffer(mDevice);
 
 	VertexBuffer::Data bufferDesc;
 	bufferDesc.mUsage =					Usage::Default;
-	bufferDesc.mTopology =				Topology::TriangleStrip;
-	bufferDesc.mElementCount =			4;
+	bufferDesc.mTopology =				Topology::TriangleStripAdjancency;
+	bufferDesc.mElementCount =			C_VERTEX_COUNT;
 	bufferDesc.mElementSize	=			sizeof(GridVertex);
 	bufferDesc.mFirstElementPointer	=	vertices;
 	
@@ -54,7 +66,6 @@ void Scene::CreateEffect()
 
 	InputLayoutVector inputLayout;
 	inputLayout.push_back(InputLayoutElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT));
-	//inputLayout.push_back(InputLayoutElement("COLOR", DXGI_FORMAT_R32G32B32A32_FLOAT));
 
 	mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
 }

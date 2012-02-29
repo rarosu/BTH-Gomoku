@@ -29,10 +29,14 @@ public:
 	*/
 	void Draw(const Camera& camera);
 private:
+	static const int C_GRID_WIDTH;
+	static const int C_GRID_HEIGHT;
+	static const int C_CELL_SIZE;
+	static const float C_BORDER_SIZE;
+
 	struct GridVertex
 	{
 		D3DXVECTOR3				position;
-		D3DXCOLOR				color;
 	};
 
 	ID3D10Device*				mDevice;

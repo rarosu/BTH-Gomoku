@@ -1,14 +1,12 @@
 struct VS_INPUT
 {
 	float3		position	: POSITION;
-	//float4		color		: COLOR;
 };
 
 struct PS_INPUT
 {
 	float4		position	: SV_POSITION;
 	float3		worldPos	: POSITION;
-	//float4		color		: COLOR;
 };
 
 RasterizerState NoCulling
@@ -19,7 +17,6 @@ RasterizerState NoCulling
 cbuffer cbEveryFrame
 {
 	matrix		gVP;
-	//matrix		gWorld;
 	float4		gMarkedCell;
 };
 
@@ -27,19 +24,20 @@ int gWidth;
 float gInterval;
 float4 gGridColor;
 
+
 PS_INPUT VS(VS_INPUT input)
 {
 	PS_INPUT output;
 
 	output.position = mul(float4(input.position, 1.0), gVP);
 	output.worldPos = input.position;
-	//output.color = input.color;
 
 	return output;
 }
 
 float4 PS(PS_INPUT input) : SV_TARGET0
 {
+	/*
 	float x = input.worldPos.x;
 	float z = input.worldPos.z;
 	int roundX = round(x);
@@ -52,6 +50,20 @@ float4 PS(PS_INPUT input) : SV_TARGET0
 
 	if(roundX / 10 == gMarkedCell.x && roundZ / 10 == gMarkedCell.y)
 		return float4(1.0, 0.0, 0.0, 1.0);
+
+	return gGridColor;
+	*/
+
+	/*
+	float x = input.worldPos.x;
+	float z = input.worldPos.z;
+
+	
+	if (x <= gInterval || z <= gInterval)
+		return float4(0.0f, 0.0f, 0.0f, 1.0f);
+	if (x >= gWidth - gInterval || z >= gWidth - gInterval)
+		return float4(0.0f, 0.0f, 0.0f, 1.0f);
+	*/
 
 	return gGridColor;
 }
