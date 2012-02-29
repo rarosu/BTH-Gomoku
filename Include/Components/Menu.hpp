@@ -13,6 +13,7 @@ namespace Components
 	{
 	public:
 		Menu(ID3D10Device* device, ComponentGroup* ownerGroup, RECT position);
+		~Menu() throw();
 
 		void SetPosition(RECT newPosition);
 
@@ -21,6 +22,8 @@ namespace Components
 		void Draw();
 		void LostFocus();
 		void GotFocus();
+		// DEBUG
+		virtual std::string GetName();
 
 	private:
 		ID3D10Device*						mDevice;

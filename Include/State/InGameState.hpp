@@ -35,8 +35,9 @@ namespace State
 		Frustrum						mViewFrustrum;
 
 		Components::ComponentGroup*		mComponents;
-		Components::Menu*				mDragonAgeMenu;
-		bool							mShowMenu;
+		//Components::Menu*				mDragonAgeMenu;
+
+		void CreateComponents();
 	};
 }
 

@@ -28,7 +28,7 @@ namespace State
 	class MenuState : public ApplicationState
 	{
 	public:
-		MenuState(StateID id, ID3D10Device* device, int width, int height);
+		MenuState(StateID id, ID3D10Device* device);
 		~MenuState() throw();
 		
 		
@@ -50,10 +50,10 @@ namespace State
 		VertexBuffer*							mBuffer;
 		std::vector<Components::TextButton*>	mButtons;
 		Components::ComponentGroup*				mComponents;
-		bool									mShowMenu;
 
 		void CreateBuffer(float width, float height);
 		void CreateEffect();
+		void CreateComponents();
 	};
 }
 

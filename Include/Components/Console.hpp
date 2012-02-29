@@ -32,6 +32,8 @@ namespace Components
 		void Draw();
 		void LostFocus();
 		void GotFocus();
+		// DEBUG
+		virtual std::string GetName();
 
 		// Methods inherited from Scrollable
 		void Scroll(bool isUp);
@@ -51,7 +53,6 @@ namespace Components
 		VertexBuffer*				mVertexBuffer;
 		GameFont*					mFont;
 		D3DXCOLOR					mTextColor;
-		ComponentGroup*				mGroup;
 		InputField*					mInputField;
 		Scrollbar*					mScrollbar;
 

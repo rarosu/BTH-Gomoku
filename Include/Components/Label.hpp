@@ -25,6 +25,8 @@ namespace Components
 		virtual void Draw();
 		void LostFocus();
 		void GotFocus();
+		// DEBUG
+		virtual std::string GetName();
 
 	private:
 		GameFont*					mFont;

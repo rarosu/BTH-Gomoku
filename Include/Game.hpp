@@ -6,6 +6,7 @@
 #include "GameTime.hpp"
 #include "GameFont.hpp"
 #include "Console.hpp"
+#include "RootComponent.hpp"
 
 #include "MenuState.hpp"
 #include "LocalLobbyState.hpp"
@@ -26,9 +27,9 @@ public:
 private:
 	GameTime					mGameTime;
 	GameFont*					mDefaultFont;
-	Components::Console*		mConsole;				// DEBUG: will be removed
+	//Components::Console*		mConsole;				// DEBUG: will be removed
 	InputManager				mInputManager;
-	Components::ComponentGroup*	mRootComponentGroup;
+	Components::RootComponent*	mRootComponentGroup;
 
 	State::MenuState*			mMenuState;
 	State::LocalLobbyState*		mLocalLobbyState;

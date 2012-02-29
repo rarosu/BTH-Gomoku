@@ -6,37 +6,34 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth,
 	mLocalLobbyState(NULL),
 	mInGameState(NULL),
 	mDefaultFont(NULL),
-	mConsole(NULL),
+	/*mConsole(NULL),*/
 	mRootComponentGroup(NULL)
 {
+	// Create general objects
+	mDefaultFont = new GameFont(mDeviceD3D, "Times New Roman", 24);
+	/*RECT consolePos = { 0, 0, mViewport.GetWidth(), mViewport.GetHeight() / 2 };
+	mConsole = new Components::Console(mDeviceD3D, mRootComponentGroup, consolePos, D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.0f));*/
+	//mRootComponentGroup->SetFocus(mConsole);
+
 	// Setup static access variables
 	Components::Component::sViewport = &mViewport;
 	State::ApplicationState::sViewport = &mViewport;
 	State::ApplicationState::sInputManager = &mInputManager;
 
-	mRootComponentGroup = new Components::ComponentGroup();
+	mRootComponentGroup = new Components::RootComponent(mDeviceD3D, mViewport.GetWidth(), mViewport.GetHeight());
 	mInputManager.AddKeyListener(mRootComponentGroup);
 	mInputManager.AddMouseListener(mRootComponentGroup);
 	State::ApplicationState::sRootComponentGroup = mRootComponentGroup;
 
-	// Create general objects
-	mDefaultFont = new GameFont(mDeviceD3D, "Times New Roman", 24);
-	RECT consolePos = { 0, 0, mViewport.GetWidth(), mViewport.GetHeight() / 2 };
-
 	// Create the states
-	mMenuState = new State::MenuState(State::C_STATE_MENU, mDeviceD3D, mViewport.GetWidth(), mViewport.GetHeight());
-	mLocalLobbyState = new State::LocalLobbyState(State::C_STATE_LOCAL_LOBBY, mDeviceD3D,
-												  mViewport.GetWidth(), mViewport.GetHeight());
-	mNetworkLobbyState = new State::NetworkLobbyState(State::C_STATE_NETWORK_LOBBY, mDeviceD3D,
-												  mViewport.GetWidth(), mViewport.GetHeight());
+	mMenuState = new State::MenuState(State::C_STATE_MENU, mDeviceD3D);
+	mLocalLobbyState = new State::LocalLobbyState(State::C_STATE_LOCAL_LOBBY, mDeviceD3D);
+	mNetworkLobbyState = new State::NetworkLobbyState(State::C_STATE_NETWORK_LOBBY, mDeviceD3D);
 	mInGameState = new State::InGameState(State::C_STATE_IN_GAME, mDeviceD3D);
 
 	// Start the application in InGameState
 	State::ApplicationState::sStack.ChangeState(mMenuState);
 	State::ApplicationState::sStack.UpdateStack();
-
-	mConsole = new Components::Console(mDeviceD3D, mRootComponentGroup, consolePos, D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.0f));
-	mRootComponentGroup->SetFocus(mConsole);
 }
 
 
@@ -72,19 +69,9 @@ void Game::Update()
 	// Update the state stack
 	State::ApplicationState::sStack.UpdateStack();
 
-	// Update game time, input and console
+	// Update game time and GUI components
 	mGameTime.Update();
-	
-
-	if(mInputManager.GetCurrent().Keyboard.keyIsPressed[VK_CONTROL])
-		if(mInputManager.GetCurrent().Keyboard.keyIsPressed['T'])
-			if(!(mInputManager.GetPrevious().Keyboard.keyIsPressed['T']))
-			{
-				mConsole->Toggle();
-				mRootComponentGroup->SetFocus(mConsole);
-			}
-
-	mConsole->Update(mGameTime, mInputManager.GetCurrent(), mInputManager.GetPrevious());
+	mRootComponentGroup->Update(mGameTime, mInputManager.GetCurrent(), mInputManager.GetPrevious());
 
 	// Update the topmost state
 	State::ApplicationState::sStack.UpdateState(mInputManager.GetCurrent(), 
@@ -101,7 +88,11 @@ void Game::Draw()
 	// Draw the topmost state
 	State::ApplicationState::sStack.DrawState();
 	// Draw the console on top of everything else
-	mConsole->Draw();
+	//mConsole->Draw();
+	mRootComponentGroup->Draw();
+
+	POINT pos = {10, 10};
+	mDefaultFont->WriteText(mRootComponentGroup->GetName(), pos, D3DXCOLOR(1.0, 0.0, 0.0, 1.0));
 	
 	// Swap backbuffer
 	RenderScene();

@@ -4,16 +4,16 @@
 
 namespace Components
 {
-	ComponentGroup::ComponentGroup(ComponentGroup* ownerGroup)
+	ComponentGroup::ComponentGroup(ComponentGroup* ownerGroup, std::string name)
 		: Component(ownerGroup),
-		  mFocusedComponent(NULL)
+		  mFocusedComponent(NULL), mName(name)
 	{
 		assert(ownerGroup != NULL);
 	}
 	
 	ComponentGroup::ComponentGroup()
 		: Component(NULL),
-		  mFocusedComponent(NULL)
+		  mFocusedComponent(NULL), mName("Root Component Group")
 	{
 	}
 
@@ -21,21 +21,29 @@ namespace Components
 	{
 		for(unsigned int i = 0; i < mComponents.size(); ++i)
 		{
-			delete mComponents[i];
+			SafeDelete(mComponents[i]);
 		}
 	}
 
 	void ComponentGroup::AddComponent(Component* component)
 	{
-		mComponents.push_back(component);
+		std::vector<Component*>::iterator index = std::find(mComponents.begin(), mComponents.end(), component);
+
+		if(index == mComponents.end())
+			mComponents.push_back(component);
 	}
 
 	void ComponentGroup::RemoveComponent(Component* component)
 	{
 		std::vector<Component*>::iterator index = std::find(mComponents.begin(), mComponents.end(), component);
+		if(mFocusedComponent == component)
+			mFocusedComponent = NULL;
 
 		if(index != mComponents.end())
+		{
+			SafeDelete(*index);
 			mComponents.erase(index);
+		}
 	}
 
 	void ComponentGroup::SetFocus(Component* component)
@@ -126,5 +134,16 @@ namespace Components
 	{
 		if(mFocusedComponent)
 			mFocusedComponent->CharEntered(symbol, currentState);
+	}
+
+	// DEBUG
+	std::string ComponentGroup::GetName()
+	{
+		std::string result = mName;
+
+		if(mFocusedComponent)
+			result += " -> " + mFocusedComponent->GetName();
+
+		return result;
 	}
 }

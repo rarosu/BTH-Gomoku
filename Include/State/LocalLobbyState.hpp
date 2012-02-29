@@ -25,7 +25,7 @@ namespace State
 	class LocalLobbyState : public ApplicationState
 	{
 	public:
-		LocalLobbyState(StateID id, ID3D10Device* device, int width, int height);
+		LocalLobbyState(StateID id, ID3D10Device* device);
 		~LocalLobbyState() throw();
 
 		// Inherited from Application State
@@ -50,6 +50,7 @@ namespace State
 
 		void CreateBuffer(float width, float height);
 		void CreateEffect();
+		void CreateComponents();
 
 	};
 }

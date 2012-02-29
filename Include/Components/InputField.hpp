@@ -28,11 +28,13 @@ namespace Components
 		RECT position, GameFont* font);
 		~InputField() throw();
 
+		// Methods inherited from Component
 		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		void Draw();
-
 		void LostFocus();
 		void GotFocus();
+		// DEBUG
+		virtual std::string GetName();
 
 		// Methods inherited from KeyListener
 		void KeyPressed(int code, const InputState& currentState);

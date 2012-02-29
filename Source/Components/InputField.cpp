@@ -160,4 +160,10 @@ namespace Components
 		//mStream << symbol;
 		mFirstString << symbol;
 	}
+
+	// DEBUG
+	std::string InputField::GetName()
+	{
+		return "InputField";
+	}
 }

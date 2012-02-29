@@ -42,4 +42,10 @@ namespace Components
 	{
 		mCaption = newCaption;
 	}
+
+	// DEBUG
+	std::string Label::GetName()
+	{
+		return "Label";
+	}
 }

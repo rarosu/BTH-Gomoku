@@ -55,6 +55,9 @@ namespace Components
 		void MouseExited();
 		void MousePressed(int buttonIndex);
 		void MouseReleased(int buttonIndex);
+
+		// DEBUG
+		virtual std::string GetName();
 	};
 }
 #endif

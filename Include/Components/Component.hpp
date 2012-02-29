@@ -38,6 +38,9 @@ namespace Components
 		virtual void KeyPressed(int code, const InputState& currentState) {}
 		virtual void KeyReleased(int code, const InputState& currentState) {}
 		virtual void CharEntered(unsigned char symbol, const InputState& currentState) {}
+
+		// DEBUG
+		virtual std::string GetName() = 0;
 		
 	protected:
 		RECT						mPositionRect;

@@ -29,4 +29,10 @@ namespace Components
 		Button::Draw();
 		mFont->WriteText(mCaption, &mPositionRect, mTextColor, GameFont::Center, GameFont::Middle);
 	}
+
+	// DEBUG
+	std::string TextButton::GetName()
+	{
+		return "Button: " + mCaption;
+	}
 }

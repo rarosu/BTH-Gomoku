@@ -12,14 +12,10 @@ Scene::Scene(ID3D10Device* device, InputSubscription* inputManager) :
 
 	mEffect->SetVariable("gWidth", 10);
 	mEffect->SetVariable("gInterval", 0.1f);
-
-	mInputSubscription->AddMouseListener(this);
 }
 
 Scene::~Scene() throw()
 {
-	mInputSubscription->RemoveMouseListener(this);
-
 	SafeDelete(mVertexBuffer);
 	SafeDelete(mEffect);
 }

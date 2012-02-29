@@ -2,38 +2,11 @@
 
 namespace State
 {
-	NetworkLobbyState::NetworkLobbyState(StateID id, ID3D10Device* device, int width, int height) 
+	NetworkLobbyState::NetworkLobbyState(StateID id, ID3D10Device* device) 
 		: ApplicationState(id), mDevice(device), mEffect(NULL), mBuffer(NULL), mTitle(NULL), mComponents(NULL)
 	{
-		CreateBuffer((float)width, (float)height);
+		CreateBuffer((float)sViewport->GetWidth(), (float)sViewport->GetHeight());
 		CreateEffect();
-
-		mComponents = new Components::ComponentGroup(sRootComponentGroup);
-		sInputManager->AddKeyListener(mComponents);
-		sInputManager->AddMouseListener(mComponents);
-
-		ID3D10ShaderResourceView* texture;
-		D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/marbleBG1422x800.png", NULL, NULL, 
-											   &texture, NULL);
-		mEffect->SetVariable("textureBG", texture);
-
-		const std::string btnCaptions[] = { "Start Game", "Back To Menu" };
-		LONG centerX = (LONG)width / 2;
-		LONG centerY = (LONG)height / 2;
-		const int padding = 20;
-
-		for(int i = 0; i < NLobbyButton::Count; ++i)
-		{
-			mButtons.push_back(new Components::TextButton(mComponents));
-		
-			RECT buttonPos = { centerX - 96, centerY - 24, centerX + 96, centerY + 24 };
-			mButtons.at(i)->Initialize(mDevice, buttonPos, btnCaptions[i]);
-			centerY += 48 + padding;
-		}
-
-		int lableX = sViewport->GetWidth() / 2;
-		RECT labelPos = { lableX - 360, 100, lableX + 360, 200 };
-		mTitle = new Components::Label(mDevice, mComponents, "CREATE A NETWORK GAME", labelPos);
 	}
 
 	NetworkLobbyState::~NetworkLobbyState() throw()
@@ -81,20 +54,46 @@ namespace State
 		mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
 	}
 
-	void NetworkLobbyState::OnStatePushed()
+	void NetworkLobbyState::CreateComponents()
 	{
+		mComponents = new Components::ComponentGroup(sRootComponentGroup, "NetworkLobby Group");
+
+		ID3D10ShaderResourceView* texture;
+		D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/marbleBG1422x800.png", NULL, NULL, 
+											   &texture, NULL);
+		mEffect->SetVariable("textureBG", texture);
+
+		const std::string btnCaptions[] = { "Start Game", "Back To Menu" };
+		LONG centerX = (LONG)sViewport->GetWidth() / 2;
+		LONG centerY = (LONG)sViewport->GetHeight() / 2;
+		const int padding = 20;
+
 		for(int i = 0; i < NLobbyButton::Count; ++i)
 		{
-			sInputManager->AddMouseListener(mButtons[i]);
+			mButtons.push_back(new Components::TextButton(mComponents));
+		
+			RECT buttonPos = { centerX - 96, centerY - 24, centerX + 96, centerY + 24 };
+			mButtons.at(i)->Initialize(mDevice, buttonPos, btnCaptions[i]);
+			centerY += 48 + padding;
 		}
+
+		int lableX = sViewport->GetWidth() / 2;
+		RECT labelPos = { lableX - 360, 100, lableX + 360, 200 };
+		mTitle = new Components::Label(mDevice, mComponents, "CREATE A NETWORK GAME", labelPos);
+	}
+
+	void NetworkLobbyState::OnStatePushed()
+	{
+		CreateComponents();	
+		mComponents->GiveFocus();
 	}
 
 	void NetworkLobbyState::OnStatePopped()
 	{
-		for(int i = 0; i < NLobbyButton::Count; ++i)
-		{
-			sInputManager->RemoveMouseListener(mButtons[i]);
-		}
+		sRootComponentGroup->RemoveComponent(mComponents);
+		mComponents = NULL;
+		mButtons.clear();
+		mTitle = NULL;
 	}
 
 	void NetworkLobbyState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)

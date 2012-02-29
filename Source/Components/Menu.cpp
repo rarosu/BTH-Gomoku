@@ -38,6 +38,10 @@ namespace Components
 		CreateButtons();		
 	}
 
+	Menu::~Menu() throw()
+	{
+	}
+
 	void Menu::UpdateButtonPositions()
 	{
 		mPositions.clear();
@@ -117,5 +121,11 @@ namespace Components
 
 	void Menu::GotFocus()
 	{
+	}
+
+	// DEBUG
+	std::string Menu::GetName()
+	{
+		return "DragonAge Menu";
 	}
 }

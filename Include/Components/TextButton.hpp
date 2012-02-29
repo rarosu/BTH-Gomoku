@@ -19,6 +19,9 @@ namespace Components
 		void Initialize(ID3D10Device* device, RECT position, std::string caption);
 		//void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		void Draw();
+		
+		// DEBUG
+		virtual std::string GetName();
 
 	private:
 		GameFont*					mFont;

@@ -2,32 +2,36 @@
 #define COMPONENTGROUP_HPP
 
 #include <vector>
+#include <string>
 
+#include "Globals.hpp"
 #include "Component.hpp"
 #include "InputManager.hpp"
 
-class Game;
-
 namespace Components
 {
+	class RootComponent;
+
 	class ComponentGroup : public Component
 	{
 	public:
-		friend class Game;
+		friend class RootComponent;
 
-		ComponentGroup(ComponentGroup* ownerGroup);
+		ComponentGroup(ComponentGroup* ownerGroup, std::string name);
 		virtual ~ComponentGroup() throw();
 
 		void AddComponent(Component* component);
 		void RemoveComponent(Component* component);
 		void GiveFocus();
-		void SetFocus(Component* component);
+		virtual void SetFocus(Component* component);
 
 		// Methods inherited from Component
-		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
-		void Draw();
+		virtual void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
+		virtual void Draw();
 		void LostFocus();
 		void GotFocus();
+		// DEBUG
+		std::string GetName();
 
 		// Methods inherited from MouseListener
 		virtual void MouseButtonPressed(int index, const InputState& currentState);
@@ -41,8 +45,10 @@ namespace Components
 
 	private:
 		Component*					mFocusedComponent;
-
 		std::vector<Component*>		mComponents;
+		
+		// DEBUG
+		std::string					mName;
 
 		ComponentGroup();
 	};

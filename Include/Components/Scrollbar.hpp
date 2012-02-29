@@ -26,6 +26,8 @@ namespace Components
 		void Draw();
 		virtual void LostFocus();
 		virtual void GotFocus();
+		// DEBUG
+		virtual std::string GetName();
 
 	protected:
 		// Methods inherited from Clickable

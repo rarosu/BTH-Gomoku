@@ -137,4 +137,9 @@ namespace Components
 		else
 			mEffect->SetVariable("textureBase", mGraphics.textureUp);
 	}
+
+	std::string Button::GetName()
+	{
+		return "Button";
+	}
 }

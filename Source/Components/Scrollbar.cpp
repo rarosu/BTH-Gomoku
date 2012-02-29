@@ -14,8 +14,6 @@ namespace Components
 	{
 		SafeDelete(mBuffer);
 		SafeDelete(mEffect);
-		SafeDelete(mBtnUp);
-		SafeDelete(mBtnDown);
 	}
 
 	void Scrollbar::Initialize(ID3D10Device* device, RECT position)
@@ -131,5 +129,11 @@ namespace Components
 			mScrollable->Scroll(true);
 		else if(mBtnDown->IsHovered() && mScrollable)
 			mScrollable->Scroll(false);
+	}
+
+	// DEBUG
+	std::string Scrollbar::GetName()
+	{
+		return "Scrollbar";
 	}
 }
