@@ -3,12 +3,14 @@
 
 #include "Session.hpp"
 
-class ServerSession : public Session
+namespace Logic
 {
-public:
+	class ServerSession : public Session
+	{
+	public:
 
-private:
+	private:
 
-};
-
+	};
+}
 #endif
