@@ -243,6 +243,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+    <None Include="pull.sh" />
+    <None Include="push.sh" />
     <None Include="Resources\Effects\Background.fx" />
     <None Include="Resources\Effects\Button.fx" />
     <None Include="Resources\Effects\Basic2D.fx" />
