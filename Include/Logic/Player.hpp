@@ -12,7 +12,7 @@ namespace Logic
 
 	private:
 
-	*/};
+	};*/
 }
 
 #endif
