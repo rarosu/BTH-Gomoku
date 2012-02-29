@@ -7,6 +7,7 @@
 
 #include "ApplicationState.hpp"
 #include "TextButton.hpp"
+#include "ComponentGroup.hpp"
 #include "Buffer.hpp"
 #include "Effect.hpp"
 
@@ -24,7 +25,7 @@ namespace State
 	class LocalLobbyState : public ApplicationState
 	{
 	public:
-		LocalLobbyState(StateID id, ID3D10Device* device, InputSubscription* manager, int width, int height);
+		LocalLobbyState(StateID id, ID3D10Device* device, int width, int height);
 		~LocalLobbyState() throw();
 
 		// Inherited from Application State
@@ -43,6 +44,7 @@ namespace State
 		ID3D10Device*							mDevice;
 		Effect*									mEffect;
 		VertexBuffer*							mBuffer;
+		Components::ComponentGroup*				mComponents;
 		std::vector<Components::TextButton*>	mButtons;
 		Components::Label*						mTitle;
 

@@ -5,8 +5,9 @@ namespace State
 {
 	StateRegistry				ApplicationState::sRegistry;
 	StateStack					ApplicationState::sStack;
-	const Viewport*				ApplicationState::sViewport		= NULL;
-	InputSubscription*			ApplicationState::sInputManager	= NULL;
+	const Viewport*				ApplicationState::sViewport				= NULL;
+	InputSubscription*			ApplicationState::sInputManager			= NULL;
+	Components::ComponentGroup*	ApplicationState::sRootComponentGroup	= NULL;
 
 	ApplicationState::ApplicationState(StateID id)
 	{

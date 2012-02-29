@@ -2,12 +2,12 @@
 
 namespace Components
 {
-	Scrollbar::Scrollbar(InputSubscription* manager, Scrollable* scrollable)
-		: Clickable(manager), mScrollable(scrollable)
+	Scrollbar::Scrollbar(ComponentGroup* ownerGroup, Scrollable* scrollable)
+		: Clickable(ownerGroup), 
+		  mScrollable(scrollable)
 	{
-		mBtnUp = new Button(manager);
-		mBtnDown = new Button(manager);
-		manager->AddMouseListener(this);
+		mBtnUp = new Button(ownerGroup);
+		mBtnDown = new Button(ownerGroup);
 	}
 
 	Scrollbar::~Scrollbar() throw()

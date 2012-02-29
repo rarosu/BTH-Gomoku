@@ -5,6 +5,7 @@
 #include "Grid.hpp"
 #include "Scene.hpp"
 #include "Marker.hpp"
+#include "ComponentGroup.hpp"
 #include "Menu.hpp"
 
 namespace State
@@ -23,18 +24,19 @@ namespace State
 		void Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime);
 		void Draw();
 	private:
-		ID3D10Device*		mDevice;
+		ID3D10Device*					mDevice;
 
-		Logic::Grid*		mGrid;
+		Logic::Grid*					mGrid;
 
-		Scene*				mScene;
-		Camera*				mCamera;
-		Marker*				mMarkerBlue;		// Debug
-		Marker*				mMarkerGreen;
-		Frustrum			mViewFrustrum;
+		Scene*							mScene;
+		Camera*							mCamera;
+		Marker*							mMarkerBlue;		// Debug
+		Marker*							mMarkerGreen;
+		Frustrum						mViewFrustrum;
 
-		Components::Menu*	mDragonAgeMenu;
-		bool				mShowMenu;
+		Components::ComponentGroup*		mComponents;
+		Components::Menu*				mDragonAgeMenu;
+		bool							mShowMenu;
 	};
 }
 

@@ -2,11 +2,15 @@
 
 namespace State
 {
-	NetworkLobbyState::NetworkLobbyState(StateID id, ID3D10Device* device, InputSubscription* manager, int width, int height) 
-		: ApplicationState(id), mDevice(device), mEffect(NULL), mBuffer(NULL)
+	NetworkLobbyState::NetworkLobbyState(StateID id, ID3D10Device* device, int width, int height) 
+		: ApplicationState(id), mDevice(device), mEffect(NULL), mBuffer(NULL), mTitle(NULL), mComponents(NULL)
 	{
 		CreateBuffer((float)width, (float)height);
 		CreateEffect();
+
+		mComponents = new Components::ComponentGroup(sRootComponentGroup);
+		sInputManager->AddKeyListener(mComponents);
+		sInputManager->AddMouseListener(mComponents);
 
 		ID3D10ShaderResourceView* texture;
 		D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/marbleBG1422x800.png", NULL, NULL, 
@@ -20,7 +24,7 @@ namespace State
 
 		for(int i = 0; i < NLobbyButton::Count; ++i)
 		{
-			mButtons.push_back(new Components::TextButton(manager));
+			mButtons.push_back(new Components::TextButton(mComponents));
 		
 			RECT buttonPos = { centerX - 96, centerY - 24, centerX + 96, centerY + 24 };
 			mButtons.at(i)->Initialize(mDevice, buttonPos, btnCaptions[i]);
@@ -28,8 +32,8 @@ namespace State
 		}
 
 		int lableX = sViewport->GetWidth() / 2;
-		RECT labelPos = { lableX - 420, 100, lableX + 420, 200 };
-		mTitle = new Components::Label(mDevice, "CREATE A NETWORK GAME", labelPos);
+		RECT labelPos = { lableX - 360, 100, lableX + 360, 200 };
+		mTitle = new Components::Label(mDevice, mComponents, "CREATE A NETWORK GAME", labelPos);
 	}
 
 	NetworkLobbyState::~NetworkLobbyState() throw()
@@ -60,8 +64,8 @@ namespace State
 		bufferDesc.mUsage					= Usage::Default;
 		bufferDesc.mTopology				= Topology::TriangleStrip;
 		bufferDesc.mElementCount			= numVertices;
-		bufferDesc.mFirstElementPointer		= vertices;
 		bufferDesc.mElementSize				= sizeof(bgVertex);
+		bufferDesc.mFirstElementPointer		= vertices;
 
 		mBuffer->SetData(bufferDesc, NULL);
 	}

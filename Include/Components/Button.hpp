@@ -19,16 +19,18 @@ namespace Components
 			D3DXCOLOR					hoverColor;
 			ID3D10ShaderResourceView*	textureUp;
 			ID3D10ShaderResourceView*	textureDown;
+			ID3D10ShaderResourceView*	textureHover;
 
 			Graphics();
 		};
 
-		Button(InputSubscription* manager);
+		Button(/*InputSubscription* manager*/ComponentGroup* ownerGroup);
 	
 		virtual void Initialize(ID3D10Device* device, RECT position, Graphics buttonColors);
+
+		// Methods inherited from Component
 		virtual void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		virtual void Draw();
-
 		virtual void LostFocus();
 		virtual void GotFocus();
 	

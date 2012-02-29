@@ -13,6 +13,7 @@ namespace Components
 	{
 	public:
 		Label(ID3D10Device* device,
+			  ComponentGroup* ownerGroup,
 			  std::string caption, 
 			  RECT position, 
 			  GameFont::AlignHorizontal alignHorizontal = GameFont::Center, 

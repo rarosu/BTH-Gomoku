@@ -26,8 +26,9 @@ public:
 private:
 	GameTime					mGameTime;
 	GameFont*					mDefaultFont;
-	Components::Console*		mConsole;
+	Components::Console*		mConsole;				// DEBUG: will be removed
 	InputManager				mInputManager;
+	Components::ComponentGroup*	mRootComponentGroup;
 
 	State::MenuState*			mMenuState;
 	State::LocalLobbyState*		mLocalLobbyState;

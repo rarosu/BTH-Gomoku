@@ -21,10 +21,10 @@ namespace Components
 		virtual void RecieveInput(std::string input) = 0;
 	};
 
-	class InputField : public Component, public KeyListener
+	class InputField : public Component
 	{
 	public:
-		InputField(ID3D10Device* device, InputSubscription* manager, InputReceiver* receiver, 
+		InputField(ID3D10Device* device, ComponentGroup* ownerGroup, InputReceiver* receiver, 
 		RECT position, GameFont* font);
 		~InputField() throw();
 
@@ -49,7 +49,7 @@ namespace Components
 		std::stringstream			mFirstString;
 		std::stringstream			mLastString;
 		InputReceiver*				mReceiver;
-		InputSubscription*				mManager;
+
 		bool						mShowMarker;
 		float						mMSSinceBlink;
 		

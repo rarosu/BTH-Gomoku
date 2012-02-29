@@ -6,12 +6,14 @@ namespace Components
 {
 	const int Console::C_NUM_VERTICES = 4;
 
-	Console::Console(ID3D10Device* device, RECT position, D3DXCOLOR bgColor, InputSubscription* manager, UINT size)
-		: mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0)), mInputManager(manager), mIsToggled(false), mFirstShowRow(0), 
-		C_HISTORY_SIZE(size)
+	Console::Console(ID3D10Device* device, ComponentGroup* ownerGroup, RECT position, D3DXCOLOR bgColor, UINT size)
+		: ComponentGroup(ownerGroup),
+		  mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0)), mFirstShowRow(0), 
+		  C_HISTORY_SIZE(size)
 	{
 		mDevice = device;
 		mPositionRect = position;
+		mGroup = new ComponentGroup(ownerGroup);
 
 		CreateBuffer();
 		CreateEffect();
@@ -28,10 +30,12 @@ namespace Components
 		int scrollWidth = 20;
 		RECT scrollbarPos = { mPositionRect.right - scrollWidth, mPositionRect.top, 
 							  mPositionRect.right, mPositionRect.bottom };
-		mScrollbar = new Scrollbar(mInputManager, this);
+		mScrollbar = new Scrollbar(mGroup, this);
 		mScrollbar->Initialize(mDevice, scrollbarPos);
-		mInputField = new InputField(mDevice, mInputManager, this, inputFieldPos, mFont);
+		mInputField = new InputField(mDevice, mGroup, this, inputFieldPos, mFont);
 		mEffect->SetVariable("bgColor", (D3DXVECTOR4)C_COLOR_WINDOW_BG);
+
+		SetFocus(mInputField);
 }
 
 
@@ -82,7 +86,7 @@ namespace Components
 	// Update the console
 	void Console::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
 	{
-		if(!mIsToggled)
+		if(!IsVisible())
 			return;
 
 		if(currInputState.Keyboard.keyIsPressed[VK_UP] && !prevInputState.Keyboard.keyIsPressed[VK_UP])
@@ -101,7 +105,7 @@ namespace Components
 	// Draw the console
 	void Console::Draw()
 	{
-		if(!mIsToggled)
+		if(!IsVisible())
 			return;
 
 		mVertexBuffer->Bind();
@@ -127,7 +131,8 @@ namespace Components
 	// Toggle showing of the console
 	void Console::Toggle()
 	{
-		mIsToggled = !mIsToggled;
+		//mIsToggled = !mIsToggled;
+		SetVisible(!IsVisible());
 	}
 
 	void Console::LostFocus()

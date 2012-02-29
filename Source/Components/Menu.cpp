@@ -2,8 +2,9 @@
 
 namespace Components
 {
-	Menu::Menu(ID3D10Device* device, InputSubscription* manager, RECT position)
-		: mDevice(device), mInputManager(manager)
+	Menu::Menu(ID3D10Device* device, ComponentGroup* ownerGroup, RECT position)
+		: Component(ownerGroup),
+		  mDevice(device)
 	{
 		mPositionRect = position;
 
@@ -73,15 +74,14 @@ namespace Components
 	{
 		for(unsigned int i = 0; i < mButtons.size(); ++i)
 		{
-			mInputManager->RemoveMouseListener(mButtons[i]);
+			delete mButtons[i];
 		}
 		mButtons.clear();
 
 		for(int i = 0; i < 4; ++i)
 		{
-			Components::Button* btn = new Components::Button(mInputManager);
+			Components::Button* btn = new Components::Button(mOwner);
 			btn->Initialize(mDevice, mPositions[i], mGraphics[i]);
-			mInputManager->AddMouseListener(btn);
 			
 			mButtons.push_back(btn);
 		}

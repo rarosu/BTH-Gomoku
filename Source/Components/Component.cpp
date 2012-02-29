@@ -1,19 +1,21 @@
 #include "Component.hpp"
+#include "ComponentGroup.hpp"
 
 namespace Components
 {
-	Component*			Component::sHasFocus = NULL;
 	const Viewport*		Component::sViewport = NULL;
 
-	Component::Component()
+	Component::Component(ComponentGroup* ownerGroup)
+		: mIsEnabled(true), mIsVisible(true), mOwner(ownerGroup)
 	{
 		ZeroMemory(&mPositionRect, sizeof(mPositionRect));
+		
+		if(mOwner)
+			mOwner->AddComponent(this);
 	}
 
 	Component::~Component() throw()
 	{
-		if(sHasFocus == this)
-			sHasFocus = NULL;
 	}
 
 	float Component::GetWidth() const
@@ -28,17 +30,33 @@ namespace Components
 
 	void Component::SetFocusThis()
 	{
-		if(sHasFocus)
-			sHasFocus->LostFocus();
-
-		sHasFocus = this;
-		sHasFocus->GotFocus();
+		if(mOwner)
+			mOwner->SetFocus(this);
 	}
 
 	void Component::LoseFocus()
 	{
-		if(sHasFocus)
-			sHasFocus->LostFocus();
-		sHasFocus = NULL;
+		if(mOwner)
+			mOwner->SetFocus(NULL);
+	}
+
+	bool Component::IsEnabled()
+	{
+		return mIsEnabled;
+	}
+
+	void Component::SetEnabled(bool isEnabled)
+	{
+		mIsEnabled = isEnabled;
+	}
+
+	bool Component::IsVisible()
+	{
+		return mIsVisible;
+	}
+
+	void Component::SetVisible(bool isVisible)
+	{
+		mIsVisible = isVisible;
 	}
 }

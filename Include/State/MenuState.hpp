@@ -7,6 +7,7 @@
 #include "ApplicationState.hpp"
 #include "Buffer.hpp"
 #include "Effect.hpp"
+#include "ComponentGroup.hpp"
 #include "TextButton.hpp"
 #include "Menu.hpp"
 
@@ -48,7 +49,7 @@ namespace State
 		Effect*									mEffect;
 		VertexBuffer*							mBuffer;
 		std::vector<Components::TextButton*>	mButtons;
-		Components::Menu*						mDragonAgeMenu;
+		Components::ComponentGroup*				mComponents;
 		bool									mShowMenu;
 
 		void CreateBuffer(float width, float height);

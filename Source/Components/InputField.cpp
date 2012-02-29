@@ -5,25 +5,22 @@ namespace Components
 	const int InputField::C_NUM_VERTICES = 4;
 	const float InputField::C_MARKER_SPEED = 500;
 
-	InputField::InputField(ID3D10Device* device, InputSubscription* manager, InputReceiver* receiver, 
+	InputField::InputField(ID3D10Device* device, ComponentGroup* ownerGroup, InputReceiver* receiver, 
 		RECT position, GameFont* font)
-		: mDevice(device), mManager(manager), mBuffer(NULL), mEffect(NULL), mFont(font), 
+		: Component(ownerGroup),
+		  mDevice(device), mBuffer(NULL), mEffect(NULL), mFont(font), 
 		  mReceiver(receiver), mShowMarker(true), mMSSinceBlink(0.0f)
 	{
 		mPositionRect = position;
 
 		CreateBuffer();
 		CreateEffect();
-
-		mManager->AddKeyListener(this);
 	
 		mEffect->SetVariable("bgColor", D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 
 	InputField::~InputField() throw()
 	{
-		mManager->RemoveKeyListener(this);
-
 		SafeDelete(mBuffer);
 		SafeDelete(mEffect);
 	}

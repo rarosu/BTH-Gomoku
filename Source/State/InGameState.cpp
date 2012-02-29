@@ -11,15 +11,21 @@ namespace State
 		mCamera(NULL),
 		mMarkerBlue(NULL),
 		mMarkerGreen(NULL),
-		mShowMenu(false)
+		mShowMenu(false),
+		mComponents(NULL)
 	{
+		mComponents = new Components::ComponentGroup(sRootComponentGroup);
+		sInputManager->AddKeyListener(mComponents);
+		sInputManager->AddMouseListener(mComponents);
+
 		mViewFrustrum.nearDistance = 1.0f;
 		mViewFrustrum.farDistance = 1000.0f;
 		mViewFrustrum.fovY = (float)D3DX_PI * 0.25f;
 		mViewFrustrum.aspectRatio = static_cast<float>(sViewport->GetWidth()) / static_cast<float>(sViewport->GetHeight());
 
 		RECT menuPos = { 100, 100, 200, 200 };
-		mDragonAgeMenu = new Components::Menu(mDevice, sInputManager, menuPos);
+		mDragonAgeMenu = new Components::Menu(mDevice, mComponents, menuPos);
+		mDragonAgeMenu->SetVisible(false);
 	}
 
 	InGameState::~InGameState() throw()
@@ -43,6 +49,8 @@ namespace State
 		mMarkerGreen = new Marker(mDevice, 6, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
 
 		mCamera->CreateProjectionMatrix(mViewFrustrum);
+
+		mComponents->GiveFocus();
 	}
 
 	void InGameState::OnStatePopped()
@@ -72,15 +80,18 @@ namespace State
 
 		if(currInput.Mouse.buttonIsPressed[C_MOUSE_RIGHT] && !prevInput.Mouse.buttonIsPressed[C_MOUSE_RIGHT])
 		{
-			mShowMenu = true;
+			mDragonAgeMenu->SetVisible(true);
+			//mShowMenu = true;
 			RECT menuPos = { currInput.Mouse.x - 50, currInput.Mouse.y - 50, 
 							 currInput.Mouse.x + 50, currInput.Mouse.y + 50 };
 			mDragonAgeMenu->SetPosition(menuPos);
+			mComponents->SetFocus(mDragonAgeMenu);
 		}
 		else if (!currInput.Mouse.buttonIsPressed[C_MOUSE_RIGHT] && prevInput.Mouse.buttonIsPressed[C_MOUSE_RIGHT])
-			mShowMenu = false;
+			mDragonAgeMenu->SetVisible(false);
+			//mShowMenu = false;
 
-		if(mShowMenu)
+		if(mDragonAgeMenu->IsVisible() /*mShowMenu*/)
 			mDragonAgeMenu->Update(gameTime, currInput, prevInput);
 	}
 

@@ -7,10 +7,11 @@ namespace Components
 		idleColor = activeColor = hoverColor = D3DXCOLOR(1.0, 1.0, 1.0, 1.0);
 		textureUp = NULL;
 		textureDown = NULL;
+		textureHover = NULL;
 	}
 
-	Button::Button(InputSubscription* manager)
-		: Clickable(manager),
+	Button::Button(ComponentGroup* ownerGroup)
+		: Clickable(ownerGroup),
 		mDevice(NULL), mBuffer(NULL), mEffect(NULL)
 	{
 	}
@@ -107,7 +108,12 @@ namespace Components
 				mEffect->SetVariable("textureBase", mGraphics.textureDown);
 		}
 		else
+		{
 			mEffect->SetVariable("buttonColor", (D3DXVECTOR4)mGraphics.hoverColor);
+			if(mGraphics.textureHover)
+				mEffect->SetVariable("textureBase", mGraphics.textureHover);
+
+		}
 	}
 
 	void Button::MouseExited()
@@ -126,6 +132,9 @@ namespace Components
 	void Button::MouseReleased(int buttonIndex)
 	{
 		mEffect->SetVariable("buttonColor", (D3DXVECTOR4)mGraphics.hoverColor);
-		mEffect->SetVariable("textureBase", mGraphics.textureUp);
+		if(mGraphics.textureHover)
+				mEffect->SetVariable("textureBase", mGraphics.textureHover);
+		else
+			mEffect->SetVariable("textureBase", mGraphics.textureUp);
 	}
 }

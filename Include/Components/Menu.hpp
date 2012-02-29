@@ -12,7 +12,7 @@ namespace Components
 	class Menu : public Component
 	{
 	public:
-		Menu(ID3D10Device* device, InputSubscription* manager, RECT position);
+		Menu(ID3D10Device* device, ComponentGroup* ownerGroup, RECT position);
 
 		void SetPosition(RECT newPosition);
 
@@ -23,12 +23,11 @@ namespace Components
 		void GotFocus();
 
 	private:
-		ID3D10Device*					mDevice;
-		InputSubscription*				mInputManager;
+		ID3D10Device*						mDevice;
 
 		std::vector<Components::Button*>	mButtons;
-		std::vector<Button::Graphics>	mGraphics;
-		std::vector<RECT>				mPositions;
+		std::vector<Button::Graphics>		mGraphics;
+		std::vector<RECT>					mPositions;
 
 		void UpdateButtonPositions();
 		void CreateButtons();

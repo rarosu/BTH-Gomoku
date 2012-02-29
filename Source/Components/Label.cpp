@@ -2,9 +2,10 @@
 
 namespace Components
 {
-	Label::Label(ID3D10Device* device, std::string caption, RECT position, GameFont::AlignHorizontal alignHorizontal, 
-				 GameFont::AlignVertical alignVertical)
-		: mFont(NULL), mCaption(caption), mTextColor(C_COLOR_TEXT), 
+	Label::Label(ID3D10Device* device, ComponentGroup* ownerGroup, std::string caption, RECT position, 
+				 GameFont::AlignHorizontal alignHorizontal, GameFont::AlignVertical alignVertical)
+		: Component(ownerGroup),
+		  mFont(NULL), mCaption(caption), mTextColor(C_COLOR_TEXT), 
 		  mShadowColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f)), mAlignHor(alignHorizontal), mAlignVer(alignVertical)
 	{
 		mPositionRect = position;

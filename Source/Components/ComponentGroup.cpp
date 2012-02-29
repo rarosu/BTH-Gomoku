@@ -1,8 +1,30 @@
 #include <algorithm>
+#include <cassert>
 #include "ComponentGroup.hpp"
 
 namespace Components
 {
+	ComponentGroup::ComponentGroup(ComponentGroup* ownerGroup)
+		: Component(ownerGroup),
+		  mFocusedComponent(NULL)
+	{
+		assert(ownerGroup != NULL);
+	}
+	
+	ComponentGroup::ComponentGroup()
+		: Component(NULL),
+		  mFocusedComponent(NULL)
+	{
+	}
+
+	ComponentGroup::~ComponentGroup()
+	{
+		for(unsigned int i = 0; i < mComponents.size(); ++i)
+		{
+			delete mComponents[i];
+		}
+	}
+
 	void ComponentGroup::AddComponent(Component* component)
 	{
 		mComponents.push_back(component);
@@ -14,6 +36,22 @@ namespace Components
 
 		if(index != mComponents.end())
 			mComponents.erase(index);
+	}
+
+	void ComponentGroup::SetFocus(Component* component)
+	{
+		if(mFocusedComponent)
+			mFocusedComponent->LostFocus();
+
+		mFocusedComponent = component;
+		if(mFocusedComponent)
+			mFocusedComponent->GotFocus();
+	}
+
+	void ComponentGroup::GiveFocus()
+	{
+		if(mOwner)
+			mOwner->SetFocus(this);
 	}
 
 	void ComponentGroup::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
@@ -46,5 +84,47 @@ namespace Components
 		
 		for(it = mComponents.begin(); it != mComponents.end(); it++)
 			(*it)->GotFocus();
+	}
+
+	void ComponentGroup::MouseButtonPressed(int index, const InputState& currentState)
+	{
+		std::vector<Component*>::iterator it;
+		
+		for(it = mComponents.begin(); it != mComponents.end(); it++)
+			(*it)->MouseButtonPressed(index, currentState);
+	}
+
+	void ComponentGroup::MouseButtonReleased(int index, const InputState& currentState)
+	{
+		std::vector<Component*>::iterator it;
+		
+		for(it = mComponents.begin(); it != mComponents.end(); it++)
+			(*it)->MouseButtonReleased(index, currentState);
+	}
+
+	void ComponentGroup::MouseWheelMoved(short delta, const InputState& currentState)
+	{
+		std::vector<Component*>::iterator it;
+		
+		for(it = mComponents.begin(); it != mComponents.end(); it++)
+			(*it)->MouseWheelMoved(delta, currentState);
+	}
+
+	void ComponentGroup::KeyPressed(int code, const InputState& currentState)
+	{
+		if(mFocusedComponent)
+			mFocusedComponent->KeyPressed(code, currentState);
+	}
+
+	void ComponentGroup::KeyReleased(int code, const InputState& currentState)
+	{
+		if(mFocusedComponent)
+			mFocusedComponent->KeyReleased(code, currentState);
+	}
+
+	void ComponentGroup::CharEntered(unsigned char symbol, const InputState& currentState)
+	{
+		if(mFocusedComponent)
+			mFocusedComponent->CharEntered(symbol, currentState);
 	}
 }

@@ -3,10 +3,14 @@
 namespace State
 {
 	MenuState::MenuState(StateID id, ID3D10Device* device, int width, int height) 
-		: ApplicationState(id), mDevice(device),  mEffect(NULL), mBuffer(NULL), mDragonAgeMenu(NULL)
+		: ApplicationState(id), mDevice(device),  mEffect(NULL), mBuffer(NULL), mComponents(NULL)
 	{
 		CreateBuffer((float)width, (float)height);
 		CreateEffect();
+
+		mComponents = new Components::ComponentGroup(sRootComponentGroup);
+		sInputManager->AddKeyListener(mComponents);
+		sInputManager->AddMouseListener(mComponents);
 
 		ID3D10ShaderResourceView* texture;
 		D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/titleScreen1422x800.png", NULL, NULL, 
@@ -20,23 +24,16 @@ namespace State
 
 		for(int i = 0; i < MenuButton::Count; ++i)
 		{
-			mButtons.push_back(new Components::TextButton(sInputManager));
+			mButtons.push_back(new Components::TextButton(mComponents));
 		
 			RECT buttonPos = { centerX - 96, centerY - 24, centerX + 96, centerY + 24 };
 			mButtons[i]->Initialize(mDevice, buttonPos, btnCaptions[i]);
 			centerY += 48 + padding;
 		}
-
-		RECT menuPos = { 100, 100, 200, 200 };
-		mDragonAgeMenu = new Components::Menu(mDevice, sInputManager, menuPos);
 	}
 
 	MenuState::~MenuState() throw()
 	{
-		for(UINT i = 0; i < mButtons.size(); ++i)
-		{
-			SafeDelete(mButtons.at(i));
-		}
 	}
 
 	void MenuState::CreateBuffer(float width, float height)
@@ -78,18 +75,12 @@ namespace State
 
 	void MenuState::OnStatePushed()
 	{
-		for(int i = 0; i < MenuButton::Count; ++i)
-		{
-			sInputManager->AddMouseListener(mButtons[i]);
-		}
+
 	}
 
 	void MenuState::OnStatePopped()
 	{
-		for(int i = 0; i < MenuButton::Count; ++i)
-		{
-			sInputManager->RemoveMouseListener(mButtons[i]);
-		}
+
 	}
 
 	void MenuState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
@@ -106,10 +97,7 @@ namespace State
 		if(mButtons[MenuButton::Exit]->GetAndResetClickStatus())
 			QuitApplication();
 
-		for(UINT i = 0; i < mButtons.size(); ++i)
-		{
-			mButtons.at(i)->Update(gameTime, currInput, prevInput);
-		}
+		mComponents->Update(gameTime, currInput, prevInput);
 	}
 
 	void MenuState::Draw()
@@ -121,9 +109,6 @@ namespace State
 			mBuffer->Draw();
 		}
 
-		for(UINT i = 0; i < mButtons.size(); ++i)
-		{
-			mButtons[i]->Draw();
-		}
+		mComponents->Draw();
 	}
 }
