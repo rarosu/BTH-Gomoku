@@ -67,7 +67,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(SolutionDir)\Build\x86\$(Configuration)\</IntDir>
     <ExecutablePath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Utilities\Bin\x86;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\State;Include\Network;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include;$(IncludePath)</IncludePath>
+    <IncludePath>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\Logic\Grid;Include\State;Include\Network;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -76,7 +76,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(SolutionDir)\Build\x86\$(Configuration)\</IntDir>
     <ExecutablePath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Utilities\Bin\x86;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\State;Include\Network;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include;$(IncludePath)</IncludePath>
+    <IncludePath>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\Logic\Grid;Include\State;Include\Network;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -85,7 +85,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IntDir>$(SolutionDir)\Build\x64\$(Configuration)\</IntDir>
     <ExecutablePath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Utilities\Bin\x64;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\State;Include\Network;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include;$(IncludePath)</IncludePath>
+    <IncludePath>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\Logic\Grid;Include\State;Include\Network;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x64;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -94,7 +94,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IntDir>$(SolutionDir)\Build\x64\$(Configuration)\</IntDir>
     <ExecutablePath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Utilities\Bin\x64;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\State;Include\Network;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include;$(IncludePath)</IncludePath>
+    <IncludePath>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\Logic\Grid;Include\State;Include\Network;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x64;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -102,7 +102,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
-      <AdditionalIncludeDirectories>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\State;Include\Network;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\Logic\Grid;Include\State;Include\Network;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -114,7 +114,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
-      <AdditionalIncludeDirectories>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\State;Include\Network;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\Logic\Grid;Include\State;Include\Network;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -128,7 +128,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
-      <AdditionalIncludeDirectories>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\State;Include\Network;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\Logic\Grid;Include\State;Include\Network;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -144,7 +144,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
-      <AdditionalIncludeDirectories>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\State;Include\Network;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\Logic\Grid;Include\State;Include\Network;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -176,9 +176,9 @@
     <ClCompile Include="Source\Globals.cpp" />
     <ClCompile Include="Source\Components\InputField.cpp" />
     <ClCompile Include="Source\Framework\InputManager.cpp" />
-    <ClCompile Include="Source\Logic\Cell.cpp" />
-    <ClCompile Include="Source\Logic\Grid.cpp" />
-    <ClCompile Include="Source\Logic\Row.cpp" />
+    <ClCompile Include="Source\Logic\Grid\Cell.cpp" />
+    <ClCompile Include="Source\Logic\Grid\Grid.cpp" />
+    <ClCompile Include="Source\Logic\Grid\Row.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Network\ChatMessage.cpp" />
     <ClCompile Include="Source\Network\Client.cpp" />
@@ -219,11 +219,11 @@
     <ClInclude Include="Include\Globals.hpp" />
     <ClInclude Include="Include\Components\InputField.hpp" />
     <ClInclude Include="Include\Framework\InputManager.hpp" />
-    <ClInclude Include="Include\Logic\Cell.hpp" />
-    <ClInclude Include="Include\Logic\Direction.hpp" />
-    <ClInclude Include="Include\Logic\Grid.hpp" />
+    <ClInclude Include="Include\Logic\Grid\Cell.hpp" />
+    <ClInclude Include="Include\Logic\Grid\Direction.hpp" />
+    <ClInclude Include="Include\Logic\Grid\Grid.hpp" />
     <ClInclude Include="Include\Logic\Player.hpp" />
-    <ClInclude Include="Include\Logic\Row.hpp" />
+    <ClInclude Include="Include\Logic\Grid\Row.hpp" />
     <ClInclude Include="Include\Network\ChatMessage.hpp" />
     <ClInclude Include="Include\Network\Client.hpp" />
     <ClInclude Include="Include\Network\ComSocket.hpp" />

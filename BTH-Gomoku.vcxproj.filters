@@ -4,9 +4,6 @@
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Game.cpp" />
-    <ClCompile Include="Source\Logic\Cell.cpp" />
-    <ClCompile Include="Source\Logic\Row.cpp" />
-    <ClCompile Include="Source\Logic\Grid.cpp" />
     <ClCompile Include="Source\Globals.cpp" />
     <ClCompile Include="Source\Components\Console.cpp" />
     <ClCompile Include="Source\Components\InputField.cpp" />
@@ -42,16 +39,15 @@
     <ClCompile Include="Source\Network\ListenSocket.cpp" />
     <ClCompile Include="Source\Network\Message.cpp" />
     <ClCompile Include="Source\Network\Server.cpp" />
+    <ClCompile Include="Source\Logic\Grid\Cell.cpp" />
+    <ClCompile Include="Source\Logic\Grid\Grid.cpp" />
+    <ClCompile Include="Source\Logic\Grid\Row.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
     <ClInclude Include="Include\Game.hpp" />
     <ClInclude Include="Include\Globals.hpp" />
-    <ClInclude Include="Include\Logic\Cell.hpp" />
-    <ClInclude Include="Include\Logic\Direction.hpp" />
-    <ClInclude Include="Include\Logic\Grid.hpp" />
     <ClInclude Include="Include\Logic\Player.hpp" />
-    <ClInclude Include="Include\Logic\Row.hpp" />
     <ClInclude Include="Include\Components\InputField.hpp" />
     <ClInclude Include="Include\Components\Console.hpp" />
     <ClInclude Include="Include\Framework\GameTime.hpp" />
@@ -87,6 +83,10 @@
     <ClInclude Include="Include\Network\Message.hpp" />
     <ClInclude Include="Include\Network\Server.hpp" />
     <ClInclude Include="Include\WinInclude.hpp" />
+    <ClInclude Include="Include\Logic\Grid\Cell.hpp" />
+    <ClInclude Include="Include\Logic\Grid\Direction.hpp" />
+    <ClInclude Include="Include\Logic\Grid\Grid.hpp" />
+    <ClInclude Include="Include\Logic\Grid\Row.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

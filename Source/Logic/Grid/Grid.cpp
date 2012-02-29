@@ -2,9 +2,11 @@
 
 namespace Logic
 {
-	bool Grid::AddMarker(const Cell& cell, Player player) 
+	bool Grid::AddMarker(const Cell& cell, PlayerID player) 
 	{
-		if (mMarkers[cell] != K_PLAYER_NONE) return false;
+		// Can only add a marker if the cell is unoccupied
+		if (mMarkers[cell] != K_PLAYER_NONE) 
+			return false;
 		
 		// Check every neighbour of the given cell...
 		for (int directionIterator = Direction::Up;
@@ -24,17 +26,13 @@ namespace Logic
 					 rowIterator != mRows.end();
 					 rowIterator++)
 				{
-					// Make sure the neighbour belongs to the row...
 					if (rowIterator->Contains(neighbour))
 					{
-						// Make sure the given cell is aligned with the row...
-						if (rowIterator->IsAligned(cell))
+						if (rowIterator->CanAddMarker(cell))
 						{
-							// Add the marker to this row!
 							rowIterator->AddMarker(cell);
 							foundRow = true;
-							
-							// No need to search for more rows in this direction
+
 							break;
 						}
 					}
@@ -63,17 +61,17 @@ namespace Logic
 		return mRows;
 	}
 	
-	const Player Grid::GetMarkerInCell(const Cell& cell) const
+	const PlayerID Grid::GetMarkerInCell(const Cell& cell) const
 	{
 		return mMarkers.find(cell)->second;
 	}
 	
-	const Player Grid::GetMarkerInCell(int x, int y) const
+	const PlayerID Grid::GetMarkerInCell(int x, int y) const
 	{
 		return mMarkers.find(Cell(x, y))->second;
 	}
 
-	Grid::MarkerMap::const_iterator Grid::GetFirstOccupiedCell() const
+	Grid::MarkerMap::const_iterator Grid::GetMarkerMapStart() const
 	{
 		return mMarkers.begin();
 	}

@@ -31,6 +31,23 @@ namespace Logic
 			See if this row contains a given cell
 		*/
 		bool Contains(const Cell& cell) const;
+
+		/**
+			Check whether the marker in the cell
+			is of the same player as this row.
+
+			If this row contains no cells, this will return
+			true.
+
+			If the cell is unoccupied, this ALWAYS returns false.
+		*/
+		bool IsSamePlayer(const Cell& cell) const;
+
+		/**
+			Check if it is possible to add the marker in the
+			given cell to this row.
+		*/
+		bool CanAddMarker(const Cell& cell) const;
 		
 		/**
 			This method will check whether cell is aligned and of the
@@ -50,7 +67,7 @@ namespace Logic
 		CellVector mCells;
 		
 		Alignment::Alignment mAlignment;
-		Player mPlayer;
+		PlayerID mPlayer;
 	};
 }
 
