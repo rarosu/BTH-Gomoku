@@ -5,7 +5,6 @@
 #include "Grid.hpp"
 #include "Scene.hpp"
 #include "Marker.hpp"
-#include "Menu.hpp"
 
 namespace State
 {
@@ -31,11 +30,7 @@ namespace State
 		Camera*				mCamera;
 		Marker*				mMarkerBlue;		// Debug
 		Marker*				mMarkerGreen;
-		Frustrum			mViewFrustrum;
-
-
-		Components::Menu*	mDragonAgeMenu;
-		bool				mShowMenu;
+		Frustum				mViewFrustum;
 	};
 }
 
