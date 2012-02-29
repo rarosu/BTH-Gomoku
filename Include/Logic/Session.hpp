@@ -1,12 +1,21 @@
 #ifndef SESSION_HPP
 #define SESSION_HPP
 
-class Session
+#include <vector>
+#include "Player.hpp"
+
+namespace Logic
 {
-public:
+	class Session
+	{
+	public:
+		void SetNumberOfPlayers(int count);
+		void AddPlayer(int slot, const Player& player);
+	private:
+		typedef std::vector<Player> PlayerVector;
 
-private:
-
-};
+		PlayerVector mPlayers;
+	};
+}
 
 #endif
