@@ -9,12 +9,12 @@ namespace Logic
 	class Session
 	{
 	public:
-		void SetNumberOfPlayers(int count);
-		void AddPlayer(int slot, const Player& player);
+		//void SetNumberOfPlayers(int count);
+		//void AddPlayer(int slot, const Player& player);
 	private:
-		typedef std::vector<Player> PlayerVector;
+		//typedef std::vector<Player> PlayerVector;
 
-		PlayerVector mPlayers;
+		//PlayerVector mPlayers;
 	};
 }
 

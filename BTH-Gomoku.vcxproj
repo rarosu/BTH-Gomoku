@@ -236,7 +236,6 @@
     <ClInclude Include="Include\Logic\Grid\Cell.hpp" />
     <ClInclude Include="Include\Logic\Grid\Direction.hpp" />
     <ClInclude Include="Include\Logic\Grid\Grid.hpp" />
-    <ClInclude Include="Include\Logic\Player.hpp" />
     <ClInclude Include="Include\Logic\Grid\Row.hpp" />
     <ClInclude Include="Include\Logic\ClientSession.hpp" />
     <ClInclude Include="Include\Logic\Player.hpp" />
