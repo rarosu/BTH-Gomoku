@@ -1,0 +1,1 @@
+git pull git@github.com:rarosu/BTH-Gomoku.git $1

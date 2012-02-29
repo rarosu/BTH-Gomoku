@@ -3,9 +3,9 @@
 
 namespace Logic
 {
-	typedef int Player;
+	typedef int PlayerID;
 	
-	const int K_PLAYER_NONE = 0;
+	const PlayerID K_PLAYER_NONE = 0;
 }
 
 #endif

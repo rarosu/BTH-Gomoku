@@ -33,6 +33,7 @@ namespace State
 		Marker*				mMarkerGreen;
 		Frustrum			mViewFrustrum;
 
+
 		Components::Menu*	mDragonAgeMenu;
 		bool				mShowMenu;
 	};

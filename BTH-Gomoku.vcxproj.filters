@@ -4,9 +4,6 @@
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Game.cpp" />
-    <ClCompile Include="Source\Logic\Cell.cpp" />
-    <ClCompile Include="Source\Logic\Row.cpp" />
-    <ClCompile Include="Source\Logic\Grid.cpp" />
     <ClCompile Include="Source\Globals.cpp" />
     <ClCompile Include="Source\Components\Console.cpp" />
     <ClCompile Include="Source\Components\InputField.cpp" />
@@ -36,22 +33,35 @@
     <ClCompile Include="Source\Framework\Effect\Technique.cpp" />
     <ClCompile Include="Source\Components\Label.cpp" />
     <ClCompile Include="Source\Components\Menu.cpp" />
-    <ClCompile Include="Source\Network\ChatMessage.cpp" />
     <ClCompile Include="Source\Network\Client.cpp" />
     <ClCompile Include="Source\Network\ComSocket.cpp" />
     <ClCompile Include="Source\Network\ListenSocket.cpp" />
     <ClCompile Include="Source\Network\Message.cpp" />
     <ClCompile Include="Source\Network\Server.cpp" />
+    <ClCompile Include="Source\Logic\Grid\Cell.cpp" />
+    <ClCompile Include="Source\Logic\Grid\Grid.cpp" />
+    <ClCompile Include="Source\Logic\Grid\Row.cpp" />
+    <ClCompile Include="Source\Logic\Session.cpp" />
+    <ClCompile Include="Source\Logic\ServerSession.cpp" />
+    <ClCompile Include="Source\Logic\ClientSession.cpp" />
+    <ClCompile Include="Source\Network\Messages\ChatMessage.cpp" />
+    <ClCompile Include="Source\Network\Messages\AcceptMessage.cpp" />
+    <ClCompile Include="Source\Network\Messages\AddPlayerMessage.cpp" />
+    <ClCompile Include="Source\Network\Messages\RemovePlayerMessage.cpp" />
+    <ClCompile Include="Source\Network\Messages\SetTeamMessage.cpp" />
+    <ClCompile Include="Source\Network\Messages\SetMarkerMessage.cpp" />
+    <ClCompile Include="Source\Network\Messages\PlacePieceMessage.cpp" />
+    <ClCompile Include="Source\Network\Messages\RemovePieceMessage.cpp" />
+    <ClCompile Include="Source\Network\Messages\TurnMessage.cpp" />
+    <ClCompile Include="Source\Network\Messages\StartGameMessage.cpp" />
+    <ClCompile Include="Source\Network\Messages\LeaveGameMessage.cpp" />
+    <ClCompile Include="Source\Network\Messages\StayAliveMessage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
     <ClInclude Include="Include\Game.hpp" />
     <ClInclude Include="Include\Globals.hpp" />
-    <ClInclude Include="Include\Logic\Cell.hpp" />
-    <ClInclude Include="Include\Logic\Direction.hpp" />
-    <ClInclude Include="Include\Logic\Grid.hpp" />
     <ClInclude Include="Include\Logic\Player.hpp" />
-    <ClInclude Include="Include\Logic\Row.hpp" />
     <ClInclude Include="Include\Components\InputField.hpp" />
     <ClInclude Include="Include\Components\Console.hpp" />
     <ClInclude Include="Include\Framework\GameTime.hpp" />
@@ -80,15 +90,33 @@
     <ClInclude Include="Include\Framework\Effect\Technique.hpp" />
     <ClInclude Include="Include\Components\Label.hpp" />
     <ClInclude Include="Include\Components\Menu.hpp" />
-
-    <ClInclude Include="Include\Network\ChatMessage.hpp" />
     <ClInclude Include="Include\Network\Client.hpp" />
     <ClInclude Include="Include\Network\ComSocket.hpp" />
     <ClInclude Include="Include\Network\ListenSocket.hpp" />
     <ClInclude Include="Include\Network\Message.hpp" />
     <ClInclude Include="Include\Network\Server.hpp" />
     <ClInclude Include="Include\WinInclude.hpp" />
-
+    <ClInclude Include="Include\Logic\Grid\Cell.hpp" />
+    <ClInclude Include="Include\Logic\Grid\Direction.hpp" />
+    <ClInclude Include="Include\Logic\Grid\Grid.hpp" />
+    <ClInclude Include="Include\Logic\Grid\Row.hpp" />
+    <ClInclude Include="Include\Logic\Session.hpp" />
+    <ClInclude Include="Include\Logic\ServerSession.hpp" />
+    <ClInclude Include="Include\Logic\ClientSession.hpp" />
+    <ClInclude Include="Include\Network\Messages\ChatMessage.hpp" />
+    <ClInclude Include="Include\Network\Messages\AcceptMessage.hpp" />
+    <ClInclude Include="Include\Logic\PlayerController.hpp" />
+    <ClInclude Include="Include\Network\Messages\AddPlayerMessage.hpp" />
+    <ClInclude Include="Include\Network\Messages\RemovePlayerMessage.hpp" />
+    <ClInclude Include="Include\Network\Messages\SetTeamMessage.hpp" />
+    <ClInclude Include="Include\Network\Messages\SetMarkerMessage.hpp" />
+    <ClInclude Include="Include\Network\Messages\PlacePieceMessage.hpp" />
+    <ClInclude Include="Include\Network\Messages\RemovePieceMessage.hpp" />
+    <ClInclude Include="Include\Network\Messages\TurnMessage.hpp" />
+    <ClInclude Include="Include\Network\Messages\StartGameMessage.hpp" />
+    <ClInclude Include="Include\Network\Messages\LeaveGameMessage.hpp" />
+    <ClInclude Include="Include\Network\Messages\StayAliveMessage.hpp" />
+    <ClInclude Include="Include\Network\Messages\MessageInclude.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
@@ -120,5 +148,7 @@
     <None Include="Resources\Textures\otherL.png" />
     <None Include="Resources\Textures\question.png" />
     <None Include="Resources\Textures\questionL.png" />
+    <None Include="pull.sh" />
+    <None Include="push.sh" />
   </ItemGroup>
 </Project>

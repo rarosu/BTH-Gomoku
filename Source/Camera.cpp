@@ -8,14 +8,14 @@ const float	Camera::C_ZOOM_SPEED		= 6.0f;
 const float	Camera::C_ZOOM_MIN			= -200.0f;
 const float	Camera::C_ZOOM_MAX			= -10.0f;
 
-Camera::Camera(D3DXVECTOR3 position, D3DXVECTOR3 direction, D3DXVECTOR3 worldUp, const Frustrum& viewFrustrum, InputSubscription* inputManager)
+Camera::Camera(D3DXVECTOR3 position, D3DXVECTOR3 direction, D3DXVECTOR3 worldUp, const Frustum& viewFrustum, InputSubscription* inputManager)
 	: mPosition(position), mDirection(direction), mWorldUp(worldUp), mZoom(-50.0f), mInputManager(inputManager)
 {
 	mInputManager->AddMouseListener(this);
 	mPosition = mPosition - (D3DXVec3Dot(&mPosition, &mWorldUp) * mWorldUp);
 
 	D3DXVec3Normalize(&mDirection, &mDirection);
-	CreateProjectionMatrix(viewFrustrum);
+	CreateProjectionMatrix(viewFrustum);
 }
 
 Camera::~Camera() throw()
@@ -141,20 +141,20 @@ const D3DXMATRIX& Camera::GetProjectionMatrix() const
 }
 
 // Create the projection matrix for the camera
-void Camera::CreateProjectionMatrix(const Frustrum& viewFrustrum)
+void Camera::CreateProjectionMatrix(const Frustum& viewFrustum)
 {
 	ZeroMemory(&mProjectionMatrix, sizeof(mProjectionMatrix));
 	
 	float scaleY, scaleX, length;
-	scaleY = 1.0f / std::tan(viewFrustrum.fovY * 0.5f);
-	scaleX = scaleY / viewFrustrum.aspectRatio;
-	length = viewFrustrum.farDistance - viewFrustrum.nearDistance;
+	scaleY = 1.0f / std::tan(viewFrustum.fovY * 0.5f);
+	scaleX = scaleY / viewFrustum.aspectRatio;
+	length = viewFrustum.farDistance - viewFrustum.nearDistance;
 
 	mProjectionMatrix.m[0][0] = scaleX;
 	mProjectionMatrix.m[1][1] = scaleY;
-	mProjectionMatrix.m[2][2] = viewFrustrum.farDistance / length;
+	mProjectionMatrix.m[2][2] = viewFrustum.farDistance / length;
 	mProjectionMatrix.m[2][3] = 1;
-	mProjectionMatrix.m[3][2] = (-viewFrustrum.nearDistance * viewFrustrum.farDistance) / length;
+	mProjectionMatrix.m[3][2] = (-viewFrustum.nearDistance * viewFrustum.farDistance) / length;
 }
 
 // Get the camera's right vector (camera x-axis)

@@ -1,4 +1,5 @@
 #include "Row.hpp"
+#include "Grid.hpp"
 #include <algorithm>
 
 namespace Logic
@@ -37,11 +38,34 @@ namespace Logic
 		
 		return false;
 	}
+
+	bool Row::IsSamePlayer(const Cell& cell) const
+	{
+		PlayerID marker = mGrid->GetMarkerInCell(cell);
+		
+		if (marker == K_PLAYER_NONE)
+			return false;
+		if (mCells.size() == 0)
+			return true;
+
+		return marker == mGrid->GetMarkerInCell(mCells[0]);
+	}
+
+	bool Row::CanAddMarker(const Cell& cell) const
+	{
+		if (Contains(cell))
+			return false;
+		if (!IsSamePlayer(cell))
+			return false;
+		if (!IsAligned(cell))
+			return false;
+		return true;
+	}
 	
 	void Row::AddMarker(const Cell& cell)
 	{
-		if (Contains(cell)) return;
-		if (!IsAligned(cell)) return;
+		if (!CanAddMarker(cell))
+			return;
 		
 		mCells.push_back(cell);
 		
