@@ -8,6 +8,7 @@
 #include "Grid.hpp"
 #include "Marker.hpp"
 #include "Viewport.hpp"
+#include <fstream>
 
 /**
 	The scene will render a view of the grid and is able to determine
@@ -37,13 +38,23 @@ private:
 	struct GridVertex
 	{
 		D3DXVECTOR3				position;
+		D3DXVECTOR2				uv;
+	};
+
+	struct CellFace
+	{
+		GridVertex mVertices[6];
 	};
 
 	ID3D10Device*				mDevice;
 	Effect*						mEffect;
 	VertexBuffer*				mVertexBuffer;
+	ID3D10ShaderResourceView*	mCellTexture;
+
+	D3DXMATRIX					mModelMatrix;
 
 	Logic::Cell					mHoveredCell;
+	std::ofstream				mFile;
 
 	/**
 		Methods for creating the buffer- and effect objects, for rendering.

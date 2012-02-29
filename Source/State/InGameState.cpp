@@ -37,7 +37,7 @@ namespace State
 							 D3DXVECTOR3(0, 1.0f, 0), 
 							 mViewFrustum,
 							 sInputManager);
-		mMarker = new Marker(mDevice, 6, D3DXVECTOR3(5.0f, 1.0f, 5.0f), D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+		mMarker = new Marker(mDevice, 6, D3DXVECTOR3(0.0f, 1.0f, 0.0f), D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
 
 		mCamera->CreateProjectionMatrix(mViewFrustum);
 	}

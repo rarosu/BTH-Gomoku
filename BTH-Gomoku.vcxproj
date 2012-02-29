@@ -258,6 +258,7 @@
     <None Include="Resources\Textures\button.png" />
     <None Include="Resources\Textures\buttonDown.png" />
     <None Include="Resources\Textures\buttonUp.png" />
+    <None Include="Resources\Textures\cell.png" />
     <None Include="Resources\Textures\exclamation.png" />
     <None Include="Resources\Textures\exclamationL.png" />
     <None Include="Resources\Textures\hint.png" />

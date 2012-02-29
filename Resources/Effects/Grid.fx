@@ -1,11 +1,13 @@
 struct VS_INPUT
 {
 	float3		position	: POSITION;
+	float2		uv			: TEXCOORD;
 };
 
 struct PS_INPUT
 {
 	float4		position	: SV_POSITION;
+	float2		uv			: TEXCOORD;
 	float3		worldPos	: POSITION;
 };
 
@@ -14,58 +16,49 @@ RasterizerState NoCulling
 	CullMode = None;
 };
 
+SamplerState LinearSampler 
+{
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+
 cbuffer cbEveryFrame
 {
-	matrix		gVP;
-	float4		gMarkedCell;
+	matrix		gModel;
+	matrix		gMVP;
+	float2		gMarkedCell;
+	float		gLeft;		// TEST
+	float		gUp;
+	float		gRight;
+	float		gDown;		// END TEST
 };
 
 int gWidth;
 float gInterval;
 float4 gGridColor;
+Texture2D gCellTexture;
 
 
 PS_INPUT VS(VS_INPUT input)
 {
 	PS_INPUT output;
 
-	output.position = mul(float4(input.position, 1.0), gVP);
-	output.worldPos = input.position;
+	output.position = mul(float4(input.position, 1.0), gMVP);
+	output.worldPos = mul(float4(input.position, 1.0), gModel).xyz;
+	output.uv = input.uv;
 
 	return output;
 }
 
 float4 PS(PS_INPUT input) : SV_TARGET0
 {
-	/*
-	float x = input.worldPos.x;
-	float z = input.worldPos.z;
-	int roundX = round(x);
-	int roundZ = round(z);
-
-	if(abs(roundX - x) <= gInterval && roundX % gWidth == 0)
-		return float4(0.0, 0.0, 0.0, 1.0);
-	if(abs(roundZ - z) <= gInterval && roundZ % gWidth == 0)
-		return float4(0.0, 0.0, 0.0, 1.0);
-
-	if(roundX / 10 == gMarkedCell.x && roundZ / 10 == gMarkedCell.y)
-		return float4(1.0, 0.0, 0.0, 1.0);
-
-	return gGridColor;
-	*/
-
-	/*
-	float x = input.worldPos.x;
-	float z = input.worldPos.z;
-
-	
-	if (x <= gInterval || z <= gInterval)
+	float4 col = gGridColor;
+	if (input.worldPos.x > gLeft && input.worldPos.x < gRight &&
+		input.worldPos.z > gDown && input.worldPos.z < gUp)
 		return float4(0.0f, 0.0f, 0.0f, 1.0f);
-	if (x >= gWidth - gInterval || z >= gWidth - gInterval)
-		return float4(0.0f, 0.0f, 0.0f, 1.0f);
-	*/
 
-	return gGridColor;
+	return col * gCellTexture.Sample(LinearSampler, input.uv);
 }
 
 technique10 DrawTechnique

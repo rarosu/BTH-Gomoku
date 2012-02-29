@@ -120,5 +120,6 @@
     <None Include="Resources\Textures\questionL.png" />
     <None Include="pull.sh" />
     <None Include="push.sh" />
+    <None Include="Resources\Textures\cell.png" />
   </ItemGroup>
 </Project>
