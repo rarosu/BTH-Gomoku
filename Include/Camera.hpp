@@ -13,10 +13,10 @@ struct Frustum
 	float		aspectRatio;
 };
 
-class Camera : public MouseListener
+class Camera
 {
 public:
-	Camera(D3DXVECTOR3 position, D3DXVECTOR3 direction, D3DXVECTOR3 worldUp, const Frustum& viewFrustum, InputSubscription* inputManager);
+	Camera(D3DXVECTOR3 position, D3DXVECTOR3 direction, D3DXVECTOR3 worldUp, const Frustum& viewFrustum);
 	~Camera() throw();
 
 	void Update(const InputState& prevInput, const InputState& currInput, const GameTime& gameTime);
@@ -28,12 +28,12 @@ public:
 	const D3DXVECTOR3& GetPos() const;
 	void SetHeight(float height);
 	
+	/*
 	void MouseButtonPressed(int index, const InputState& currentState);
 	void MouseButtonReleased(int index, const InputState& currentState);
 	void MouseWheelMoved(short delta, const InputState& currentState);
+	*/
 private:
-	InputSubscription*		mInputManager;
-
 	D3DXVECTOR3				mPosition;
 	D3DXVECTOR3				mDirection;
 	D3DXVECTOR3				mWorldUp;

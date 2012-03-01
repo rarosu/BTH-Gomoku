@@ -6,47 +6,66 @@
 #include "Effect.hpp"
 #include "Camera.hpp"
 #include "Grid.hpp"
-#include "InputManager.hpp"
 #include "Marker.hpp"
-#include "Console.hpp"
 #include "Viewport.hpp"
+#include "GameFont.hpp"		// DEBUG
+#include <fstream>
 
 /**
 	The scene will render a view of the grid and is able to determine
 	what cell the mouse is hovering over
 */
-class Scene : public MouseListener
+class Scene
 {
 public:
-	Scene(ID3D10Device* device, InputSubscription* inputSubscription);
+	Scene(ID3D10Device* device, float aspectRatio);
 	~Scene() throw();
 
 	/**
 		Create a texture of the grid from the model
 	*/
-	void Update(const Logic::Grid& grid, const Camera& camera, const Viewport& viewport, const InputState& currentInput);
+	void Update(const Logic::Grid& grid, const Viewport& viewport, const InputState& currentInput, const InputState& previousInput, const GameTime& gameTime);
 
 	/**
 		Render the grid, through the given camera
 	*/
-	void Draw(const Camera& camera);
+	void Draw();
 
-
-	virtual void MouseButtonPressed(int index, const InputState& currentState);
-	virtual void MouseButtonReleased(int index, const InputState& currentState);
-	virtual void MouseWheelMoved(short delta, const InputState& currentState);
+	/**
+		When the frustum's dimensions have been resized, call this
+		method.
+	*/
+	void ResizeFrustum(float aspectRatio);
 private:
+	static const int C_GRID_WIDTH;
+	static const int C_GRID_HEIGHT;
+	static const int C_CELL_SIZE;
+	static const float C_BORDER_SIZE;
+
 	struct GridVertex
 	{
 		D3DXVECTOR3				position;
-		D3DXCOLOR				color;
+		D3DXVECTOR2				uv;
+	};
+
+	struct CellFace
+	{
+		GridVertex mVertices[6];
 	};
 
 	ID3D10Device*				mDevice;
-	InputSubscription*			mInputSubscription;
-
 	Effect*						mEffect;
 	VertexBuffer*				mVertexBuffer;
+	ID3D10ShaderResourceView*	mCellTexture;
+	GameFont*					mFont;
+
+	Frustum						mFrustum;
+	Camera*						mCamera;
+
+	D3DXMATRIX					mModelMatrix;
+	Logic::Cell					mHoveredCell;
+
+	std::string					mOutputText;
 
 	/**
 		Methods for creating the buffer- and effect objects, for rendering.
@@ -58,7 +77,7 @@ private:
 		Given the position of the mouse and the orientation of the camera,
 		this method will return the cell the mouse is hovering over.
 	*/
-	D3DXVECTOR2 PickCell(const Viewport& viewport, int mouseX, int mouseY, const Camera& camera) const;
+	Logic::Cell PickCell(const Viewport& viewport, int mouseX, int mouseY) const;
 };
 
 #endif

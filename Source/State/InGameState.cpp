@@ -7,25 +7,25 @@ namespace State
 		ApplicationState(id),
 		mDevice(device),
 		mGrid(NULL),
-		mScene(NULL),
-		mCamera(NULL),
 		mMarkerBlue(NULL),
 		mMarkerGreen(NULL),
 		mComponents(NULL)
+		mScene(NULL)
 	{
-		mViewFrustum.nearDistance = 1.0f;
-		mViewFrustum.farDistance = 1000.0f;
-		mViewFrustum.fovY = (float)D3DX_PI * 0.25f;
-		mViewFrustum.aspectRatio = static_cast<float>(sViewport->GetWidth()) / static_cast<float>(sViewport->GetHeight());
+
 	}
 
 	InGameState::~InGameState() throw()
 	{
 		SafeDelete(mGrid);
 		SafeDelete(mScene);
-		SafeDelete(mCamera);
 		SafeDelete(mMarkerBlue);
 		SafeDelete(mMarkerGreen);
+	}
+
+	float CalculateAspectRatio(const Viewport& viewport)
+	{
+		return static_cast<float>(viewport.GetWidth()) / static_cast<float>(viewport.GetHeight());
 	}
 
 	void InGameState::CreateComponents()
@@ -35,18 +35,12 @@ namespace State
 		/*RECT menuPos = { 100, 100, 200, 200 };
 		mDragonAgeMenu = new Components::Menu(mDevice, mComponents, menuPos);
 		mDragonAgeMenu->SetVisible(false);*/
-
-		mGrid = new Logic::Grid();
-		mScene = new Scene(mDevice, sInputManager);
-		mCamera = new Camera(D3DXVECTOR3(0, 0, 0), 
-							 D3DXVECTOR3(0, -1.0f, 2.0f), 
-							 D3DXVECTOR3(0, 1.0f, 0), 
-							 mViewFrustum,
-							 sInputManager);
+		
 		mMarkerBlue = new Marker(mDevice, 6, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
 		mMarkerGreen = new Marker(mDevice, 6, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
 
-		mCamera->CreateProjectionMatrix(mViewFrustum);
+		mGrid = new Logic::Grid();
+		mScene = new Scene(mDevice, CalculateAspectRatio(*sViewport));
 	}
 
 	void InGameState::OnStatePushed()
@@ -59,7 +53,6 @@ namespace State
 	{
 		SafeDelete(mGrid);
 		SafeDelete(mScene);
-		SafeDelete(mCamera);
 		SafeDelete(mMarkerBlue);
 		SafeDelete(mMarkerGreen);
 
@@ -70,10 +63,8 @@ namespace State
 
 	void InGameState::OnResize()
 	{
-		mViewFrustum.aspectRatio = static_cast<float>(sViewport->GetWidth()) / static_cast<float>(sViewport->GetHeight());
-
-		if (mCamera != NULL)
-			mCamera->CreateProjectionMatrix(mViewFrustum);
+		if (mScene != NULL)
+			mScene->ResizeFrustum(CalculateAspectRatio(*sViewport));
 	}
 
 	void InGameState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
@@ -81,8 +72,7 @@ namespace State
 		if(currInput.Keyboard.keyIsPressed[VK_ESCAPE] && !prevInput.Keyboard.keyIsPressed[VK_ESCAPE])
 			ChangeState(C_STATE_MENU);
 
-		mCamera->Update(prevInput, currInput, gameTime);
-		mScene->Update(*mGrid, *mCamera, *sViewport, currInput);
+		mScene->Update(*mGrid, *sViewport, currInput, prevInput, gameTime);
 
 		/*if(currInput.Mouse.buttonIsPressed[C_MOUSE_RIGHT] && !prevInput.Mouse.buttonIsPressed[C_MOUSE_RIGHT])
 		{
@@ -102,7 +92,7 @@ namespace State
 
 	void InGameState::Draw()
 	{
-		mScene->Draw(*mCamera);
+		mScene->Draw();
 		mMarkerBlue->Draw(*mCamera, D3DXVECTOR3(5.0f, 1.0f, 5.0f));
 		mMarkerBlue->Draw(*mCamera, D3DXVECTOR3(-5.0f, 1.0f, -5.0f));
 		mMarkerGreen->Draw(*mCamera, D3DXVECTOR3(-5.0f, 1.0f, 5.0f));

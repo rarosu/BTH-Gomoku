@@ -28,7 +28,7 @@ namespace Usage
 */
 namespace Topology
 {
-	enum Topology { PointList, LineStrip, LineList, TriangleStrip, TriangleList };
+	enum Topology { PointList, LineStrip, LineStripAdjancency, LineList, LineListAdjancency, TriangleStrip, TriangleStripAdjancency, TriangleList, TriangleListAdjancency };
 }
 
 /**

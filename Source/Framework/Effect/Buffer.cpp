@@ -139,14 +139,26 @@ D3D10_PRIMITIVE_TOPOLOGY VertexBuffer::GetTopologyFlag(Topology::Topology topolo
 		case Topology::LineStrip:
 			result = D3D10_PRIMITIVE_TOPOLOGY_LINESTRIP;
 			break;
+		case Topology::LineStripAdjancency:
+			result = D3D10_PRIMITIVE_TOPOLOGY_LINESTRIP_ADJ;
+			break;
 		case Topology::LineList:
 			result = D3D10_PRIMITIVE_TOPOLOGY_LINELIST;
+			break;
+		case Topology::LineListAdjancency:
+			result = D3D10_PRIMITIVE_TOPOLOGY_LINELIST_ADJ;
 			break;
 		case Topology::TriangleStrip:
 			result = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
 			break;
+		case Topology::TriangleStripAdjancency:
+			result = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP_ADJ;
+			break;
 		case Topology::TriangleList:
 			result = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+			break;
+		case Topology::TriangleListAdjancency:
+			result = D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST_ADJ;
 			break;
 		default:
 			result = D3D10_PRIMITIVE_TOPOLOGY_POINTLIST;
