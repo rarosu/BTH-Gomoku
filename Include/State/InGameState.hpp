@@ -27,9 +27,6 @@ namespace State
 
 		Logic::Grid*		mGrid;
 		Scene*				mScene;
-
-		Components::Menu*	mDragonAgeMenu;
-		bool				mShowMenu;
 	};
 }
 

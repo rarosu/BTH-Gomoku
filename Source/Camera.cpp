@@ -9,7 +9,7 @@ const float	Camera::C_ZOOM_MIN			= -200.0f;
 const float	Camera::C_ZOOM_MAX			= -10.0f;
 
 Camera::Camera(D3DXVECTOR3 position, D3DXVECTOR3 direction, D3DXVECTOR3 worldUp, const Frustum& viewFrustum)
-	: mPosition(position), mDirection(direction), mWorldUp(worldUp), mZoom(-50.0f)
+	: mPosition(position), mDirection(direction), mWorldUp(worldUp), mZoom(-200.0f)
 {
 	mPosition = mPosition - (D3DXVec3Dot(&mPosition, &mWorldUp) * mWorldUp);
 

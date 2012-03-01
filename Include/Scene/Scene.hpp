@@ -8,6 +8,7 @@
 #include "Grid.hpp"
 #include "Marker.hpp"
 #include "Viewport.hpp"
+#include "GameFont.hpp"		// DEBUG
 #include <fstream>
 
 /**
@@ -23,7 +24,7 @@ public:
 	/**
 		Create a texture of the grid from the model
 	*/
-	void Update(const Logic::Grid& grid, const Viewport& viewport, const InputState& currentInput);
+	void Update(const Logic::Grid& grid, const Viewport& viewport, const InputState& currentInput, const InputState& previousInput, const GameTime& gameTime);
 
 	/**
 		Render the grid, through the given camera
@@ -56,6 +57,7 @@ private:
 	Effect*						mEffect;
 	VertexBuffer*				mVertexBuffer;
 	ID3D10ShaderResourceView*	mCellTexture;
+	GameFont*					mFont;
 
 	Frustum						mFrustum;
 	Camera*						mCamera;
@@ -63,7 +65,7 @@ private:
 	D3DXMATRIX					mModelMatrix;
 	Logic::Cell					mHoveredCell;
 
-	mutable std::ofstream		mFile;
+	std::string					mOutputText;
 
 	/**
 		Methods for creating the buffer- and effect objects, for rendering.

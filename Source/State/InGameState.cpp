@@ -7,11 +7,9 @@ namespace State
 		ApplicationState(id),
 		mDevice(device),
 		mGrid(NULL),
-		mScene(NULL),
-		mShowMenu(false)
+		mScene(NULL)
 	{
-		RECT menuPos = { 100, 100, 200, 200 };
-		mDragonAgeMenu = new Components::Menu(mDevice, sInputManager, menuPos);
+
 	}
 
 	InGameState::~InGameState() throw()
@@ -20,19 +18,15 @@ namespace State
 		SafeDelete(mScene);
 	}
 
+	float CalculateAspectRatio(const Viewport& viewport)
+	{
+		return static_cast<float>(viewport.GetWidth()) / static_cast<float>(viewport.GetHeight());
+	}
+
 	void InGameState::OnStatePushed()
 	{
 		mGrid = new Logic::Grid();
-		mScene = new Scene(mDevice);
-		/*
-		mCamera = new Camera(D3DXVECTOR3(0, 0, 0), 
-							 D3DXVECTOR3(0, -1.0f, 2.0f), 
-							 D3DXVECTOR3(0, 1.0f, 0), 
-							 mViewFrustum,
-							 sInputManager);
-		*/
-
-		//mCamera->CreateProjectionMatrix(mViewFrustum);
+		mScene = new Scene(mDevice, CalculateAspectRatio(*sViewport));
 	}
 
 	void InGameState::OnStatePopped()
@@ -44,7 +38,7 @@ namespace State
 	void InGameState::OnResize()
 	{
 		if (mScene != NULL)
-			mScene->ResizeFrustum(static_cast<float>(sViewport->GetWidth()) / static_cast<float>(sViewport->GetHeight()));
+			mScene->ResizeFrustum(CalculateAspectRatio(*sViewport));
 	}
 
 	void InGameState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
@@ -52,27 +46,11 @@ namespace State
 		if(currInput.Keyboard.keyIsPressed[VK_ESCAPE] && !prevInput.Keyboard.keyIsPressed[VK_ESCAPE])
 			ChangeState(C_STATE_MENU);
 
-		mScene->Update(*mGrid, *sViewport, currInput);
-
-		if(currInput.Mouse.buttonIsPressed[C_MOUSE_RIGHT] && !prevInput.Mouse.buttonIsPressed[C_MOUSE_RIGHT])
-		{
-			mShowMenu = true;
-			RECT menuPos = { currInput.Mouse.x - 50, currInput.Mouse.y - 50, 
-							 currInput.Mouse.x + 50, currInput.Mouse.y + 50 };
-			mDragonAgeMenu->SetPosition(menuPos);
-		}
-		else if (!currInput.Mouse.buttonIsPressed[C_MOUSE_RIGHT] && prevInput.Mouse.buttonIsPressed[C_MOUSE_RIGHT])
-			mShowMenu = false;
-
-		if(mShowMenu)
-			mDragonAgeMenu->Update(gameTime, currInput, prevInput);
+		mScene->Update(*mGrid, *sViewport, currInput, prevInput, gameTime);
 	}
 
 	void InGameState::Draw()
 	{
 		mScene->Draw();
-
-		if(mShowMenu)
-			mDragonAgeMenu->Draw();
 	}
 }

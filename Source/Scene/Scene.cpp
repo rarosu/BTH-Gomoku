@@ -9,7 +9,10 @@ const float Scene::C_BORDER_SIZE = 0.2f;
 Scene::Scene(ID3D10Device* device, float aspectRatio) :
 	mDevice(device),
 	mVertexBuffer(NULL),
-	mEffect(NULL)
+	mEffect(NULL),
+	mCellTexture(NULL),
+	mFont(NULL),
+	mCamera(NULL)
 {
 	CreateBuffer();
 	CreateEffect();
@@ -35,15 +38,16 @@ Scene::Scene(ID3D10Device* device, float aspectRatio) :
 	mFrustum.fovY = D3DX_PI * 0.25f;
 	mFrustum.aspectRatio = aspectRatio;
 
+	mFont = new GameFont(mDevice, "Courier New", 24, false, false);
 	mCamera = new Camera(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1.0f, -1.0f, 1.0f), D3DXVECTOR3(0.0f, 1.0f, 0.0f), mFrustum);
-
-	mFile.open("grid.txt", std::ios::trunc);
 }
 
 Scene::~Scene() throw()
 {
 	SafeDelete(mVertexBuffer);
 	SafeDelete(mEffect);
+	SafeRelease(mCellTexture);
+	SafeDelete(mFont);
 	SafeDelete(mCamera);
 }
 
@@ -107,8 +111,10 @@ void Scene::CreateEffect()
 	mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
 }
 
-void Scene::Update(const Logic::Grid& grid, const Viewport& viewport, const InputState& currentInput)
+void Scene::Update(const Logic::Grid& grid, const Viewport& viewport, const InputState& currentInput, const InputState& previousInput, const GameTime& gameTime)
 {
+	mCamera->Update(previousInput, currentInput, gameTime);
+
 	// Pick cell
 	mHoveredCell = PickCell(viewport, currentInput.Mouse.x, currentInput.Mouse.y);
 }
@@ -143,6 +149,8 @@ void Scene::Draw()
 		mEffect->GetTechniqueByIndex(0).GetPassByIndex(p).Apply(mDevice);
 		mVertexBuffer->Draw();
 	}
+
+	mFont->WriteText(mOutputText, POINT(), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 }
 
 void Scene::ResizeFrustum(float aspectRatio)
@@ -151,57 +159,42 @@ void Scene::ResizeFrustum(float aspectRatio)
 	mCamera->CreateProjectionMatrix(mFrustum);
 }
 
+float FindClosestMultiple(float x, float interval)
+{
+	float a = std::floor(x / interval) * interval;
+	float b = (x - a) / interval;
+
+	if (b <= 0.5f)
+		return a;
+	else
+		return a + interval;
+}
+
 Logic::Cell Scene::PickCell(const Viewport& viewport, int mouseX, int mouseY) const
 {
-	D3DXVECTOR2 normalizedMouseCoordinates = viewport.TransformToViewport(D3DXVECTOR2((float)mouseX, (float)mouseY));
-	D3DXVECTOR2 frustumCoordinates;
+	D3DXVECTOR2 screenSpaceCoordinates = viewport.TransformToViewport(D3DXVECTOR2((float)mouseX, (float)mouseY));
+	D3DXMATRIX inverseProjection = mCamera->GetProjectionMatrix();
+	D3DXMATRIX inverseView = mCamera->GetViewMatrix();
 
-	frustumCoordinates.x = normalizedMouseCoordinates.x / mCamera->GetProjectionMatrix()._22;
-	frustumCoordinates.y = normalizedMouseCoordinates.y / mCamera->GetProjectionMatrix()._11;
-	
-	D3DXMATRIX viewInverse = mCamera->GetViewMatrix();
-	D3DXMatrixInverse(&viewInverse, NULL, &viewInverse);
+	D3DXMatrixInverse(&inverseProjection, NULL, &inverseProjection);
+	D3DXMatrixInverse(&inverseView, NULL, &inverseView);
 
-	D3DXVECTOR4 p1 = D3DXVECTOR4(frustumCoordinates.x * mFrustum.nearDistance, frustumCoordinates.y * mFrustum.nearDistance, mFrustum.nearDistance, 1.0f);
-	D3DXVECTOR4 p2 = D3DXVECTOR4(frustumCoordinates.x * mFrustum.farDistance, frustumCoordinates.y * mFrustum.farDistance, mFrustum.farDistance, 1.0f);
+	D3DXVECTOR4 nearPos = D3DXVECTOR4(screenSpaceCoordinates.x, screenSpaceCoordinates.y, 0.0f, 1.0f);
+	D3DXVECTOR4 farPos = D3DXVECTOR4(screenSpaceCoordinates.x, screenSpaceCoordinates.y, 1.0f, 1.0f);
 
-	D3DXVec4Transform(&p1, &p1, &viewInverse);
-	D3DXVec4Transform(&p2, &p2, &viewInverse);
+	D3DXVec4Transform(&nearPos, &nearPos, &(inverseProjection * inverseView));
+	D3DXVec4Transform(&farPos, &farPos, &(inverseProjection * inverseView));
 
-	/*
-	D3DXVECTOR3 direction = D3DXVECTOR3(p2.x - p1.x, p2.
-	float t = -p1.y / (p2 - p1).y;
-	*/
+	farPos /= farPos.w;
 
-	/*
-	D3DXVECTOR3 v;
-	
-	v.x = normalizedMouseCoordinates.x;
-	v.y = normalizedMouseCoordinates.y;
-	v.z = 1.0f;
-	*/
+	D3DXVECTOR3 origin = D3DXVECTOR3(nearPos.x, nearPos.y, nearPos.z);
+	D3DXVECTOR3 direction = D3DXVECTOR3(farPos.x - nearPos.x, farPos.y - nearPos.y, farPos.z - nearPos.z);
+	D3DXVec3Normalize(&direction, &direction);
 
-
-	/*v.x /= camera.GetProjectionMatrix()._11;
-	v.y /= camera.GetProjectionMatrix()._22;
-
-	D3DXMATRIX viewProjInverse;
-	D3DXMatrixInverse(&viewProjInverse, NULL, &(mModelMatrix * camera.GetViewMatrix() * camera.GetProjectionMatrix()));
-
-	D3DXVECTOR4 origin(0.0f, 0.0f, 0.0f, 1.0f);
-	D3DXVECTOR4 direction(v.x, v.y, 1.0f, 0.0f);
-
-	D3DXVec4Transform(&origin, &origin,  &viewProjInverse);
-	D3DXVec4Transform(&direction, &direction, &viewProjInverse);
-
-	// TODO: Fix this description
-	// We want to know when the ray hits the XZ-plane, thus we want to know when
-	// origin.y - t * direction.y = 0. Which gives the following solution:
 	float t = -origin.y / direction.y;
-
 	D3DXVECTOR3 hit = origin + direction * t;
-	Logic::Cell cell = Logic::Cell(static_cast<int>(hit.x) / 10, static_cast<int>(hit.z) / 10);
-	*/
 
-	//return cell;
+	float closestMultipleX = FindClosestMultiple(hit.x, C_CELL_SIZE);
+	float closestMultipleZ = FindClosestMultiple(hit.z, C_CELL_SIZE);
+	return Logic::Cell(static_cast<int>(closestMultipleX) / C_CELL_SIZE, static_cast<int>(closestMultipleZ) / C_CELL_SIZE);
 }
