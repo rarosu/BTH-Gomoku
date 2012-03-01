@@ -17,7 +17,11 @@ namespace Logic
 	{
 	public:
 		typedef std::map<Cell, PlayerID> MarkerMap;
-		typedef std::vector<Row> RowVector;
+		
+		/**
+			Construct an empty grid
+		*/
+		Grid();
 	
 		/**
 			For adding a new marker to the grid
@@ -27,7 +31,6 @@ namespace Logic
 		/**
 			For accessing the grid data
 		*/
-		const RowVector& GetRows() const;
 		const PlayerID GetMarkerInCell(const Cell& cell) const;
 		const PlayerID GetMarkerInCell(int x, int y) const;
 
@@ -37,8 +40,12 @@ namespace Logic
 		MarkerMap::const_iterator GetMarkerMapStart() const;
 		MarkerMap::const_iterator GetMarkerMapEnd() const;
 	private:
+		unsigned int CountMarkersInRow(const Cell& cell, Direction::Direction direction) const;
+
+		PlayerID mLeadingPlayer;
+		unsigned int mLeadingCount;
+
 		MarkerMap mMarkers;
-		RowVector mRows;
 	};
 }
 

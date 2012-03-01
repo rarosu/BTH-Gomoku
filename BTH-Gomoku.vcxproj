@@ -178,6 +178,7 @@
     <ClCompile Include="Source\Components\InputField.cpp" />
     <ClCompile Include="Source\Framework\InputManager.cpp" />
     <ClCompile Include="Source\Logic\Grid\Cell.cpp" />
+    <ClCompile Include="Source\Logic\Grid\Direction.cpp" />
     <ClCompile Include="Source\Logic\Grid\Grid.cpp" />
     <ClCompile Include="Source\Logic\Grid\Row.cpp" />
     <ClCompile Include="Source\Logic\ClientSession.cpp" />

@@ -16,7 +16,10 @@ namespace Logic
 	class Row
 	{
 	public:
-		Row(Grid* grid);
+		/**
+			Construct a row containing one cell
+		*/
+		Row(const Cell& cell, Grid* grid);
 		
 		/**
 			Check whether a given cell is aligned with this row -
@@ -53,7 +56,7 @@ namespace Logic
 			This method will check whether cell is aligned and of the
 			right player - and if that is the case, add it to this row.
 		*/
-		void AddMarker(const Cell& cell);
+		//void AddMarker(const Cell& cell);
 
 		/**
 			Merge this row with row and return the result.

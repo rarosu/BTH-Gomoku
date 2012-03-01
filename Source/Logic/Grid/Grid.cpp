@@ -2,6 +2,17 @@
 
 namespace Logic
 {
+	Grid::Grid()
+		: mLeadingPlayer(C_PLAYER_NONE),
+		  mLeadingCount(0)	{}
+
+	unsigned int Grid::CountMarkersInRow(const Cell& cell, Direction::Direction direction) const
+	{
+		Cell neighbour = cell.GetNeighbour(direction);
+		if (GetMarkerInCell(neighbour) == GetMarkerInCell(cell))
+			return 1 + CountMarkersInRow(neighbour, direction);
+	}
+
 	bool Grid::AddMarker(const Cell& cell, PlayerID player) 
 	{
 		// Can only add a marker if the cell is unoccupied
@@ -9,57 +20,28 @@ namespace Logic
 			return false;
 		mMarkers[cell] = player;
 		
-		// Check every neighbour of the given cell...
-		for (int directionIterator = Direction::Up;
-			 directionIterator <= Direction::UpLeft;
+		// Check every direction
+		for (int directionIterator = Direction::C_FIRST;
+			 directionIterator < (Direction::C_COUNT - 1) / 2;
 			 ++directionIterator)
 		{
-			Direction::Direction direction = (Direction::Direction) directionIterator;
-			Cell neighbour = cell.GetNeighbour(direction);
-			
-			// If this cell and its neighbour are of the same player...
-			if (GetMarkerInCell(neighbour) == GetMarkerInCell(cell))
-			{
-				// Check every row in the Grid, to see if we find one which the neighbour
-				// belongs to and the given cell could be added to.
-				bool foundRow = false;
-				for (RowVector::iterator rowIterator = mRows.begin();
-					 rowIterator != mRows.end();
-					 rowIterator++)
-				{
-					if (rowIterator->Contains(neighbour))
-					{
-						if (rowIterator->CanAddMarker(cell))
-						{
-							rowIterator->AddMarker(cell);
-							foundRow = true;
+			Direction::Direction directions[2] = { static_cast<Direction::Direction>(directionIterator),
+												   Direction::GetOpposite(static_cast<Direction::Direction>(directionIterator)) };
 
-							break;
-						}
-					}
-				}
-				
-				
-				// See if we have two cells that are neighbours, of the same player and
-				// are not part of a row with their alignment. In that case, we'll need to
-				// create a new row.
-				if (!foundRow)
-				{
-					Row newRow(this);
-					newRow.AddMarker(cell);
-					newRow.AddMarker(neighbour);
-					
-					mRows.push_back(newRow);
-				}
+			unsigned int count = 1;
+			for (int i = 0; i < 2; ++i)
+			{
+				count += CountMarkersInRow(cell.GetNeighbour(directions[i]), directions[i]);
+			}
+
+			if (count > mLeadingCount)
+			{
+				mLeadingPlayer = mMarkers[cell];
+				mLeadingCount = count;
 			}
 		}
-		
+
 		return true;
-	}
-	
-	const Grid::RowVector& Grid::GetRows() const
-	{
-		return mRows;
 	}
 	
 	const PlayerID Grid::GetMarkerInCell(const Cell& cell) const
