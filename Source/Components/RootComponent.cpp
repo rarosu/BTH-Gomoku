@@ -13,6 +13,7 @@ namespace Components
 
 		RECT consolePos = { 0, 0, width, height / 2 };
 		mConsole  = new Components::Console(device, this, consolePos, D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.0f));
+		mConsole->SetVisible(false);
 		AddComponent(mConsole);
 	}
 

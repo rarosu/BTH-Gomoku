@@ -6,7 +6,6 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth,
 	mLocalLobbyState(NULL),
 	mInGameState(NULL),
 	mDefaultFont(NULL),
-	/*mConsole(NULL),*/
 	mRootComponentGroup(NULL)
 {
 	// Create general objects
