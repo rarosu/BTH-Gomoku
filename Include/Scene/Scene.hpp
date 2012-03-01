@@ -63,7 +63,9 @@ private:
 	Camera*						mCamera;
 
 	D3DXMATRIX					mModelMatrix;
+	Logic::Grid					mGrid;
 	Logic::Cell					mHoveredCell;
+	Marker*						mMarker;
 
 	std::string					mOutputText;
 

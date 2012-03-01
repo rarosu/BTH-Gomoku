@@ -1,6 +1,6 @@
 #include "Marker.hpp"
 
-Marker::Marker(ID3D10Device* device, int size, D3DXCOLOR markerColor)
+Marker::Marker(ID3D10Device* device, int size, const D3DXCOLOR& markerColor)
 {
 	mDevice = device;
 	D3DXMatrixIdentity(&mWorldMatrix);
@@ -12,11 +12,13 @@ Marker::Marker(ID3D10Device* device, int size, D3DXCOLOR markerColor)
 	mEffect->SetVariable("gColor", (D3DXVECTOR4)markerColor);
 }
 
-void Marker::Update(const Camera& camera)
+Marker::~Marker() throw()
 {
+	SafeDelete(mBuffer);
+	SafeDelete(mEffect);
 }
 
-void Marker::Draw(const Camera& camera, D3DXVECTOR3 drawPosition)
+void Marker::Draw(const Camera& camera, const D3DXVECTOR3& drawPosition)
 {
 	UpdateWorldMatrix(drawPosition);
 	D3DXMATRIX worldViewProjection = mWorldMatrix * camera.GetViewMatrix() * camera.GetProjectionMatrix();
@@ -63,7 +65,7 @@ void Marker::CreateEffect()
 	mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
 }
 
-void Marker::UpdateWorldMatrix(D3DXVECTOR3 position)
+void Marker::UpdateWorldMatrix(const D3DXVECTOR3& position)
 {
 	// Update rotation in matrix
 	/*float cosA = std::cos(mRotation);

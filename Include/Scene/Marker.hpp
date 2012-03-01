@@ -10,10 +10,10 @@
 class Marker
 {
 public:
-	Marker(ID3D10Device* device, int size, D3DXCOLOR markerColor);
-	void Update(const Camera& camera);
-	void Draw(const Camera& camera, D3DXVECTOR3 drawPosition);
+	Marker(ID3D10Device* device, int size, const D3DXCOLOR& markerColor);
+	~Marker() throw();
 
+	void Draw(const Camera& camera, const D3DXVECTOR3& drawPosition);
 private:
 	ID3D10Device*				mDevice;
 	VertexBuffer*				mBuffer;
@@ -23,6 +23,6 @@ private:
 
 	void CreateBuffer(int size);
 	void CreateEffect();
-	void UpdateWorldMatrix(D3DXVECTOR3 position);
+	void UpdateWorldMatrix(const D3DXVECTOR3& position);
 };
 #endif

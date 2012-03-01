@@ -7,9 +7,7 @@ namespace State
 		ApplicationState(id),
 		mDevice(device),
 		mGrid(NULL),
-		mMarkerBlue(NULL),
-		mMarkerGreen(NULL),
-		mComponents(NULL)
+		mComponents(NULL),
 		mScene(NULL)
 	{
 
@@ -19,8 +17,6 @@ namespace State
 	{
 		SafeDelete(mGrid);
 		SafeDelete(mScene);
-		SafeDelete(mMarkerBlue);
-		SafeDelete(mMarkerGreen);
 	}
 
 	float CalculateAspectRatio(const Viewport& viewport)
@@ -35,9 +31,6 @@ namespace State
 		/*RECT menuPos = { 100, 100, 200, 200 };
 		mDragonAgeMenu = new Components::Menu(mDevice, mComponents, menuPos);
 		mDragonAgeMenu->SetVisible(false);*/
-		
-		mMarkerBlue = new Marker(mDevice, 6, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
-		mMarkerGreen = new Marker(mDevice, 6, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
 
 		mGrid = new Logic::Grid();
 		mScene = new Scene(mDevice, CalculateAspectRatio(*sViewport));
@@ -53,8 +46,6 @@ namespace State
 	{
 		SafeDelete(mGrid);
 		SafeDelete(mScene);
-		SafeDelete(mMarkerBlue);
-		SafeDelete(mMarkerGreen);
 
 		sRootComponentGroup->RemoveComponent(mComponents);
 		mComponents = NULL;
@@ -93,9 +84,6 @@ namespace State
 	void InGameState::Draw()
 	{
 		mScene->Draw();
-		mMarkerBlue->Draw(*mCamera, D3DXVECTOR3(5.0f, 1.0f, 5.0f));
-		mMarkerBlue->Draw(*mCamera, D3DXVECTOR3(-5.0f, 1.0f, -5.0f));
-		mMarkerGreen->Draw(*mCamera, D3DXVECTOR3(-5.0f, 1.0f, 5.0f));
 
 		/*if(mDragonAgeMenu->IsVisible())
 			mDragonAgeMenu->Draw();*/

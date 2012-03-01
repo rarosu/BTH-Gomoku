@@ -26,11 +26,8 @@ namespace State
 	private:
 		ID3D10Device*					mDevice;
 
-		Logic::Grid*		mGrid;
-		Scene*				mScene;
-		
-		Marker*				mMarkerBlue;		// Debug
-		Marker*				mMarkerGreen;
+		Logic::Grid*					mGrid;
+		Scene*							mScene;
 
 		Components::ComponentGroup*		mComponents;
 		//Components::Menu*				mDragonAgeMenu;

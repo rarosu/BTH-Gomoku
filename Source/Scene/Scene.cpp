@@ -40,6 +40,7 @@ Scene::Scene(ID3D10Device* device, float aspectRatio) :
 
 	mFont = new GameFont(mDevice, "Courier New", 24, false, false);
 	mCamera = new Camera(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1.0f, -1.0f, 1.0f), D3DXVECTOR3(0.0f, 1.0f, 0.0f), mFrustum);
+	mMarker = new Marker(mDevice, C_CELL_SIZE, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 }
 
 Scene::~Scene() throw()
@@ -49,6 +50,7 @@ Scene::~Scene() throw()
 	SafeRelease(mCellTexture);
 	SafeDelete(mFont);
 	SafeDelete(mCamera);
+	SafeDelete(mMarker);
 }
 
 void Scene::CreateBuffer()
@@ -117,6 +119,11 @@ void Scene::Update(const Logic::Grid& grid, const Viewport& viewport, const Inpu
 
 	// Pick cell
 	mHoveredCell = PickCell(viewport, currentInput.Mouse.x, currentInput.Mouse.y);
+
+	if (currentInput.Mouse.buttonIsPressed[C_MOUSE_LEFT] && !previousInput.Mouse.buttonIsPressed[C_MOUSE_LEFT])
+	{
+		mGrid.AddMarker(mHoveredCell, 1);
+	}
 }
 
 void Scene::Draw()
@@ -150,7 +157,23 @@ void Scene::Draw()
 		mVertexBuffer->Draw();
 	}
 
+	int count = 0;
+	for (Logic::Grid::MarkerMap::const_iterator it = mGrid.GetMarkerMapStart(); 
+		 it != mGrid.GetMarkerMapEnd(); 
+		 it++)
+	{
+		mMarker->Draw(*mCamera, D3DXVECTOR3(it->first.x * C_CELL_SIZE, 1.0f, it->first.y * C_CELL_SIZE));
+		count++;
+	}
+
+	std::stringstream s;
+	s << "Marker count: " << count << std::endl;
+	//s << "Row count: " << mGrid.GetRows().size() << std::endl;
+	mOutputText += s.str();
+
 	mFont->WriteText(mOutputText, POINT(), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+
+	mOutputText = "";
 }
 
 void Scene::ResizeFrustum(float aspectRatio)

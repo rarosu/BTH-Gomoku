@@ -4,7 +4,7 @@
 
 namespace Logic
 {
-	Row::Row(Grid* grid) : mGrid(grid), mAlignment(Alignment::None), mPlayer(K_PLAYER_NONE) {}
+	Row::Row(Grid* grid) : mGrid(grid), mAlignment(Alignment::None), mPlayer(C_PLAYER_NONE) {}
 		
 	bool Row::IsAligned(const Cell& cell) const
 	{
@@ -43,7 +43,7 @@ namespace Logic
 	{
 		PlayerID marker = mGrid->GetMarkerInCell(cell);
 		
-		if (marker == K_PLAYER_NONE)
+		if (marker == C_PLAYER_NONE)
 			return false;
 		if (mCells.size() == 0)
 			return true;
