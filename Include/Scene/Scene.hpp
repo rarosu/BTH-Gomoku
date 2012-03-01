@@ -65,7 +65,8 @@ private:
 	D3DXMATRIX					mModelMatrix;
 	Logic::Grid					mGrid;
 	Logic::Cell					mHoveredCell;
-	Marker*						mMarker;
+	Marker*						mMarker[2];
+	Logic::PlayerID				mCurrentPlayer;
 
 	std::string					mOutputText;
 

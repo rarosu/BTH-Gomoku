@@ -12,7 +12,8 @@ Scene::Scene(ID3D10Device* device, float aspectRatio) :
 	mEffect(NULL),
 	mCellTexture(NULL),
 	mFont(NULL),
-	mCamera(NULL)
+	mCamera(NULL),
+	mCurrentPlayer(1)
 {
 	CreateBuffer();
 	CreateEffect();
@@ -40,7 +41,9 @@ Scene::Scene(ID3D10Device* device, float aspectRatio) :
 
 	mFont = new GameFont(mDevice, "Courier New", 24, false, false);
 	mCamera = new Camera(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1.0f, -1.0f, 1.0f), D3DXVECTOR3(0.0f, 1.0f, 0.0f), mFrustum);
-	mMarker = new Marker(mDevice, C_CELL_SIZE, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+	mMarker[0] = new Marker(mDevice, C_CELL_SIZE, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+	mMarker[1] = new Marker(mDevice, C_CELL_SIZE, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
+
 }
 
 Scene::~Scene() throw()
@@ -50,7 +53,8 @@ Scene::~Scene() throw()
 	SafeRelease(mCellTexture);
 	SafeDelete(mFont);
 	SafeDelete(mCamera);
-	SafeDelete(mMarker);
+	SafeDelete(mMarker[0]);
+	SafeDelete(mMarker[1]);
 }
 
 void Scene::CreateBuffer()
@@ -122,7 +126,8 @@ void Scene::Update(const Logic::Grid& grid, const Viewport& viewport, const Inpu
 
 	if (currentInput.Mouse.buttonIsPressed[C_MOUSE_LEFT] && !previousInput.Mouse.buttonIsPressed[C_MOUSE_LEFT])
 	{
-		mGrid.AddMarker(mHoveredCell, 1);
+		mGrid.AddMarker(mHoveredCell, mCurrentPlayer);
+		mCurrentPlayer = (mCurrentPlayer == 1) ? 2 : 1;
 	}
 }
 
@@ -162,7 +167,7 @@ void Scene::Draw()
 		 it != mGrid.GetMarkerMapEnd(); 
 		 it++)
 	{
-		mMarker->Draw(*mCamera, D3DXVECTOR3(it->first.x * C_CELL_SIZE, 1.0f, it->first.y * C_CELL_SIZE));
+		mMarker[it->second - 1]->Draw(*mCamera, D3DXVECTOR3(it->first.x * C_CELL_SIZE, 1.0f, it->first.y * C_CELL_SIZE));
 		count++;
 	}
 
