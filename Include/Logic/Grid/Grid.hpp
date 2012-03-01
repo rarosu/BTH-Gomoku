@@ -16,6 +16,7 @@ namespace Logic
 	{
 	public:
 		typedef std::map<Cell, PlayerID> MarkerMap;
+		typedef std::vector<Cell> Row;
 		
 		/**
 			Construct an empty grid
@@ -26,6 +27,11 @@ namespace Logic
 			For adding a new marker to the grid
 		*/
 		bool AddMarker(const Cell& cell, PlayerID player);
+
+		/**
+			For removing markers from the grid
+		*/
+		void RemoveMarker(const Cell& cell);
 		
 		/**
 			For accessing the grid data
@@ -42,19 +48,18 @@ namespace Logic
 		/**
 			Get the leaderboard
 		*/
-		unsigned int GetLeadingCount() const;
+		const Row& GetLeadingRow() const;
 		PlayerID GetLeadingPlayer() const;
 	private:
 		/**
 			Keep going in one direction, counting all cells of the same player
 		*/
-		unsigned int CountMarkersInRow(const Cell& cell, Direction::Direction direction) const;
+		void CountMarkersInRow(std::vector<Cell>& row, PlayerID player, const Cell& cell, Direction::Direction direction) const;
 
 		/**
 			The leaderboard
 		*/
-		PlayerID mLeadingPlayer;
-		unsigned int mLeadingCount;
+		std::vector<Cell> mLeadingRow;
 
 		/**
 			The actual markers

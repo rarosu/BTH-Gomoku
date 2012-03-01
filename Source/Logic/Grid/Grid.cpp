@@ -2,19 +2,15 @@
 
 namespace Logic
 {
-	Grid::Grid()
-		: mLeadingPlayer(C_PLAYER_NONE),
-		  mLeadingCount(0)	{}
+	Grid::Grid() {}
 
-	unsigned int Grid::CountMarkersInRow(const Cell& cell, Direction::Direction direction) const
+	void Grid::CountMarkersInRow(std::vector<Cell>& row, PlayerID player, const Cell& cell, Direction::Direction direction) const
 	{
-		if (GetMarkerInCell(cell) == C_PLAYER_NONE)
-			return 0;
-
-		Cell neighbour = cell.GetNeighbour(direction);
-		if (GetMarkerInCell(neighbour) == GetMarkerInCell(cell))
-			return 1 + CountMarkersInRow(neighbour, direction);
-		return 1;
+		if (GetMarkerInCell(cell) != player)
+			return;
+		
+		row.push_back(cell);
+		CountMarkersInRow(row, player, cell.GetNeighbour(direction), direction);
 	}
 
 	bool Grid::AddMarker(const Cell& cell, PlayerID player) 
@@ -29,24 +25,38 @@ namespace Logic
 			 directionIterator <= (Direction::C_COUNT - 1) / 2;
 			 ++directionIterator)
 		{
+			// Enumerate the direction and its opposite
 			Direction::Direction directions[2] = { static_cast<Direction::Direction>(directionIterator),
 												   Direction::GetOpposite(static_cast<Direction::Direction>(directionIterator)) };
 
-			unsigned int count = 1;
+			// Count all markers lying in a row in this alignment
+			std::vector<Cell> row;
+			row.push_back(cell);
 			for (int i = 0; i < 2; ++i)
 			{
-				if (GetMarkerInCell(cell) == GetMarkerInCell(cell.GetNeighbour(directions[i])))
-					count += CountMarkersInRow(cell.GetNeighbour(directions[i]), directions[i]);
+				CountMarkersInRow(row, GetMarkerInCell(cell), cell.GetNeighbour(directions[i]), directions[i]);
 			}
 
-			if (count > mLeadingCount)
+			// If the counted row was larger than the currently longest row, replace it
+			if (row.size() > mLeadingRow.size())
 			{
-				mLeadingPlayer = mMarkers[cell];
-				mLeadingCount = count;
+				mLeadingRow = row;
 			}
 		}
 
 		return true;
+	}
+
+	void Grid::RemoveMarker(const Cell& cell)
+	{
+		if (GetMarkerInCell(cell) != C_PLAYER_NONE)
+		{
+			mMarkers[cell] = C_PLAYER_NONE;
+
+			// We cannot know anything about the rows now, 
+			// so just clear it
+			mLeadingRow.clear();
+		}
 	}
 	
 	const PlayerID Grid::GetMarkerInCell(const Cell& cell) const
@@ -73,14 +83,16 @@ namespace Logic
 		return mMarkers.end();
 	}
 
-	unsigned int Grid::GetLeadingCount() const
+	const Grid::Row& Grid::GetLeadingRow() const
 	{
-		return mLeadingCount;
+		return mLeadingRow;
 	}
 
 	PlayerID Grid::GetLeadingPlayer() const
 	{
-		return mLeadingPlayer;
+		if (mLeadingRow.size() == 0)
+			return C_PLAYER_NONE;
+		return GetMarkerInCell(mLeadingRow[0]);
 	}
 	
 }

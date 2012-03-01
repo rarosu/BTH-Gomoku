@@ -173,7 +173,7 @@ void Scene::Draw()
 
 	std::stringstream s;
 	s << "Marker count: " << count << std::endl;
-	s << "Longest Row Count: " << mGrid.GetLeadingCount() << std::endl;
+	s << "Longest Row Count: " << mGrid.GetLeadingRow().size() << std::endl;
 	s << "Leading Player: " << mGrid.GetLeadingPlayer() << std::endl;
 	mOutputText += s.str();
 
