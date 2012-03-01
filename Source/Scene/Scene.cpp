@@ -173,7 +173,8 @@ void Scene::Draw()
 
 	std::stringstream s;
 	s << "Marker count: " << count << std::endl;
-	//s << "Row count: " << mGrid.GetRows().size() << std::endl;
+	s << "Longest Row Count: " << mGrid.GetLeadingCount() << std::endl;
+	s << "Leading Player: " << mGrid.GetLeadingPlayer() << std::endl;
 	mOutputText += s.str();
 
 	mFont->WriteText(mOutputText, POINT(), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));

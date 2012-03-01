@@ -8,9 +8,13 @@ namespace Logic
 
 	unsigned int Grid::CountMarkersInRow(const Cell& cell, Direction::Direction direction) const
 	{
+		if (GetMarkerInCell(cell) == C_PLAYER_NONE)
+			return 0;
+
 		Cell neighbour = cell.GetNeighbour(direction);
 		if (GetMarkerInCell(neighbour) == GetMarkerInCell(cell))
 			return 1 + CountMarkersInRow(neighbour, direction);
+		return 1;
 	}
 
 	bool Grid::AddMarker(const Cell& cell, PlayerID player) 
@@ -22,7 +26,7 @@ namespace Logic
 		
 		// Check every direction
 		for (int directionIterator = Direction::C_FIRST;
-			 directionIterator < (Direction::C_COUNT - 1) / 2;
+			 directionIterator <= (Direction::C_COUNT - 1) / 2;
 			 ++directionIterator)
 		{
 			Direction::Direction directions[2] = { static_cast<Direction::Direction>(directionIterator),
@@ -31,7 +35,8 @@ namespace Logic
 			unsigned int count = 1;
 			for (int i = 0; i < 2; ++i)
 			{
-				count += CountMarkersInRow(cell.GetNeighbour(directions[i]), directions[i]);
+				if (GetMarkerInCell(cell) == GetMarkerInCell(cell.GetNeighbour(directions[i])))
+					count += CountMarkersInRow(cell.GetNeighbour(directions[i]), directions[i]);
 			}
 
 			if (count > mLeadingCount)
@@ -66,6 +71,16 @@ namespace Logic
 	Grid::MarkerMap::const_iterator Grid::GetMarkerMapEnd() const
 	{
 		return mMarkers.end();
+	}
+
+	unsigned int Grid::GetLeadingCount() const
+	{
+		return mLeadingCount;
+	}
+
+	PlayerID Grid::GetLeadingPlayer() const
+	{
+		return mLeadingPlayer;
 	}
 	
 }

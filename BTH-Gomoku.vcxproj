@@ -180,7 +180,6 @@
     <ClCompile Include="Source\Logic\Grid\Cell.cpp" />
     <ClCompile Include="Source\Logic\Grid\Direction.cpp" />
     <ClCompile Include="Source\Logic\Grid\Grid.cpp" />
-    <ClCompile Include="Source\Logic\Grid\Row.cpp" />
     <ClCompile Include="Source\Logic\ClientSession.cpp" />
     <ClCompile Include="Source\Logic\ServerSession.cpp" />
     <ClCompile Include="Source\Logic\Session.cpp" />
@@ -239,7 +238,6 @@
     <ClInclude Include="Include\Logic\Grid\Cell.hpp" />
     <ClInclude Include="Include\Logic\Grid\Direction.hpp" />
     <ClInclude Include="Include\Logic\Grid\Grid.hpp" />
-    <ClInclude Include="Include\Logic\Grid\Row.hpp" />
     <ClInclude Include="Include\Logic\ClientSession.hpp" />
     <ClInclude Include="Include\Logic\Player.hpp" />
     <ClInclude Include="Include\Logic\PlayerController.hpp" />
