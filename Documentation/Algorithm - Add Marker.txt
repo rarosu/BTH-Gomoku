@@ -8,7 +8,8 @@ AddMarker(C, P):
 		return
 	mMarkers[C] = P
 	
-	foreach neighbour N to C:
+	for half of all directions D:
+		N = Neighbour(C, D)
 		if (mMarkers[N] == P):
 			bool CreateNewRow := true
 			foreach row R in grid:

@@ -1,6 +1,7 @@
 #include "Row.hpp"
 #include "Grid.hpp"
 #include <algorithm>
+#include <cassert>
 
 namespace Logic
 {
@@ -74,6 +75,25 @@ namespace Logic
 		{
 			mAlignment = mCells[0].GetAlignmentToNeighbour(mCells[1]);
 		}
+	}
+
+	bool Row::Merge(const Row& row)
+	{
+		assert(row.Length() >= 2);
+		assert(Length() >= 2);
+
+		if (mAlignment != row.mAlignment)
+			return false;
+		if (mPlayer != row.mPlayer)
+			return false;
+
+		for (int i = 0; i < row.mCells.size(); ++i)
+		{
+			assert(mCells[i] != row.mCells[i]);
+			mCells.push_back(row.mCells[i]);
+		}
+
+		return true;
 	}
 	
 	int Row::Length() const

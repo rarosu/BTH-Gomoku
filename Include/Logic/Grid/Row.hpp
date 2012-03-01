@@ -54,6 +54,13 @@ namespace Logic
 			right player - and if that is the case, add it to this row.
 		*/
 		void AddMarker(const Cell& cell);
+
+		/**
+			Merge this row with row and return the result.
+			Will only work if both rows are aligned and of the
+			same player.
+		*/
+		bool Merge(const Row& row);
 		
 		/**
 			Get the number of markers in this row

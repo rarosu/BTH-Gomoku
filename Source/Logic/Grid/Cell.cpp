@@ -138,6 +138,11 @@ namespace Logic
 		return (x == cell.x) && (y == cell.y);
 	}
 
+	bool Cell::operator!=(const Cell& cell) const
+	{
+		return !(*this == cell);
+	}
+
 	bool Cell::operator<(const Cell& cell) const
 	{
 		if (x < cell.x) return true;
