@@ -19,9 +19,9 @@ namespace State
 		Constants for all states in Gomoku
 	*/
 	const StateID C_STATE_MENU			= 1;
-	const StateID C_STATE_LOCAL_LOBBY	= 2;
-	const StateID C_STATE_NETWORK_LOBBY = 3;
-	const StateID C_STATE_IN_GAME		= 4;
+	const StateID C_STATE_LOBBY			= 2;
+	const StateID C_STATE_IN_GAME		= 3;
+	const StateID C_STATE_CREATE_GAME	= 4;
 
 	/**
 		Abstract class for an application state

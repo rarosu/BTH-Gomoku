@@ -9,9 +9,9 @@
 #include "RootComponent.hpp"
 
 #include "MenuState.hpp"
-#include "LocalLobbyState.hpp"
-#include "NetworkLobbyState.hpp"
+#include "LobbyState.hpp"
 #include "InGameState.hpp"
+#include "CreateAGameState.hpp"
 
 class Game : public D3DApplication
 {
@@ -32,9 +32,10 @@ private:
 	Components::RootComponent*	mRootComponentGroup;
 
 	State::MenuState*			mMenuState;
-	State::LocalLobbyState*		mLocalLobbyState;
-	State::NetworkLobbyState*	mNetworkLobbyState;
 	State::InGameState*			mInGameState;
+	State::LobbyState*			mLobbyState;
+	State::CreateAGameState*	mCreateGameState;
+
 protected:
 	void ProgramLoop();
 	void OnResize();

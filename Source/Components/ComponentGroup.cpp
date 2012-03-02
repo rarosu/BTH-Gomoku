@@ -88,10 +88,13 @@ namespace Components
 
 	void ComponentGroup::GotFocus()
 	{
-		std::vector<Component*>::iterator it;
+		/*std::vector<Component*>::iterator it;
 		
 		for(it = mComponents.begin(); it != mComponents.end(); it++)
-			(*it)->GotFocus();
+			(*it)->GotFocus();*/
+
+		if(mFocusedComponent)
+			mFocusedComponent->GotFocus();
 	}
 
 	void ComponentGroup::MouseButtonPressed(int index, const InputState& currentState)

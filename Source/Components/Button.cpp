@@ -78,7 +78,8 @@ namespace Components
 
 	void Button::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
 	{
-		Clickable::Update(gameTime, currInputState, prevInputState);
+		if(IsEnabled())
+			Clickable::Update(gameTime, currInputState, prevInputState);
 	}
 
 	void Button::Draw()

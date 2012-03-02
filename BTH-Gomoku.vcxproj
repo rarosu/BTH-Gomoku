@@ -204,7 +204,9 @@
     <ClCompile Include="Source\Scene\Marker.cpp" />
     <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\State\ApplicationState.cpp" />
+    <ClCompile Include="Source\State\CreateAGameState.cpp" />
     <ClCompile Include="Source\State\InGameState.cpp" />
+    <ClCompile Include="Source\State\LobbyState.cpp" />
     <ClCompile Include="Source\State\LocalLobbyState.cpp" />
     <ClCompile Include="Source\State\MenuState.cpp" />
     <ClCompile Include="Source\State\NetworkLobbyState.cpp" />
@@ -265,7 +267,9 @@
     <ClInclude Include="Include\Scene\Marker.hpp" />
     <ClInclude Include="Include\Scene\Scene.hpp" />
     <ClInclude Include="Include\State\ApplicationState.hpp" />
+    <ClInclude Include="Include\State\CreateAGameState.hpp" />
     <ClInclude Include="Include\State\InGameState.hpp" />
+    <ClInclude Include="Include\State\LobbyState.hpp" />
     <ClInclude Include="Include\State\LocalLobbyState.hpp" />
     <ClInclude Include="Include\State\MenuState.hpp" />
     <ClInclude Include="Include\State\NetworkLobbyState.hpp" />
@@ -288,6 +292,7 @@
     <None Include="Resources\Textures\btnUIdle.png" />
     <None Include="Resources\Textures\btnUPressed.png" />
     <None Include="Resources\Textures\button.png" />
+    <None Include="Resources\Textures\buttonBase.png" />
     <None Include="Resources\Textures\buttonDown.png" />
     <None Include="Resources\Textures\buttonUp.png" />
     <None Include="Resources\Textures\cell.png" />

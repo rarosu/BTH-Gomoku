@@ -4,18 +4,18 @@ namespace Components
 {
 	TextButton::TextButton(ComponentGroup* ownerGroup)
 		: Button(ownerGroup),
-		  mFont (NULL), mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0))
+		  mFont (NULL), mTextColor(D3DXCOLOR(1.0, 1.0, 1.0, 1.0))
 	{
 	}
 
 	void TextButton::Initialize(ID3D10Device* device, RECT position, std::string caption)
 	{
 		Graphics buttonGraphics;
-		buttonGraphics.hoverColor = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f);
-		D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/buttonUp.png", NULL, NULL, 
+		buttonGraphics.activeColor = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f);
+		buttonGraphics.idleColor = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f);
+		buttonGraphics.hoverColor = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.6f);
+		D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/buttonBase.png", NULL, NULL, 
 											   &buttonGraphics.textureUp, NULL);
-		D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/buttonDown.png", NULL, NULL, 
-											   &buttonGraphics.textureDown, NULL);
 
 		Button::Initialize(device, position, buttonGraphics);
 
@@ -27,7 +27,15 @@ namespace Components
 	void TextButton::Draw()
 	{
 		Button::Draw();
-		mFont->WriteText(mCaption, &mPositionRect, mTextColor, GameFont::Center, GameFont::Middle);
+		if(IsEnabled())
+		{
+			if(IsHovered())
+				mFont->WriteText(mCaption, &mPositionRect, D3DXCOLOR(1.0, 1.0, 0.0, 1.0), GameFont::Center, GameFont::Middle);
+			else
+				mFont->WriteText(mCaption, &mPositionRect, mTextColor, GameFont::Center, GameFont::Middle);
+		}
+		else
+			mFont->WriteText(mCaption, &mPositionRect, D3DXCOLOR(0.5, 0.5, 0.5, 1.0), GameFont::Center, GameFont::Middle);
 	}
 
 	// DEBUG

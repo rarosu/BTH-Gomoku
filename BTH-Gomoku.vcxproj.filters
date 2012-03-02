@@ -33,7 +33,7 @@
     <ClCompile Include="Source\Framework\Effect\Technique.cpp" />
     <ClCompile Include="Source\Components\Label.cpp" />
     <ClCompile Include="Source\Components\Menu.cpp" />
-	<ClCompile Include="Source\Components\RootComponent.cpp" />
+    <ClCompile Include="Source\Components\RootComponent.cpp" />
     <ClCompile Include="Source\Network\Client.cpp" />
     <ClCompile Include="Source\Network\ComSocket.cpp" />
     <ClCompile Include="Source\Network\ListenSocket.cpp" />
@@ -57,7 +57,8 @@
     <ClCompile Include="Source\Network\Messages\StartGameMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\LeaveGameMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\StayAliveMessage.cpp" />
-    
+    <ClCompile Include="Source\State\CreateAGameState.cpp" />
+    <ClCompile Include="Source\State\LobbyState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -120,6 +121,8 @@
     <ClInclude Include="Include\Network\Messages\StayAliveMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\MessageInclude.hpp" />
     <ClInclude Include="Include\Components\RootComponent.hpp" />
+    <ClInclude Include="Include\State\CreateAGameState.hpp" />
+    <ClInclude Include="Include\State\LobbyState.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
@@ -154,5 +157,6 @@
     <None Include="pull.sh" />
     <None Include="push.sh" />
     <None Include="Resources\Textures\cell.png" />
+    <None Include="Resources\Textures\buttonBase.png" />
   </ItemGroup>
 </Project>

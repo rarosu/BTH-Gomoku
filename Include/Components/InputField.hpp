@@ -7,7 +7,7 @@
 
 #include "Buffer.hpp"
 #include "Effect.hpp"
-#include "Component.hpp"
+#include "Clickable.hpp"
 #include "GameFont.hpp"
 #include "GameTime.hpp"
 #include "InputManager.hpp"
@@ -21,18 +21,21 @@ namespace Components
 		virtual void RecieveInput(std::string input) = 0;
 	};
 
-	class InputField : public Component
+	class InputField : public Clickable
 	{
 	public:
 		InputField(ID3D10Device* device, ComponentGroup* ownerGroup, InputReceiver* receiver, 
 		RECT position, GameFont* font);
 		~InputField() throw();
 
+		std::string GetText();
+
 		// Methods inherited from Component
 		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		void Draw();
 		void LostFocus();
 		void GotFocus();
+		
 		// DEBUG
 		virtual std::string GetName();
 
@@ -40,6 +43,12 @@ namespace Components
 		void KeyPressed(int code, const InputState& currentState);
 		void KeyReleased(int code, const InputState& currentState);
 		void CharEntered(unsigned char symbol, const InputState& currentState);
+
+		// Methods inherited from Clickable
+		void MouseEntered();
+		void MouseExited();
+		void MousePressed(int buttonIndex);
+		void MouseReleased(int buttonIndex);
 
 	private:
 		ID3D10Device*				mDevice;
@@ -52,6 +61,7 @@ namespace Components
 		std::stringstream			mLastString;
 		InputReceiver*				mReceiver;
 
+		bool						mHasFocus;
 		bool						mShowMarker;
 		float						mMSSinceBlink;
 		

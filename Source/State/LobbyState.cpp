@@ -1,19 +1,17 @@
-#include "MenuState.hpp"
+#include "LobbyState.hpp"
+#include "Label.hpp"
 
 namespace State
 {
-	MenuState::MenuState(StateID id, ID3D10Device* device) 
-		: ApplicationState(id), mDevice(device),  mEffect(NULL), mBuffer(NULL), mComponents(NULL)
+	LobbyState::LobbyState(StateID id, ID3D10Device* device)
+		: ApplicationState(id),
+		  mDevice(device), mComponents(NULL)
 	{
 		CreateBuffer((float)sViewport->GetWidth(), (float)sViewport->GetHeight());
 		CreateEffect();
 	}
 
-	MenuState::~MenuState() throw()
-	{
-	}
-
-	void MenuState::CreateBuffer(float width, float height)
+	void LobbyState::CreateBuffer(float width, float height)
 	{
 		const int numVertices = 4;
 		bgVertex vertices[numVertices];
@@ -39,7 +37,7 @@ namespace State
 		mBuffer->SetData(bufferDesc, NULL);
 	}
 	
-	void MenuState::CreateEffect()
+	void LobbyState::CreateEffect()
 	{
 		mEffect = new Effect(mDevice, "Resources/Effects/Background.fx");
 		
@@ -50,66 +48,42 @@ namespace State
 		mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
 	}
 
-	void MenuState::CreateComponents()
+	void LobbyState::CreateComponents()
 	{
-		mComponents = new Components::ComponentGroup(sRootComponentGroup, "MenuState Group");
+		mComponents = new Components::ComponentGroup(sRootComponentGroup, "LobbyState Group");
 
 		ID3D10ShaderResourceView* texture;
-		D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/titleScreen1422x800.png", NULL, NULL, 
+		D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/marbleBG1422x800.png", NULL, NULL, 
 											   &texture, NULL);
 		mEffect->SetVariable("textureBG", texture);
 
-		const std::string btnCaptions[] = { "Start Game", "Watch Replay", "Credits", "Exit Game" };
-		const int width = 300;
-		const int height = 75;
-		const int padding = 0;
-		LONG leftOffset = 0;
-		LONG topOffset = (LONG)sViewport->GetHeight() - MenuButton::Count * (height + padding) + padding;
+		int leftOffset = 100;
+		const std::string btnCaptions[] = { "Create", "Cancel" };
+		LONG centerX = leftOffset + 96;
+		LONG centerY = (LONG)sViewport->GetHeight() / 2;
+		const int padding = 30;
 
-		for(int i = 0; i < MenuButton::Count; ++i)
+		for(int i = 0; i < 2; ++i)
 		{
 			mButtons.push_back(new Components::TextButton(mComponents));
 		
-			RECT buttonPos = { leftOffset, topOffset, leftOffset + width, topOffset + height };
+			RECT buttonPos = { centerX - 96, centerY - 24, centerX + 96, centerY + 24 };
 			mButtons[i]->Initialize(mDevice, buttonPos, btnCaptions[i]);
-			topOffset += height + padding;
+			centerX += 192 + padding;
 		}
-
-		mButtons[1]->SetEnabled(false);
-		mButtons[2]->SetEnabled(false);
 	}
 
-	void MenuState::OnStatePushed()
+	void LobbyState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
 	{
-		CreateComponents();
-		mComponents->GiveFocus();
-	}
-
-	void MenuState::OnStatePopped()
-	{
-		sRootComponentGroup->RemoveComponent(mComponents);
-		mComponents = NULL;
-		mButtons.clear();
-	}
-
-	void MenuState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
-	{
-		if(currInput.Keyboard.keyIsPressed[VK_ESCAPE] && !prevInput.Keyboard.keyIsPressed[VK_ESCAPE])
-			QuitApplication();
-
-		if(mButtons[MenuButton::StartGame]->GetAndResetClickStatus())
-			ChangeState(C_STATE_CREATE_GAME);
-		/*if(mButtons[MenuButton::WatchReplay]->GetAndResetClickStatus())
-			ChangeState(C_STATE_NETWORK_LOBBY);*/
-		/*if(mButtons.at(MenuButton::Options)->GetAndResetClickStatus())
-			ChangeState(C_STATE_IN_GAME);*/
-		if(mButtons[MenuButton::Exit]->GetAndResetClickStatus())
-			QuitApplication();
+		if(mButtons[LobbyButton::Create]->GetAndResetClickStatus())
+			ChangeState(C_STATE_LOBBY);
+		if(mButtons[LobbyButton::Cancel]->GetAndResetClickStatus())
+			ChangeState(C_STATE_MENU);
 
 		mComponents->Update(gameTime, currInput, prevInput);
 	}
 
-	void MenuState::Draw()
+	void LobbyState::Draw()
 	{
 		mBuffer->Bind();
 		for(UINT p = 0; p < mEffect->GetTechniqueByIndex(0).GetPassCount(); ++p)
@@ -119,5 +93,18 @@ namespace State
 		}
 
 		mComponents->Draw();
+	}
+
+	void LobbyState::OnStatePushed()
+	{
+		CreateComponents();
+		mComponents->GiveFocus();
+	}
+
+	void LobbyState::OnStatePopped()
+	{
+		sRootComponentGroup->RemoveComponent(mComponents);
+		mComponents = NULL;
+		mButtons.clear();
 	}
 }

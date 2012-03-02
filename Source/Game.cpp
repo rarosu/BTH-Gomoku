@@ -3,7 +3,6 @@
 Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth, UINT clientHeight) : 
 	D3DApplication(applicationInstance, windowTitle, clientWidth, clientHeight),
 	mMenuState(NULL),
-	mLocalLobbyState(NULL),
 	mInGameState(NULL),
 	mDefaultFont(NULL),
 	mRootComponentGroup(NULL)
@@ -26,9 +25,9 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth,
 
 	// Create the states
 	mMenuState = new State::MenuState(State::C_STATE_MENU, mDeviceD3D);
-	mLocalLobbyState = new State::LocalLobbyState(State::C_STATE_LOCAL_LOBBY, mDeviceD3D);
-	mNetworkLobbyState = new State::NetworkLobbyState(State::C_STATE_NETWORK_LOBBY, mDeviceD3D);
+	mLobbyState = new State::LobbyState(State::C_STATE_LOBBY, mDeviceD3D);
 	mInGameState = new State::InGameState(State::C_STATE_IN_GAME, mDeviceD3D);
+	mCreateGameState = new State::CreateAGameState(State::C_STATE_CREATE_GAME, mDeviceD3D);
 
 	// Start the application in InGameState
 	State::ApplicationState::sStack.ChangeState(mMenuState);
@@ -41,8 +40,11 @@ Game::~Game()
 	SafeDelete(mDefaultFont);
 
 	SafeDelete(mMenuState);
-	SafeDelete(mLocalLobbyState);
 	SafeDelete(mInGameState);
+	SafeDelete(mLobbyState);
+
+	SafeDelete(mCreateGameState);
+
 	SafeDelete(mRootComponentGroup);
 }
 

@@ -7,9 +7,9 @@ namespace Components
 
 	InputField::InputField(ID3D10Device* device, ComponentGroup* ownerGroup, InputReceiver* receiver, 
 		RECT position, GameFont* font)
-		: Component(ownerGroup),
+		: Clickable(ownerGroup),
 		  mDevice(device), mBuffer(NULL), mEffect(NULL), mFont(font), 
-		  mReceiver(receiver), mShowMarker(true), mMSSinceBlink(0.0f)
+		  mReceiver(receiver), mShowMarker(true), mMSSinceBlink(0.0f), mHasFocus(false)
 	{
 		mPositionRect = position;
 
@@ -55,15 +55,28 @@ namespace Components
 		mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
 	}
 
+	std::string InputField::GetText()
+	{
+		return mFirstString.str() + mLastString.str();
+	}
+
 	void InputField::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
 	{
-		mMSSinceBlink += (float)gameTime.GetTimeSinceLastTick().Milliseconds;
+		Clickable::Update(gameTime, currInputState, prevInputState);
 
-		if(mMSSinceBlink >= C_MARKER_SPEED)
+		if(mHasFocus)
 		{
-			mShowMarker = !mShowMarker;
-			mMSSinceBlink -= C_MARKER_SPEED;
+			mMSSinceBlink += (float)gameTime.GetTimeSinceLastTick().Milliseconds;
+
+			if(mMSSinceBlink >= C_MARKER_SPEED)
+			{
+				mShowMarker = !mShowMarker;
+				mMSSinceBlink -= C_MARKER_SPEED;
+			}
 		}
+		else
+			mShowMarker = false;
+		
 	}
 
 	void InputField::Draw()
@@ -81,17 +94,19 @@ namespace Components
 		std::string marker = " ";
 		if(mShowMarker)
 			marker = "|";
-		//mFont->WriteText(mStream.str() + marker, position, D3DXCOLOR(0.0, 0.0, 0.0, 1.0));
+		
 		mFont->WriteText(mFirstString.str() + marker + mLastString.str(), 
 						 position, D3DXCOLOR(0.0, 0.0, 0.0, 1.0));
 	}
 
 	void InputField::LostFocus()
 	{
+		mHasFocus = false;
 	}
 
 	void InputField::GotFocus()
 	{
+		mHasFocus = true;
 	}
 
 	void InputField::KeyPressed(int code, const InputState& currentState)
@@ -105,8 +120,6 @@ namespace Components
 				{
 					if(mReceiver)
 					{
-						//mReceiver->RecieveInput(mStream.str());
-						//mStream.str("");
 						mReceiver->RecieveInput(mFirstString.str() + mLastString.str());
 						mFirstString.str("");
 						mLastString.str("");
@@ -157,13 +170,28 @@ namespace Components
 
 	void InputField::CharEntered(unsigned char symbol, const InputState& currentState)
 	{
-		//mStream << symbol;
 		mFirstString << symbol;
 	}
 
+	void InputField::MouseEntered()
+	{
+	}
+	
+	void InputField::MouseExited()
+	{
+	}
+	
+	void InputField::MousePressed(int buttonIndex)
+	{
+	}
+	
+	void InputField::MouseReleased(int buttonIndex)
+	{
+	}
+	
 	// DEBUG
 	std::string InputField::GetName()
 	{
-		return "InputField";
+		return "InputField: " + GetText();
 	}
 }

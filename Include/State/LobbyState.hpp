@@ -1,40 +1,31 @@
-#ifndef MENU_STATE_HPP
-#define MENU_STATE_HPP
-
-#include "WinInclude.hpp"
-#include <vector>
+#ifndef LOBBY_STATE_HPP
+#define LOBBY_STATE_HPP
 
 #include "ApplicationState.hpp"
-#include "Buffer.hpp"
-#include "Effect.hpp"
-#include "ComponentGroup.hpp"
 #include "TextButton.hpp"
-#include "Menu.hpp"
+#include "Effect.hpp"
+#include "Buffer.hpp"
 
 namespace State
 {
-	namespace MenuButton
+	namespace LobbyButton
 	{
 		enum Button
 		{
-			StartGame,
-			WatchReplay,
-			Credits,
-			Exit,
+			Create,
+			Cancel,
 			Count
 		};
 	}
 
-	class MenuState : public ApplicationState
+	class LobbyState : public ApplicationState
 	{
 	public:
-		MenuState(StateID id, ID3D10Device* device);
-		~MenuState() throw();
-		
-		
-		// Inherited from Application State
+		LobbyState(StateID id, ID3D10Device* device);
+
 		void Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime);
 		void Draw();
+
 		void OnStatePushed();
 		void OnStatePopped();
 
@@ -48,13 +39,12 @@ namespace State
 		ID3D10Device*							mDevice;
 		Effect*									mEffect;
 		VertexBuffer*							mBuffer;
-		std::vector<Components::TextButton*>	mButtons;
 		Components::ComponentGroup*				mComponents;
+		std::vector<Components::TextButton*>	mButtons;
 
+		void CreateComponents();
 		void CreateBuffer(float width, float height);
 		void CreateEffect();
-		void CreateComponents();
 	};
 }
-
 #endif
