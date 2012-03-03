@@ -16,7 +16,6 @@ namespace Network
 		int Update();
 	private:
 		ComSocket mSocket;
-
 	};
 }
 

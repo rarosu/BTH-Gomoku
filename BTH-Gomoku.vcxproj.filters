@@ -57,6 +57,7 @@
     <ClCompile Include="Source\Network\Messages\LeaveGameMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\StayAliveMessage.cpp" />
     <ClCompile Include="Source\Logic\Grid\Direction.cpp" />
+    <ClCompile Include="Source\Logic\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -118,6 +119,7 @@
     <ClInclude Include="Include\Network\Messages\StayAliveMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\MessageInclude.hpp" />
     <ClInclude Include="Include\Components\RootComponent.hpp" />
+    <ClInclude Include="Include\Logic\Ruleset.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
