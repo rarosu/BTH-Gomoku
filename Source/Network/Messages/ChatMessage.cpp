@@ -19,12 +19,14 @@ namespace Network
 		int sourceID;
 		int targetID;
 		int recipient;
+		std::string message;
 
 		s >> sourceID;
 		s >> targetID;
 		s >> recipient;
+		std::getline(s, message);
 
-		return new ChatMessage(sourceID, targetID, static_cast<Recipient::Recipient>(recipient), s.str());
+		return new ChatMessage(sourceID, targetID, static_cast<Recipient::Recipient>(recipient), message);
 	}
 
 	int ChatMessage::ID() const
@@ -35,7 +37,7 @@ namespace Network
 	std::string ChatMessage::FlattenArguments() const
 	{
 		std::stringstream s;
-		s << mSourceID << " " << mMessage << " " << static_cast<int>(mRecipient) << " " << mTargetID;
+		s << mSourceID << " " << mTargetID << " " << static_cast<int>(mRecipient) << " " << mMessage;
 
 		return s.str();
 	}

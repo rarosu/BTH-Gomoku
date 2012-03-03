@@ -94,6 +94,7 @@ void StartClient()
 		{
 			cout << "Write message: ";
 			getline(cin, message);
+			cout << "Sending message: " << message << endl;
 
 			Network::ChatMessage m;
 			m.mMessage = message;
