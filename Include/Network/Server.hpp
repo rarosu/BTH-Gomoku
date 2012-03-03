@@ -8,16 +8,27 @@
 
 namespace Network
 {
+	class ServerEventInterface
+	{
+	public:
+		virtual void ClientConnected(int slot) = 0;
+		virtual void ClientDisconnected(int slot) = 0;
+	};
+
 	class Server
 	{
 	public:
-		Server(int maxClients, unsigned short port = 6666);
+		Server(ServerEventInterface* eventInterface, int maxClients, unsigned short port = 6666);
 		~Server();
+
 		int GetPort() const;
 		void Update();
+
 		void Send(const Message& message);
 		Message* PopMessage();
 	private:
+		ServerEventInterface* mEventInterface;
+
 		int mPort;
 		int mMaxClients;
 		ListenSocket mListenSocket;

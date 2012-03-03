@@ -11,7 +11,7 @@ namespace Network
 	public:
 		ListenSocket(int maxClients);
 		~ListenSocket();
-		int Bind(unsigned short port = 6666);
+		void Bind(unsigned short port = 6666);
 		SOCKET Accept();
 		void Shutdown();
 	private:

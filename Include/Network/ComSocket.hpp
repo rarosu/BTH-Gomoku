@@ -15,14 +15,16 @@ namespace Network
 		~ComSocket();
 		int Connect(const char* ipAddress = "127.0.0.1", unsigned short port = 6666);
 		void Send(const std::string& message);
-		int Receive();
+		bool Receive();
 		int Update();
 		std::string PopMessage();
 		void Shutdown();
+		bool IsConnected() const;
 	private:
-		int SendMessage(const std::string& message);
+		void SendMessage(const std::string& message);
 		void InterpretBuffer();
 
+		bool mConnected;
 		SOCKET mSocket;
 		std::vector<std::string> mMessagesToSend;
 		std::vector<std::string> mReceivedMessages;
