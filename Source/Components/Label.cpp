@@ -38,6 +38,11 @@ namespace Components
 	{
 	}
 
+	std::string Label::GetCaption()
+	{
+		return mCaption;
+	}
+
 	void Label::SetCaption(std::string newCaption)
 	{
 		mCaption = newCaption;

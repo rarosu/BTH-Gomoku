@@ -59,6 +59,7 @@
     <ClCompile Include="Source\Network\Messages\StayAliveMessage.cpp" />
     <ClCompile Include="Source\State\CreateAGameState.cpp" />
     <ClCompile Include="Source\State\LobbyState.cpp" />
+    <ClCompile Include="Source\Components\List.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -123,6 +124,7 @@
     <ClInclude Include="Include\Components\RootComponent.hpp" />
     <ClInclude Include="Include\State\CreateAGameState.hpp" />
     <ClInclude Include="Include\State\LobbyState.hpp" />
+    <ClInclude Include="Include\Components\List.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

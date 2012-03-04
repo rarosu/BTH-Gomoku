@@ -25,18 +25,18 @@ namespace Components
 
 		RECT inputFieldPos = mPositionRect;
 		inputFieldPos.top = inputFieldPos.bottom - 20;
+		mInputField = new InputField(mDevice, this, this, inputFieldPos, mFont);
 
 		int scrollWidth = 20;
 		RECT scrollbarPos = { mPositionRect.right - scrollWidth, mPositionRect.top, 
 							  mPositionRect.right, mPositionRect.bottom };
 		mScrollbar = new Scrollbar(this, this);
 		mScrollbar->Initialize(mDevice, scrollbarPos);
-		mInputField = new InputField(mDevice, this, this, inputFieldPos, mFont);
+
 		mEffect->SetVariable("bgColor", (D3DXVECTOR4)C_COLOR_WINDOW_BG);
 
 		SetFocus(mInputField);
 }
-
 
 	Console::~Console() throw()
 	{
@@ -111,7 +111,7 @@ namespace Components
 			mVertexBuffer->Draw();
 		}
 
-		POINT position = { 3 , 0 };
+		POINT position = { mPositionRect.left + 3 , mPositionRect.top };
 		int start = std::max<int>(0, mFirstShowRow);
 		int end = std::min<int>(mFirstShowRow + mMaxNumRows, mOutput.size());
 		for(int i = start; i < end; ++i)
@@ -140,10 +140,23 @@ namespace Components
 
 	void Console::LostFocus()
 	{
+		mInputField->LostFocus();
 	}
 
 	void Console::GotFocus()
 	{
+		SetFocus(mInputField);
+	}
+
+	void Console::MouseButtonReleased(int index, const InputState& currentState)
+	{
+		ComponentGroup::MouseButtonReleased(index, currentState);
+
+		if(IsVisible())
+			if(currentState.Mouse.x > mPositionRect.left && currentState.Mouse.x < mPositionRect.right &&
+			   currentState.Mouse.y > mPositionRect.top && currentState.Mouse.y < mPositionRect.bottom &&
+			   !mScrollbar->IsHovered())
+				SetFocusThis();	
 	}
 
 	void Console::Scroll(bool isUp)
@@ -181,8 +194,13 @@ namespace Components
 	}
 
 	// DEBUG
-	std::string Console::GetName()
-	{
-		return "Console";
-	}
+	//std::string Console::GetName()
+	//{
+	//	std::string result = "Console";
+
+	//	if(mFocusedComponent)
+	//		result += " -> " + mFocusedComponent->GetName();
+
+	//	return result;
+	//}
 }

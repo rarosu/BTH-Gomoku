@@ -158,6 +158,7 @@
     <ClCompile Include="Source\Components\Component.cpp" />
     <ClCompile Include="Source\Components\ComponentGroup.cpp" />
     <ClCompile Include="Source\Components\Label.cpp" />
+    <ClCompile Include="Source\Components\List.cpp" />
     <ClCompile Include="Source\Components\Menu.cpp" />
     <ClCompile Include="Source\Components\RootComponent.cpp" />
     <ClCompile Include="Source\Components\Scrollbar.cpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="Include\Components\Component.hpp" />
     <ClInclude Include="Include\Components\ComponentGroup.hpp" />
     <ClInclude Include="Include\Components\Label.hpp" />
+    <ClInclude Include="Include\Components\List.hpp" />
     <ClInclude Include="Include\Components\Menu.hpp" />
     <ClInclude Include="Include\Components\RootComponent.hpp" />
     <ClInclude Include="Include\Components\Scrollbar.hpp" />

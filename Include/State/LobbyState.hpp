@@ -3,6 +3,7 @@
 
 #include "ApplicationState.hpp"
 #include "TextButton.hpp"
+#include "Label.hpp"
 #include "Effect.hpp"
 #include "Buffer.hpp"
 
@@ -12,7 +13,11 @@ namespace State
 	{
 		enum Button
 		{
-			Create,
+			Team1Player1,
+			Team1Player2,
+			Team2Player1,
+			Team2Player2,
+			StartGame,
 			Cancel,
 			Count
 		};
@@ -41,6 +46,7 @@ namespace State
 		VertexBuffer*							mBuffer;
 		Components::ComponentGroup*				mComponents;
 		std::vector<Components::TextButton*>	mButtons;
+		std::vector<Components::Label*>			mPlayerLabels;
 
 		void CreateComponents();
 		void CreateBuffer(float width, float height);

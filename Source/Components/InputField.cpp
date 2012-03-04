@@ -60,6 +60,12 @@ namespace Components
 		return mFirstString.str() + mLastString.str();
 	}
 
+	void InputField::SetText(std::string newText)
+	{
+		mFirstString.str(newText);
+		mLastString.str("");
+	}
+
 	void InputField::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
 	{
 		Clickable::Update(gameTime, currInputState, prevInputState);

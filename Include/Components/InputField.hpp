@@ -29,6 +29,7 @@ namespace Components
 		~InputField() throw();
 
 		std::string GetText();
+		void SetText(std::string newText);
 
 		// Methods inherited from Component
 		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);

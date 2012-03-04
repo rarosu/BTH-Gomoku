@@ -33,7 +33,11 @@ namespace Components
 		void LostFocus();
 		void GotFocus();
 		// DEBUG
-		virtual std::string GetName();
+		//virtual std::string GetName();
+
+		// Override method in Component
+		void MouseButtonReleased(int index, const InputState& currentState);
+
 
 		// Methods inherited from Scrollable
 		void Scroll(bool isUp);

@@ -18,6 +18,8 @@ namespace Components
 			  RECT position, 
 			  GameFont::AlignHorizontal alignHorizontal = GameFont::Center, 
 			  GameFont::AlignVertical alignVertical = GameFont::Middle);
+		
+		std::string GetCaption();
 		void SetCaption(std::string newCaption);
 
 		// Methods inherited from Component

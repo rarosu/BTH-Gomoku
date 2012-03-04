@@ -30,7 +30,7 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth,
 	mCreateGameState = new State::CreateAGameState(State::C_STATE_CREATE_GAME, mDeviceD3D);
 
 	// Start the application in InGameState
-	State::ApplicationState::sStack.ChangeState(mMenuState);
+	State::ApplicationState::sStack.ChangeState(mLobbyState);
 	State::ApplicationState::sStack.UpdateStack();
 }
 
