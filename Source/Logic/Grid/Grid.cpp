@@ -2,6 +2,17 @@
 
 namespace Logic
 {
+	Grid::Grid() {}
+
+	void Grid::CountMarkersInRow(std::vector<Cell>& row, PlayerID player, const Cell& cell, Direction::Direction direction) const
+	{
+		if (GetMarkerInCell(cell) != player)
+			return;
+		
+		row.push_back(cell);
+		CountMarkersInRow(row, player, cell.GetNeighbour(direction), direction);
+	}
+
 	bool Grid::AddMarker(const Cell& cell, PlayerID player) 
 	{
 		// Can only add a marker if the cell is unoccupied
@@ -9,57 +20,43 @@ namespace Logic
 			return false;
 		mMarkers[cell] = player;
 		
-		// Check every neighbour of the given cell...
-		for (int directionIterator = Direction::Up;
-			 directionIterator <= Direction::UpLeft;
+		// Check every direction
+		for (int directionIterator = Direction::C_FIRST;
+			 directionIterator <= (Direction::C_COUNT - 1) / 2;
 			 ++directionIterator)
 		{
-			Direction::Direction direction = (Direction::Direction) directionIterator;
-			Cell neighbour = cell.GetNeighbour(direction);
-			
-			// If this cell and its neighbour are of the same player...
-			if (GetMarkerInCell(neighbour) == GetMarkerInCell(cell))
-			{
-				// Check every row in the Grid, to see if we find one which the neighbour
-				// belongs to and the given cell could be added to.
-				bool foundRow = false;
-				for (RowVector::iterator rowIterator = mRows.begin();
-					 rowIterator != mRows.end();
-					 rowIterator++)
-				{
-					if (rowIterator->Contains(neighbour))
-					{
-						if (rowIterator->CanAddMarker(cell))
-						{
-							rowIterator->AddMarker(cell);
-							foundRow = true;
+			// Enumerate the direction and its opposite
+			Direction::Direction directions[2] = { static_cast<Direction::Direction>(directionIterator),
+												   Direction::GetOpposite(static_cast<Direction::Direction>(directionIterator)) };
 
-							break;
-						}
-					}
-				}
-				
-				
-				// See if we have two cells that are neighbours, of the same player and
-				// are not part of a row with their alignment. In that case, we'll need to
-				// create a new row.
-				if (!foundRow)
-				{
-					Row newRow(this);
-					newRow.AddMarker(cell);
-					newRow.AddMarker(neighbour);
-					
-					mRows.push_back(newRow);
-				}
+			// Count all markers lying in a row in this alignment
+			std::vector<Cell> row;
+			row.push_back(cell);
+			for (int i = 0; i < 2; ++i)
+			{
+				CountMarkersInRow(row, GetMarkerInCell(cell), cell.GetNeighbour(directions[i]), directions[i]);
+			}
+
+			// If the counted row was larger than the currently longest row, replace it
+			if (row.size() > mLeadingRow.size())
+			{
+				mLeadingRow = row;
 			}
 		}
-		
+
 		return true;
 	}
-	
-	const Grid::RowVector& Grid::GetRows() const
+
+	void Grid::RemoveMarker(const Cell& cell)
 	{
-		return mRows;
+		if (GetMarkerInCell(cell) != C_PLAYER_NONE)
+		{
+			mMarkers[cell] = C_PLAYER_NONE;
+
+			// We cannot know anything about the rows now, 
+			// so just clear it
+			mLeadingRow.clear();
+		}
 	}
 	
 	const PlayerID Grid::GetMarkerInCell(const Cell& cell) const
@@ -84,6 +81,18 @@ namespace Logic
 	Grid::MarkerMap::const_iterator Grid::GetMarkerMapEnd() const
 	{
 		return mMarkers.end();
+	}
+
+	const Grid::Row& Grid::GetLeadingRow() const
+	{
+		return mLeadingRow;
+	}
+
+	PlayerID Grid::GetLeadingPlayer() const
+	{
+		if (mLeadingRow.size() == 0)
+			return C_PLAYER_NONE;
+		return GetMarkerInCell(mLeadingRow[0]);
 	}
 	
 }

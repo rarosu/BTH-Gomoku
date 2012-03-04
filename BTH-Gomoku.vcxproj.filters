@@ -41,7 +41,6 @@
     <ClCompile Include="Source\Network\Server.cpp" />
     <ClCompile Include="Source\Logic\Grid\Cell.cpp" />
     <ClCompile Include="Source\Logic\Grid\Grid.cpp" />
-    <ClCompile Include="Source\Logic\Grid\Row.cpp" />
     <ClCompile Include="Source\Logic\Session.cpp" />
     <ClCompile Include="Source\Logic\ServerSession.cpp" />
     <ClCompile Include="Source\Logic\ClientSession.cpp" />
@@ -60,6 +59,7 @@
     <ClCompile Include="Source\State\CreateAGameState.cpp" />
     <ClCompile Include="Source\State\LobbyState.cpp" />
     <ClCompile Include="Source\Components\List.cpp" />
+    <ClCompile Include="Source\Logic\Grid\Direction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -103,7 +103,6 @@
     <ClInclude Include="Include\Logic\Grid\Cell.hpp" />
     <ClInclude Include="Include\Logic\Grid\Direction.hpp" />
     <ClInclude Include="Include\Logic\Grid\Grid.hpp" />
-    <ClInclude Include="Include\Logic\Grid\Row.hpp" />
     <ClInclude Include="Include\Logic\Session.hpp" />
     <ClInclude Include="Include\Logic\ServerSession.hpp" />
     <ClInclude Include="Include\Logic\ClientSession.hpp" />

@@ -6,11 +6,17 @@ namespace Logic
 	namespace Alignment
 	{
 		enum Alignment { None, Vertical, DiagonalLLToUR, Horizontal, DiagonalULToLR };
+		const int C_COUNT = 5;
+		const int C_FIRST = Alignment::Vertical;
 	}
 	
 	namespace Direction 
 	{
 		enum Direction { None, Up, UpRight, Right, DownRight, Down, DownLeft, Left, UpLeft };
+		const int C_COUNT = 9;
+		const int C_FIRST = Direction::Up;
+
+		Direction GetOpposite(Direction direction);
 	}
 }
 

@@ -41,6 +41,7 @@ namespace Logic
 			Comparison operators
 		*/
 		bool operator==(const Cell& cell) const;
+		bool operator!=(const Cell& cell) const;
 		bool operator<(const Cell& cell) const;
 	};
 }
