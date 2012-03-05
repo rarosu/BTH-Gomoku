@@ -3,7 +3,7 @@
 namespace Logic
 {
 	ServerSession::ServerSession(const ServerParameters& parameters) 
-		: mServer(parameters.mRuleset->GetPlayerCount(), parameters.mPort)
+		: mServer(this, parameters.mRuleset->GetPlayerCount(), parameters.mPort)
 		, mRuleset(parameters.mRuleset)
 	{
 		mPlayers.resize(mRuleset->GetPlayerCount());
@@ -14,6 +14,16 @@ namespace Logic
 	}
 
 	ServerSession::~ServerSession() throw()
+	{
+
+	}
+
+	void ServerSession::ClientConnected(int slot)
+	{
+
+	}
+
+	void ServerSession::ClientDisconnected(int slot)
 	{
 
 	}

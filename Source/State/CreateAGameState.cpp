@@ -1,10 +1,12 @@
 #include "CreateAGameState.hpp"
+#include "ServerSession.hpp"
 
 namespace State
 {
-	CreateAGameState::CreateAGameState(StateID id, ID3D10Device* device)
+	CreateAGameState::CreateAGameState(StateID id, ID3D10Device* device, LobbyState* lobbyState)
 		: ApplicationState(id),
-		  mDevice(device), mComponents(NULL), mDefaultFont(NULL)
+		  mDevice(device), mComponents(NULL), mDefaultFont(NULL),
+		  mLobbyState(lobbyState)
 	{
 		CreateBuffer((float)sViewport->GetWidth(), (float)sViewport->GetHeight());
 		CreateEffect();
@@ -96,7 +98,17 @@ namespace State
 	void CreateAGameState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
 	{		
 		if(mButtons[CAGButton::Create]->GetAndResetClickStatus())
+		{
+			std::stringstream ss;
+			ss << mIF
+			
+			Logic::ServerParameters args;
+			args.mAdminName = mIFName->GetText();
+			
+
+			Logic::ServerSession(
 			ChangeState(C_STATE_LOBBY);
+		}
 		if(mButtons[CAGButton::Cancel]->GetAndResetClickStatus())
 			ChangeState(C_STATE_MENU);
 

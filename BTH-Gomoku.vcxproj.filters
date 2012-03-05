@@ -22,11 +22,9 @@
     <ClCompile Include="Source\State\ApplicationState.cpp" />
     <ClCompile Include="Source\State\StateStack.cpp" />
     <ClCompile Include="Source\State\InGameState.cpp" />
-    <ClCompile Include="Source\State\LocalLobbyState.cpp" />
     <ClCompile Include="Source\State\MenuState.cpp" />
     <ClCompile Include="Source\State\StateRegistry.cpp" />
     <ClCompile Include="Source\Framework\Viewport.cpp" />
-    <ClCompile Include="Source\State\NetworkLobbyState.cpp" />
     <ClCompile Include="Source\Framework\Effect\Buffer.cpp" />
     <ClCompile Include="Source\Framework\Effect\Effect.cpp" />
     <ClCompile Include="Source\Framework\Effect\Pass.cpp" />
@@ -61,6 +59,7 @@
     <ClCompile Include="Source\Components\List.cpp" />
     <ClCompile Include="Source\Logic\Grid\Direction.cpp" />
     <ClCompile Include="Source\Logic\Player.cpp" />
+    <ClCompile Include="Source\State\JoinAGameState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -84,11 +83,9 @@
     <ClInclude Include="Include\State\ApplicationState.hpp" />
     <ClInclude Include="Include\State\StateStack.hpp" />
     <ClInclude Include="Include\State\InGameState.hpp" />
-    <ClInclude Include="Include\State\LocalLobbyState.hpp" />
     <ClInclude Include="Include\State\MenuState.hpp" />
     <ClInclude Include="Include\State\StateRegistry.hpp" />
     <ClInclude Include="Include\Framework\Viewport.hpp" />
-    <ClInclude Include="Include\State\NetworkLobbyState.hpp" />
     <ClInclude Include="Include\Framework\Effect\Buffer.hpp" />
     <ClInclude Include="Include\Framework\Effect\Effect.hpp" />
     <ClInclude Include="Include\Framework\Effect\Pass.hpp" />
@@ -126,6 +123,7 @@
     <ClInclude Include="Include\State\LobbyState.hpp" />
     <ClInclude Include="Include\Components\List.hpp" />
     <ClInclude Include="Include\Logic\Ruleset.hpp" />
+    <ClInclude Include="Include\State\JoinAGameState.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

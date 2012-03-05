@@ -29,11 +29,17 @@ namespace Logic
 		When creating a game, a server session should be created, which will
 		listen for incoming connections and check game logic.
 	*/
-	class ServerSession : public Session
+	class ServerSession : public Session, public Network::ServerEventInterface
 	{
 	public:
 		ServerSession(const ServerParameters& parameters);
 		~ServerSession() throw();
+
+		/**
+			Implemented from ServerEventInterface
+		*/
+		void ClientConnected(int slot);
+		void ClientDisconnected(int slot);
 	private:
 		Network::Server mServer;
 
