@@ -1,6 +1,7 @@
 #ifndef CLICKMENU_HPP
 #define CLICKMENU_HPP
 
+#include <map>
 #include "GameFont.hpp"
 #include "ComponentGroup.hpp"
 #include "Button.hpp"
@@ -13,14 +14,16 @@ namespace Components
 	{
 	public:
 		MenuItem(ClickMenu* ownerGroup);
+		~MenuItem() throw();
 
 		void AddSubItem(const std::string& caption);
+		ClickMenu* GetSubMenu();
 
-		void Initialize(ID3D10Device* device, RECT position, std::string caption);
+		void Initialize(ID3D10Device* device, RECT position, const std::string& caption);
 		void Draw();
+
 		// DEBUG
 		virtual std::string GetName();
-
 	private:
 		ClickMenu*					mSubMenu;
 		GameFont*					mFont;
@@ -38,13 +41,18 @@ namespace Components
 				  int itemWidth, 
 				  int itemHeight);
 
-		void AddMenuItem(std::string caption);
+		void AddMenuItem(const std::string& caption);
 
+		bool GetAndResetClickStatus(const std::string& caption);
+		MenuItem* GetMenuItem(const std::string& caption);
+		ClickMenu* GetSubMenu(const std::string& caption);
 	private:
-		ID3D10Device*				mDevice;
-		std::vector<MenuItem*>		mItems;
-		int							mItemWidth;
-		int							mItemHeight;
+		typedef std::map<std::string, MenuItem*> ItemMap;
+
+		ID3D10Device*						mDevice;
+		ItemMap								mItems;
+		int									mItemWidth;
+		int									mItemHeight;
 	};
 }
 #endif

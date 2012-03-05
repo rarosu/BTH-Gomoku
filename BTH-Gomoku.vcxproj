@@ -209,9 +209,7 @@
     <ClCompile Include="Source\State\CreateAGameState.cpp" />
     <ClCompile Include="Source\State\InGameState.cpp" />
     <ClCompile Include="Source\State\LobbyState.cpp" />
-    <ClCompile Include="Source\State\LocalLobbyState.cpp" />
     <ClCompile Include="Source\State\MenuState.cpp" />
-    <ClCompile Include="Source\State\NetworkLobbyState.cpp" />
     <ClCompile Include="Source\State\StateRegistry.cpp" />
     <ClCompile Include="Source\State\StateStack.cpp" />
   </ItemGroup>
@@ -273,9 +271,7 @@
     <ClInclude Include="Include\State\CreateAGameState.hpp" />
     <ClInclude Include="Include\State\InGameState.hpp" />
     <ClInclude Include="Include\State\LobbyState.hpp" />
-    <ClInclude Include="Include\State\LocalLobbyState.hpp" />
     <ClInclude Include="Include\State\MenuState.hpp" />
-    <ClInclude Include="Include\State\NetworkLobbyState.hpp" />
     <ClInclude Include="Include\State\StateRegistry.hpp" />
     <ClInclude Include="Include\State\StateStack.hpp" />
     <ClInclude Include="Include\WinInclude.hpp" />

@@ -9,7 +9,12 @@ namespace Components
 	{
 	}
 
-	void MenuItem::Initialize(ID3D10Device* device, RECT position, std::string caption)
+	MenuItem::~MenuItem() throw()
+	{
+		SafeDelete(mFont);
+	}
+
+	void MenuItem::Initialize(ID3D10Device* device, RECT position, const std::string& caption)
 	{
 		Graphics buttonGraphics;
 		buttonGraphics.activeColor = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f);
@@ -58,6 +63,11 @@ namespace Components
 		return "MenuItem: " + mCaption;
 	}
 
+	ClickMenu* MenuItem::GetSubMenu()
+	{
+		return mSubMenu;
+	}
+
 }
 
 // Click Menu
@@ -72,7 +82,7 @@ namespace Components
 		mPositionRect = pos;
 	}
 
-	void ClickMenu::AddMenuItem(std::string caption)
+	void ClickMenu::AddMenuItem(const std::string& caption)
 	{
 		MenuItem* newItem = new MenuItem(this);
 		LONG yTop = mPositionRect.top + (mItemHeight * mItems.size());
@@ -80,7 +90,37 @@ namespace Components
 		RECT pos = { mPositionRect.left, yTop, mPositionRect.right, yBottom };
 		newItem->Initialize(mDevice, pos, caption);
 		
-		mItems.push_back(newItem);
+		mItems[caption] = newItem;
 		mPositionRect.bottom = yBottom;
+	}
+
+	bool ClickMenu::GetAndResetClickStatus(const std::string& caption)
+	{
+		ItemMap::iterator it = mItems.find(caption);
+
+		if (it != mItems.end())
+			return it->second->GetAndResetClickStatus();
+		
+		return false;
+	}
+
+	MenuItem* ClickMenu::GetMenuItem(const std::string& caption)
+	{
+		ItemMap::iterator it = mItems.find(caption);
+
+		if (it != mItems.end())
+			return it->second;
+
+		return NULL;
+	}
+
+	ClickMenu* ClickMenu::GetSubMenu(const std::string& caption)
+	{
+		ItemMap::iterator it = mItems.find(caption);
+
+		if (it != mItems.end())
+			return it->second->GetSubMenu();
+
+		return NULL;
 	}
 }
