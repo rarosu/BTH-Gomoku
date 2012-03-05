@@ -7,3 +7,6 @@ ipch/
 BTH-Gomoku.opensdf
 BTH-Gomoku.sdf
 BTH-Gomoku.suo
+
+# Ignore backup files
+*.dia~

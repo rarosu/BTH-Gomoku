@@ -1,0 +1,7 @@
+Menu State:
+* Start Game [Button]
+** Create Game [Button] 	-> CreateAGame State
+** Join Game [Button] 		-> JoinAGame State
+* Watch Replay [Button] 	-> SelectReplay State
+* Credits [Button] 			-> Credits State
+* Exit [Button]				-> Exit
