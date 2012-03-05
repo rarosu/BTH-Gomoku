@@ -10,6 +10,8 @@ namespace Components
 {
 	class ClickMenu;
 
+	
+
 	class MenuItem : public Button
 	{
 	public:
@@ -20,12 +22,14 @@ namespace Components
 		ClickMenu* GetSubMenu();
 
 		void Initialize(ID3D10Device* device, RECT position, const std::string& caption);
+		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		void Draw();
 
 		// DEBUG
 		virtual std::string GetName();
 	private:
 		ClickMenu*					mSubMenu;
+
 		GameFont*					mFont;
 		std::string					mCaption;
 		D3DXCOLOR					mTextColor;
