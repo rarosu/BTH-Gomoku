@@ -21,6 +21,9 @@ namespace Network
 
 	Message* MessageFactory::Inflate(const std::string& message)
 	{
+		if (message == "")
+			return NULL;
+
 		// Put the message in streamform and split it by its ID and arguments
 		std::stringstream s(message);
 		int id;
@@ -32,40 +35,40 @@ namespace Network
 		switch(id)
 		{
 			case C_MESSAGE_CHAT:
-				m = ChatMessage::Inflate(s.str());
+				m = ChatMessage::Inflate(args);
 				break;
 			case C_MESSAGE_ACCEPT:
-				m = AcceptMessage::Inflate(s.str());
+				m = AcceptMessage::Inflate(args);
 				break;
 			case C_MESSAGE_ADD_PLAYER:
-				m = AddPlayerMessage::Inflate(s.str());
+				m = AddPlayerMessage::Inflate(args);
 				break;
 			case C_MESSAGE_REMOVE_PLAYER:
-				m = RemovePlayerMessage::Inflate(s.str());
+				m = RemovePlayerMessage::Inflate(args);
 				break;
 			case C_MESSAGE_SET_TEAM:
-				m = SetTeamMessage::Inflate(s.str());
+				m = SetTeamMessage::Inflate(args);
 				break;
 			case C_MESSAGE_SET_MARKER:
-				m = SetMarkerMessage::Inflate(s.str());
+				m = SetMarkerMessage::Inflate(args);
 				break;
 			case C_MESSAGE_PLACE_PIECE:
-				m = PlacePieceMessage::Inflate(s.str());
+				m = PlacePieceMessage::Inflate(args);
 				break;
 			case C_MESSAGE_REMOVE_PIECE:
-				m = RemovePieceMessage::Inflate(s.str());
+				m = RemovePieceMessage::Inflate(args);
 				break;
 			case C_MESSAGE_TURN:
-				m = TurnMessage::Inflate(s.str());
+				m = TurnMessage::Inflate(args);
 				break;
 			case C_MESSAGE_START_GAME:
 				m = new StartGameMessage();
 				break;
 			case C_MESSAGE_LEAVE_GAME:
-				m = LeaveGameMessage::Inflate(s.str());
+				m = LeaveGameMessage::Inflate(args);
 				break;
 			case C_MESSAGE_STAY_ALIVE:
-				m = StayAliveMessage::Inflate(s.str());
+				m = StayAliveMessage::Inflate(args);
 				break;
 		}
 

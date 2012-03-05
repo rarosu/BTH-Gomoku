@@ -60,6 +60,7 @@
     <ClCompile Include="Source\State\LobbyState.cpp" />
     <ClCompile Include="Source\Components\List.cpp" />
     <ClCompile Include="Source\Logic\Grid\Direction.cpp" />
+    <ClCompile Include="Source\Logic\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -124,6 +125,7 @@
     <ClInclude Include="Include\State\CreateAGameState.hpp" />
     <ClInclude Include="Include\State\LobbyState.hpp" />
     <ClInclude Include="Include\Components\List.hpp" />
+    <ClInclude Include="Include\Logic\Ruleset.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
