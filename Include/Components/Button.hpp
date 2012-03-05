@@ -24,7 +24,7 @@ namespace Components
 			Graphics();
 		};
 
-		Button(/*InputSubscription* manager*/ComponentGroup* ownerGroup);
+		Button(ComponentGroup* ownerGroup);
 	
 		virtual void Initialize(ID3D10Device* device, RECT position, Graphics buttonColors);
 
@@ -34,6 +34,9 @@ namespace Components
 		virtual void LostFocus();
 		virtual void GotFocus();
 	
+	protected:
+		ID3D10Device*				mDevice;
+
 	private:
 		struct ButtonVertex
 		{
@@ -41,7 +44,6 @@ namespace Components
 			D3DXVECTOR2				uv;
 		};
 
-		ID3D10Device*				mDevice;
 		VertexBuffer*				mBuffer;
 		Effect*						mEffect;
 

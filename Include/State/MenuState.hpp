@@ -10,6 +10,7 @@
 #include "ComponentGroup.hpp"
 #include "TextButton.hpp"
 #include "Menu.hpp"
+#include "ClickMenu.hpp"
 
 namespace State
 {
@@ -48,7 +49,8 @@ namespace State
 		ID3D10Device*							mDevice;
 		Effect*									mEffect;
 		VertexBuffer*							mBuffer;
-		std::vector<Components::TextButton*>	mButtons;
+		std::vector<Components::MenuItem*>		mButtons;
+		Components::ClickMenu*					mMenuButtons;
 		Components::ComponentGroup*				mComponents;
 
 		void CreateBuffer(float width, float height);

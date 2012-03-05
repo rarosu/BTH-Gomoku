@@ -30,7 +30,7 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth,
 	mCreateGameState = new State::CreateAGameState(State::C_STATE_CREATE_GAME, mDeviceD3D);
 
 	// Start the application in InGameState
-	State::ApplicationState::sStack.ChangeState(mLobbyState);
+	State::ApplicationState::sStack.ChangeState(mMenuState);
 	State::ApplicationState::sStack.UpdateStack();
 }
 
@@ -92,7 +92,7 @@ void Game::Draw()
 	//mConsole->Draw();
 	mRootComponentGroup->Draw();
 
-	POINT pos = {10, 10};
+	POINT pos = { 10, mViewport.GetHeight() - 40};
 	mDefaultFont->WriteText(mRootComponentGroup->GetName(), pos, D3DXCOLOR(1.0, 0.0, 0.0, 1.0));
 	
 	// Swap backbuffer

@@ -16,7 +16,7 @@ namespace Components
 	public:
 		TextButton(ComponentGroup* ownerGroup);
 	
-		void Initialize(ID3D10Device* device, RECT position, std::string caption);
+		virtual void Initialize(ID3D10Device* device, RECT position, std::string caption);
 		//void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		void Draw();
 		

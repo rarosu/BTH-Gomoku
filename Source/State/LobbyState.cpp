@@ -68,8 +68,8 @@ namespace State
 		// Create player list
 		LONG lblTop = 200;
 		LONG lblLeft = 0;
-		LONG lblHeight = 48;
-		LONG lblWidth = 192;
+		LONG lblHeight = 40;
+		LONG lblWidth = 200;
 
 		const std::string playerCaptions[] = { "PLAYERS: ", "1. ", "2. ", "3. ", "4. " };
 
@@ -84,8 +84,8 @@ namespace State
 		const std::string lblCaptions[] = { "Team 1: ", "Team 2: " };
 		const std::string btnCaptions[] = { "Team 1: Player 1", "Team 1: Player 2", 
 											"Team 2: Player 1", "Team 2: Player 2" };
-		LONG btnWidth = 192;
-		LONG btnHeight = 48;
+		LONG btnWidth = 200;
+		LONG btnHeight = 40;
 		LONG btnLeft = (LONG)sViewport->GetWidth() - (btnWidth + 30);
 		LONG btnTop = 200;
 		const int padding = 20;
