@@ -60,6 +60,7 @@
     <ClCompile Include="Source\Components\ClickMenu.cpp" />
     <ClCompile Include="Source\State\JoinGameState.cpp" />
     <ClCompile Include="Source\Logic\Player.cpp" />
+    <ClCompile Include="Source\Network\Messages\JoinMessage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -124,6 +125,7 @@
     <ClInclude Include="Include\State\JoinGameState.hpp" />
     <ClInclude Include="Include\Logic\Ruleset.hpp" />
     <ClInclude Include="Include\State\CreateGameState.hpp" />
+    <ClInclude Include="Include\Network\Messages\JoinMessage.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

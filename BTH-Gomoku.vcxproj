@@ -194,6 +194,7 @@
     <ClCompile Include="Source\Network\ComSocket.cpp" />
     <ClCompile Include="Source\Network\ListenSocket.cpp" />
     <ClCompile Include="Source\Network\Message.cpp" />
+    <ClCompile Include="Source\Network\Messages\JoinMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\LeaveGameMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\PlacePieceMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\RemovePieceMessage.cpp" />
@@ -256,6 +257,7 @@
     <ClInclude Include="Include\Network\ComSocket.hpp" />
     <ClInclude Include="Include\Network\ListenSocket.hpp" />
     <ClInclude Include="Include\Network\Message.hpp" />
+    <ClInclude Include="Include\Network\Messages\JoinMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\LeaveGameMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\MessageInclude.hpp" />
     <ClInclude Include="Include\Network\Messages\PlacePieceMessage.hpp" />
