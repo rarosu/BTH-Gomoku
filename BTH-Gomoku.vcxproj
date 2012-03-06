@@ -213,7 +213,6 @@
     <ClCompile Include="Source\State\LobbyState.cpp" />
     <ClCompile Include="Source\State\MenuState.cpp" />
     <ClCompile Include="Source\State\StateRegistry.cpp" />
-    <ClCompile Include="Source\State\StateStack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Components\Button.hpp" />
@@ -277,7 +276,6 @@
     <ClInclude Include="Include\State\LobbyState.hpp" />
     <ClInclude Include="Include\State\MenuState.hpp" />
     <ClInclude Include="Include\State\StateRegistry.hpp" />
-    <ClInclude Include="Include\State\StateStack.hpp" />
     <ClInclude Include="Include\WinInclude.hpp" />
   </ItemGroup>
   <ItemGroup>

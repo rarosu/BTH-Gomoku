@@ -14,7 +14,7 @@
 #include "JoinGameState.hpp"
 #include "CreateGameState.hpp"
 
-class Game : public D3DApplication
+class Game : public D3DApplication, public State::StateManager
 {
 public:
 	Game(HINSTANCE applicationInstance, LPCTSTR windowTitle = "GameWindow", 
@@ -25,6 +25,10 @@ public:
 	void Draw();
 	LRESULT HandleAppMessages(UINT message, WPARAM wParam, LPARAM lParam);
 
+	/**
+		Implemented StateManager
+	*/
+	void ChangeState(State::ApplicationState* state);
 private:
 	GameTime					mGameTime;
 	GameFont*					mDefaultFont;
@@ -32,10 +36,13 @@ private:
 	Components::RootComponent*	mRootComponentGroup;
 
 	State::MenuState*			mMenuState;
-	State::InGameState*			mInGameState;
-	State::LobbyState*			mLobbyState;
 	State::CreateGameState*		mCreateGameState;
 	State::JoinGameState*		mJoinGameState;
+	State::LobbyState*			mLobbyState;
+	State::InGameState*			mInGameState;
+
+	State::ApplicationState*	mCurrentState;
+	State::ApplicationState*	mNextState;
 protected:
 	void ProgramLoop();
 	void OnResize();

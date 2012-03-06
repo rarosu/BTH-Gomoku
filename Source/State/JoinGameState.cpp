@@ -10,7 +10,6 @@ namespace State
 
 	JoinGameState::~JoinGameState() throw()
 	{
-		SafeDelete(mComponents);
 		SafeDelete(mDefaultFont);
 	}
 
@@ -92,6 +91,5 @@ namespace State
 
 		mComponents->SetFocus(mNameField);
 		mComponents->GiveFocus();
-		
 	}
 }

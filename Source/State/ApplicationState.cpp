@@ -4,7 +4,7 @@
 namespace State
 {
 	StateRegistry				ApplicationState::sRegistry;
-	StateStack					ApplicationState::sStack;
+	StateManager*				ApplicationState::sManager				= NULL;
 	const Viewport*				ApplicationState::sViewport				= NULL;
 	InputSubscription*			ApplicationState::sInputManager			= NULL;
 	Components::ComponentGroup*	ApplicationState::sRootComponentGroup	= NULL;
@@ -29,36 +29,14 @@ namespace State
 
 	void ApplicationState::OnResize() {}
 
-	bool ApplicationState::UpdateStateBeneath()
-	{
-		return false;
-	}
-
-	bool ApplicationState::DrawStateBeneath()
-	{
-		return false;
-	}
-
-
-
-	void ApplicationState::PushState(StateID id)
-	{
-		sStack.PushState(sRegistry.GetState(id));
-	}
-
-	void ApplicationState::PopState()
-	{
-		sStack.PopState();
-	}
-
 	void ApplicationState::ChangeState(StateID id)
 	{
-		sStack.ChangeState(sRegistry.GetState(id));
+		sManager->ChangeState(sRegistry.GetState(id));
 	}
 
 	void ApplicationState::QuitApplication()
 	{
-		sStack.ChangeState(NULL);
+		sManager->ChangeState(NULL);
 	}
 
 }

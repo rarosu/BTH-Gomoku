@@ -20,7 +20,6 @@
     <ClCompile Include="Source\Components\Scrollbar.cpp" />
     <ClCompile Include="Source\Components\TextButton.cpp" />
     <ClCompile Include="Source\State\ApplicationState.cpp" />
-    <ClCompile Include="Source\State\StateStack.cpp" />
     <ClCompile Include="Source\State\InGameState.cpp" />
     <ClCompile Include="Source\State\MenuState.cpp" />
     <ClCompile Include="Source\State\StateRegistry.cpp" />
@@ -82,7 +81,6 @@
     <ClInclude Include="Include\Components\Scrollbar.hpp" />
     <ClInclude Include="Include\Components\TextButton.hpp" />
     <ClInclude Include="Include\State\ApplicationState.hpp" />
-    <ClInclude Include="Include\State\StateStack.hpp" />
     <ClInclude Include="Include\State\InGameState.hpp" />
     <ClInclude Include="Include\State\MenuState.hpp" />
     <ClInclude Include="Include\State\StateRegistry.hpp" />

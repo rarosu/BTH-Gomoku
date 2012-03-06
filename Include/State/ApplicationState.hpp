@@ -4,7 +4,6 @@
 #include "GameTime.hpp"
 #include "ComponentGroup.hpp"
 #include "StateRegistry.hpp"
-#include "StateStack.hpp"
 #include "Viewport.hpp"
 #include "InputManager.hpp"
 
@@ -16,6 +15,11 @@ class Game;
 namespace State
 {
 	/**
+		Forward-declare
+	*/
+	class ApplicationState;
+
+	/**
 		Constants for all states in Gomoku
 	*/
 	const StateID C_STATE_MENU			= 1;
@@ -23,6 +27,16 @@ namespace State
 	const StateID C_STATE_IN_GAME		= 3;
 	const StateID C_STATE_CREATE_GAME	= 4;
 	const StateID C_STATE_JOIN_GAME		= 5;
+
+	/**
+		This should be implemented by the Game class,
+		to handle changing of states.
+	*/
+	class StateManager
+	{
+	public:
+		virtual void ChangeState(ApplicationState* state) = 0;
+	};
 
 	/**
 		Abstract class for an application state
@@ -63,12 +77,6 @@ namespace State
 			been updated.
 		*/
 		virtual void OnResize();
-
-		/**
-			These can be used to override default behaviour
-		*/
-		virtual bool UpdateStateBeneath();
-		virtual bool DrawStateBeneath();
 	protected:
 		static const Viewport*				sViewport;
 		static InputSubscription*			sInputManager;
@@ -80,11 +88,9 @@ namespace State
 		explicit ApplicationState(StateID id);
 
 		/**
-			These methods can be used to push/pop/change states
+			These methods can be used to change states
 			by using their IDs.
 		*/
-		static void PushState(StateID id);
-		static void PopState();
 		static void ChangeState(StateID id);
 		static void QuitApplication();
 	private:
@@ -92,7 +98,7 @@ namespace State
 			One instance of a registry and a stack
 		*/
 		static StateRegistry sRegistry;
-		static StateStack sStack;
+		static StateManager* sManager;
 
 		/**
 			The ID of this state
