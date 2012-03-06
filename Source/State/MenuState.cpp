@@ -3,14 +3,18 @@
 namespace State
 {
 	MenuState::MenuState(StateID id, ID3D10Device* device) 
-		: ApplicationState(id), mDevice(device),  mEffect(NULL), mBuffer(NULL), mComponents(NULL)
+		: ApplicationState(id), mDevice(device), mEffect(NULL), mBuffer(NULL), mComponents(NULL), mSprite(NULL)
 	{
 		CreateBuffer((float)sViewport->GetWidth(), (float)sViewport->GetHeight());
 		CreateEffect();
+		mSprite = new Sprite(mDevice, sViewport,  "exclamation.png", 64.0f, 64.0f);
 	}
 
 	MenuState::~MenuState() throw()
 	{
+		SafeDelete(mEffect);
+		SafeDelete(mBuffer);
+		SafeDelete(mSprite);
 	}
 
 	void MenuState::CreateBuffer(float width, float height)
@@ -118,5 +122,6 @@ namespace State
 		}
 
 		mComponents->Draw();
+		mSprite->Draw(D3DXVECTOR2(0,0));
 	}
 }

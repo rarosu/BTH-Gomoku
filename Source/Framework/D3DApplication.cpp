@@ -45,7 +45,7 @@ D3DApplication::~D3DApplication()
 // Create an application window and initialize it returning true if success, else false
 bool D3DApplication::InitWindowsApplication(HINSTANCE applicationHandle, LPCTSTR title, int showSetting)
 {
-	showSetting = SW_MAXIMIZE;
+	showSetting = SW_NORMAL;
 
 	// Create a new window and specify its settings
 	WNDCLASSEX window;
@@ -76,18 +76,19 @@ bool D3DApplication::InitWindowsApplication(HINSTANCE applicationHandle, LPCTSTR
 	int width = outerSize.right - outerSize.left;
 	int height = outerSize.bottom - outerSize.top;
 
+	DWORD style = WS_OVERLAPPEDWINDOW ^ (WS_SIZEBOX | WS_MAXIMIZEBOX);
 	// Try to create the window, if success the handle will be stored in gWindowHandle, if failed 0 will be stored
-	mWindowHandle = CreateWindow("GameWindow",				// The name of the registered window "mold" to use
-								title,						// Title of the window
-								WS_OVERLAPPEDWINDOW,		// Window style
-								CW_USEDEFAULT,				// X-position
-								CW_USEDEFAULT,				// Y-position
-								width,						// Window width
-								height,						// Window height
-								0,							// Parent window, 0 because there is no parent
-								0,							// Menu handle, 0 because there is no menu
-								applicationHandle,			// Application instance handle
-								this);						// Extra parameter, not needed
+	mWindowHandle = CreateWindow("GameWindow",		// The name of the registered window "mold" to use
+								title,				// Title of the window
+								style,				// Window style, ^ (SIZEBOX | MAXIMIZEBOX) means no resize, no max
+								CW_USEDEFAULT,		// X-position
+								CW_USEDEFAULT,		// Y-position
+								width,				// Window width
+								height,				// Window height
+								0,					// Parent window, 0 because there is no parent
+								0,					// Menu handle, 0 because there is no menu
+								applicationHandle,	// Application instance handle
+								this);				// Extra parameter, not needed
 
 	if(mWindowHandle == 0)		// Creation failed
 	{

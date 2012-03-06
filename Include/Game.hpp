@@ -17,7 +17,7 @@ class Game : public D3DApplication
 {
 public:
 	Game(HINSTANCE applicationInstance, LPCTSTR windowTitle = "GameWindow", 
-		UINT clientWidth = 640, UINT clientHeight = 480);
+		UINT clientWidth = 1024, UINT clientHeight = 576);
 	~Game() throw();
 
 	void Update();

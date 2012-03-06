@@ -64,3 +64,8 @@ void Viewport::SetHeight(int newHeight)
 {
 	mDescription.Height = newHeight;
 }
+
+const D3DXMATRIX& Viewport::GetMatrix() const
+{
+	return mViewSpaceTransform;
+}

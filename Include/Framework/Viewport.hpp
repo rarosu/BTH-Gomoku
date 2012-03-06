@@ -14,6 +14,7 @@ public:
 	void SetWidth(int newWidth);
 	int GetHeight() const;
 	void SetHeight(int newHeight);
+	const D3DXMATRIX& GetMatrix() const;
 
 private:
 	D3DXMATRIX			mViewSpaceTransform;

@@ -11,6 +11,7 @@
 #include "TextButton.hpp"
 #include "Menu.hpp"
 #include "ClickMenu.hpp"
+#include "Sprite.hpp"
 
 namespace State
 {
@@ -52,6 +53,7 @@ namespace State
 		std::vector<Components::MenuItem*>		mButtons;
 		Components::ClickMenu*					mMenuButtons;
 		Components::ComponentGroup*				mComponents;
+		Sprite*									mSprite;
 
 		void CreateBuffer(float width, float height);
 		void CreateEffect();
