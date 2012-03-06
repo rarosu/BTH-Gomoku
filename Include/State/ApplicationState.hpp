@@ -57,6 +57,7 @@ namespace State
 		virtual void Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime) = 0;
 		virtual void Draw() = 0;
 
+
 		/**
 			This will be called when the application has been resized, and the Viewport has
 			been updated.

@@ -6,6 +6,7 @@
 #include "Label.hpp"
 #include "Effect.hpp"
 #include "Buffer.hpp"
+#include "Session.hpp"
 
 namespace State
 {
@@ -34,6 +35,8 @@ namespace State
 		void OnStatePushed();
 		void OnStatePopped();
 
+		void SetSession(Logic::Session* session);
+
 	private:
 		struct bgVertex
 		{
@@ -47,6 +50,8 @@ namespace State
 		Components::ComponentGroup*				mComponents;
 		std::vector<Components::TextButton*>	mButtons;
 		std::vector<Components::Label*>			mPlayerLabels;
+
+		Logic::Session*							mSession;
 
 		void CreateComponents();
 		void CreateBuffer(float width, float height);

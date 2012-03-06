@@ -15,7 +15,17 @@ namespace Logic
 
 	ServerSession::~ServerSession() throw()
 	{
+		SafeDelete(mRuleset);
+	}
 
+	unsigned short ServerSession::GetPort() const
+	{
+		return mServer.GetPort();
+	}
+
+	const Ruleset* ServerSession::GetRuleset() const
+	{
+		return mRuleset;
 	}
 
 	void ServerSession::ClientConnected(int slot)

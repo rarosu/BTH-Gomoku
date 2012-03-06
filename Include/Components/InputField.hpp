@@ -28,7 +28,8 @@ namespace Components
 		RECT position, GameFont* font);
 		~InputField() throw();
 
-		std::string GetText();
+		std::string GetText() const;
+		bool Empty() const;
 		void SetText(std::string newText);
 
 		// Methods inherited from Component

@@ -9,7 +9,7 @@ namespace Logic
 	class Session
 	{
 	public:
-
+		virtual ~Session() throw() {}
 	protected:
 		std::vector<Player> mPlayers;
 	};

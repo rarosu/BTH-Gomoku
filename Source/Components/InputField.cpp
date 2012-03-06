@@ -55,9 +55,14 @@ namespace Components
 		mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
 	}
 
-	std::string InputField::GetText()
+	std::string InputField::GetText() const
 	{
 		return mFirstString.str() + mLastString.str();
+	}
+
+	bool InputField::Empty() const
+	{
+		return GetText().empty();
 	}
 
 	void InputField::SetText(std::string newText)

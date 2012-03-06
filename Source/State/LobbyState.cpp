@@ -1,11 +1,12 @@
 #include "LobbyState.hpp"
 #include "Console.hpp"
+#include <cassert>
 
 namespace State
 {
 	LobbyState::LobbyState(StateID id, ID3D10Device* device)
 		: ApplicationState(id),
-		  mDevice(device), mComponents(NULL)
+		  mDevice(device), mComponents(NULL), mSession(NULL)
 	{
 		CreateBuffer((float)sViewport->GetWidth(), (float)sViewport->GetHeight());
 		CreateEffect();
@@ -129,7 +130,10 @@ namespace State
 		if(mButtons[LobbyButton::StartGame]->GetAndResetClickStatus())
 			ChangeState(C_STATE_IN_GAME);
 		if(mButtons[LobbyButton::Cancel]->GetAndResetClickStatus())
+		{
+			SafeDelete(mSession);
 			ChangeState(C_STATE_MENU);
+		}
 
 		mComponents->Update(gameTime, currInput, prevInput);
 	}
@@ -150,12 +154,20 @@ namespace State
 	{
 		CreateComponents();
 		mComponents->GiveFocus();
+		assert(mSession != NULL);
+
 	}
 
 	void LobbyState::OnStatePopped()
 	{
 		sRootComponentGroup->RemoveComponent(mComponents);
 		mComponents = NULL;
+		mSession = NULL;
 		mButtons.clear();
+	}
+
+	void LobbyState::SetSession(Logic::Session* session)
+	{
+		mSession = session;
 	}
 }

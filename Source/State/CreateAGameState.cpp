@@ -83,8 +83,8 @@ namespace State
 		// Set default font
 		mDefaultFont = new GameFont(mDevice,  "Segoe Print", (labelPos.bottom - labelPos.top));
 		RECT ifPos = { labelPos.right + 10, labelPos.top, buttonPos.right, labelPos.bottom };
-		Components::InputField* input = new Components::InputField(mDevice, mComponents, NULL, ifPos, mDefaultFont);
-		mComponents->SetFocus(input);
+		mIFPort = new Components::InputField(mDevice, mComponents, NULL, ifPos, mDefaultFont);
+		
 
 		RECT labelNPos = { leftOffset, 320, leftOffset + 90, 368 };
 		mLblName = new Components::Label(mDevice, mComponents, "Name:", labelNPos);
@@ -93,21 +93,35 @@ namespace State
 
 		RECT labelTPos = { 0, 50, 600, 150 };
 		Components::Label* labelTitle = new Components::Label(mDevice, mComponents, "CREATE A GAME", labelTPos);
+
+		mComponents->SetFocus(mIFPort);
+		mComponents->GiveFocus();
 	}
 
 	void CreateAGameState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
-	{		
-		if(mButtons[CAGButton::Create]->GetAndResetClickStatus())
+	{	
+		if (mIFName->Empty() || mIFPort->Empty())
+			mButtons[CAGButton::Create]->SetEnabled(false);
+		else
 		{
-			std::stringstream ss;
-			ss << mIF
-			
-			Logic::ServerParameters args;
-			args.mAdminName = mIFName->GetText();
-			
+			mButtons[CAGButton::Create]->SetEnabled(true);
+			if(mButtons[CAGButton::Create]->GetAndResetClickStatus())
+			{
+				Logic::ServerParameters args;
+				args.mAdminName = mIFName->GetText();
+				
+				std::stringstream s;
+				s.str(mIFPort->GetText());
+				if (s >> args.mPort)
+				{
+					args.mRuleset = new Logic::StandardRuleset();
+					Logic::ServerSession* session = new Logic::ServerSession(args);
+					mLobbyState->SetSession(session);
+					ChangeState(C_STATE_LOBBY);
+				}
 
-			Logic::ServerSession(
-			ChangeState(C_STATE_LOBBY);
+				
+			}
 		}
 		if(mButtons[CAGButton::Cancel]->GetAndResetClickStatus())
 			ChangeState(C_STATE_MENU);
@@ -130,7 +144,6 @@ namespace State
 	void CreateAGameState::OnStatePushed()
 	{
 		CreateComponents();
-		mComponents->GiveFocus();
 	}
 
 	void CreateAGameState::OnStatePopped()

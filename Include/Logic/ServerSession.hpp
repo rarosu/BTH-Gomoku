@@ -35,6 +35,10 @@ namespace Logic
 		ServerSession(const ServerParameters& parameters);
 		~ServerSession() throw();
 
+		unsigned short GetPort() const;
+		const Ruleset* GetRuleset() const;
+
+
 		/**
 			Implemented from ServerEventInterface
 		*/

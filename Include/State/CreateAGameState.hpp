@@ -43,12 +43,13 @@ namespace State
 		ID3D10Device*							mDevice;
 		Effect*									mEffect;
 		VertexBuffer*							mBuffer;
-		Components::ComponentGroup*				mComponents;
-		std::vector<Components::TextButton*>	mButtons;
+		GameFont*								mDefaultFont;		
 
-		GameFont*								mDefaultFont;
+		Components::ComponentGroup*				mComponents;
 		Components::Label*						mLblName;
 		Components::InputField*					mIFName;
+		Components::InputField*					mIFPort;
+		std::vector<Components::TextButton*>	mButtons;
 
 		LobbyState*								mLobbyState;
 
