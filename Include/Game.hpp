@@ -12,7 +12,7 @@
 #include "LobbyState.hpp"
 #include "InGameState.hpp"
 #include "JoinGameState.hpp"
-#include "CreateAGameState.hpp"
+#include "CreateGameState.hpp"
 
 class Game : public D3DApplication
 {
@@ -28,16 +28,14 @@ public:
 private:
 	GameTime					mGameTime;
 	GameFont*					mDefaultFont;
-	//Components::Console*		mConsole;				// DEBUG: will be removed
 	InputManager				mInputManager;
 	Components::RootComponent*	mRootComponentGroup;
 
 	State::MenuState*			mMenuState;
 	State::InGameState*			mInGameState;
 	State::LobbyState*			mLobbyState;
-	State::CreateAGameState*	mCreateGameState;
+	State::CreateGameState*		mCreateGameState;
 	State::JoinGameState*		mJoinGameState;
-
 protected:
 	void ProgramLoop();
 	void OnResize();

@@ -120,12 +120,12 @@
     <ClInclude Include="Include\Network\Messages\StayAliveMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\MessageInclude.hpp" />
     <ClInclude Include="Include\Components\RootComponent.hpp" />
-    <ClInclude Include="Include\State\CreateAGameState.hpp" />
     <ClInclude Include="Include\State\LobbyState.hpp" />
     <ClInclude Include="Include\Components\List.hpp" />
     <ClInclude Include="Include\Components\ClickMenu.hpp" />
     <ClInclude Include="Include\State\JoinGameState.hpp" />
     <ClInclude Include="Include\Logic\Ruleset.hpp" />
+    <ClInclude Include="Include\State\CreateGameState.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

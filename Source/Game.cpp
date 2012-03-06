@@ -29,7 +29,7 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth,
 	mMenuState = new State::MenuState(State::C_STATE_MENU, mDeviceD3D);
 	mLobbyState = new State::LobbyState(State::C_STATE_LOBBY, mDeviceD3D);
 	mInGameState = new State::InGameState(State::C_STATE_IN_GAME, mDeviceD3D);
-	mCreateGameState = new State::CreateAGameState(State::C_STATE_CREATE_GAME, mDeviceD3D, mLobbyState);
+	mCreateGameState = new State::CreateGameState(State::C_STATE_CREATE_GAME, mDeviceD3D, mLobbyState);
 	mJoinGameState = new State::JoinGameState(State::C_STATE_JOIN_GAME, mDeviceD3D);
 
 	// Start the application in InGameState

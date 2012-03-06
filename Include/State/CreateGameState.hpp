@@ -1,5 +1,5 @@
-#ifndef CREATE_A_GAME_STATE_HPP
-#define CREATE_A_GAME_STATE_HPP
+#ifndef CREATE_GAME_STATE_HPP
+#define CREATE_GAME_STATE_HPP
 
 #include "ApplicationState.hpp"
 #include "TextButton.hpp"
@@ -13,20 +13,11 @@
 
 namespace State
 {
-	namespace CAGButton
-	{
-		enum Button
-		{
-			Create,
-			Cancel,
-			Count
-		};
-	}
-
-	class CreateAGameState : public ApplicationState
+	class CreateGameState : public ApplicationState
 	{
 	public:
-		CreateAGameState(StateID id, ID3D10Device* device, LobbyState* lobbyState);
+		CreateGameState(StateID id, ID3D10Device* device, LobbyState* lobbyState);
+		~CreateGameState() throw();
 
 		void Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime);
 		void Draw();
@@ -45,13 +36,13 @@ namespace State
 		VertexBuffer*							mBuffer;
 		GameFont*								mDefaultFont;		
 
+		LobbyState*								mLobbyState;
+
 		Components::ComponentGroup*				mComponents;
-		Components::Label*						mLblName;
 		Components::InputField*					mIFName;
 		Components::InputField*					mIFPort;
-		std::vector<Components::TextButton*>	mButtons;
-
-		LobbyState*								mLobbyState;
+		Components::TextButton*					mBtnCreate;
+		Components::TextButton*					mBtnCancel;
 
 		void CreateComponents();
 		void CreateBuffer(float width, float height);

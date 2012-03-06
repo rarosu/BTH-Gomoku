@@ -1,18 +1,32 @@
-#include "CreateAGameState.hpp"
+#include "CreateGameState.hpp"
 #include "ServerSession.hpp"
 
 namespace State
 {
-	CreateAGameState::CreateAGameState(StateID id, ID3D10Device* device, LobbyState* lobbyState)
+	CreateGameState::CreateGameState(StateID id, ID3D10Device* device, LobbyState* lobbyState)
 		: ApplicationState(id),
-		  mDevice(device), mComponents(NULL), mDefaultFont(NULL),
-		  mLobbyState(lobbyState)
+		  mDevice(device), 
+		  mComponents(NULL), 
+		  mDefaultFont(NULL),
+		  mLobbyState(lobbyState),
+		  mIFName(NULL),
+		  mIFPort(NULL),
+		  mBtnCreate(NULL),
+		  mBtnCancel(NULL)
 	{
 		CreateBuffer((float)sViewport->GetWidth(), (float)sViewport->GetHeight());
 		CreateEffect();
+
+		mDefaultFont = new GameFont(mDevice, "Segoe Print", 48);
 	}
 
-	void CreateAGameState::CreateBuffer(float width, float height)
+	CreateGameState::~CreateGameState() throw()
+	{
+		SafeDelete(mDefaultFont);
+		SafeDelete(mComponents);
+	}
+
+	void CreateGameState::CreateBuffer(float width, float height)
 	{
 		const int numVertices = 4;
 		bgVertex vertices[numVertices];
@@ -38,7 +52,7 @@ namespace State
 		mBuffer->SetData(bufferDesc, NULL);
 	}
 	
-	void CreateAGameState::CreateEffect()
+	void CreateGameState::CreateEffect()
 	{
 		mEffect = new Effect(mDevice, "Resources/Effects/Background.fx");
 		
@@ -47,59 +61,73 @@ namespace State
 		inputLayout.push_back(InputLayoutElement("TEXCOORD", DXGI_FORMAT_R32G32_FLOAT));
 
 		mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
-	}
-
-	void CreateAGameState::CreateComponents()
-	{
-		mComponents = new Components::ComponentGroup(sRootComponentGroup, "CreateAGameState Group");
 
 		ID3D10ShaderResourceView* texture;
-		D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/marbleBG1422x800.png", NULL, NULL, 
-											   &texture, NULL);
+		D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/marbleBG1422x800.png", NULL, NULL, &texture, NULL);
 		mEffect->SetVariable("textureBG", texture);
-
-		int leftOffset = 100;
-		const std::string btnCaptions[] = { "Create", "Cancel" };
-		LONG topOffset = 430;
-		const int width = 192;
-		const int padding = 30;
-
-		for(int i = 0; i < 2; ++i)
-		{
-			mButtons.push_back(new Components::TextButton(mComponents));
-		
-			RECT buttonPos = { leftOffset + (i * (width + padding)), topOffset, 
-							   leftOffset + (i * (width + padding)) + width, topOffset + 48 };
-			mButtons[i]->Initialize(mDevice, buttonPos, btnCaptions[i]);
-		}
-
-		Components::TextButton* tempBtn = new Components::TextButton(mComponents);
-		RECT buttonPos = { leftOffset, 200, leftOffset + 414, 248 };
-		tempBtn->Initialize(mDevice, buttonPos, "1 v 1 Normal Game");
-		mButtons.push_back(tempBtn);
-
-		RECT labelPos = { leftOffset, 260, leftOffset + 90, 308 };
-		Components::Label* label = new Components::Label(mDevice, mComponents, "Port:", labelPos);
-		// Set default font
-		mDefaultFont = new GameFont(mDevice,  "Segoe Print", (labelPos.bottom - labelPos.top));
-		RECT ifPos = { labelPos.right + 10, labelPos.top, buttonPos.right, labelPos.bottom };
-		mIFPort = new Components::InputField(mDevice, mComponents, NULL, ifPos, mDefaultFont);
-		
-
-		RECT labelNPos = { leftOffset, 320, leftOffset + 90, 368 };
-		mLblName = new Components::Label(mDevice, mComponents, "Name:", labelNPos);
-		RECT ifNPos = { labelNPos.right + 10, labelNPos.top, buttonPos.right, labelNPos.bottom };
-		mIFName = new Components::InputField(mDevice, mComponents, NULL, ifNPos, mDefaultFont);
-
-		RECT labelTPos = { 0, 50, 600, 150 };
-		Components::Label* labelTitle = new Components::Label(mDevice, mComponents, "CREATE A GAME", labelTPos);
-
-		mComponents->SetFocus(mIFPort);
-		mComponents->GiveFocus();
 	}
 
-	void CreateAGameState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
+	void CreateGameState::CreateComponents()
+	{
+		// Define sizes
+		const int C_OFFSET_LEFT = 100;
+		const int C_OFFSET_TOP = 430;
+		const int C_BUTTON_WIDTH = 192;
+		const int C_BUTTON_HEIGHT = 48;
+		const int C_INPUT_FIELD_WIDTH = 192;
+		const int C_INPUT_FIELD_HEIGHT = 48;
+		const int C_LABEL_WIDTH = 220;
+		const int C_LABEL_HEIGHT = 48;
+		RECT r;
+
+		// Create all the components and put them in the right place
+		mComponents = new Components::ComponentGroup(sRootComponentGroup, "CreateGameState Group");
+
+		r.left = C_OFFSET_LEFT;
+		r.right = r.left + C_LABEL_WIDTH;
+		r.top = C_OFFSET_TOP;
+		r.bottom = r.top + C_LABEL_HEIGHT;
+		new Components::Label(mDevice, mComponents, "Name:", r);
+
+		r.left = C_OFFSET_LEFT + C_LABEL_WIDTH;
+		r.right = r.left + C_INPUT_FIELD_WIDTH;
+		r.bottom = r.top + C_INPUT_FIELD_HEIGHT;
+		mIFName = new Components::InputField(mDevice, mComponents, NULL, r, mDefaultFont);
+
+		r.left = C_OFFSET_LEFT;
+		r.right = r.left + C_LABEL_WIDTH;
+		r.top = C_OFFSET_TOP + C_LABEL_HEIGHT * 2;
+		r.bottom = r.top + C_LABEL_HEIGHT;
+		new Components::Label(mDevice, mComponents, "Port:", r);
+
+		r.left = C_OFFSET_LEFT + C_LABEL_WIDTH;
+		r.right = r.left + C_INPUT_FIELD_WIDTH;
+		r.bottom = r.top + C_INPUT_FIELD_HEIGHT;
+		mIFPort = new Components::InputField(mDevice, mComponents, NULL, r, mDefaultFont);
+
+		r.left = C_OFFSET_LEFT;
+		r.right = r.left + C_BUTTON_WIDTH;
+		r.top = C_OFFSET_TOP + C_LABEL_HEIGHT * 4;
+		r.bottom = r.top + C_BUTTON_HEIGHT;
+		mBtnCreate = new Components::TextButton(mComponents);
+		mBtnCreate->Initialize(mDevice, r, "Create Game");
+
+		r.left = C_OFFSET_LEFT + C_BUTTON_WIDTH * 2;
+		r.right = r.left + C_BUTTON_WIDTH;
+		mBtnCancel = new Components::TextButton(mComponents);
+		mBtnCancel->Initialize(mDevice, r, "Cancel");
+
+		// Set the initial focus, and focus this component group
+		mComponents->SetFocus(mIFPort);
+		mComponents->GiveFocus();	
+	}
+
+	void CreateGameState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
 	{	
+		if (mBtnCancel->GetAndResetClickStatus())
+			ChangeState(C_STATE_MENU);
+
+		/*
 		if (mIFName->Empty() || mIFPort->Empty())
 			mButtons[CAGButton::Create]->SetEnabled(false);
 		else
@@ -127,9 +155,10 @@ namespace State
 			ChangeState(C_STATE_MENU);
 
 		mComponents->Update(gameTime, currInput, prevInput);
+		*/
 	}
 
-	void CreateAGameState::Draw()
+	void CreateGameState::Draw()
 	{
 		mBuffer->Bind();
 		for(UINT p = 0; p < mEffect->GetTechniqueByIndex(0).GetPassCount(); ++p)
@@ -138,19 +167,22 @@ namespace State
 			mBuffer->Draw();
 		}
 
-		mComponents->Draw();
+		//mComponents->Draw();
 	}
 
-	void CreateAGameState::OnStatePushed()
+	void CreateGameState::OnStatePushed()
 	{
 		CreateComponents();
 	}
 
-	void CreateAGameState::OnStatePopped()
+	void CreateGameState::OnStatePopped()
 	{
 		sRootComponentGroup->RemoveComponent(mComponents);
+
 		mComponents = NULL;
-		mButtons.clear();
-		mDefaultFont = NULL;
+		mIFName = NULL;
+		mIFPort = NULL;
+		mBtnCreate = NULL;
+		mBtnCancel = NULL;
 	}
 }

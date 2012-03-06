@@ -271,7 +271,7 @@
     <ClInclude Include="Include\Scene\Marker.hpp" />
     <ClInclude Include="Include\Scene\Scene.hpp" />
     <ClInclude Include="Include\State\ApplicationState.hpp" />
-    <ClInclude Include="Include\State\CreateAGameState.hpp" />
+    <ClInclude Include="Include\State\CreateGameState.hpp" />
     <ClInclude Include="Include\State\InGameState.hpp" />
     <ClInclude Include="Include\State\JoinGameState.hpp" />
     <ClInclude Include="Include\State\LobbyState.hpp" />

@@ -21,7 +21,9 @@ namespace State
 
 	void JoinGameState::OnStatePopped()
 	{
-		SafeDelete(mComponents);
+		sRootComponentGroup->RemoveComponent(mComponents);
+
+		mComponents = NULL;
 		mNameField = NULL;
 		mIPAddressField = NULL;
 		mPortField = NULL;
