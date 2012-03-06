@@ -47,12 +47,12 @@ namespace State
 
 		static const std::string C_MENU_CAPTIONS[];
 
-		ID3D10Device*							mDevice;
-		Effect*									mEffect;
-		VertexBuffer*							mBuffer;
-		std::vector<Components::MenuItem*>		mButtons;
-		Components::ClickMenu*					mMenuButtons;
-		Components::ComponentGroup*				mComponents;
+		ID3D10Device*								mDevice;
+		Effect*										mEffect;
+		VertexBuffer*								mBuffer;
+		std::vector<Components::ClickMenuItem*>		mButtons;
+		Components::ClickMenu*						mMenuButtons;
+		Components::ComponentGroup*					mComponents;
 
 		void CreateBuffer(float width, float height);
 		void CreateEffect();

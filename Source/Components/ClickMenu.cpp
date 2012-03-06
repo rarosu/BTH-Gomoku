@@ -3,18 +3,22 @@
 // Menu Item
 namespace Components
 {
-	MenuItem::MenuItem(ClickMenu* ownerGroup)
+	ClickMenuItem::ClickMenuItem(ClickMenu* ownerGroup)
 		: Button(ownerGroup),
-		  mSubMenu(NULL), mFont (NULL), mTextColor(D3DXCOLOR(1.0, 1.0, 1.0, 1.0))
+		  mSubMenu(NULL), 
+		  mFont (NULL), 
+		  mTextColor(D3DXCOLOR(1.0, 1.0, 1.0, 1.0)),
+		  mSubMenuState(ClickMenuState::Collapsed),
+		  mSubMenuInterpolation(0.0f)
 	{
 	}
 
-	MenuItem::~MenuItem() throw()
+	ClickMenuItem::~ClickMenuItem() throw()
 	{
 		SafeDelete(mFont);
 	}
 
-	void MenuItem::Initialize(ID3D10Device* device, RECT position, const std::string& caption)
+	void ClickMenuItem::Initialize(ID3D10Device* device, RECT position, const std::string& caption)
 	{
 		Graphics buttonGraphics;
 		buttonGraphics.activeColor = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f);
@@ -30,20 +34,27 @@ namespace Components
 		mCaption = caption;
 	}
 
-	void MenuItem::AddSubItem(const std::string& caption)
+	void ClickMenuItem::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
 	{
-		if(mSubMenu == NULL)
-		{
-			int width = mPositionRect.right - mPositionRect.left;
-			int height = mPositionRect.bottom - mPositionRect.top;
-			POINT subPos = { mPositionRect.right, mPositionRect.top };
-			mSubMenu = new ClickMenu(mOwner, mDevice, subPos, width, height);
-		}
+		Button::Update(gameTime, currInputState, prevInputState);
 
-		mSubMenu->AddMenuItem(caption);
+		if (mSubMenu != NULL)
+		{
+			if (GetAndResetClickStatus())
+			{
+				if (mSubMenuState == ClickMenuState::Collapsed || mSubMenuState == ClickMenuState::Collapsing)
+				{
+					mSubMenuState = ClickMenuState::Opening;
+				}
+				else
+				{
+					mSubMenuState = ClickMenuState::Collapsing;
+				}
+			}
+		}
 	}
 
-	void MenuItem::Draw()
+	void ClickMenuItem::Draw()
 	{
 		Button::Draw();
 		if(IsEnabled())
@@ -57,13 +68,30 @@ namespace Components
 			mFont->WriteText(mCaption, &mPositionRect, D3DXCOLOR(0.5, 0.5, 0.5, 1.0), GameFont::Center, GameFont::Middle);
 	}
 
+
+
+	void ClickMenuItem::AddSubItem(const std::string& caption)
+	{
+		if(mSubMenu == NULL)
+		{
+			int width = mPositionRect.right - mPositionRect.left;
+			int height = mPositionRect.bottom - mPositionRect.top;
+			POINT subPos = { mPositionRect.right, mPositionRect.top };
+			mSubMenu = new ClickMenu(mOwner, mDevice, subPos, width, height);
+		}
+
+		mSubMenu->AddMenuItem(caption);
+	}
+
+	
+
 	// DEBUG
-	std::string MenuItem::GetName()
+	std::string ClickMenuItem::GetName()
 	{
 		return "MenuItem: " + mCaption;
 	}
 
-	ClickMenu* MenuItem::GetSubMenu()
+	ClickMenu* ClickMenuItem::GetSubMenu()
 	{
 		return mSubMenu;
 	}
@@ -84,7 +112,7 @@ namespace Components
 
 	void ClickMenu::AddMenuItem(const std::string& caption)
 	{
-		MenuItem* newItem = new MenuItem(this);
+		ClickMenuItem* newItem = new ClickMenuItem(this);
 		LONG yTop = mPositionRect.top + (mItemHeight * mItems.size());
 		LONG yBottom = yTop + mItemHeight;
 		RECT pos = { mPositionRect.left, yTop, mPositionRect.right, yBottom };
@@ -92,6 +120,12 @@ namespace Components
 		
 		mItems[caption] = newItem;
 		mPositionRect.bottom = yBottom;
+	}
+
+	void ClickMenu::SetPosition(const POINT& position)
+	{
+		RECT pos = { position.x, position.y, position.x + mItemWidth, position.y + (mPositionRect.bottom - mPositionRect.top) };
+		mPositionRect = pos;
 	}
 
 	bool ClickMenu::GetAndResetClickStatus(const std::string& caption)
@@ -104,7 +138,7 @@ namespace Components
 		return false;
 	}
 
-	MenuItem* ClickMenu::GetMenuItem(const std::string& caption)
+	ClickMenuItem* ClickMenu::GetMenuItem(const std::string& caption)
 	{
 		ItemMap::iterator it = mItems.find(caption);
 
