@@ -208,7 +208,7 @@
     <ClCompile Include="Source\Scene\Marker.cpp" />
     <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\State\ApplicationState.cpp" />
-    <ClCompile Include="Source\State\CreateAGameState.cpp" />
+    <ClCompile Include="Source\State\CreateGameState.cpp" />
     <ClCompile Include="Source\State\InGameState.cpp" />
     <ClCompile Include="Source\State\JoinGameState.cpp" />
     <ClCompile Include="Source\State\LobbyState.cpp" />

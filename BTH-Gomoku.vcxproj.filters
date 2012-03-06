@@ -53,7 +53,6 @@
     <ClCompile Include="Source\Network\Messages\StartGameMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\LeaveGameMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\StayAliveMessage.cpp" />
-    <ClCompile Include="Source\State\CreateAGameState.cpp" />
     <ClCompile Include="Source\State\LobbyState.cpp" />
     <ClCompile Include="Source\Components\List.cpp" />
     <ClCompile Include="Source\Logic\Grid\Direction.cpp" />
@@ -61,6 +60,7 @@
     <ClCompile Include="Source\State\JoinGameState.cpp" />
     <ClCompile Include="Source\Logic\Player.cpp" />
     <ClCompile Include="Source\Network\Messages\JoinMessage.cpp" />
+    <ClCompile Include="Source\State\CreateGameState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
