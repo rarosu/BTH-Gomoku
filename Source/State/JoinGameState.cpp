@@ -5,7 +5,7 @@ namespace State
 	JoinGameState::JoinGameState(StateID id, ID3D10Device* device)
 		: ApplicationState(id), mDevice(device), mDefaultFont(NULL)
 	{
-		mDefaultFont = new GameFont(mDevice,  "Segoe Print", 20);
+		mDefaultFont = new GameFont(mDevice,  "Segoe Print", 40);
 	}
 
 	JoinGameState::~JoinGameState() throw()
@@ -87,6 +87,9 @@ namespace State
 		r.bottom = r.top + K_BUTTON_HEIGHT;
 		mCancelButton = new Components::TextButton(mComponents);
 		mCancelButton->Initialize(mDevice, r, "CANCEL");
+
+		mComponents->SetFocus(mNameField);
+		mComponents->GiveFocus();
 		
 	}
 }
