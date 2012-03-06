@@ -3,6 +3,8 @@
 
 #include "WinInclude.hpp"
 #include "ApplicationState.hpp"
+#include "Buffer.hpp"
+#include "Effect.hpp"
 #include "InputField.hpp"
 #include "TextButton.hpp"
 
@@ -20,7 +22,16 @@ namespace State
 		void Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime);
 		void Draw();
 	private:
+		struct bgVertex
+		{
+			D3DXVECTOR2		position;
+			D3DXVECTOR2		uv;
+		};
+
 		ID3D10Device*				mDevice;
+		GameFont*					mDefaultFont;
+		VertexBuffer*				mBuffer;
+		Effect*						mEffect;
 
 		Components::ComponentGroup*	mComponents;
 
@@ -30,9 +41,11 @@ namespace State
 		Components::TextButton*		mJoinButton;
 		Components::TextButton*		mCancelButton;
 
-		GameFont*					mDefaultFont;
+
 
 		void CreateComponents();
+		void CreateBuffer();
+		void CreateEffect();
 	};
 }
 

@@ -24,6 +24,8 @@ namespace State
 	{
 		SafeDelete(mDefaultFont);
 		SafeDelete(mComponents);
+		SafeDelete(mBuffer);
+		SafeDelete(mEffect);
 	}
 
 	void CreateGameState::CreateBuffer(float width, float height)
@@ -73,12 +75,14 @@ namespace State
 		const int C_OFFSET_LEFT = 100;
 		const int C_OFFSET_TOP = 430;
 		const int C_BUTTON_WIDTH = 192;
-		const int C_BUTTON_HEIGHT = 48;
+		const int C_BUTTON_HEIGHT = mDefaultFont->GetSize();
 		const int C_INPUT_FIELD_WIDTH = 192;
-		const int C_INPUT_FIELD_HEIGHT = 48;
+		const int C_INPUT_FIELD_HEIGHT = mDefaultFont->GetSize();
 		const int C_LABEL_WIDTH = 220;
-		const int C_LABEL_HEIGHT = 48;
+		const int C_LABEL_HEIGHT = mDefaultFont->GetSize();
 		RECT r;
+
+
 
 		// Create all the components and put them in the right place
 		mComponents = new Components::ComponentGroup(sRootComponentGroup, "CreateGameState Group");
@@ -93,6 +97,7 @@ namespace State
 		r.right = r.left + C_INPUT_FIELD_WIDTH;
 		r.bottom = r.top + C_INPUT_FIELD_HEIGHT;
 		mIFName = new Components::InputField(mDevice, mComponents, NULL, r, mDefaultFont);
+		mIFName->SetText("Admin");
 
 		r.left = C_OFFSET_LEFT;
 		r.right = r.left + C_LABEL_WIDTH;
@@ -104,6 +109,7 @@ namespace State
 		r.right = r.left + C_INPUT_FIELD_WIDTH;
 		r.bottom = r.top + C_INPUT_FIELD_HEIGHT;
 		mIFPort = new Components::InputField(mDevice, mComponents, NULL, r, mDefaultFont);
+		mIFPort->SetText("6666");
 
 		r.left = C_OFFSET_LEFT;
 		r.right = r.left + C_BUTTON_WIDTH;
@@ -117,6 +123,8 @@ namespace State
 		mBtnCancel = new Components::TextButton(mComponents);
 		mBtnCancel->Initialize(mDevice, r, "Cancel");
 
+
+
 		// Set the initial focus, and focus this component group
 		mComponents->SetFocus(mIFPort);
 		mComponents->GiveFocus();	
@@ -125,37 +133,40 @@ namespace State
 	void CreateGameState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
 	{	
 		if (mBtnCancel->GetAndResetClickStatus())
-			ChangeState(C_STATE_MENU);
-
-		/*
-		if (mIFName->Empty() || mIFPort->Empty())
-			mButtons[CAGButton::Create]->SetEnabled(false);
-		else
 		{
-			mButtons[CAGButton::Create]->SetEnabled(true);
-			if(mButtons[CAGButton::Create]->GetAndResetClickStatus())
-			{
-				Logic::ServerParameters args;
-				args.mAdminName = mIFName->GetText();
-				
-				std::stringstream s;
-				s.str(mIFPort->GetText());
-				if (s >> args.mPort)
-				{
-					args.mRuleset = new Logic::StandardRuleset();
-					Logic::ServerSession* session = new Logic::ServerSession(args);
-					mLobbyState->SetSession(session);
-					ChangeState(C_STATE_LOBBY);
-				}
-
-				
-			}
-		}
-		if(mButtons[CAGButton::Cancel]->GetAndResetClickStatus())
 			ChangeState(C_STATE_MENU);
+			return;
+		}
 
-		mComponents->Update(gameTime, currInput, prevInput);
-		*/
+
+		Logic::ServerParameters args;
+		std::stringstream s;
+
+		// Basic check to see if the port is valid
+		s.str(mIFPort->GetText());
+		if (!(s >> args.mPort))
+		{
+			mBtnCreate->SetEnabled(false);
+			return;
+		}
+
+		// Basic check to see if the name is valid (non-empty)
+		args.mAdminName = mIFName->GetText();
+		if (args.mAdminName.empty())
+		{
+			mBtnCreate->SetEnabled(false);
+			return;
+		}
+
+		// All is fine (so far)! Allow creation of server.
+		mBtnCreate->SetEnabled(true);
+
+		if (mBtnCreate->GetAndResetClickStatus())
+		{
+			args.mRuleset = new Logic::StandardRuleset();
+
+			// TODO: Attempt to create a server here, and report failure in some nifty way.
+		}
 	}
 
 	void CreateGameState::Draw()
@@ -166,8 +177,6 @@ namespace State
 			mEffect->GetTechniqueByIndex(0).GetPassByIndex(p).Apply(mDevice);
 			mBuffer->Draw();
 		}
-
-		//mComponents->Draw();
 	}
 
 	void CreateGameState::OnStatePushed()
