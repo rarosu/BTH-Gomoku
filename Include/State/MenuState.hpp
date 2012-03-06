@@ -46,6 +46,7 @@ namespace State
 		};
 
 		static const std::string C_MENU_CAPTIONS[];
+		static const std::string C_START_GAME_CAPTIONS[];
 
 		ID3D10Device*								mDevice;
 		Effect*										mEffect;

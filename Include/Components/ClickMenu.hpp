@@ -12,7 +12,7 @@ namespace Components
 
 	namespace ClickMenuState
 	{
-		enum ClickMenuState { Collapsed, Opening, Collapsing, Opened };
+		enum ClickMenuState { Collapsed, Opened };
 	}
 
 	class ClickMenuItem : public Button
@@ -33,7 +33,6 @@ namespace Components
 	private:
 		ClickMenu*						mSubMenu;
 		ClickMenuState::ClickMenuState	mSubMenuState;
-		double							mSubMenuInterpolation;
 
 		GameFont*						mFont;
 		std::string						mCaption;

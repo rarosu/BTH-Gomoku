@@ -8,10 +8,8 @@ namespace Components
 		  mSubMenu(NULL), 
 		  mFont (NULL), 
 		  mTextColor(D3DXCOLOR(1.0, 1.0, 1.0, 1.0)),
-		  mSubMenuState(ClickMenuState::Collapsed),
-		  mSubMenuInterpolation(0.0f)
-	{
-	}
+		  mSubMenuState(ClickMenuState::Collapsed)
+	{}
 
 	ClickMenuItem::~ClickMenuItem() throw()
 	{
@@ -42,14 +40,10 @@ namespace Components
 		{
 			if (GetAndResetClickStatus())
 			{
-				if (mSubMenuState == ClickMenuState::Collapsed || mSubMenuState == ClickMenuState::Collapsing)
-				{
-					mSubMenuState = ClickMenuState::Opening;
-				}
+				if (mSubMenuState == ClickMenuState::Collapsed)
+					mSubMenuState = ClickMenuState::Opened;
 				else
-				{
-					mSubMenuState = ClickMenuState::Collapsing;
-				}
+					mSubMenuState = ClickMenuState::Collapsed;
 			}
 		}
 	}
