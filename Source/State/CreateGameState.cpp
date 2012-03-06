@@ -166,6 +166,7 @@ namespace State
 			args.mRuleset = new Logic::StandardRuleset();
 
 			// TODO: Attempt to create a server here, and report failure in some nifty way.
+			
 		}
 	}
 
