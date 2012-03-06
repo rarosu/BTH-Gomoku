@@ -208,6 +208,7 @@
     <ClCompile Include="Source\State\ApplicationState.cpp" />
     <ClCompile Include="Source\State\CreateAGameState.cpp" />
     <ClCompile Include="Source\State\InGameState.cpp" />
+    <ClCompile Include="Source\State\JoinGameState.cpp" />
     <ClCompile Include="Source\State\LobbyState.cpp" />
     <ClCompile Include="Source\State\MenuState.cpp" />
     <ClCompile Include="Source\State\StateRegistry.cpp" />
@@ -270,6 +271,7 @@
     <ClInclude Include="Include\State\ApplicationState.hpp" />
     <ClInclude Include="Include\State\CreateAGameState.hpp" />
     <ClInclude Include="Include\State\InGameState.hpp" />
+    <ClInclude Include="Include\State\JoinGameState.hpp" />
     <ClInclude Include="Include\State\LobbyState.hpp" />
     <ClInclude Include="Include\State\MenuState.hpp" />
     <ClInclude Include="Include\State\StateRegistry.hpp" />

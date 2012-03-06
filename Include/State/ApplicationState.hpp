@@ -22,6 +22,7 @@ namespace State
 	const StateID C_STATE_LOBBY			= 2;
 	const StateID C_STATE_IN_GAME		= 3;
 	const StateID C_STATE_CREATE_GAME	= 4;
+	const StateID C_STATE_JOIN_GAME		= 5;
 
 	/**
 		Abstract class for an application state

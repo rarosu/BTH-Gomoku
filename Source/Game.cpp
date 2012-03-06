@@ -4,6 +4,8 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth,
 	D3DApplication(applicationInstance, windowTitle, clientWidth, clientHeight),
 	mMenuState(NULL),
 	mInGameState(NULL),
+	mCreateGameState(NULL),
+	mJoinGameState(NULL),
 	mDefaultFont(NULL),
 	mRootComponentGroup(NULL)
 {
@@ -28,6 +30,7 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth,
 	mLobbyState = new State::LobbyState(State::C_STATE_LOBBY, mDeviceD3D);
 	mInGameState = new State::InGameState(State::C_STATE_IN_GAME, mDeviceD3D);
 	mCreateGameState = new State::CreateAGameState(State::C_STATE_CREATE_GAME, mDeviceD3D);
+	mJoinGameState = new State::JoinGameState(State::C_STATE_JOIN_GAME, mDeviceD3D);
 
 	// Start the application in InGameState
 	State::ApplicationState::sStack.ChangeState(mMenuState);

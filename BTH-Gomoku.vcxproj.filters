@@ -59,6 +59,7 @@
     <ClCompile Include="Source\Components\List.cpp" />
     <ClCompile Include="Source\Logic\Grid\Direction.cpp" />
     <ClCompile Include="Source\Components\ClickMenu.cpp" />
+    <ClCompile Include="Source\State\JoinGameState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -122,6 +123,7 @@
     <ClInclude Include="Include\State\LobbyState.hpp" />
     <ClInclude Include="Include\Components\List.hpp" />
     <ClInclude Include="Include\Components\ClickMenu.hpp" />
+    <ClInclude Include="Include\State\JoinGameState.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

@@ -11,6 +11,7 @@
 #include "MenuState.hpp"
 #include "LobbyState.hpp"
 #include "InGameState.hpp"
+#include "JoinGameState.hpp"
 #include "CreateAGameState.hpp"
 
 class Game : public D3DApplication
@@ -35,6 +36,7 @@ private:
 	State::InGameState*			mInGameState;
 	State::LobbyState*			mLobbyState;
 	State::CreateAGameState*	mCreateGameState;
+	State::JoinGameState*		mJoinGameState;
 
 protected:
 	void ProgramLoop();
