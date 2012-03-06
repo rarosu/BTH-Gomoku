@@ -1,6 +1,7 @@
 #include "ListenSocket.hpp"
 #include <sstream>
 #include <iostream>
+#include <stdexcept>
 
 namespace Network
 {
@@ -12,10 +13,10 @@ namespace Network
 
 	ListenSocket::~ListenSocket()
 	{
-		
+		Shutdown();
 	}
 
-	int ListenSocket::Bind(unsigned short port)
+	void ListenSocket::Bind(unsigned short port)
 	{
 		int result;
 		int error = 0;
@@ -35,15 +36,23 @@ namespace Network
 		result = getaddrinfo(NULL, s.str().c_str(), &hints, &addrResult);
 		if (result != 0)
 		{
-			std::cerr << "getaddrinfo failed: " << result << std::endl;
+			std::stringstream ss;
+
+			ss << "getaddrinfo failed: " << result;
+			throw std::runtime_error(ss.str());
+
 		}
 		mSocket = socket(addrResult->ai_family, addrResult->ai_socktype, addrResult->ai_protocol);
 
 		if (mSocket == INVALID_SOCKET)
 		{
 			error = WSAGetLastError();
-			std::cerr << "Error at socket(): " << error << std::endl;
 			freeaddrinfo(addrResult);
+
+			std::stringstream ss;
+			ss << "Error at socket(): " << error;
+
+			throw std::runtime_error(ss.str());
 		}
 		unsigned long mode = 1;
 		ioctlsocket(mSocket, FIONBIO, &mode);
@@ -53,13 +62,15 @@ namespace Network
 		if (result == SOCKET_ERROR)
 		{
 			error = WSAGetLastError();
-			std::cerr << "bind failed with error: " << error << std::endl;
 			freeaddrinfo(addrResult);
+
+			std::stringstream ss;
+			ss << "bind failed with error: " << error;
+
+			throw std::runtime_error(ss.str());
 		}
 
 		freeaddrinfo(addrResult);
-
-		return error;
 	}
 
 	SOCKET ListenSocket::Accept()
@@ -71,7 +82,10 @@ namespace Network
 		if (result == SOCKET_ERROR)
 		{
 			result = WSAGetLastError();
-			std::cerr << "Listen failed with error: " << result << std::endl;
+
+			std::stringstream ss;
+			ss << "listen failed with error: " << result;
+			throw std::runtime_error(ss.str());
 		}
 
 		// Accept a client socket
@@ -79,7 +93,10 @@ namespace Network
 		if (s == INVALID_SOCKET)
 		{
 			result = WSAGetLastError();
-			//std::cerr << "accept failed: " << result << std::endl;
+			std::stringstream ss;
+			ss << "accept failed: " << result;
+
+			throw std::runtime_error(ss.str());
 		}
 		else
 		{
@@ -96,6 +113,8 @@ namespace Network
 		{
 			shutdown(mSocket, SD_BOTH);
 			closesocket(mSocket);
+
+			mSocket = INVALID_SOCKET;
 		}
 	}
 }

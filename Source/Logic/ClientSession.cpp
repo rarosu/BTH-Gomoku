@@ -2,10 +2,10 @@
 
 namespace Logic
 {
-	ClientSession::ClientSession(const std::string& IPAddress, unsigned short port):
-		mClient(IPAddress.c_str(), port)
+	ClientSession::ClientSession(const ClientParameters& parameters)
+		: mClient(parameters.mIPAddress.c_str(), parameters.mPort)
 	{
-		
+		//mClient.Send(Network::JoinMessage(parameters.PlayerName));
 	}
 
 	ClientSession::~ClientSession()

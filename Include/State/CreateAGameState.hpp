@@ -9,6 +9,7 @@
 #include "Label.hpp"
 #include "InputField.hpp"
 #include "GameFont.hpp"
+#include "LobbyState.hpp"
 
 namespace State
 {
@@ -25,14 +26,13 @@ namespace State
 	class CreateAGameState : public ApplicationState
 	{
 	public:
-		CreateAGameState(StateID id, ID3D10Device* device);
+		CreateAGameState(StateID id, ID3D10Device* device, LobbyState* lobbyState);
 
 		void Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime);
 		void Draw();
 
 		void OnStatePushed();
 		void OnStatePopped();
-
 	private:
 		struct bgVertex
 		{
@@ -49,6 +49,8 @@ namespace State
 		GameFont*								mDefaultFont;
 		Components::Label*						mLblName;
 		Components::InputField*					mIFName;
+
+		LobbyState*								mLobbyState;
 
 		void CreateComponents();
 		void CreateBuffer(float width, float height);

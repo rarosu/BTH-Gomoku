@@ -3,8 +3,11 @@
 
 namespace Network
 {
-	Server::Server(int maxClients, unsigned short port):
-	mPort(port), mMaxClients(maxClients), mListenSocket(maxClients)
+	Server::Server(ServerEventInterface* eventInterface, int maxClients, unsigned short port)
+		: mEventInterface(eventInterface)
+		, mPort(port)
+		, mMaxClients(maxClients)
+		, mListenSocket(maxClients)
 	{
 		WSADATA wsaData;
 
@@ -41,11 +44,12 @@ namespace Network
 			s = mListenSocket.Accept();
 
 			if (s != INVALID_SOCKET)
+			{
+				// Add client and notify connect
 				mClients.push_back(ComSocket(s));
+				mEventInterface->ClientConnected(mClients.size() - 1);
+			}
 		}
-
-		
-
 	
 		for (unsigned int i = 0; i < mClients.size(); ++i)
 		{

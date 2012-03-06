@@ -22,10 +22,10 @@ namespace Network
 	{
 	public:
 		std::string Flatten() const;
+
+		virtual int ID() const = 0;
 	protected:
 		virtual std::string FlattenArguments() const = 0;
-		virtual int ID() const = 0;
-	private:
 	};
 
 	class MessageFactory

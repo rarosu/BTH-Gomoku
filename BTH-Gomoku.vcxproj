@@ -183,6 +183,7 @@
     <ClCompile Include="Source\Logic\Grid\Direction.cpp" />
     <ClCompile Include="Source\Logic\Grid\Grid.cpp" />
     <ClCompile Include="Source\Logic\ClientSession.cpp" />
+    <ClCompile Include="Source\Logic\Player.cpp" />
     <ClCompile Include="Source\Logic\ServerSession.cpp" />
     <ClCompile Include="Source\Logic\Session.cpp" />
     <ClCompile Include="Source\main.cpp" />
@@ -246,6 +247,7 @@
     <ClInclude Include="Include\Logic\ClientSession.hpp" />
     <ClInclude Include="Include\Logic\Player.hpp" />
     <ClInclude Include="Include\Logic\PlayerController.hpp" />
+    <ClInclude Include="Include\Logic\Ruleset.hpp" />
     <ClInclude Include="Include\Logic\ServerSession.hpp" />
     <ClInclude Include="Include\Logic\Session.hpp" />
     <ClInclude Include="Include\Network\Messages\AcceptMessage.hpp" />
