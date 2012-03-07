@@ -45,9 +45,8 @@ namespace State
 	void InGameState::OnStatePopped()
 	{
 		SafeDelete(mGrid);
-
+		sRootComponentGroup->RemoveComponent(mComponents);
 		mComponents = NULL;
-		//SafeDelete(mDragonAgeMenu);
 	}
 
 	void InGameState::OnResize()
