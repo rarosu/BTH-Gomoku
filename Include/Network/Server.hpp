@@ -18,8 +18,11 @@ namespace Network
 	class Server
 	{
 	public:
-		Server(ServerEventInterface* eventInterface, int maxClients, unsigned short port = 6666);
+		Server(int maxClients, unsigned short port = 6666);
 		~Server();
+
+		void SetEventInterface(ServerEventInterface* e);
+		const ServerEventInterface* GetEventInterface() const;
 
 		int GetPort() const;
 		void Update();

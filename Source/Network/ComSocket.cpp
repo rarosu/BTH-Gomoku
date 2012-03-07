@@ -6,7 +6,6 @@
 
 namespace Network
 {
-
 	ComSocket::ComSocket()
 		: mSocket(INVALID_SOCKET), mConnected(false)
 	{

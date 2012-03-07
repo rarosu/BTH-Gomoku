@@ -165,8 +165,19 @@ namespace State
 		{
 			args.mRuleset = new Logic::StandardRuleset();
 
-			// TODO: Attempt to create a server here, and report failure in some nifty way.
+			try
+			{
+				Network::Server server(args.mRuleset->GetPlayerCount(), args.mPort);
+			}
+			catch (Network::BindException e)
+			{
+				// TODO: Report error here
+				MessageBox(NULL, e.what(), "Bind Error", MB_OK | MB_ICONERROR);
+				return;
+			}
 			
+			// TODO: Forward server to LobbyState
+			// TODO: Switch to LobbyState
 		}
 	}
 

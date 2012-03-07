@@ -1,10 +1,10 @@
 #include "Server.hpp"
-#include <iostream>
+#include <sstream>
 
 namespace Network
 {
-	Server::Server(ServerEventInterface* eventInterface, int maxClients, unsigned short port)
-		: mEventInterface(eventInterface)
+	Server::Server(int maxClients, unsigned short port)
+		: mEventInterface(NULL)
 		, mPort(port)
 		, mMaxClients(maxClients)
 		, mListenSocket(maxClients)
@@ -13,9 +13,12 @@ namespace Network
 
 		int result;
 		result = WSAStartup(MAKEWORD(2,2), &wsaData);
-		if (result != 0)
+		if (result == SOCKET_ERROR)
 		{
-			std::cerr << "WSAStartup failed: " << result << std::endl;
+			std::stringstream ss;
+			ss << "WSAStartup failed: " << WSAGetLastError();
+
+			throw std::runtime_error(ss.str());
 		}
 
 		mListenSocket.Bind(port);
@@ -29,6 +32,16 @@ namespace Network
 
 		WSACleanup();
 
+	}
+
+	void Server::SetEventInterface(ServerEventInterface* e)
+	{
+		mEventInterface = e;
+	}
+
+	const ServerEventInterface* Server::GetEventInterface() const
+	{
+		return mEventInterface;
 	}
 
 	int Server::GetPort() const
@@ -47,16 +60,29 @@ namespace Network
 			{
 				// Add client and notify connect
 				mClients.push_back(ComSocket(s));
-				mEventInterface->ClientConnected(mClients.size() - 1);
+
+				if (mEventInterface != NULL)
+					mEventInterface->ClientConnected(mClients.size() - 1);
 			}
 		}
 	
 		for (unsigned int i = 0; i < mClients.size(); ++i)
 		{
-			mClients[i].Update();
-			std::string m;
-			while ((m = mClients[i].PopMessage()) != "")
-				mMessageQueue.push_back(m);
+			if (mClients[i].IsConnected())
+			{
+				mClients[i].Update();
+				std::string m;
+				while ((m = mClients[i].PopMessage()) != "")
+					mMessageQueue.push_back(m);
+			}
+			else
+			{
+				mClients.erase(mClients.begin() + i);
+				--i;
+
+				if (mEventInterface != NULL)
+					mEventInterface->ClientDisconnected(i);
+			}
 		}
 		
 	}

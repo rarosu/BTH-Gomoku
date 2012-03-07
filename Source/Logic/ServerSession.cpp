@@ -3,9 +3,10 @@
 namespace Logic
 {
 	ServerSession::ServerSession(const ServerParameters& parameters) 
-		: mServer(this, parameters.mRuleset->GetPlayerCount(), parameters.mPort)
+		: mServer(parameters.mRuleset->GetPlayerCount(), parameters.mPort)
 		, mRuleset(parameters.mRuleset)
 	{
+		mServer.SetEventInterface(this);
 		mPlayers.resize(mRuleset->GetPlayerCount());
 		
 		// TODO: Set admin to local controller

@@ -5,6 +5,19 @@
 
 namespace Network
 {
+	BindException::BindException(int port, int errorCode)
+		: mPort(port), mErrorCode(errorCode), std::runtime_error("")
+	{}
+
+	const char* BindException::what() const
+	{
+		std::stringstream ss;
+		ss << "Failed to bind to port: " << mPort << " with error: " << mErrorCode;
+		return ss.str().c_str();
+	}
+
+
+
 	ListenSocket::ListenSocket(int maxClients):
 		mSocket(INVALID_SOCKET), mMaxClients(maxClients)
 	{
@@ -36,24 +49,17 @@ namespace Network
 		result = getaddrinfo(NULL, s.str().c_str(), &hints, &addrResult);
 		if (result != 0)
 		{
-			std::stringstream ss;
-
-			ss << "getaddrinfo failed: " << result;
-			throw std::runtime_error(ss.str());
+			throw BindException(port, result);
 
 		}
-		mSocket = socket(addrResult->ai_family, addrResult->ai_socktype, addrResult->ai_protocol);
 
+		mSocket = socket(addrResult->ai_family, addrResult->ai_socktype, addrResult->ai_protocol);
 		if (mSocket == INVALID_SOCKET)
 		{
-			error = WSAGetLastError();
 			freeaddrinfo(addrResult);
-
-			std::stringstream ss;
-			ss << "Error at socket(): " << error;
-
-			throw std::runtime_error(ss.str());
+			throw BindException(port, WSAGetLastError());
 		}
+
 		unsigned long mode = 1;
 		ioctlsocket(mSocket, FIONBIO, &mode);
 
@@ -61,13 +67,8 @@ namespace Network
 		result = bind(mSocket, addrResult->ai_addr, (int)addrResult->ai_addrlen);
 		if (result == SOCKET_ERROR)
 		{
-			error = WSAGetLastError();
 			freeaddrinfo(addrResult);
-
-			std::stringstream ss;
-			ss << "bind failed with error: " << error;
-
-			throw std::runtime_error(ss.str());
+			throw BindException(port, WSAGetLastError());
 		}
 
 		freeaddrinfo(addrResult);
