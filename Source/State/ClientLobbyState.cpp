@@ -100,15 +100,11 @@ namespace State
 			ChangeState(C_STATE_MENU);
 		}
 		*/
-
-		mComponents->Update(gameTime, currInput, prevInput);
 	}
 
 	void ClientLobbyState::Draw()
 	{
 		mBackground->Draw(D3DXVECTOR2(0.0f, 0.0f));
-
-		mComponents->Draw();
 	}
 
 	void ClientLobbyState::OnStatePushed()

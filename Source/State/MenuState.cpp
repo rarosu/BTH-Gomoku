@@ -56,7 +56,6 @@ namespace State
 	{
 		sRootComponentGroup->RemoveComponent(mComponents);
 		mComponents = NULL;
-		mButtons.clear();
 		SafeDelete(mBackground);
 	}
 
@@ -81,7 +80,6 @@ namespace State
 
 	void MenuState::Draw()
 	{
-		mComponents->Draw();
 		mBackground->Draw(D3DXVECTOR2(0, 0));
 	}
 }

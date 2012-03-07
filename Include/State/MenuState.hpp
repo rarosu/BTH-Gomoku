@@ -48,7 +48,6 @@ namespace State
 		static const std::string C_START_GAME_CAPTIONS[];
 
 		ID3D10Device*							mDevice;
-		std::vector<Components::MenuItem*>		mButtons;
 		Components::ClickMenu*					mMenuButtons;
 		Components::ComponentGroup*				mComponents;
 		Sprite*									mBackground;

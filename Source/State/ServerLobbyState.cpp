@@ -147,8 +147,6 @@ namespace State
 			SafeDelete(mSession);
 			ChangeState(C_STATE_MENU);
 		}
-
-		mComponents->Update(gameTime, currInput, prevInput);
 	}
 
 	void ServerLobbyState::Draw()
@@ -159,8 +157,6 @@ namespace State
 			mEffect->GetTechniqueByIndex(0).GetPassByIndex(p).Apply(mDevice);
 			mBuffer->Draw();
 		}
-
-		mComponents->Draw();
 	}
 
 	void ServerLobbyState::OnStatePushed()

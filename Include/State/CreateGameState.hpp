@@ -32,7 +32,6 @@ namespace State
 
 		ID3D10Device*							mDevice;
 		Components::ComponentGroup*				mComponents;
-		std::vector<Components::TextButton*>	mButtons;
 		Sprite*									mBackground;
 		GameFont*								mDefaultFont;
 		Components::Label*						mLblName;		
