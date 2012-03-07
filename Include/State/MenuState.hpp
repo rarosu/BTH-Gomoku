@@ -38,13 +38,14 @@ namespace State
 		void Draw();
 		void OnStatePushed();
 		void OnStatePopped();
-
 	private:
 		struct bgVertex
 		{
 			D3DXVECTOR2		position;
 			D3DXVECTOR2		uv;
 		};
+
+		static const std::string C_MENU_CAPTIONS[];
 
 		ID3D10Device*							mDevice;
 		Effect*									mEffect;

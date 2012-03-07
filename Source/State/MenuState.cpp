@@ -2,6 +2,8 @@
 
 namespace State
 {
+	const std::string MenuState::C_MENU_CAPTIONS[] = { "Start Game", "Watch Replay", "Credits", "Exit Game" };
+
 	MenuState::MenuState(StateID id, ID3D10Device* device) 
 		: ApplicationState(id), mDevice(device),  mEffect(NULL), mBuffer(NULL), mComponents(NULL)
 	{
@@ -28,8 +30,8 @@ namespace State
 		vertices[3].uv = D3DXVECTOR2(1, 1);
 
 		mBuffer = new VertexBuffer(mDevice);
-		VertexBuffer::Data bufferDesc;
 
+		VertexBuffer::Data bufferDesc;
 		bufferDesc.mUsage					= Usage::Default;
 		bufferDesc.mTopology				= Topology::TriangleStrip;
 		bufferDesc.mElementCount			= numVertices;
@@ -60,7 +62,6 @@ namespace State
 		mEffect->SetVariable("textureBG", texture);
 
 		// Create menu buttons
-		const std::string btnCaptions[] = { "Start Game", "Watch Replay", "Credits", "Exit Game" };
 		const int width = 300;
 		const int height = 75;
 		const int padding = 0;
@@ -71,11 +72,11 @@ namespace State
 
 		for(int i = 0; i < MenuButton::Count; ++i)
 		{
-			mMenuButtons->AddMenuItem(btnCaptions[i]);
+			mMenuButtons->AddMenuItem(C_MENU_CAPTIONS[i]);
 		}
 
-		/*mButtons[1]->SetEnabled(false);
-		mButtons[2]->SetEnabled(false);*/
+		mMenuButtons->GetMenuItem(C_MENU_CAPTIONS[MenuButton::WatchReplay])->SetEnabled(false);
+		mMenuButtons->GetMenuItem(C_MENU_CAPTIONS[MenuButton::Credits])->SetEnabled(false);
 	}
 
 	void MenuState::OnStatePushed()
@@ -93,19 +94,19 @@ namespace State
 
 	void MenuState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
 	{
+		// Handle quick exit shortcut
 		if(currInput.Keyboard.keyIsPressed[VK_ESCAPE] && !prevInput.Keyboard.keyIsPressed[VK_ESCAPE])
 			QuitApplication();
 
-		//if(mButtons[MenuButton::StartGame]->GetAndResetClickStatus())
-		//	ChangeState(C_STATE_CREATE_GAME);
-		///*if(mButtons[MenuButton::WatchReplay]->GetAndResetClickStatus())
-		//	ChangeState(C_STATE_NETWORK_LOBBY);*/
-		///*if(mButtons.at(MenuButton::Options)->GetAndResetClickStatus())
-		//	ChangeState(C_STATE_IN_GAME);*/
-		//if(mButtons[MenuButton::Exit]->GetAndResetClickStatus())
-		//	QuitApplication();
-
-		//mComponents->Update(gameTime, currInput, prevInput);
+		// Handle the menu events
+		if (mMenuButtons->GetAndResetClickStatus(C_MENU_CAPTIONS[MenuButton::StartGame]))
+			ChangeState(C_STATE_CREATE_GAME);
+		if (mMenuButtons->GetAndResetClickStatus(C_MENU_CAPTIONS[MenuButton::WatchReplay])) 
+			{} // Do nothing here yet
+		if (mMenuButtons->GetAndResetClickStatus(C_MENU_CAPTIONS[MenuButton::Credits]))
+			{} // Do nothing here yet
+		if (mMenuButtons->GetAndResetClickStatus(C_MENU_CAPTIONS[MenuButton::Exit]))
+			QuitApplication();
 	}
 
 	void MenuState::Draw()
