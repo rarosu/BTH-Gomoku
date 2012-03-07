@@ -28,16 +28,25 @@ namespace Components
 		return std::abs((float)mPositionRect.bottom - mPositionRect.top);
 	}
 
-	void Component::SetFocusThis()
-	{
-		if(mOwner)
-			mOwner->SetFocus(this);
-	}
-
 	void Component::LoseFocus()
 	{
 		if(mOwner)
-			mOwner->SetFocus(NULL);
+			mOwner->SetFocusedComponent(NULL);
+	}
+	
+	bool Component::HasFocus()
+	{
+		bool hasFocus = (mOwner->GetFocusedComponent() == this);
+		if(mOwner != NULL)
+			hasFocus = hasFocus && mOwner->HasFocus();
+
+		return hasFocus;
+	}
+
+	void Component::SetFocus()
+	{
+		if(mOwner)
+			mOwner->SetFocusedComponent(this);
 	}
 
 	bool Component::IsEnabled()

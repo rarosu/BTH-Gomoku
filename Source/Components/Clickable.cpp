@@ -67,7 +67,7 @@ namespace Components
 
 			if(mHovered)
 			{
-				SetFocusThis();
+				SetFocus();
 				MouseReleased(index);
 				mIsClicked = true;
 			}

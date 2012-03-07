@@ -6,14 +6,15 @@ const int Scene::C_GRID_HEIGHT = 64;
 const int Scene::C_CELL_SIZE = 32;
 const float Scene::C_BORDER_SIZE = 0.2f;
 
-Scene::Scene(ID3D10Device* device, float aspectRatio) :
-	mDevice(device),
-	mVertexBuffer(NULL),
-	mEffect(NULL),
-	mCellTexture(NULL),
-	mFont(NULL),
-	mCamera(NULL),
-	mCurrentPlayer(1)
+Scene::Scene(ID3D10Device* device, Components::ComponentGroup* ownerGroup, float aspectRatio) 
+	: Component(ownerGroup),
+	  mDevice(device),
+	  mVertexBuffer(NULL),
+	  mEffect(NULL),
+	  mCellTexture(NULL),
+	  mFont(NULL),
+	  mCamera(NULL),
+	  mCurrentPlayer(1)
 {
 	CreateBuffer();
 	CreateEffect();
@@ -40,7 +41,7 @@ Scene::Scene(ID3D10Device* device, float aspectRatio) :
 	mFrustum.aspectRatio = aspectRatio;
 
 	mFont = new GameFont(mDevice, "Courier New", 24, false, false);
-	mCamera = new Camera(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(1.0f, -1.0f, 1.0f), D3DXVECTOR3(0.0f, 1.0f, 0.0f), mFrustum);
+	mCamera = new Camera(D3DXVECTOR3(0.0f, 10.0f, 0.0f), D3DXVECTOR3(1.0f, -1.0f, 1.0f), D3DXVECTOR3(0.0f, 1.0f, 0.0f), mFrustum);
 	mMarker[0] = new Marker(mDevice, C_CELL_SIZE, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 	mMarker[1] = new Marker(mDevice, C_CELL_SIZE, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
 
@@ -117,6 +118,25 @@ void Scene::CreateEffect()
 	mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
 }
 
+void Scene::HandleKeyPress(const InputState& currentInput, const GameTime& gameTime)
+{
+	// Check for movement of the camera.
+	if(currentInput.Keyboard.keyIsPressed['Q'])
+		mCamera->MoveLeft(gameTime);
+	else if(currentInput.Keyboard.keyIsPressed['E'])
+		mCamera->MoveRight(gameTime);
+
+	if(currentInput.Keyboard.keyIsPressed['W'])
+		mCamera->MoveForward(gameTime);
+	else if(currentInput.Keyboard.keyIsPressed['S'])
+		mCamera->MoveBack(gameTime);
+
+	if(currentInput.Keyboard.keyIsPressed['A'])
+		mCamera->TurnHorizontal(gameTime, true);
+	else if(currentInput.Keyboard.keyIsPressed['D'])
+		mCamera->TurnHorizontal(gameTime, false);
+}
+
 void Scene::Update(const Logic::Grid& grid, const Viewport& viewport, const InputState& currentInput, const InputState& previousInput, const GameTime& gameTime)
 {
 	mCamera->Update(previousInput, currentInput, gameTime);
@@ -124,11 +144,16 @@ void Scene::Update(const Logic::Grid& grid, const Viewport& viewport, const Inpu
 	// Pick cell
 	mHoveredCell = PickCell(viewport, currentInput.Mouse.x, currentInput.Mouse.y);
 
+	if(!HasFocus())
+		return;
+
 	if (currentInput.Mouse.buttonIsPressed[C_MOUSE_LEFT] && !previousInput.Mouse.buttonIsPressed[C_MOUSE_LEFT])
 	{
 		mGrid.AddMarker(mHoveredCell, mCurrentPlayer);
 		mCurrentPlayer = (mCurrentPlayer == 1) ? 2 : 1;
 	}
+
+	HandleKeyPress(currentInput, gameTime);
 }
 
 void Scene::Draw()
@@ -180,6 +205,33 @@ void Scene::Draw()
 	mFont->WriteText(mOutputText, POINT(), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 
 	mOutputText = "";
+}
+
+void Scene::LostFocus()
+{
+
+}
+
+void Scene::GotFocus()
+{
+}
+
+std::string Scene::GetName()
+{
+	return "Scene";
+}
+
+void Scene::KeyPressed(int code, const InputState& currentState)
+{
+}
+
+void Scene::KeyReleased(int code, const InputState& currentState)
+{
+}
+
+void Scene::MouseWheelMoved(short delta, const InputState& currentState)
+{
+	mCamera->Zoom(delta);
 }
 
 void Scene::ResizeFrustum(float aspectRatio)

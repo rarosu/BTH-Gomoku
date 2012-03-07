@@ -2,6 +2,8 @@
 #define SCENE_HPP
 
 #include "Globals.hpp"
+#include "Component.hpp"
+#include "ComponentGroup.hpp"
 #include "Buffer.hpp"
 #include "Effect.hpp"
 #include "Camera.hpp"
@@ -15,27 +17,37 @@
 	The scene will render a view of the grid and is able to determine
 	what cell the mouse is hovering over
 */
-class Scene
+class Scene : public Components::Component
 {
 public:
-	Scene(ID3D10Device* device, float aspectRatio);
+	Scene(ID3D10Device* device, Components::ComponentGroup* ownerGroup, float aspectRatio);
 	~Scene() throw();
+
+	void HandleKeyPress(const InputState& currentInput, const GameTime& gameTime);
+
+	// Methods inherited from Component
+	void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState) {}
+	void Draw();
+	void LostFocus();
+	void GotFocus();
+	std::string GetName(); // DEBUG
+
+	void KeyPressed(int code, const InputState& currentState);
+	void KeyReleased(int code, const InputState& currentState);
+	void MouseWheelMoved(short delta, const InputState& currentState);
 
 	/**
 		Create a texture of the grid from the model
 	*/
-	void Update(const Logic::Grid& grid, const Viewport& viewport, const InputState& currentInput, const InputState& previousInput, const GameTime& gameTime);
-
-	/**
-		Render the grid, through the given camera
-	*/
-	void Draw();
+	void Update(const Logic::Grid& grid, const Viewport& viewport, const InputState& currentInput, 
+				const InputState& previousInput, const GameTime& gameTime);
 
 	/**
 		When the frustum's dimensions have been resized, call this
 		method.
 	*/
 	void ResizeFrustum(float aspectRatio);
+
 private:
 	static const int C_GRID_WIDTH;
 	static const int C_GRID_HEIGHT;

@@ -60,7 +60,6 @@ namespace Components
 		InputField*					mInputField;
 		Scrollbar*					mScrollbar;
 
-		//bool						mIsToggled;
 		std::stringstream			mStream;
 		std::deque<TextLine>		mOutput;
 		int							mMaxNumRows;

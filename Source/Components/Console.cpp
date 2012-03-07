@@ -35,7 +35,7 @@ namespace Components
 
 		mEffect->SetVariable("bgColor", (D3DXVECTOR4)C_COLOR_WINDOW_BG);
 
-		SetFocus(mInputField);
+		SetFocusedComponent(mInputField);
 }
 
 	Console::~Console() throw()
@@ -134,7 +134,7 @@ namespace Components
 		else
 		{
 			SetVisible(true);
-			SetFocusThis();
+			SetFocus();
 		}
 	}
 
@@ -145,7 +145,7 @@ namespace Components
 
 	void Console::GotFocus()
 	{
-		SetFocus(mInputField);
+		SetFocusedComponent(mInputField);
 	}
 
 	void Console::MouseButtonReleased(int index, const InputState& currentState)
@@ -156,7 +156,7 @@ namespace Components
 			if(currentState.Mouse.x > mPositionRect.left && currentState.Mouse.x < mPositionRect.right &&
 			   currentState.Mouse.y > mPositionRect.top && currentState.Mouse.y < mPositionRect.bottom &&
 			   !mScrollbar->IsHovered())
-				SetFocusThis();	
+				SetFocus();	
 	}
 
 	void Console::Scroll(bool isUp)

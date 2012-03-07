@@ -15,7 +15,8 @@ namespace Components
 
 		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		void Draw();
-		void SetFocus(Component* component);
+		void SetFocusedComponent(Component* component);
+		bool HasFocus();
 
 		static Console& GetConsole();
 

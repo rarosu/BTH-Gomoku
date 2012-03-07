@@ -46,7 +46,7 @@ namespace Components
 		}
 	}
 
-	void ComponentGroup::SetFocus(Component* component)
+	void ComponentGroup::SetFocusedComponent(Component* component)
 	{
 		if(mFocusedComponent)
 			mFocusedComponent->LostFocus();
@@ -56,10 +56,9 @@ namespace Components
 			mFocusedComponent->GotFocus();
 	}
 
-	void ComponentGroup::GiveFocus()
+	const Component* ComponentGroup::GetFocusedComponent()
 	{
-		if(mOwner)
-			mOwner->SetFocus(this);
+		return mFocusedComponent;
 	}
 
 	void ComponentGroup::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)

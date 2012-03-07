@@ -22,8 +22,8 @@ namespace Components
 
 		void AddComponent(Component* component);
 		void RemoveComponent(Component* component);
-		void GiveFocus();
-		virtual void SetFocus(Component* component);
+		virtual void SetFocusedComponent(Component* component);
+		const Component* GetFocusedComponent();
 
 		// Methods inherited from Component
 		virtual void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
