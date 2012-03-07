@@ -11,12 +11,14 @@ namespace Components
 
 	void MenuItem::Initialize(ID3D10Device* device, RECT position, std::string caption)
 	{
+		int width = position.right - position.left;
+		int height = position.bottom - position.top;
+
 		Graphics buttonGraphics;
 		buttonGraphics.activeColor = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f);
 		buttonGraphics.idleColor = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.5f);
 		buttonGraphics.hoverColor = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.6f);
-		D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/buttonBase.png", NULL, NULL, 
-											   &buttonGraphics.textureUp, NULL);
+		buttonGraphics.textureUp = new Sprite(device, sViewport, "buttonBase.png", width, height);
 
 		Button::Initialize(device, position, buttonGraphics);
 

@@ -22,19 +22,15 @@ void Sprite::CreateBuffer()
 	const int numVertices = 4;
 	SpriteVertex vertices[numVertices];
 
-	//vertices[0].position	= mViewport->TransformToViewport(D3DXVECTOR2(0, 0));
 	vertices[0].position	= D3DXVECTOR2(0, 0);
 	vertices[0].uv			= D3DXVECTOR2(0, 0);
 
-	//vertices[1].position	= mViewport->TransformToViewport(D3DXVECTOR2(mWidth, 0));
 	vertices[1].position	= D3DXVECTOR2(mWidth, 0);
 	vertices[1].uv			= D3DXVECTOR2(1, 0);
 
-	//vertices[2].position	= mViewport->TransformToViewport(D3DXVECTOR2(0, mHeight));
 	vertices[2].position	= D3DXVECTOR2(0, mHeight);
 	vertices[2].uv			= D3DXVECTOR2(0, 1);
 
-	//vertices[3].position	= mViewport->TransformToViewport(D3DXVECTOR2(mWidth, mHeight));
 	vertices[3].position	= D3DXVECTOR2(mWidth, mHeight);
 	vertices[3].uv			= D3DXVECTOR2(1, 1);
 
@@ -61,19 +57,16 @@ void Sprite::CreateEffect()
 	mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
 }
 
-void Sprite::Draw(const D3DXVECTOR2& position)
+void Sprite::Draw(const D3DXVECTOR2& position, const D3DXCOLOR& tintColor)
 {
-	D3DXMATRIX model, vpInverse;
+	D3DXMATRIX model;
+
 	D3DXMatrixIdentity(&model);
-	//D3DXVECTOR2 transPos = mViewport->TransformToViewport(position);
 	D3DXMatrixTranslation(&model, position.x, position.y, 0.0f);
-
-	D3DXMatrixInverse(&vpInverse, NULL, &mViewport->GetMatrix());
-
 	D3DXMatrixMultiply(&model, &model, &mViewport->GetMatrix());
 	
 	mEffect->SetVariable("gModel", model);
-	mEffect->SetVariable("gTintColor", D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
+	mEffect->SetVariable("gTintColor", (D3DXVECTOR4)tintColor);
 	mBuffer->Bind();
 
 	for(UINT p = 0; p < mEffect->GetTechniqueByIndex(0).GetPassCount(); ++p)

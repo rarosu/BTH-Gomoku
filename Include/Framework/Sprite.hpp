@@ -11,7 +11,7 @@ class Sprite
 public:
 	Sprite(ID3D10Device* device, const Viewport* viewport, const std::string& filename, float width, float height);
 	~Sprite() throw();
-	void Draw(const D3DXVECTOR2& position);
+	void Draw(const D3DXVECTOR2& position, const D3DXCOLOR& tintColor = D3DXCOLOR(1.0, 1.0, 1.0, 1.0));
 
 private:
 	struct SpriteVertex

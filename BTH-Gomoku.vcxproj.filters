@@ -164,5 +164,6 @@
     <None Include="Resources\Textures\cell.png" />
     <None Include="Resources\Textures\buttonBase.png" />
     <None Include="Resources\Effects\Sprite.fx" />
+    <None Include="Resources\Textures\whitePixel.png" />
   </ItemGroup>
 </Project>

@@ -8,14 +8,11 @@ namespace Components
 
 	Console::Console(ID3D10Device* device, ComponentGroup* ownerGroup, RECT position, D3DXCOLOR bgColor, UINT size)
 		: ComponentGroup(ownerGroup, "Console"),
-		  mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0)), mFirstShowRow(0), 
+		  mDevice(device), mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0)), mFirstShowRow(0), mBackground(NULL),
 		  C_HISTORY_SIZE(size)
 	{
-		mDevice = device;
 		mPositionRect = position;
-
-		CreateBuffer();
-		CreateEffect();
+		mBackground = new Sprite(mDevice, sViewport, "whitePixel.png", GetWidth(), GetHeight());
 
 		int textHeight = 18;
 		mFont = new GameFont(mDevice, "System", textHeight, false, true);
@@ -33,52 +30,16 @@ namespace Components
 		mScrollbar = new Scrollbar(this, this);
 		mScrollbar->Initialize(mDevice, scrollbarPos);
 
-		mEffect->SetVariable("bgColor", (D3DXVECTOR4)C_COLOR_WINDOW_BG);
-
+		//mEffect->SetVariable("bgColor", (D3DXVECTOR4)C_COLOR_WINDOW_BG);
+		mBGColor = C_COLOR_WINDOW_BG;
 		SetFocus(mInputField);
 }
 
 	Console::~Console() throw()
 	{
-		SafeDelete(mEffect);
-		SafeDelete(mVertexBuffer);
+		SafeDelete(mBackground);
 	}
 
-	void Console::CreateBuffer()
-	{
-		D3DXVECTOR2 vertices[C_NUM_VERTICES];
-
-		D3DXVECTOR2 point1 = D3DXVECTOR2((float)mPositionRect.left, (float)mPositionRect.top);
-		D3DXVECTOR2 point2 = D3DXVECTOR2((float)mPositionRect.right, (float)mPositionRect.top);
-		D3DXVECTOR2 point3 = D3DXVECTOR2((float)mPositionRect.left, (float)mPositionRect.bottom);
-		D3DXVECTOR2 point4 = D3DXVECTOR2((float)mPositionRect.right, (float)mPositionRect.bottom);
-
-		vertices[0]	= sViewport->TransformToViewport(point1);
-		vertices[1]	= sViewport->TransformToViewport(point2);
-		vertices[2]	= sViewport->TransformToViewport(point3);
-		vertices[3]	= sViewport->TransformToViewport(point4);
-
-		mVertexBuffer = new VertexBuffer(mDevice);
-		VertexBuffer::Data bufferDesc;
-
-		bufferDesc.mUsage					= Usage::Default;
-		bufferDesc.mTopology				= Topology::TriangleStrip;
-		bufferDesc.mElementCount			= C_NUM_VERTICES;
-		bufferDesc.mElementSize				= sizeof(D3DXVECTOR2);
-		bufferDesc.mFirstElementPointer		= vertices;
-
-		mVertexBuffer->SetData(bufferDesc, NULL);
-	}
-
-	void Console::CreateEffect()
-	{
-		mEffect = new Effect(mDevice, "Resources/Effects/Basic2D.fx");
-
-		InputLayoutVector inputLayout;
-		inputLayout.push_back(InputLayoutElement("POSITION", DXGI_FORMAT_R32G32_FLOAT));
-
-		mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
-	}
 
 	// Update the console
 	void Console::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
@@ -104,11 +65,10 @@ namespace Components
 		if(!IsVisible())
 			return;
 
-		mVertexBuffer->Bind();
-		for(UINT p = 0; p < mEffect->GetTechniqueByIndex(0).GetPassCount(); ++p)
+		if(mBackground != NULL)
 		{
-			mEffect->GetTechniqueByIndex(0).GetPassByIndex(p).Apply(mDevice);
-			mVertexBuffer->Draw();
+			D3DXVECTOR2 position = D3DXVECTOR2(mPositionRect.left, mPositionRect.top);
+			mBackground->Draw(position, mBGColor);
 		}
 
 		POINT position = { mPositionRect.left + 3 , mPositionRect.top };

@@ -317,6 +317,7 @@
     <None Include="Resources\Textures\titleScreen1024x836.png" />
     <None Include="Resources\Textures\titleScreen1422x800.png" />
     <None Include="Resources\Textures\titleScreenBig.png" />
+    <None Include="Resources\Textures\whitePixel.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

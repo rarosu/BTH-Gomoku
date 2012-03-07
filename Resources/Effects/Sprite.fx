@@ -45,7 +45,7 @@ PS_INPUT VS(VS_INPUT input)
 {
 	PS_INPUT output;
 
-	output.position = mul(float4(float3(input.position, 0.0), 1.0), gModel);
+	output.position = mul(float4(float3(input.position, 1.0), 1.0), gModel);
 	output.uv = input.uv;
 
 	return output;

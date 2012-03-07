@@ -6,55 +6,14 @@ namespace State
 		: ApplicationState(id),
 		  mDevice(device), mComponents(NULL), mDefaultFont(NULL)
 	{
-		CreateBuffer((float)sViewport->GetWidth(), (float)sViewport->GetHeight());
-		CreateEffect();
-	}
-
-	void CreateAGameState::CreateBuffer(float width, float height)
-	{
-		const int numVertices = 4;
-		bgVertex vertices[numVertices];
-
-		vertices[0].position = sViewport->TransformToViewport(D3DXVECTOR2(0, 0));
-		vertices[0].uv = D3DXVECTOR2(0, 0);
-		vertices[1].position = sViewport->TransformToViewport(D3DXVECTOR2(width, 0));
-		vertices[1].uv = D3DXVECTOR2(1, 0);
-		vertices[2].position = sViewport->TransformToViewport(D3DXVECTOR2(0, height));
-		vertices[2].uv = D3DXVECTOR2(0, 1);
-		vertices[3].position = sViewport->TransformToViewport(D3DXVECTOR2(width, height));
-		vertices[3].uv = D3DXVECTOR2(1, 1);
-
-		mBuffer = new VertexBuffer(mDevice);
-		VertexBuffer::Data bufferDesc;
-
-		bufferDesc.mUsage					= Usage::Default;
-		bufferDesc.mTopology				= Topology::TriangleStrip;
-		bufferDesc.mElementCount			= numVertices;
-		bufferDesc.mElementSize				= sizeof(bgVertex);
-		bufferDesc.mFirstElementPointer		= vertices;
-
-		mBuffer->SetData(bufferDesc, NULL);
-	}
-	
-	void CreateAGameState::CreateEffect()
-	{
-		mEffect = new Effect(mDevice, "Resources/Effects/Background.fx");
-		
-		InputLayoutVector inputLayout;
-		inputLayout.push_back(InputLayoutElement("POSITION", DXGI_FORMAT_R32G32_FLOAT));
-		inputLayout.push_back(InputLayoutElement("TEXCOORD", DXGI_FORMAT_R32G32_FLOAT));
-
-		mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
 	}
 
 	void CreateAGameState::CreateComponents()
 	{
 		mComponents = new Components::ComponentGroup(sRootComponentGroup, "CreateAGameState Group");
 
-		ID3D10ShaderResourceView* texture;
-		D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/marbleBG1422x800.png", NULL, NULL, 
-											   &texture, NULL);
-		mEffect->SetVariable("textureBG", texture);
+		mBackground = new Sprite(mDevice, sViewport,  "marbleBG1422x800.png", 
+							 sViewport->GetWidth(), sViewport->GetHeight());
 
 		int leftOffset = 100;
 		const std::string btnCaptions[] = { "Create", "Cancel" };
@@ -105,13 +64,7 @@ namespace State
 
 	void CreateAGameState::Draw()
 	{
-		mBuffer->Bind();
-		for(UINT p = 0; p < mEffect->GetTechniqueByIndex(0).GetPassCount(); ++p)
-		{
-			mEffect->GetTechniqueByIndex(0).GetPassByIndex(p).Apply(mDevice);
-			mBuffer->Draw();
-		}
-
+		mBackground->Draw(D3DXVECTOR2(0, 0));
 		mComponents->Draw();
 	}
 
@@ -127,5 +80,6 @@ namespace State
 		mComponents = NULL;
 		mButtons.clear();
 		mDefaultFont = NULL;
+		SafeDelete(mBackground);
 	}
 }

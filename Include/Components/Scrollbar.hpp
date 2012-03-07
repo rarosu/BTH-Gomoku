@@ -2,8 +2,8 @@
 #define SCROLLBAR_HPP
 
 #include "Button.hpp"
-#include "Effect.hpp"
 #include "Clickable.hpp"
+#include "Sprite.hpp"
 
 namespace Components
 {
@@ -38,15 +38,13 @@ namespace Components
 
 	private:
 		ID3D10Device*				mDevice;
-		VertexBuffer*				mBuffer;
-		Effect*						mEffect;
+		Sprite*						mBackground;
+		D3DXCOLOR					mBGColor;
+		float						mBGDrawOffset;
 
 		Button*						mBtnUp;
 		Button*						mBtnDown;
 		Scrollable*					mScrollable;
-
-		void CreateBuffer(float offset);
-		void CreateEffect();
 	};
 }
 #endif

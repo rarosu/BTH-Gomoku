@@ -3,9 +3,6 @@
 
 #include <sstream>
 #include <deque>
-
-#include "Buffer.hpp"
-#include "Effect.hpp"
 #include "Component.hpp"
 #include "ComponentGroup.hpp"
 #include "GameFont.hpp"
@@ -13,7 +10,7 @@
 #include "Globals.hpp"
 #include "InputField.hpp"
 #include "Scrollbar.hpp"
-
+#include "Sprite.hpp"
 
 namespace Components
 {
@@ -53,12 +50,12 @@ namespace Components
 		};
 
 		ID3D10Device*				mDevice;
-		Effect*						mEffect;
-		VertexBuffer*				mVertexBuffer;
 		GameFont*					mFont;
 		D3DXCOLOR					mTextColor;
 		InputField*					mInputField;
 		Scrollbar*					mScrollbar;
+		Sprite*						mBackground;
+		D3DXCOLOR					mBGColor;
 
 		//bool						mIsToggled;
 		std::stringstream			mStream;
@@ -69,9 +66,6 @@ namespace Components
 		const UINT					C_HISTORY_SIZE;
 
 		static const int			C_NUM_VERTICES;
-
-		void CreateBuffer();
-		void CreateEffect();
 	};
 }
 #endif
