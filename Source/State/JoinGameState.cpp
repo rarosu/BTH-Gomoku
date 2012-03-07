@@ -87,6 +87,7 @@ namespace State
 		if (mJoinButton->GetAndResetClickStatus())
 		{
 			// TODO: Create client and attempt to connect (report errors some way)
+			Network::Client* client = new Network::Client(
 			// TODO: Send Join message and receive Accept message.
 		}
 	}

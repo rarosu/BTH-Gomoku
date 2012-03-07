@@ -271,6 +271,7 @@
     <ClInclude Include="Include\Network\Messages\StartGameMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\StayAliveMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\TurnMessage.hpp" />
+    <ClInclude Include="Include\Network\NetworkInclude.hpp" />
     <ClInclude Include="Include\Network\Server.hpp" />
     <ClInclude Include="Include\Scene\Marker.hpp" />
     <ClInclude Include="Include\Scene\Scene.hpp" />

@@ -36,18 +36,20 @@ namespace Logic
 		/**
 			Implemented from ServerEventInterface
 		*/
-		void ClientConnected(int slot);
-		void ClientDisconnected(int slot);
+		void ClientConnected(Network::Slot slot);
+		void ClientDisconnected(Network::Slot slot);
 	private:
-		static const float C_TIMEOUT;
-
 		typedef std::map<int, float> TimeoutMap;
 
-		Network::Server* mServer;
-		TimeoutMap mTimeoutCounter;
-		std::vector<int> mClientsToBeRemoved;
+		static const float C_TIMEOUT;
 
 		Ruleset* mRuleset;
+
+		Network::Server* mServer;
+		TimeoutMap mTimeoutCounters;
+		std::vector<int> mClientsToBeRemoved;
+
+		void HandleJoinMessage(Network::Slot clientSlot, const std::string& name);
 	};
 }
 #endif

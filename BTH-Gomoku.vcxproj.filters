@@ -130,6 +130,7 @@
     <ClInclude Include="Include\State\ServerLobbyState.hpp" />
     <ClInclude Include="Include\State\ClientLobbyState.hpp" />
     <ClInclude Include="Include\Network\Messages\RefuseMessage.hpp" />
+    <ClInclude Include="Include\Network\NetworkInclude.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

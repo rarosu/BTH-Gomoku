@@ -9,6 +9,7 @@
 namespace Network
 {
 	typedef unsigned int Slot;
+	typedef unsigned short Port;
 
 	class ServerEventInterface
 	{
@@ -31,13 +32,13 @@ namespace Network
 	class Server
 	{
 	public:
-		Server(int maxClients, unsigned short port = 6666);
+		Server(int maxClients, Port port = 6666);
 		~Server();
 
 		void SetEventInterface(ServerEventInterface* e);
 		const ServerEventInterface* GetEventInterface() const;
 
-		int GetPort() const;
+		Port GetPort() const;
 		void Update();
 
 		void Send(const Message& message);
@@ -48,8 +49,8 @@ namespace Network
 	private:
 		ServerEventInterface* mEventInterface;
 
-		int mPort;
-		int mMaxClients;
+		Port mPort;
+		unsigned int mMaxClients;
 		ListenSocket mListenSocket;
 		std::vector<ComSocket> mClients;
 		std::vector<SlotMessage> mMessageQueue;

@@ -6,7 +6,7 @@
 namespace Network
 {
 	SlotMessage::SlotMessage()
-		: mMessage(NULL), mSlot(0) {}
+		: mMessage(NULL), mSlot(-1) {}
 
 	SlotMessage::SlotMessage(Message* message, Slot slot)
 		: mMessage(message), mSlot(slot) {}
@@ -16,7 +16,7 @@ namespace Network
 		SafeDelete(mMessage);
 	}
 
-	Server::Server(int maxClients, unsigned short port)
+	Server::Server(int maxClients, Port port)
 		: mEventInterface(NULL)
 		, mPort(port)
 		, mMaxClients(maxClients)
@@ -57,7 +57,7 @@ namespace Network
 		return mEventInterface;
 	}
 
-	int Server::GetPort() const
+	Port Server::GetPort() const
 	{
 		return mPort;
 	}
@@ -86,7 +86,7 @@ namespace Network
 				mClients[i].Update();
 				std::string m;
 				while ((m = mClients[i].PopMessage()) != "")
-					mMessageQueue.push_back(m);
+					mMessageQueue.push_back(SlotMessage(MessageFactory::Inflate(m), i));
 			}
 			else
 			{
@@ -118,16 +118,15 @@ namespace Network
 
 	SlotMessage Server::PopMessage()
 	{
-		/*
 		SlotMessage m;
+
 		if (!mMessageQueue.empty())
 		{
-			m.mMessage = MessageFactory::Inflate(mMessageQueue.front().mMessage);
+			m = mMessageQueue.front();
 			mMessageQueue.erase(mMessageQueue.begin());
 		}
 
 		return m;
-		*/
 	}
 
 	void Server::DisconnectClient(Slot slot)

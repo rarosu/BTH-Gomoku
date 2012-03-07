@@ -9,17 +9,10 @@
 
 namespace Logic
 {
-	struct ClientParameters
-	{
-		std::string mPlayerName;
-		std::string mIPAddress;
-		unsigned short mPort;
-	};	
-
 	class ClientSession : public Session
 	{
 	public:
-		ClientSession(const ClientParameters& parameters);
+		ClientSession(const std::string& IPAddress, );
 		~ClientSession();
 	private:
 		Network::Client mClient;
@@ -34,6 +27,7 @@ namespace Logic
 		
 		When Accept is received, a ClientSession will be created.
 	*/
+	/*
 	class ClientJoinSetup
 	{
 	public:
@@ -46,6 +40,6 @@ namespace Logic
 
 		std::vector<Player> mPlayers;
 	};
-
+	*/
 }
 #endif
