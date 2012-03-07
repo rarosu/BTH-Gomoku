@@ -5,13 +5,11 @@
 #include <sstream>
 #include <string>
 
-#include "Buffer.hpp"
-#include "Effect.hpp"
 #include "Clickable.hpp"
 #include "GameFont.hpp"
 #include "GameTime.hpp"
 #include "InputManager.hpp"
-
+#include "Sprite.hpp"
 
 namespace Components
 {
@@ -53,8 +51,7 @@ namespace Components
 
 	private:
 		ID3D10Device*				mDevice;
-		VertexBuffer*				mBuffer;
-		Effect*						mEffect;
+		Sprite*						mBackground;
 
 		GameFont*					mFont;
 		//std::stringstream			mStream;
@@ -68,9 +65,6 @@ namespace Components
 		
 		static const float			C_MARKER_SPEED;
 		static const int			C_NUM_VERTICES;
-
-		void CreateBuffer();
-		void CreateEffect();
 	};
 }
 #endif

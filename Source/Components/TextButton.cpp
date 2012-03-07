@@ -14,10 +14,17 @@ namespace Components
 		buttonGraphics.activeColor = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 		buttonGraphics.idleColor = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 		buttonGraphics.hoverColor = D3DXCOLOR(0.9f, 0.9f, 0.9f, 1.0f);
-		D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/buttonUp.png", NULL, NULL, 
+
+		int width = position.right - position.left;
+		int height = position.bottom - position.top;
+
+		buttonGraphics.textureUp = new Sprite(device, sViewport, "buttonUp.png", width, height);
+		buttonGraphics.textureDown = new Sprite(device, sViewport, "buttonDown.png", width, height);
+
+		/*D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/buttonUp.png", NULL, NULL, 
 											   &buttonGraphics.textureUp, NULL);
 		D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/buttonDown.png", NULL, NULL, 
-											   &buttonGraphics.textureDown, NULL);
+											   &buttonGraphics.textureDown, NULL);*/
 
 		Button::Initialize(device, position, buttonGraphics);
 

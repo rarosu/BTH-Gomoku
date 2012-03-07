@@ -172,6 +172,7 @@
     <ClCompile Include="Source\Framework\Effect\Effect.cpp" />
     <ClCompile Include="Source\Framework\Effect\Pass.cpp" />
     <ClCompile Include="Source\Framework\Effect\Technique.cpp" />
+    <ClCompile Include="Source\Framework\Sprite.cpp" />
     <ClCompile Include="Source\Framework\Viewport.cpp" />
     <ClCompile Include="Source\Game.cpp" />
     <ClCompile Include="Source\Framework\GameFont.cpp" />
@@ -232,6 +233,7 @@
     <ClInclude Include="Include\Framework\Effect\Effect.hpp" />
     <ClInclude Include="Include\Framework\Effect\Pass.hpp" />
     <ClInclude Include="Include\Framework\Effect\Technique.hpp" />
+    <ClInclude Include="Include\Framework\Sprite.hpp" />
     <ClInclude Include="Include\Framework\Viewport.hpp" />
     <ClInclude Include="Include\Game.hpp" />
     <ClInclude Include="Include\Framework\GameFont.hpp" />
@@ -286,6 +288,7 @@
     <None Include="Resources\Effects\Grid.fx" />
     <None Include="Effects\InputField.fx" />
     <None Include="Resources\Effects\Marker.fx" />
+    <None Include="Resources\Effects\Sprite.fx" />
     <None Include="Resources\Textures\btnDIdle.png" />
     <None Include="Resources\Textures\btnDPressed.png" />
     <None Include="Resources\Textures\btnUIdle.png" />
@@ -310,6 +313,7 @@
     <None Include="Resources\Textures\titleScreen1024x836.png" />
     <None Include="Resources\Textures\titleScreen1422x800.png" />
     <None Include="Resources\Textures\titleScreenBig.png" />
+    <None Include="Resources\Textures\whitePixel.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

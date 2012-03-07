@@ -8,34 +8,34 @@ namespace Components
 	{
 		mPositionRect = position;
 
-		Button::Graphics graphQuestion, graphWarning, graphHint, graphOther;
-		D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/question.png", NULL, NULL, 
-											   &graphQuestion.textureUp, NULL);
-		D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/questionL.png", NULL, NULL, 
-											   &graphQuestion.textureDown, NULL);
+		//Button::Graphics graphQuestion, graphWarning, graphHint, graphOther;
+		//D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/question.png", NULL, NULL, 
+		//									   &graphQuestion.textureUp, NULL);
+		//D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/questionL.png", NULL, NULL, 
+		//									   &graphQuestion.textureDown, NULL);
 
-		D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/exclamation.png", NULL, NULL, 
-											   &graphWarning.textureUp, NULL);
-		D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/exclamationL.png", NULL, NULL, 
-											   &graphWarning.textureDown, NULL);
+		//D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/exclamation.png", NULL, NULL, 
+		//									   &graphWarning.textureUp, NULL);
+		//D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/exclamationL.png", NULL, NULL, 
+		//									   &graphWarning.textureDown, NULL);
 
-		D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/hint.png", NULL, NULL, 
-											   &graphHint.textureUp, NULL);
-		D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/hintL.png", NULL, NULL, 
-											   &graphHint.textureDown, NULL);
+		//D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/hint.png", NULL, NULL, 
+		//									   &graphHint.textureUp, NULL);
+		//D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/hintL.png", NULL, NULL, 
+		//									   &graphHint.textureDown, NULL);
 
-		D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/other.png", NULL, NULL, 
-											   &graphOther.textureUp, NULL);
-		D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/otherL.png", NULL, NULL, 
-											   &graphOther.textureDown, NULL);
+		//D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/other.png", NULL, NULL, 
+		//									   &graphOther.textureUp, NULL);
+		//D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/otherL.png", NULL, NULL, 
+		//									   &graphOther.textureDown, NULL);
 
-		mGraphics.push_back(graphQuestion);
+		/*mGraphics.push_back(graphQuestion);
 		mGraphics.push_back(graphWarning);
 		mGraphics.push_back(graphHint);
 		mGraphics.push_back(graphOther);
 
 		UpdateButtonPositions();
-		CreateButtons();		
+		CreateButtons();*/		
 	}
 
 	Menu::~Menu() throw()

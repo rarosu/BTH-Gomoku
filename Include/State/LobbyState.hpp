@@ -4,8 +4,7 @@
 #include "ApplicationState.hpp"
 #include "TextButton.hpp"
 #include "Label.hpp"
-#include "Effect.hpp"
-#include "Buffer.hpp"
+#include "Sprite.hpp"
 
 namespace State
 {
@@ -27,6 +26,7 @@ namespace State
 	{
 	public:
 		LobbyState(StateID id, ID3D10Device* device);
+		~LobbyState() throw();
 
 		void Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime);
 		void Draw();
@@ -42,15 +42,12 @@ namespace State
 		};
 
 		ID3D10Device*							mDevice;
-		Effect*									mEffect;
-		VertexBuffer*							mBuffer;
+		Sprite*									mBackground;
 		Components::ComponentGroup*				mComponents;
 		std::vector<Components::TextButton*>	mButtons;
 		std::vector<Components::Label*>			mPlayerLabels;
 
 		void CreateComponents();
-		void CreateBuffer(float width, float height);
-		void CreateEffect();
 	};
 }
 #endif

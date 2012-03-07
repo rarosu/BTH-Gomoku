@@ -3,12 +3,11 @@
 
 #include "ApplicationState.hpp"
 #include "TextButton.hpp"
-#include "Effect.hpp"
-#include "Buffer.hpp"
 #include "GameFont.hpp"
 #include "Label.hpp"
 #include "InputField.hpp"
 #include "GameFont.hpp"
+#include "Sprite.hpp"
 
 namespace State
 {
@@ -41,18 +40,14 @@ namespace State
 		};
 
 		ID3D10Device*							mDevice;
-		Effect*									mEffect;
-		VertexBuffer*							mBuffer;
 		Components::ComponentGroup*				mComponents;
 		std::vector<Components::TextButton*>	mButtons;
-
+		Sprite*									mBackground;
 		GameFont*								mDefaultFont;
 		Components::Label*						mLblName;
 		Components::InputField*					mIFName;
 
 		void CreateComponents();
-		void CreateBuffer(float width, float height);
-		void CreateEffect();
 	};
 }
 #endif

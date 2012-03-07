@@ -8,51 +8,17 @@ namespace Components
 	InputField::InputField(ID3D10Device* device, ComponentGroup* ownerGroup, InputReceiver* receiver, 
 		RECT position, GameFont* font)
 		: Clickable(ownerGroup),
-		  mDevice(device), mBuffer(NULL), mEffect(NULL), mFont(font), 
+		  mDevice(device), mBackground(NULL), mFont(font), 
 		  mReceiver(receiver), mShowMarker(true), mMSSinceBlink(0.0f), mHasFocus(false)
 	{
 		mPositionRect = position;
-
-		CreateBuffer();
-		CreateEffect();
 	
-		mEffect->SetVariable("bgColor", D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
+		mBackground = new Sprite(mDevice, sViewport, "whitePixel.png", GetWidth(), GetHeight());
 	}
 
 	InputField::~InputField() throw()
 	{
-		SafeDelete(mBuffer);
-		SafeDelete(mEffect);
-	}
-
-	void InputField::CreateBuffer()
-	{
-		D3DXVECTOR2 vertices[C_NUM_VERTICES];
-		vertices[0]	= sViewport->TransformToViewport(D3DXVECTOR2((float)mPositionRect.left, (float)mPositionRect.top));
-		vertices[1]	= sViewport->TransformToViewport(D3DXVECTOR2((float)mPositionRect.right, (float)mPositionRect.top));
-		vertices[2]	= sViewport->TransformToViewport(D3DXVECTOR2((float)mPositionRect.left, (float)mPositionRect.bottom));
-		vertices[3]	= sViewport->TransformToViewport(D3DXVECTOR2((float)mPositionRect.right, (float)mPositionRect.bottom));
-
-		mBuffer = new VertexBuffer(mDevice);
-		VertexBuffer::Data bufferDesc;
-
-		bufferDesc.mUsage =					Usage::Default;
-		bufferDesc.mTopology =				Topology::TriangleStrip;
-		bufferDesc.mElementCount =			C_NUM_VERTICES;
-		bufferDesc.mElementSize =			sizeof(D3DXVECTOR2);
-		bufferDesc.mFirstElementPointer =	vertices;
-
-		mBuffer->SetData(bufferDesc, NULL);
-	}
-
-	void InputField::CreateEffect()
-	{
-		mEffect = new Effect(mDevice, "Resources/Effects/Basic2D.fx");
-		
-		InputLayoutVector inputLayout;
-		inputLayout.push_back(InputLayoutElement("POSITION", DXGI_FORMAT_R32G32_FLOAT));
-
-		mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
+		SafeDelete(mBackground);
 	}
 
 	std::string InputField::GetText()
@@ -62,7 +28,8 @@ namespace Components
 
 	void InputField::SetText(std::string newText)
 	{
-		mFirstString.str(newText);
+		mFirstString.str("");
+		mFirstString << newText;
 		mLastString.str("");
 	}
 
@@ -87,11 +54,10 @@ namespace Components
 
 	void InputField::Draw()
 	{
-		mBuffer->Bind();
-		for(UINT p = 0; p < mEffect->GetTechniqueByIndex(0).GetPassCount(); ++p)
+		if(mBackground != NULL)
 		{
-			mEffect->GetTechniqueByIndex(0).GetPassByIndex(p).Apply(mDevice);
-			mBuffer->Draw();
+			D3DXVECTOR2 position = D3DXVECTOR2(mPositionRect.left, mPositionRect.top);
+			mBackground->Draw(position);
 		}
 
 		int offset = 10;

@@ -5,12 +5,11 @@
 #include <vector>
 
 #include "ApplicationState.hpp"
-#include "Buffer.hpp"
-#include "Effect.hpp"
 #include "ComponentGroup.hpp"
 #include "TextButton.hpp"
 #include "Menu.hpp"
 #include "ClickMenu.hpp"
+#include "Sprite.hpp"
 
 namespace State
 {
@@ -48,14 +47,11 @@ namespace State
 		static const std::string C_MENU_CAPTIONS[];
 
 		ID3D10Device*							mDevice;
-		Effect*									mEffect;
-		VertexBuffer*							mBuffer;
 		std::vector<Components::MenuItem*>		mButtons;
 		Components::ClickMenu*					mMenuButtons;
 		Components::ComponentGroup*				mComponents;
+		Sprite*									mBackground;
 
-		void CreateBuffer(float width, float height);
-		void CreateEffect();
 		void CreateComponents();
 	};
 }

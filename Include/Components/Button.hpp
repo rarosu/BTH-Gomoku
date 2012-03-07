@@ -2,10 +2,9 @@
 #define BUTTON_HPP
 
 #include "WinInclude.hpp"
-#include "Buffer.hpp"
-#include "Effect.hpp"
 #include "Component.hpp"
 #include "Clickable.hpp"
+#include "Sprite.hpp"
 
 namespace Components
 {
@@ -17,9 +16,9 @@ namespace Components
 			D3DXCOLOR					idleColor;
 			D3DXCOLOR					activeColor;
 			D3DXCOLOR					hoverColor;
-			ID3D10ShaderResourceView*	textureUp;
-			ID3D10ShaderResourceView*	textureDown;
-			ID3D10ShaderResourceView*	textureHover;
+			Sprite*						textureUp;
+			Sprite*						textureDown;
+			Sprite*						textureHover;
 
 			Graphics();
 		};
@@ -44,13 +43,9 @@ namespace Components
 			D3DXVECTOR2				uv;
 		};
 
-		VertexBuffer*				mBuffer;
-		Effect*						mEffect;
-
+		Sprite*						mTexture;
+		D3DXCOLOR					mTintColor;
 		Graphics					mGraphics;
-
-		void CreateBuffer();
-		void CreateEffect();
 
 		// Inherited from Clickable
 		void MouseEntered();

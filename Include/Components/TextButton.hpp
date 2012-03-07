@@ -3,11 +3,10 @@
 
 #include <string>
 
-#include "Buffer.hpp"
 #include "Button.hpp"
-#include "Effect.hpp"
 #include "GameFont.hpp"
 #include "InputManager.hpp"
+#include "Sprite.hpp"
 
 namespace Components
 {

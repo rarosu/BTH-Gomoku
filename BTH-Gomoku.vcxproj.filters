@@ -59,6 +59,7 @@
     <ClCompile Include="Source\Components\List.cpp" />
     <ClCompile Include="Source\Logic\Grid\Direction.cpp" />
     <ClCompile Include="Source\Components\ClickMenu.cpp" />
+    <ClCompile Include="Source\Framework\Sprite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -122,6 +123,7 @@
     <ClInclude Include="Include\State\LobbyState.hpp" />
     <ClInclude Include="Include\Components\List.hpp" />
     <ClInclude Include="Include\Components\ClickMenu.hpp" />
+    <ClInclude Include="Include\Framework\Sprite.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
@@ -157,5 +159,7 @@
     <None Include="push.sh" />
     <None Include="Resources\Textures\cell.png" />
     <None Include="Resources\Textures\buttonBase.png" />
+    <None Include="Resources\Effects\Sprite.fx" />
+    <None Include="Resources\Textures\whitePixel.png" />
   </ItemGroup>
 </Project>
