@@ -1,9 +1,21 @@
 #include "Server.hpp"
+#include "Globals.hpp"
 #include <sstream>
 #include <cassert>
 
 namespace Network
 {
+	SlotMessage::SlotMessage()
+		: mMessage(NULL), mSlot(0) {}
+
+	SlotMessage::SlotMessage(Message* message, Slot slot)
+		: mMessage(message), mSlot(slot) {}
+
+	SlotMessage::~SlotMessage()
+	{
+		SafeDelete(mMessage);
+	}
+
 	Server::Server(int maxClients, unsigned short port)
 		: mEventInterface(NULL)
 		, mPort(port)
@@ -67,7 +79,7 @@ namespace Network
 			}
 		}
 	
-		for (unsigned int i = 0; i < mClients.size(); ++i)
+		for (Slot i = 0; i < mClients.size(); ++i)
 		{
 			if (mClients[i].IsConnected())
 			{
@@ -90,26 +102,35 @@ namespace Network
 
 	void Server::Send(const Message& message)
 	{
-		if (!mClients.empty())
+		for (Slot i = 0; i < mClients.size(); ++i)
 		{
-			for (unsigned int i = 0; i < mClients.size(); ++i)
-				mClients[i].Send(message.Flatten());
+			Send(i, message);
 		}
 	}
 
-	Message* Server::PopMessage()
+	void Server::Send(Slot slot, const Message& message)
 	{
-		Message* m = NULL;
+		assert(slot >= 0);
+		assert(slot < mClients.size());
+
+		mClients[slot].Send(message.Flatten());
+	}
+
+	SlotMessage Server::PopMessage()
+	{
+		/*
+		SlotMessage m;
 		if (!mMessageQueue.empty())
 		{
-			m = MessageFactory::Inflate(mMessageQueue.front());
+			m.mMessage = MessageFactory::Inflate(mMessageQueue.front().mMessage);
 			mMessageQueue.erase(mMessageQueue.begin());
 		}
 
 		return m;
+		*/
 	}
 
-	void Server::DisconnectClient(int slot)
+	void Server::DisconnectClient(Slot slot)
 	{
 		assert(slot >= 0);
 		assert(slot < mClients.size());

@@ -13,5 +13,7 @@
 #include "StartGameMessage.hpp"
 #include "StayAliveMessage.hpp"
 #include "TurnMessage.hpp"
+#include "JoinMessage.hpp"
+#include "RefuseMessage.hpp"
 
 #endif
