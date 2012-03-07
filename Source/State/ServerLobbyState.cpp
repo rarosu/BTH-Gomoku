@@ -1,26 +1,75 @@
-#include "LobbyState.hpp"
+#include "ServerLobbyState.hpp"
 #include "Console.hpp"
+#include <cassert>
 
 namespace State
 {
-	LobbyState::LobbyState(StateID id, ID3D10Device* device)
+	ServerLobbyState::ServerLobbyState(StateID id, ID3D10Device* device)
 		: ApplicationState(id),
-		  mDevice(device), mComponents(NULL), mBackground(NULL)
+		  mDevice(device), 
+		  mComponents(NULL), 
+		  mSession(NULL),
+		  mEffect(NULL),
+		  mBuffer(NULL)
 	{
+		CreateBuffer((float)sViewport->GetWidth(), (float)sViewport->GetHeight());
+		CreateEffect();
 	}
 
-	LobbyState::~LobbyState() throw()
+	ServerLobbyState::~ServerLobbyState() throw()
 	{
-		SafeDelete(mBackground);
+		SafeDelete(mEffect);
+		SafeDelete(mBuffer);
+		SafeDelete(mSession);
 	}
 
-	void LobbyState::CreateComponents()
+	void ServerLobbyState::CreateBuffer(float width, float height)
+	{
+		const int numVertices = 4;
+		bgVertex vertices[numVertices];
+
+		vertices[0].position = sViewport->TransformToViewport(D3DXVECTOR2(0, 0));
+		vertices[0].uv = D3DXVECTOR2(0, 0);
+		vertices[1].position = sViewport->TransformToViewport(D3DXVECTOR2(width, 0));
+		vertices[1].uv = D3DXVECTOR2(1, 0);
+		vertices[2].position = sViewport->TransformToViewport(D3DXVECTOR2(0, height));
+		vertices[2].uv = D3DXVECTOR2(0, 1);
+		vertices[3].position = sViewport->TransformToViewport(D3DXVECTOR2(width, height));
+		vertices[3].uv = D3DXVECTOR2(1, 1);
+
+		mBuffer = new VertexBuffer(mDevice);
+		VertexBuffer::Data bufferDesc;
+
+		bufferDesc.mUsage					= Usage::Default;
+		bufferDesc.mTopology				= Topology::TriangleStrip;
+		bufferDesc.mElementCount			= numVertices;
+		bufferDesc.mElementSize				= sizeof(bgVertex);
+		bufferDesc.mFirstElementPointer		= vertices;
+
+		mBuffer->SetData(bufferDesc, NULL);
+	}
+	
+	void ServerLobbyState::CreateEffect()
+	{
+		mEffect = new Effect(mDevice, "Resources/Effects/Background.fx");
+		
+		InputLayoutVector inputLayout;
+		inputLayout.push_back(InputLayoutElement("POSITION", DXGI_FORMAT_R32G32_FLOAT));
+		inputLayout.push_back(InputLayoutElement("TEXCOORD", DXGI_FORMAT_R32G32_FLOAT));
+
+		mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
+	}
+
+	void ServerLobbyState::CreateComponents()
 	{
 		// Create new component group
-		mComponents = new Components::ComponentGroup(sRootComponentGroup, "LobbyState Group");
+		mComponents = new Components::ComponentGroup(sRootComponentGroup, "ServerLobbyState Group");
 
-		mBackground = new Sprite(mDevice, sViewport,  "marbleBG1422x800.png", 
-							 sViewport->GetWidth(), sViewport->GetHeight());
+		// Load background texture
+		ID3D10ShaderResourceView* texture;
+		D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/marbleBG1422x800.png", NULL, NULL, 
+											   &texture, NULL);
+		mEffect->SetVariable("textureBG", texture);
 
 		// Create title label
 		int lblCenterX = sViewport->GetWidth() / 2;
@@ -84,37 +133,56 @@ namespace State
 		// Create chat console
 		RECT chatPos = { 0, sViewport->GetHeight() - 180, sViewport->GetWidth(), sViewport->GetHeight() };
 		Components::Console* chatWindow = new Components::Console(mDevice, mComponents, chatPos, C_COLOR_WINDOW_BG);
-		mComponents->SetFocusedComponent(chatWindow);
+
+		chatWindow->SetFocus();
+		mComponents->SetFocus();
 	}
 
-	void LobbyState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
+	void ServerLobbyState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
 	{
 		if(mButtons[LobbyButton::StartGame]->GetAndResetClickStatus())
 			ChangeState(C_STATE_IN_GAME);
 		if(mButtons[LobbyButton::Cancel]->GetAndResetClickStatus())
+		{
+			SafeDelete(mSession);
 			ChangeState(C_STATE_MENU);
+		}
 
 		mComponents->Update(gameTime, currInput, prevInput);
 	}
 
-	void LobbyState::Draw()
+	void ServerLobbyState::Draw()
 	{
-		mBackground->Draw(D3DXVECTOR2(0.0f, 0.0f));
+		mBuffer->Bind();
+		for(UINT p = 0; p < mEffect->GetTechniqueByIndex(0).GetPassCount(); ++p)
+		{
+			mEffect->GetTechniqueByIndex(0).GetPassByIndex(p).Apply(mDevice);
+			mBuffer->Draw();
+		}
 
 		mComponents->Draw();
 	}
 
-	void LobbyState::OnStatePushed()
+	void ServerLobbyState::OnStatePushed()
 	{
+		assert(mSession != NULL);
+		
 		CreateComponents();
-		mComponents->SetFocus();
+		
 	}
 
-	void LobbyState::OnStatePopped()
+	void ServerLobbyState::OnStatePopped()
 	{
+		mSession = NULL;
+
 		sRootComponentGroup->RemoveComponent(mComponents);
 		mComponents = NULL;
 		mButtons.clear();
-		SafeDelete(mBackground);
+	}
+
+	void ServerLobbyState::SetSessionArguments(Network::Server* server, const std::string& adminName, Logic::Ruleset* ruleset)
+	{
+		assert(mSession == NULL);
+		mSession = new Logic::ServerSession(server, adminName, ruleset);
 	}
 }

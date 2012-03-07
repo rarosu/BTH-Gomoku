@@ -20,7 +20,6 @@
     <ClCompile Include="Source\Components\Scrollbar.cpp" />
     <ClCompile Include="Source\Components\TextButton.cpp" />
     <ClCompile Include="Source\State\ApplicationState.cpp" />
-    <ClCompile Include="Source\State\StateStack.cpp" />
     <ClCompile Include="Source\State\InGameState.cpp" />
     <ClCompile Include="Source\State\MenuState.cpp" />
     <ClCompile Include="Source\State\StateRegistry.cpp" />
@@ -54,12 +53,17 @@
     <ClCompile Include="Source\Network\Messages\StartGameMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\LeaveGameMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\StayAliveMessage.cpp" />
-    <ClCompile Include="Source\State\CreateAGameState.cpp" />
-    <ClCompile Include="Source\State\LobbyState.cpp" />
     <ClCompile Include="Source\Components\List.cpp" />
     <ClCompile Include="Source\Logic\Grid\Direction.cpp" />
     <ClCompile Include="Source\Components\ClickMenu.cpp" />
     <ClCompile Include="Source\Framework\Sprite.cpp" />
+    <ClCompile Include="Source\State\JoinGameState.cpp" />
+    <ClCompile Include="Source\Logic\Player.cpp" />
+    <ClCompile Include="Source\Network\Messages\JoinMessage.cpp" />
+    <ClCompile Include="Source\State\CreateGameState.cpp" />
+    <ClCompile Include="Source\State\ServerLobbyState.cpp" />
+    <ClCompile Include="Source\State\ClientLobbyState.cpp" />
+    <ClCompile Include="Source\Network\Messages\RefuseMessage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -81,7 +85,6 @@
     <ClInclude Include="Include\Components\Scrollbar.hpp" />
     <ClInclude Include="Include\Components\TextButton.hpp" />
     <ClInclude Include="Include\State\ApplicationState.hpp" />
-    <ClInclude Include="Include\State\StateStack.hpp" />
     <ClInclude Include="Include\State\InGameState.hpp" />
     <ClInclude Include="Include\State\MenuState.hpp" />
     <ClInclude Include="Include\State\StateRegistry.hpp" />
@@ -119,11 +122,17 @@
     <ClInclude Include="Include\Network\Messages\StayAliveMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\MessageInclude.hpp" />
     <ClInclude Include="Include\Components\RootComponent.hpp" />
-    <ClInclude Include="Include\State\CreateAGameState.hpp" />
-    <ClInclude Include="Include\State\LobbyState.hpp" />
     <ClInclude Include="Include\Components\List.hpp" />
     <ClInclude Include="Include\Components\ClickMenu.hpp" />
     <ClInclude Include="Include\Framework\Sprite.hpp" />
+    <ClInclude Include="Include\State\JoinGameState.hpp" />
+    <ClInclude Include="Include\Logic\Ruleset.hpp" />
+    <ClInclude Include="Include\State\CreateGameState.hpp" />
+    <ClInclude Include="Include\Network\Messages\JoinMessage.hpp" />
+    <ClInclude Include="Include\State\ServerLobbyState.hpp" />
+    <ClInclude Include="Include\State\ClientLobbyState.hpp" />
+    <ClInclude Include="Include\Network\Messages\RefuseMessage.hpp" />
+    <ClInclude Include="Include\Network\NetworkInclude.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

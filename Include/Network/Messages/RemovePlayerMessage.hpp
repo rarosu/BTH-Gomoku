@@ -5,20 +5,20 @@
 
 namespace Network
 {
-	namespace Reason
+	namespace RemovePlayerReason
 	{
-		enum Reason { TimeOut, Left, Boot };
+		enum RemovePlayerReason { TimeOut, Left, Boot };
 	}
 
 	class RemovePlayerMessage : public Message
 	{
 	public:
 		RemovePlayerMessage();
-		RemovePlayerMessage(int playerID, Reason::Reason reason);
+		RemovePlayerMessage(int playerID, RemovePlayerReason::RemovePlayerReason reason);
 		static Message* Inflate(const std::string& args);
 
 		int mPlayerID;
-		Reason::Reason mReason;
+		RemovePlayerReason::RemovePlayerReason mReason;
 	protected:
 		int ID() const;
 		std::string FlattenArguments() const;

@@ -10,25 +10,33 @@ namespace Components
 {
 	class ClickMenu;
 
-	class MenuItem : public Button
+	namespace ClickMenuState
+	{
+		enum ClickMenuState { Collapsed, Opened };
+	}
+
+	class ClickMenuItem : public Button
 	{
 	public:
-		MenuItem(ClickMenu* ownerGroup);
-		~MenuItem() throw();
+		ClickMenuItem(ClickMenu* ownerGroup);
+		~ClickMenuItem() throw();
 
 		void AddSubItem(const std::string& caption);
 		ClickMenu* GetSubMenu();
 
 		void Initialize(ID3D10Device* device, RECT position, const std::string& caption);
+		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		void Draw();
 
 		// DEBUG
 		virtual std::string GetName();
 	private:
-		ClickMenu*					mSubMenu;
-		GameFont*					mFont;
-		std::string					mCaption;
-		D3DXCOLOR					mTextColor;
+		ClickMenu*						mSubMenu;
+		ClickMenuState::ClickMenuState	mSubMenuState;
+
+		GameFont*						mFont;
+		std::string						mCaption;
+		D3DXCOLOR						mTextColor;
 	};
 
 
@@ -42,12 +50,13 @@ namespace Components
 				  int itemHeight);
 
 		void AddMenuItem(const std::string& caption);
+		void SetPosition(const POINT& position);
 
 		bool GetAndResetClickStatus(const std::string& caption);
-		MenuItem* GetMenuItem(const std::string& caption);
+		ClickMenuItem* GetMenuItem(const std::string& caption);
 		ClickMenu* GetSubMenu(const std::string& caption);
 	private:
-		typedef std::map<std::string, MenuItem*> ItemMap;
+		typedef std::map<std::string, ClickMenuItem*> ItemMap;
 
 		ID3D10Device*						mDevice;
 		ItemMap								mItems;

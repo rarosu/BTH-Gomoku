@@ -68,4 +68,9 @@ namespace Components
 	{
 		mIsVisible = isVisible;
 	}
+
+	const RECT& Component::GetBoundingRect() const
+	{
+		return mPositionRect;
+	}
 }

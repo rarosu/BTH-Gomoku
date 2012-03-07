@@ -2,21 +2,23 @@
 
 Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth, UINT clientHeight) : 
 	D3DApplication(applicationInstance, windowTitle, clientWidth, clientHeight),
+	mCurrentState(NULL),
+	mNextState(NULL),
 	mMenuState(NULL),
 	mInGameState(NULL),
+	mCreateGameState(NULL),
+	mJoinGameState(NULL),
 	mDefaultFont(NULL),
 	mRootComponentGroup(NULL)
 {
 	// Create general objects
 	mDefaultFont = new GameFont(mDeviceD3D, "Times New Roman", 24);
-	/*RECT consolePos = { 0, 0, mViewport.GetWidth(), mViewport.GetHeight() / 2 };
-	mConsole = new Components::Console(mDeviceD3D, mRootComponentGroup, consolePos, D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.0f));*/
-	//mRootComponentGroup->SetFocusedComponent(mConsole);
 
 	// Setup static access variables
 	Components::Component::sViewport = &mViewport;
 	State::ApplicationState::sViewport = &mViewport;
 	State::ApplicationState::sInputManager = &mInputManager;
+	State::ApplicationState::sManager = this;
 
 	mRootComponentGroup = new Components::RootComponent(mDeviceD3D, mViewport.GetWidth(), mViewport.GetHeight());
 	mInputManager.AddKeyListener(mRootComponentGroup);
@@ -25,25 +27,32 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth,
 
 	// Create the states
 	mMenuState = new State::MenuState(State::C_STATE_MENU, mDeviceD3D);
-	mLobbyState = new State::LobbyState(State::C_STATE_LOBBY, mDeviceD3D);
+	mServerLobbyState = new State::ServerLobbyState(State::C_STATE_SERVER_LOBBY, mDeviceD3D);
+	mClientLobbyState = new State::ClientLobbyState(State::C_STATE_CLIENT_LOBBY, mDeviceD3D);
+	mCreateGameState = new State::CreateGameState(State::C_STATE_CREATE_GAME, mDeviceD3D, mServerLobbyState);
+	mJoinGameState = new State::JoinGameState(State::C_STATE_JOIN_GAME, mDeviceD3D);
 	mInGameState = new State::InGameState(State::C_STATE_IN_GAME, mDeviceD3D);
-	mCreateGameState = new State::CreateAGameState(State::C_STATE_CREATE_GAME, mDeviceD3D);
 
-	// Start the application in InGameState
-	State::ApplicationState::sStack.ChangeState(mMenuState);
-	State::ApplicationState::sStack.UpdateStack();
+	// Set the starting state
+	mCurrentState = mMenuState;
+	mNextState = mMenuState;
+	mCurrentState->OnStatePushed();
 }
 
 
 Game::~Game()
 {
+	// If the current state isn't NULL, notify it that it is being popped before destroying it.
+	if (mCurrentState != NULL)
+		mCurrentState->OnStatePopped();
+
 	SafeDelete(mDefaultFont);
 
 	SafeDelete(mMenuState);
-	SafeDelete(mInGameState);
-	SafeDelete(mLobbyState);
-
 	SafeDelete(mCreateGameState);
+	SafeDelete(mJoinGameState);
+	SafeDelete(mServerLobbyState);
+	SafeDelete(mInGameState);
 
 	SafeDelete(mRootComponentGroup);
 }
@@ -51,9 +60,17 @@ Game::~Game()
 //  What happens every loop of the program (ie updating and drawing the game)
 void Game::ProgramLoop()
 {
-	// Make sure the next state is valid - if a NULL state has been specified,
-	// the program will exit
-	if (State::ApplicationState::sStack.GetNextState() != NULL)
+	// Swap to the next state, if the state has been changed
+	if (mNextState != mCurrentState)
+	{
+		if (mNextState != NULL)		mNextState->OnStatePushed();
+		if (mCurrentState != NULL)	mCurrentState->OnStatePopped();
+
+		mCurrentState = mNextState;
+	}
+	
+	// If the state has been changed to NULL, we're supposed to quit
+	if (mCurrentState != NULL)
 	{
 		Update();
 		Draw();
@@ -67,18 +84,15 @@ void Game::ProgramLoop()
 // Update the game
 void Game::Update()
 {
-	// Update the state stack
-	State::ApplicationState::sStack.UpdateStack();
-
 	// Update game time and GUI components
 	mGameTime.Update();
 	mRootComponentGroup->Update(mGameTime, mInputManager.GetCurrent(), mInputManager.GetPrevious());
 
-	// Update the topmost state
-	State::ApplicationState::sStack.UpdateState(mInputManager.GetCurrent(), 
-		mInputManager.GetPrevious(), mGameTime);
+	// Update the current state
+	mCurrentState->Update(mInputManager.GetCurrent(), mInputManager.GetPrevious(), mGameTime);
 
-	mInputManager.Update();					// Keep last
+	// Update the input
+	mInputManager.Update();
 }
 
 // Draw the scene
@@ -86,14 +100,20 @@ void Game::Draw()
 {
 	ClearScene();
 	
-	// Draw the topmost state
-	State::ApplicationState::sStack.DrawState();
-	// Draw the console on top of everything else
-	//mConsole->Draw();
+
+
+	// Draw the current state
+	mCurrentState->Draw();
+
+	// Draw the HUD
 	mRootComponentGroup->Draw();
 
+	// DEBUG - Output the name of the component that currently has focus
 	POINT pos = { 10, mViewport.GetHeight() - 40};
 	mDefaultFont->WriteText(mRootComponentGroup->GetName(), pos, D3DXCOLOR(1.0, 0.0, 0.0, 1.0));
+	// /DEBUG
+
+
 	
 	// Swap backbuffer
 	RenderScene();
@@ -137,10 +157,15 @@ LRESULT Game::HandleAppMessages(UINT message, WPARAM wParam, LPARAM lParam)
 	return D3DApplication::HandleAppMessages(message, wParam, lParam);
 }
 
+void Game::ChangeState(State::ApplicationState* state)
+{
+	mNextState = state;
+}
+
 void Game::OnResize()
 {
 	D3DApplication::OnResize();
 
-	if (State::ApplicationState::sStack.Top() != NULL)
-		State::ApplicationState::sStack.Top()->OnResize();
+	if (mCurrentState != NULL)
+		mCurrentState->OnResize();
 }

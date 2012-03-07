@@ -9,11 +9,13 @@
 #include "RootComponent.hpp"
 
 #include "MenuState.hpp"
-#include "LobbyState.hpp"
+#include "JoinGameState.hpp"
+#include "CreateGameState.hpp"
+#include "ServerLobbyState.hpp"
+#include "ClientLobbyState.hpp"
 #include "InGameState.hpp"
-#include "CreateAGameState.hpp"
 
-class Game : public D3DApplication
+class Game : public D3DApplication, public State::StateManager
 {
 public:
 	Game(HINSTANCE applicationInstance, LPCTSTR windowTitle = "GameWindow", 
@@ -24,18 +26,25 @@ public:
 	void Draw();
 	LRESULT HandleAppMessages(UINT message, WPARAM wParam, LPARAM lParam);
 
+	/**
+		Implemented StateManager
+	*/
+	void ChangeState(State::ApplicationState* state);
 private:
 	GameTime					mGameTime;
 	GameFont*					mDefaultFont;
-	//Components::Console*		mConsole;				// DEBUG: will be removed
 	InputManager				mInputManager;
 	Components::RootComponent*	mRootComponentGroup;
 
 	State::MenuState*			mMenuState;
+	State::CreateGameState*		mCreateGameState;
+	State::JoinGameState*		mJoinGameState;
+	State::ServerLobbyState*	mServerLobbyState;
+	State::ClientLobbyState*	mClientLobbyState;
 	State::InGameState*			mInGameState;
-	State::LobbyState*			mLobbyState;
-	State::CreateAGameState*	mCreateGameState;
 
+	State::ApplicationState*	mCurrentState;
+	State::ApplicationState*	mNextState;
 protected:
 	void ProgramLoop();
 	void OnResize();

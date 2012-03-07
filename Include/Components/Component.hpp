@@ -31,6 +31,8 @@ namespace Components
 		bool IsVisible();
 		void SetVisible(bool isVisible);
 
+		const RECT& GetBoundingRect() const;
+
 		// Methods inherited from MouseListener
 		virtual void MouseButtonPressed(int index, const InputState& currentState) {}
 		virtual void MouseButtonReleased(int index, const InputState& currentState) {}

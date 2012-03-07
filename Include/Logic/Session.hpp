@@ -9,12 +9,9 @@ namespace Logic
 	class Session
 	{
 	public:
-		//void SetNumberOfPlayers(int count);
-		//void AddPlayer(int slot, const Player& player);
-	private:
-		//typedef std::vector<Player> PlayerVector;
-
-		//PlayerVector mPlayers;
+		virtual ~Session() throw() {}
+	protected:
+		std::vector<Player> mPlayers;
 	};
 }
 

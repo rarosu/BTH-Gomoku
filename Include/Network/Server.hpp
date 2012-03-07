@@ -8,21 +8,52 @@
 
 namespace Network
 {
+	typedef unsigned int Slot;
+	typedef unsigned short Port;
+
+	class ServerEventInterface
+	{
+	public:
+		virtual void ClientConnected(Slot slot) = 0;
+		virtual void ClientDisconnected(Slot slot) = 0;
+	};
+
+	struct SlotMessage
+	{
+	public:
+		SlotMessage();
+		SlotMessage(Message* message, Slot slot);
+		~SlotMessage();
+
+		Message* mMessage;
+		Slot mSlot;
+	};
+
 	class Server
 	{
 	public:
-		Server(int maxClients, unsigned short port = 6666);
+		Server(int maxClients, Port port = 6666);
 		~Server();
-		int GetPort() const;
+
+		void SetEventInterface(ServerEventInterface* e);
+		const ServerEventInterface* GetEventInterface() const;
+
+		Port GetPort() const;
 		void Update();
+
 		void Send(const Message& message);
-		Message* PopMessage();
+		void Send(Slot slot, const Message& message);
+		SlotMessage PopMessage();
+
+		void DisconnectClient(Slot slot);
 	private:
-		int mPort;
-		int mMaxClients;
+		ServerEventInterface* mEventInterface;
+
+		Port mPort;
+		unsigned int mMaxClients;
 		ListenSocket mListenSocket;
 		std::vector<ComSocket> mClients;
-		std::vector<std::string> mMessageQueue;
+		std::vector<SlotMessage> mMessageQueue;
 	};
 }
 

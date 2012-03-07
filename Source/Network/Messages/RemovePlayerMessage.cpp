@@ -4,10 +4,10 @@
 namespace Network
 {
 	RemovePlayerMessage::RemovePlayerMessage() 
-		: mPlayerID(-1), mReason(Reason::TimeOut)
+		: mPlayerID(-1), mReason(RemovePlayerReason::TimeOut)
 	{}
 
-	RemovePlayerMessage::RemovePlayerMessage(int playerID, Reason::Reason reason) 
+	RemovePlayerMessage::RemovePlayerMessage(int playerID, RemovePlayerReason::RemovePlayerReason reason) 
 		: mPlayerID(playerID), mReason(reason)
 	{}
 
@@ -22,7 +22,7 @@ namespace Network
 		s >> playerID;
 		s >> reason;
 
-		return new RemovePlayerMessage(playerID, static_cast<Reason::Reason>(reason));
+		return new RemovePlayerMessage(playerID, static_cast<RemovePlayerReason::RemovePlayerReason>(reason));
 	}
 
 	int RemovePlayerMessage::ID() const

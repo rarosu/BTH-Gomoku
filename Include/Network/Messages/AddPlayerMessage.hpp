@@ -5,7 +5,7 @@
 
 namespace Network
 {
-	class AddPlayerMessage : Message
+	class AddPlayerMessage : public Message
 	{
 	public:
 		AddPlayerMessage();

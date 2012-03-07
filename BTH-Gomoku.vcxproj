@@ -184,6 +184,7 @@
     <ClCompile Include="Source\Logic\Grid\Direction.cpp" />
     <ClCompile Include="Source\Logic\Grid\Grid.cpp" />
     <ClCompile Include="Source\Logic\ClientSession.cpp" />
+    <ClCompile Include="Source\Logic\Player.cpp" />
     <ClCompile Include="Source\Logic\ServerSession.cpp" />
     <ClCompile Include="Source\Logic\Session.cpp" />
     <ClCompile Include="Source\main.cpp" />
@@ -194,8 +195,10 @@
     <ClCompile Include="Source\Network\ComSocket.cpp" />
     <ClCompile Include="Source\Network\ListenSocket.cpp" />
     <ClCompile Include="Source\Network\Message.cpp" />
+    <ClCompile Include="Source\Network\Messages\JoinMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\LeaveGameMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\PlacePieceMessage.cpp" />
+    <ClCompile Include="Source\Network\Messages\RefuseMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\RemovePieceMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\RemovePlayerMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\SetMarkerMessage.cpp" />
@@ -207,12 +210,13 @@
     <ClCompile Include="Source\Scene\Marker.cpp" />
     <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\State\ApplicationState.cpp" />
-    <ClCompile Include="Source\State\CreateAGameState.cpp" />
+    <ClCompile Include="Source\State\ClientLobbyState.cpp" />
+    <ClCompile Include="Source\State\CreateGameState.cpp" />
     <ClCompile Include="Source\State\InGameState.cpp" />
-    <ClCompile Include="Source\State\LobbyState.cpp" />
+    <ClCompile Include="Source\State\JoinGameState.cpp" />
+    <ClCompile Include="Source\State\ServerLobbyState.cpp" />
     <ClCompile Include="Source\State\MenuState.cpp" />
     <ClCompile Include="Source\State\StateRegistry.cpp" />
-    <ClCompile Include="Source\State\StateStack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Components\Button.hpp" />
@@ -247,6 +251,7 @@
     <ClInclude Include="Include\Logic\ClientSession.hpp" />
     <ClInclude Include="Include\Logic\Player.hpp" />
     <ClInclude Include="Include\Logic\PlayerController.hpp" />
+    <ClInclude Include="Include\Logic\Ruleset.hpp" />
     <ClInclude Include="Include\Logic\ServerSession.hpp" />
     <ClInclude Include="Include\Logic\Session.hpp" />
     <ClInclude Include="Include\Network\Messages\AcceptMessage.hpp" />
@@ -256,9 +261,11 @@
     <ClInclude Include="Include\Network\ComSocket.hpp" />
     <ClInclude Include="Include\Network\ListenSocket.hpp" />
     <ClInclude Include="Include\Network\Message.hpp" />
+    <ClInclude Include="Include\Network\Messages\JoinMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\LeaveGameMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\MessageInclude.hpp" />
     <ClInclude Include="Include\Network\Messages\PlacePieceMessage.hpp" />
+    <ClInclude Include="Include\Network\Messages\RefuseMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\RemovePieceMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\RemovePlayerMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\SetMarkerMessage.hpp" />
@@ -266,16 +273,18 @@
     <ClInclude Include="Include\Network\Messages\StartGameMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\StayAliveMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\TurnMessage.hpp" />
+    <ClInclude Include="Include\Network\NetworkInclude.hpp" />
     <ClInclude Include="Include\Network\Server.hpp" />
     <ClInclude Include="Include\Scene\Marker.hpp" />
     <ClInclude Include="Include\Scene\Scene.hpp" />
     <ClInclude Include="Include\State\ApplicationState.hpp" />
-    <ClInclude Include="Include\State\CreateAGameState.hpp" />
+    <ClInclude Include="Include\State\ClientLobbyState.hpp" />
+    <ClInclude Include="Include\State\CreateGameState.hpp" />
     <ClInclude Include="Include\State\InGameState.hpp" />
-    <ClInclude Include="Include\State\LobbyState.hpp" />
+    <ClInclude Include="Include\State\JoinGameState.hpp" />
+    <ClInclude Include="Include\State\ServerLobbyState.hpp" />
     <ClInclude Include="Include\State\MenuState.hpp" />
     <ClInclude Include="Include\State\StateRegistry.hpp" />
-    <ClInclude Include="Include\State\StateStack.hpp" />
     <ClInclude Include="Include\WinInclude.hpp" />
   </ItemGroup>
   <ItemGroup>

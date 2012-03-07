@@ -11,6 +11,8 @@ extern const D3DXCOLOR			C_COLOR_TEXT;
 //void UpdateViewportMatrix(int newWidth, int newHeight);
 //D3DXVECTOR2 TransformToViewport(const D3DXVECTOR2& vector);
 
+const double C_EPSILON = 10e-6;
+
 template <typename T>
 inline void SafeRelease(T*& resource)
 {

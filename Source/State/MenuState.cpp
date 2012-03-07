@@ -3,6 +3,7 @@
 namespace State
 {
 	const std::string MenuState::C_MENU_CAPTIONS[] = { "Start Game", "Watch Replay", "Credits", "Exit Game" };
+	const std::string MenuState::C_START_GAME_CAPTIONS[] = { "Create Game", "Join Game" };
 
 	MenuState::MenuState(StateID id, ID3D10Device* device) 
 		: ApplicationState(id), mDevice(device), mComponents(NULL), mBackground(NULL)
@@ -35,8 +36,14 @@ namespace State
 			mMenuButtons->AddMenuItem(C_MENU_CAPTIONS[i]);
 		}
 
+		for (int i = 0; i < 2; ++i)
+		{
+			mMenuButtons->GetMenuItem(C_MENU_CAPTIONS[MenuButton::StartGame])->AddSubItem(C_START_GAME_CAPTIONS[i]);
+		}
+
 		mMenuButtons->GetMenuItem(C_MENU_CAPTIONS[MenuButton::WatchReplay])->SetEnabled(false);
 		mMenuButtons->GetMenuItem(C_MENU_CAPTIONS[MenuButton::Credits])->SetEnabled(false);
+		mMenuButtons->GetSubMenu(C_MENU_CAPTIONS[MenuButton::StartGame])->GetMenuItem(C_START_GAME_CAPTIONS[1])->SetEnabled(true);
 	}
 
 	void MenuState::OnStatePushed()
@@ -60,12 +67,14 @@ namespace State
 			QuitApplication();
 
 		// Handle the menu events
-		if (mMenuButtons->GetAndResetClickStatus(C_MENU_CAPTIONS[MenuButton::StartGame]))
+		if (mMenuButtons->GetSubMenu(C_MENU_CAPTIONS[MenuButton::StartGame])->GetAndResetClickStatus(C_START_GAME_CAPTIONS[0]))
 			ChangeState(C_STATE_CREATE_GAME);
+		if (mMenuButtons->GetSubMenu(C_MENU_CAPTIONS[MenuButton::StartGame])->GetAndResetClickStatus(C_START_GAME_CAPTIONS[1]))
+			ChangeState(C_STATE_JOIN_GAME);
 		if (mMenuButtons->GetAndResetClickStatus(C_MENU_CAPTIONS[MenuButton::WatchReplay])) 
 			{} // Do nothing here yet
 		if (mMenuButtons->GetAndResetClickStatus(C_MENU_CAPTIONS[MenuButton::Credits]))
-			{} // Do nothing here yet
+			{} // Change to CreditsState
 		if (mMenuButtons->GetAndResetClickStatus(C_MENU_CAPTIONS[MenuButton::Exit]))
 			QuitApplication();
 	}

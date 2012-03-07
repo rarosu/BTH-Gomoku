@@ -1,32 +1,19 @@
-#ifndef LOBBY_STATE_HPP
-#define LOBBY_STATE_HPP
+#ifndef CLIENT_LOBBY_STATE_HPP
+#define CLIENT_LOBBY_STATE_HPP
 
 #include "ApplicationState.hpp"
 #include "TextButton.hpp"
 #include "Label.hpp"
 #include "Sprite.hpp"
+#include "ClientSession.hpp"
 
 namespace State
 {
-	namespace LobbyButton
-	{
-		enum Button
-		{
-			Team1Player1,
-			Team1Player2,
-			Team2Player1,
-			Team2Player2,
-			StartGame,
-			Cancel,
-			Count
-		};
-	}
-
-	class LobbyState : public ApplicationState
+	class ClientLobbyState : public ApplicationState
 	{
 	public:
-		LobbyState(StateID id, ID3D10Device* device);
-		~LobbyState() throw();
+		ClientLobbyState(StateID id, ID3D10Device* device);
+		~ClientLobbyState() throw();
 
 		void Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime);
 		void Draw();
@@ -34,6 +21,7 @@ namespace State
 		void OnStatePushed();
 		void OnStatePopped();
 
+		void SetSession(Logic::ClientSession* session);
 	private:
 		struct bgVertex
 		{
@@ -46,6 +34,8 @@ namespace State
 		Components::ComponentGroup*				mComponents;
 		std::vector<Components::TextButton*>	mButtons;
 		std::vector<Components::Label*>			mPlayerLabels;
+
+		Logic::ClientSession*					mClientSession;
 
 		void CreateComponents();
 	};

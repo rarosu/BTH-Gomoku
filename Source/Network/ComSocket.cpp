@@ -2,24 +2,25 @@
 
 #include <sstream>
 #include <iostream>
+#include <stdexcept>
 
 namespace Network
 {
-
-	ComSocket::ComSocket():
-	mSocket(INVALID_SOCKET)
+	ComSocket::ComSocket()
+		: mSocket(INVALID_SOCKET), mConnected(false)
 	{
 
 	}
 
-	ComSocket::ComSocket(SOCKET socket):
-	mSocket(socket)
+	ComSocket::ComSocket(SOCKET socket)
+		: mSocket(socket), mConnected(true)
 	{
 
 	}
 
 	ComSocket::~ComSocket()
 	{
+		Shutdown();
 	}
 
 	int ComSocket::Connect(const char* ipAddress, unsigned short port)
@@ -37,7 +38,10 @@ namespace Network
 		int result = getaddrinfo(ipAddress, s.str().c_str(), &hints, &addrResult);
 		if (result != 0)
 		{
-			std::cerr << "getaddrinfo failed: " << result << std::endl;
+			std::stringstream ss;
+			ss << "getaddrinfo failed: " << result;
+
+			throw std::runtime_error(ss.str());
 		}
 
 		for (addrinfo* ptr = addrResult; ptr != NULL; ptr = ptr->ai_next)
@@ -45,7 +49,10 @@ namespace Network
 			mSocket = socket(addrResult->ai_family, addrResult->ai_socktype, addrResult->ai_protocol);
 			if (mSocket == INVALID_SOCKET)
 			{
-				std::cerr << "socket failed with error: " << WSAGetLastError() << std::endl;
+				std::stringstream ss;
+				ss << "socket failed with error: " << WSAGetLastError();
+
+				throw std::runtime_error(ss.str());
 			}
 
 			// Connect to server
@@ -66,8 +73,10 @@ namespace Network
 
 		if (mSocket == INVALID_SOCKET)
 		{
-			std::cerr << "Unable to connect to server!" << std::endl;
+			throw std::runtime_error("Unable to connect to server!");
 		}
+
+		mConnected = true;
 
 		return result;
 	}
@@ -79,7 +88,7 @@ namespace Network
 	}
 
 	// Concatenates a message to the receive buffer, returns error or zero
-	int ComSocket::Receive()
+	bool ComSocket::Receive()
 	{
 		int len = 0;
 		int error = 0;
@@ -93,22 +102,29 @@ namespace Network
 				std::string msg(buf, len);
 				mReceiveBuffer += msg;
 			}
-			else if (len < 0)
+			else if (len == 0)
+				mConnected = false;
+			else
 			{
 				error = WSAGetLastError();
+				if (error != WSAEWOULDBLOCK)
+				{
+					std::stringstream s;
+					s << "recv failed: " << error;
+
+					throw std::runtime_error(s.str());
+				}
 			}
 		} while (len > 0);
 
-		return error;
+		return mConnected;
 	}
 
 	// Tries to receive data from the socket, interpret it, and send any message in the send queue
 	// Returns the amount of received messages
 	int ComSocket::Update()
 	{
-		int result = Receive();
-		if (result != 0 && result != WSAEWOULDBLOCK)
-			std::cerr << "Error receiving: "<< result << std::endl;
+		Receive();
 
 		while (mReceiveBuffer.size() > 1)
 			InterpretBuffer();
@@ -116,9 +132,8 @@ namespace Network
 		if (!mMessagesToSend.empty())
 		{
 			std::string m = mMessagesToSend.front();
-			result = SendMessage(m);
-			if (result != 0 && result != WSAEWOULDBLOCK)
-				std::cerr << "Error sending: "<< result << std::endl;
+			SendMessage(m);
+			
 			mMessagesToSend.erase(mMessagesToSend.begin());
 		}
 
@@ -145,21 +160,30 @@ namespace Network
 		{
 			shutdown(mSocket, SD_BOTH);
 			closesocket(mSocket);
+
+			mSocket = INVALID_SOCKET;
 		}
 	}
 
 	// Sends a Message object, returns error or zero
-	int ComSocket::SendMessage(const std::string& message)
+	void ComSocket::SendMessage(const std::string& message)
 	{
 		int result = 0;
-		int error = 0;
 		std::string msg = message;
 
 		do {
 			result = send(mSocket, msg.c_str(), msg.size(), 0);
 			if (result == SOCKET_ERROR)
 			{
-				error = WSAGetLastError();
+				int error = WSAGetLastError();
+
+				if (error != WSAEWOULDBLOCK)
+				{
+					std::stringstream s;
+					s << "send failed: " << error;
+				
+					throw std::runtime_error(s.str());
+				}
 				break;
 			}
 			else
@@ -167,8 +191,6 @@ namespace Network
 
 
 		} while (result > 0);
-
-		return error;
 	}
 
 	// Interprets the buffer and adds messages to the receive queue
@@ -190,5 +212,10 @@ namespace Network
 				break;
 			}
 		}
+	}
+
+	bool ComSocket::IsConnected() const
+	{
+		return mConnected;
 	}
 }

@@ -343,7 +343,6 @@ void D3DApplication::OnResize()
 	SafeRelease(mDepthStencilView);
 
 	mViewport.Recalculate(mDeviceD3D);
-
 	mSwapChain->ResizeBuffers(0, mViewport.GetWidth(), mViewport.GetHeight(), DXGI_FORMAT_UNKNOWN, 0);
 
 	HRESULT result = SetUpView();

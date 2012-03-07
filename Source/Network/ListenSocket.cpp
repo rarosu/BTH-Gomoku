@@ -1,9 +1,16 @@
 #include "ListenSocket.hpp"
 #include <sstream>
 #include <iostream>
+#include <stdexcept>
 
 namespace Network
 {
+	BindException::BindException(int port, int errorCode)
+		: mPort(port), mErrorCode(errorCode), std::runtime_error("")
+	{}
+
+
+
 	ListenSocket::ListenSocket(int maxClients):
 		mSocket(INVALID_SOCKET), mMaxClients(maxClients)
 	{
@@ -12,10 +19,10 @@ namespace Network
 
 	ListenSocket::~ListenSocket()
 	{
-		
+		Shutdown();
 	}
 
-	int ListenSocket::Bind(unsigned short port)
+	void ListenSocket::Bind(unsigned short port)
 	{
 		int result;
 		int error = 0;
@@ -35,16 +42,17 @@ namespace Network
 		result = getaddrinfo(NULL, s.str().c_str(), &hints, &addrResult);
 		if (result != 0)
 		{
-			std::cerr << "getaddrinfo failed: " << result << std::endl;
-		}
-		mSocket = socket(addrResult->ai_family, addrResult->ai_socktype, addrResult->ai_protocol);
+			throw BindException(port, result);
 
+		}
+
+		mSocket = socket(addrResult->ai_family, addrResult->ai_socktype, addrResult->ai_protocol);
 		if (mSocket == INVALID_SOCKET)
 		{
-			error = WSAGetLastError();
-			std::cerr << "Error at socket(): " << error << std::endl;
 			freeaddrinfo(addrResult);
+			throw BindException(port, WSAGetLastError());
 		}
+
 		unsigned long mode = 1;
 		ioctlsocket(mSocket, FIONBIO, &mode);
 
@@ -52,14 +60,11 @@ namespace Network
 		result = bind(mSocket, addrResult->ai_addr, (int)addrResult->ai_addrlen);
 		if (result == SOCKET_ERROR)
 		{
-			error = WSAGetLastError();
-			std::cerr << "bind failed with error: " << error << std::endl;
 			freeaddrinfo(addrResult);
+			throw BindException(port, WSAGetLastError());
 		}
 
 		freeaddrinfo(addrResult);
-
-		return error;
 	}
 
 	SOCKET ListenSocket::Accept()
@@ -71,7 +76,10 @@ namespace Network
 		if (result == SOCKET_ERROR)
 		{
 			result = WSAGetLastError();
-			std::cerr << "Listen failed with error: " << result << std::endl;
+
+			std::stringstream ss;
+			ss << "listen failed with error: " << result;
+			throw std::runtime_error(ss.str());
 		}
 
 		// Accept a client socket
@@ -79,7 +87,10 @@ namespace Network
 		if (s == INVALID_SOCKET)
 		{
 			result = WSAGetLastError();
-			//std::cerr << "accept failed: " << result << std::endl;
+			std::stringstream ss;
+			ss << "accept failed: " << result;
+
+			throw std::runtime_error(ss.str());
 		}
 		else
 		{
@@ -96,6 +107,8 @@ namespace Network
 		{
 			shutdown(mSocket, SD_BOTH);
 			closesocket(mSocket);
+
+			mSocket = INVALID_SOCKET;
 		}
 	}
 }
