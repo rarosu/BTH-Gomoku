@@ -1,18 +1,29 @@
-#include "LobbyState.hpp"
+#include "ServerLobbyState.hpp"
 #include "Console.hpp"
 #include <cassert>
 
 namespace State
 {
-	LobbyState::LobbyState(StateID id, ID3D10Device* device)
+	ServerLobbyState::ServerLobbyState(StateID id, ID3D10Device* device)
 		: ApplicationState(id),
-		  mDevice(device), mComponents(NULL), mSession(NULL)
+		  mDevice(device), 
+		  mComponents(NULL), 
+		  mSession(NULL),
+		  mEffect(NULL),
+		  mBuffer(NULL)
 	{
 		CreateBuffer((float)sViewport->GetWidth(), (float)sViewport->GetHeight());
 		CreateEffect();
 	}
 
-	void LobbyState::CreateBuffer(float width, float height)
+	ServerLobbyState::~ServerLobbyState() throw()
+	{
+		SafeDelete(mEffect);
+		SafeDelete(mBuffer);
+		SafeDelete(mSession);
+	}
+
+	void ServerLobbyState::CreateBuffer(float width, float height)
 	{
 		const int numVertices = 4;
 		bgVertex vertices[numVertices];
@@ -38,7 +49,7 @@ namespace State
 		mBuffer->SetData(bufferDesc, NULL);
 	}
 	
-	void LobbyState::CreateEffect()
+	void ServerLobbyState::CreateEffect()
 	{
 		mEffect = new Effect(mDevice, "Resources/Effects/Background.fx");
 		
@@ -49,10 +60,10 @@ namespace State
 		mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
 	}
 
-	void LobbyState::CreateComponents()
+	void ServerLobbyState::CreateComponents()
 	{
 		// Create new component group
-		mComponents = new Components::ComponentGroup(sRootComponentGroup, "LobbyState Group");
+		mComponents = new Components::ComponentGroup(sRootComponentGroup, "ServerLobbyState Group");
 
 		// Load background texture
 		ID3D10ShaderResourceView* texture;
@@ -125,7 +136,7 @@ namespace State
 		mComponents->SetFocus(chatWindow);
 	}
 
-	void LobbyState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
+	void ServerLobbyState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
 	{
 		if(mButtons[LobbyButton::StartGame]->GetAndResetClickStatus())
 			ChangeState(C_STATE_IN_GAME);
@@ -138,7 +149,7 @@ namespace State
 		mComponents->Update(gameTime, currInput, prevInput);
 	}
 
-	void LobbyState::Draw()
+	void ServerLobbyState::Draw()
 	{
 		mBuffer->Bind();
 		for(UINT p = 0; p < mEffect->GetTechniqueByIndex(0).GetPassCount(); ++p)
@@ -150,24 +161,26 @@ namespace State
 		mComponents->Draw();
 	}
 
-	void LobbyState::OnStatePushed()
+	void ServerLobbyState::OnStatePushed()
 	{
+		assert(mSession != NULL);
+		
 		CreateComponents();
 		mComponents->GiveFocus();
-		assert(mSession != NULL);
-
 	}
 
-	void LobbyState::OnStatePopped()
+	void ServerLobbyState::OnStatePopped()
 	{
+		mSession = NULL;
+
 		sRootComponentGroup->RemoveComponent(mComponents);
 		mComponents = NULL;
-		mSession = NULL;
 		mButtons.clear();
 	}
 
-	void LobbyState::SetSession(Logic::Session* session)
+	void ServerLobbyState::SetSessionArguments(Network::Server* server, const std::string& adminName, Logic::Ruleset* ruleset)
 	{
-		mSession = session;
+		assert(mSession == NULL);
+		mSession = new Logic::ServerSession(server, adminName, ruleset);
 	}
 }

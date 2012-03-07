@@ -3,12 +3,12 @@
 
 namespace State
 {
-	CreateGameState::CreateGameState(StateID id, ID3D10Device* device, LobbyState* lobbyState)
+	CreateGameState::CreateGameState(StateID id, ID3D10Device* device, ServerLobbyState* serverLobbyState)
 		: ApplicationState(id),
 		  mDevice(device), 
 		  mComponents(NULL), 
 		  mDefaultFont(NULL),
-		  mLobbyState(lobbyState),
+		  mServerLobbyState(serverLobbyState),
 		  mIFName(NULL),
 		  mIFPort(NULL),
 		  mBtnCreate(NULL),
@@ -139,20 +139,18 @@ namespace State
 		}
 
 
-		Logic::ServerParameters args;
-		std::stringstream s;
-
 		// Basic check to see if the port is valid
+		unsigned short port = 0;
+		std::stringstream s;
 		s.str(mIFPort->GetText());
-		if (!(s >> args.mPort))
+		if (!(s >> port))
 		{
 			mBtnCreate->SetEnabled(false);
 			return;
 		}
 
 		// Basic check to see if the name is valid (non-empty)
-		args.mAdminName = mIFName->GetText();
-		if (args.mAdminName.empty())
+		if (mIFName->Empty())
 		{
 			mBtnCreate->SetEnabled(false);
 			return;
@@ -163,21 +161,22 @@ namespace State
 
 		if (mBtnCreate->GetAndResetClickStatus())
 		{
-			args.mRuleset = new Logic::StandardRuleset();
-
+			Logic::Ruleset* ruleset = new Logic::StandardRuleset();
 			try
 			{
-				Network::Server server(args.mRuleset->GetPlayerCount(), args.mPort);
+				Network::Server* server = new Network::Server(ruleset->GetPlayerCount(), port);
+				mServerLobbyState->SetSessionArguments(server, mIFName->GetText(), ruleset);
+				
+				ChangeState(C_STATE_SERVER_LOBBY);
 			}
-			catch (Network::BindException e)
+			catch (Network::BindException& e)
 			{
-				// TODO: Report error here
-				MessageBox(NULL, e.what(), "Bind Error", MB_OK | MB_ICONERROR);
-				return;
+				// TODO: Report error here in some other way
+				std::stringstream ss;
+				ss << "Failed to bind to port: " << e.GetPort() << " with error: " << e.GetErrorCode();
+
+				MessageBox(NULL, ss.str().c_str(), "Bind Error", MB_OK | MB_ICONERROR);
 			}
-			
-			// TODO: Forward server to LobbyState
-			// TODO: Switch to LobbyState
 		}
 	}
 

@@ -2,26 +2,27 @@
 
 namespace Logic
 {
-	ServerSession::ServerSession(const ServerParameters& parameters) 
-		: mServer(parameters.mRuleset->GetPlayerCount(), parameters.mPort)
-		, mRuleset(parameters.mRuleset)
+	ServerSession::ServerSession(Network::Server* server, const std::string& adminName, Ruleset* ruleset) 
+		: mServer(server)
+		, mRuleset(ruleset)
 	{
-		mServer.SetEventInterface(this);
+		mServer->SetEventInterface(this);
 		mPlayers.resize(mRuleset->GetPlayerCount());
 		
 		// TODO: Set admin to local controller
 		mPlayers[0].SetController(NULL);
-		mPlayers[0].SetName(parameters.mAdminName);
+		mPlayers[0].SetName(adminName);
 	}
 
 	ServerSession::~ServerSession() throw()
 	{
+		SafeDelete(mServer);
 		SafeDelete(mRuleset);
 	}
 
 	unsigned short ServerSession::GetPort() const
 	{
-		return mServer.GetPort();
+		return mServer->GetPort();
 	}
 
 	const Ruleset* ServerSession::GetRuleset() const
@@ -31,7 +32,15 @@ namespace Logic
 
 	void ServerSession::ClientConnected(int slot)
 	{
+		if (slot >= mPlayers.size())
+		{
+			// No room for the player
+			mServer->DisconnectClient(slot);
+		}
+		else
+		{
 
+		}
 	}
 
 	void ServerSession::ClientDisconnected(int slot)

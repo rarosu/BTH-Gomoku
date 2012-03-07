@@ -1,5 +1,6 @@
 #include "Server.hpp"
 #include <sstream>
+#include <cassert>
 
 namespace Network
 {
@@ -106,5 +107,15 @@ namespace Network
 		}
 
 		return m;
+	}
+
+	void Server::DisconnectClient(int slot)
+	{
+		assert(slot >= 0);
+		assert(slot < mClients.size());
+		
+		mClients[slot].Shutdown();
+		if (mEventInterface != NULL)
+			mEventInterface->ClientDisconnected(slot);
 	}
 }

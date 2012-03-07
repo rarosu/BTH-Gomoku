@@ -1,29 +1,28 @@
-#ifndef CREATE_GAME_STATE_HPP
-#define CREATE_GAME_STATE_HPP
+#ifndef CLIENT_LOBBY_STATE_HPP
+#define CLIENT_LOBBY_STATE_HPP
 
 #include "ApplicationState.hpp"
 #include "TextButton.hpp"
+#include "Label.hpp"
 #include "Effect.hpp"
 #include "Buffer.hpp"
-#include "GameFont.hpp"
-#include "Label.hpp"
-#include "InputField.hpp"
-#include "GameFont.hpp"
-#include "ServerLobbyState.hpp"
+#include "Session.hpp"
 
 namespace State
 {
-	class CreateGameState : public ApplicationState
+	class ClientLobbyState : public ApplicationState
 	{
 	public:
-		CreateGameState(StateID id, ID3D10Device* device, ServerLobbyState* serverLobbyState);
-		~CreateGameState() throw();
+		ClientLobbyState(StateID id, ID3D10Device* device);
 
 		void Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime);
 		void Draw();
 
 		void OnStatePushed();
 		void OnStatePopped();
+
+		void SetSession(Logic::Session* session);
+
 	private:
 		struct bgVertex
 		{
@@ -34,15 +33,11 @@ namespace State
 		ID3D10Device*							mDevice;
 		Effect*									mEffect;
 		VertexBuffer*							mBuffer;
-		GameFont*								mDefaultFont;		
-
-		ServerLobbyState*						mServerLobbyState;
-
 		Components::ComponentGroup*				mComponents;
-		Components::InputField*					mIFName;
-		Components::InputField*					mIFPort;
-		Components::TextButton*					mBtnCreate;
-		Components::TextButton*					mBtnCancel;
+		std::vector<Components::TextButton*>	mButtons;
+		std::vector<Components::Label*>			mPlayerLabels;
+
+		Logic::Session*							mSession;
 
 		void CreateComponents();
 		void CreateBuffer(float width, float height);

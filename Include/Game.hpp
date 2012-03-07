@@ -9,10 +9,11 @@
 #include "RootComponent.hpp"
 
 #include "MenuState.hpp"
-#include "LobbyState.hpp"
-#include "InGameState.hpp"
 #include "JoinGameState.hpp"
 #include "CreateGameState.hpp"
+#include "ServerLobbyState.hpp"
+#include "ClientLobbyState.hpp"
+#include "InGameState.hpp"
 
 class Game : public D3DApplication, public State::StateManager
 {
@@ -38,7 +39,8 @@ private:
 	State::MenuState*			mMenuState;
 	State::CreateGameState*		mCreateGameState;
 	State::JoinGameState*		mJoinGameState;
-	State::LobbyState*			mLobbyState;
+	State::ServerLobbyState*	mServerLobbyState;
+	State::ClientLobbyState*	mClientLobbyState;
 	State::InGameState*			mInGameState;
 
 	State::ApplicationState*	mCurrentState;

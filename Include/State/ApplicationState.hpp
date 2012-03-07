@@ -23,10 +23,11 @@ namespace State
 		Constants for all states in Gomoku
 	*/
 	const StateID C_STATE_MENU			= 1;
-	const StateID C_STATE_LOBBY			= 2;
-	const StateID C_STATE_IN_GAME		= 3;
-	const StateID C_STATE_CREATE_GAME	= 4;
-	const StateID C_STATE_JOIN_GAME		= 5;
+	const StateID C_STATE_SERVER_LOBBY	= 2;
+	const StateID C_STATE_CLIENT_LOBBY	= 3;
+	const StateID C_STATE_IN_GAME		= 4;
+	const StateID C_STATE_CREATE_GAME	= 5;
+	const StateID C_STATE_JOIN_GAME		= 6;
 
 	/**
 		This should be implemented by the Game class,

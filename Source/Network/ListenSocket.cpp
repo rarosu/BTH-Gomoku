@@ -9,13 +9,6 @@ namespace Network
 		: mPort(port), mErrorCode(errorCode), std::runtime_error("")
 	{}
 
-	const char* BindException::what() const
-	{
-		std::stringstream ss;
-		ss << "Failed to bind to port: " << mPort << " with error: " << mErrorCode;
-		return ss.str().c_str();
-	}
-
 
 
 	ListenSocket::ListenSocket(int maxClients):

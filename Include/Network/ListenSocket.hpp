@@ -12,7 +12,8 @@ namespace Network
 	public:
 		BindException(int port, int errorCode);
 
-		virtual const char* what() const;
+		int GetPort() const { return mPort; }
+		int GetErrorCode() const { return mErrorCode; }
 	private:
 		int mPort;
 		int mErrorCode;

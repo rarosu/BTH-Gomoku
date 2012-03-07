@@ -1,12 +1,13 @@
-#ifndef LOBBY_STATE_HPP
-#define LOBBY_STATE_HPP
+#ifndef SERVER_LOBBY_STATE_HPP
+#define SERVER_LOBBY_STATE_HPP
 
 #include "ApplicationState.hpp"
 #include "TextButton.hpp"
 #include "Label.hpp"
 #include "Effect.hpp"
 #include "Buffer.hpp"
-#include "Session.hpp"
+#include "ServerSession.hpp"
+#include "Server.hpp"
 
 namespace State
 {
@@ -24,10 +25,11 @@ namespace State
 		};
 	}
 
-	class LobbyState : public ApplicationState
+	class ServerLobbyState : public ApplicationState
 	{
 	public:
-		LobbyState(StateID id, ID3D10Device* device);
+		ServerLobbyState(StateID id, ID3D10Device* device);
+		~ServerLobbyState() throw();
 
 		void Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime);
 		void Draw();
@@ -35,8 +37,7 @@ namespace State
 		void OnStatePushed();
 		void OnStatePopped();
 
-		void SetSession(Logic::Session* session);
-
+		void SetSessionArguments(Network::Server* server, const std::string& adminName, Logic::Ruleset* ruleset);
 	private:
 		struct bgVertex
 		{
@@ -51,7 +52,7 @@ namespace State
 		std::vector<Components::TextButton*>	mButtons;
 		std::vector<Components::Label*>			mPlayerLabels;
 
-		Logic::Session*							mSession;
+		Logic::ServerSession*					mSession;
 
 		void CreateComponents();
 		void CreateBuffer(float width, float height);

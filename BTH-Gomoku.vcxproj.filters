@@ -53,7 +53,6 @@
     <ClCompile Include="Source\Network\Messages\StartGameMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\LeaveGameMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\StayAliveMessage.cpp" />
-    <ClCompile Include="Source\State\LobbyState.cpp" />
     <ClCompile Include="Source\Components\List.cpp" />
     <ClCompile Include="Source\Logic\Grid\Direction.cpp" />
     <ClCompile Include="Source\Components\ClickMenu.cpp" />
@@ -61,6 +60,9 @@
     <ClCompile Include="Source\Logic\Player.cpp" />
     <ClCompile Include="Source\Network\Messages\JoinMessage.cpp" />
     <ClCompile Include="Source\State\CreateGameState.cpp" />
+    <ClCompile Include="Source\State\ServerLobbyState.cpp" />
+    <ClCompile Include="Source\State\ClientLobbyState.cpp" />
+    <ClCompile Include="Source\Network\Messages\RefuseMessage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -119,13 +121,15 @@
     <ClInclude Include="Include\Network\Messages\StayAliveMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\MessageInclude.hpp" />
     <ClInclude Include="Include\Components\RootComponent.hpp" />
-    <ClInclude Include="Include\State\LobbyState.hpp" />
     <ClInclude Include="Include\Components\List.hpp" />
     <ClInclude Include="Include\Components\ClickMenu.hpp" />
     <ClInclude Include="Include\State\JoinGameState.hpp" />
     <ClInclude Include="Include\Logic\Ruleset.hpp" />
     <ClInclude Include="Include\State\CreateGameState.hpp" />
     <ClInclude Include="Include\Network\Messages\JoinMessage.hpp" />
+    <ClInclude Include="Include\State\ServerLobbyState.hpp" />
+    <ClInclude Include="Include\State\ClientLobbyState.hpp" />
+    <ClInclude Include="Include\Network\Messages\RefuseMessage.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

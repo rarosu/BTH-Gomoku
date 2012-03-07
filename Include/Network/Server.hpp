@@ -29,6 +29,8 @@ namespace Network
 
 		void Send(const Message& message);
 		Message* PopMessage();
+
+		void DisconnectClient(int slot);
 	private:
 		ServerEventInterface* mEventInterface;
 
