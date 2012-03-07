@@ -85,7 +85,7 @@ namespace State
 	void NetworkLobbyState::OnStatePushed()
 	{
 		CreateComponents();	
-		mComponents->GiveFocus();
+		mComponents->SetFocus();
 	}
 
 	void NetworkLobbyState::OnStatePopped()

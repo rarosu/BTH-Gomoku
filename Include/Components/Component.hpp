@@ -24,6 +24,8 @@ namespace Components
 		virtual void LostFocus() = 0;
 		virtual void GotFocus() = 0;
 		
+		virtual bool HasFocus();
+		void SetFocus();
 		bool IsEnabled();
 		void SetEnabled(bool isEnabled);
 		bool IsVisible();
@@ -51,7 +53,7 @@ namespace Components
 		float GetWidth() const;
 		float GetHeight() const;
 
-		void SetFocusThis();
+		
 		void LoseFocus();
 
 	private:

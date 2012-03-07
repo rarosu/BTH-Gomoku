@@ -2,17 +2,15 @@
 #include "Globals.hpp"
 #include <cmath>
 
-const float	Camera::C_MOVE_SPEED		= 50.0f;
+const float	Camera::C_MOVE_SPEED		= 100.0f;
 const float	Camera::C_TILTING_SPEED		= 0.001f;
 const float	Camera::C_ZOOM_SPEED		= 6.0f;
-const float	Camera::C_ZOOM_MIN			= -200.0f;
-const float	Camera::C_ZOOM_MAX			= -10.0f;
+const float	Camera::C_ZOOM_MIN			= -500.0f;
+const float	Camera::C_ZOOM_MAX			= -30.0f;
 
 Camera::Camera(D3DXVECTOR3 position, D3DXVECTOR3 direction, D3DXVECTOR3 worldUp, const Frustum& viewFrustum)
 	: mPosition(position), mDirection(direction), mWorldUp(worldUp), mZoom(-200.0f)
 {
-	//mInputManager->AddMouseListener(this);
-	
 	mPosition = mPosition - (D3DXVec3Dot(&mPosition, &mWorldUp) * mWorldUp);
 
 	D3DXVec3Normalize(&mDirection, &mDirection);
@@ -21,26 +19,10 @@ Camera::Camera(D3DXVECTOR3 position, D3DXVECTOR3 direction, D3DXVECTOR3 worldUp,
 
 Camera::~Camera() throw()
 {
-	//mInputManager->RemoveMouseListener(this);
 }
 
 void Camera::Update(const InputState& prevInput, const InputState& currInput, const GameTime& gameTime)
 {
-	// Check for movement of the camera.
-	if(currInput.Keyboard.keyIsPressed['Q'])
-		MoveLeft(gameTime);
-	else if(currInput.Keyboard.keyIsPressed['E'])
-		MoveRight(gameTime);
-
-	if(currInput.Keyboard.keyIsPressed['W'])
-		MoveForward(gameTime);
-	else if(currInput.Keyboard.keyIsPressed['S'])
-		MoveBack(gameTime);
-
-	if(currInput.Keyboard.keyIsPressed['A'])
-		TurnHorizontal((float)(-gameTime.GetTimeSinceLastTick().Milliseconds) * C_TILTING_SPEED);
-	else if(currInput.Keyboard.keyIsPressed['D'])
-		TurnHorizontal((float)gameTime.GetTimeSinceLastTick().Milliseconds * C_TILTING_SPEED);
 }
 
 // Move camera backwards
@@ -78,8 +60,12 @@ void Camera::MoveRight(const GameTime& gameTime)
 }
 
 // Tilt the camera horisontally: look left/right
-void Camera::TurnHorizontal(float angle)
+void Camera::TurnHorizontal(const GameTime& gameTime, bool turnLeft)
 {
+	float angle = (float)gameTime.GetTimeSinceLastTick().Milliseconds * C_TILTING_SPEED;
+	if(turnLeft)
+		angle = -angle;
+
 	D3DXVECTOR3 up;
 	D3DXVec3Cross(&up, &mDirection, &GetRight());
 	D3DXMATRIX rotation;
@@ -90,15 +76,15 @@ void Camera::TurnHorizontal(float angle)
 }
 
 // Tilt the camera vertically: look up/down
-void Camera::TurnVertical(float angle)
-{
-	D3DXVECTOR3 right = GetRight();
-	D3DXMATRIX rotation;
-
-	D3DXMatrixRotationAxis(&rotation, &right, angle);
-	D3DXVec3TransformCoord(&mDirection, &mDirection, &rotation);
-	D3DXVec3Normalize(&mDirection, &mDirection);
-}
+//void Camera::TurnVertical(float angle)
+//{
+//	D3DXVECTOR3 right = GetRight();
+//	D3DXMATRIX rotation;
+//
+//	D3DXMatrixRotationAxis(&rotation, &right, angle);
+//	D3DXVec3TransformCoord(&mDirection, &mDirection, &rotation);
+//	D3DXVec3Normalize(&mDirection, &mDirection);
+//}
 
 // Create and return the view matrix for the camera
 D3DXMATRIX Camera::GetViewMatrix() const
@@ -177,6 +163,12 @@ const D3DXVECTOR3& Camera::GetPos() const
 void Camera::SetHeight(float height)
 {
 	mPosition.y = height;
+}
+
+void Camera::Zoom(short amount)
+{
+	mZoom += amount * C_ZOOM_SPEED;
+	mZoom = Clamp(mZoom, C_ZOOM_MIN, C_ZOOM_MAX);
 }
 
 /*

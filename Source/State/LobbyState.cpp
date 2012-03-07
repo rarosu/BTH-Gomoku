@@ -121,7 +121,7 @@ namespace State
 		// Create chat console
 		RECT chatPos = { 0, sViewport->GetHeight() - 180, sViewport->GetWidth(), sViewport->GetHeight() };
 		Components::Console* chatWindow = new Components::Console(mDevice, mComponents, chatPos, C_COLOR_WINDOW_BG);
-		mComponents->SetFocus(chatWindow);
+		mComponents->SetFocusedComponent(chatWindow);
 	}
 
 	void LobbyState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
@@ -149,7 +149,7 @@ namespace State
 	void LobbyState::OnStatePushed()
 	{
 		CreateComponents();
-		mComponents->GiveFocus();
+		mComponents->SetFocus();
 	}
 
 	void LobbyState::OnStatePopped()

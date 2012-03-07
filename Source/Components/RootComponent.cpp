@@ -42,7 +42,7 @@ namespace Components
 		}
 	}
 
-	void RootComponent::SetFocus(Component* component)
+	void RootComponent::SetFocusedComponent(Component* component)
 	{
 		if(component == NULL)
 		{
@@ -50,10 +50,15 @@ namespace Components
 				mFocusedComponent->LostFocus();
 			
 			if(mComponents.size() > 1)
-				SetFocus(mComponents[1]);
+				SetFocusedComponent(mComponents[1]);
 		}
 		else
-			ComponentGroup::SetFocus(component);
+			ComponentGroup::SetFocusedComponent(component);
+	}
+
+	bool RootComponent::HasFocus()
+	{
+		return true;
 	}
 
 	// STATIC METHODS

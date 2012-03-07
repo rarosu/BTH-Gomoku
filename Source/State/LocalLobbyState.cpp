@@ -85,7 +85,7 @@ namespace State
 	void LocalLobbyState::OnStatePushed()
 	{
 		CreateComponents();
-		mComponents->GiveFocus();
+		mComponents->SetFocus();
 	}
 
 	void LocalLobbyState::OnStatePopped()

@@ -81,7 +81,7 @@ namespace State
 	void MenuState::OnStatePushed()
 	{
 		CreateComponents();
-		mComponents->GiveFocus();
+		mComponents->SetFocus();
 	}
 
 	void MenuState::OnStatePopped()

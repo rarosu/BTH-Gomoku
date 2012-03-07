@@ -82,7 +82,7 @@ namespace State
 		mDefaultFont = new GameFont(mDevice,  "Segoe Print", (labelPos.bottom - labelPos.top));
 		RECT ifPos = { labelPos.right + 10, labelPos.top, buttonPos.right, labelPos.bottom };
 		Components::InputField* input = new Components::InputField(mDevice, mComponents, NULL, ifPos, mDefaultFont);
-		mComponents->SetFocus(input);
+		mComponents->SetFocusedComponent(input);
 
 		RECT labelNPos = { leftOffset, 320, leftOffset + 90, 368 };
 		mLblName = new Components::Label(mDevice, mComponents, "Name:", labelNPos);
@@ -118,7 +118,7 @@ namespace State
 	void CreateAGameState::OnStatePushed()
 	{
 		CreateComponents();
-		mComponents->GiveFocus();
+		mComponents->SetFocus();
 	}
 
 	void CreateAGameState::OnStatePopped()

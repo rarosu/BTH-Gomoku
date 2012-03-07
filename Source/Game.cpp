@@ -11,7 +11,7 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth,
 	mDefaultFont = new GameFont(mDeviceD3D, "Times New Roman", 24);
 	/*RECT consolePos = { 0, 0, mViewport.GetWidth(), mViewport.GetHeight() / 2 };
 	mConsole = new Components::Console(mDeviceD3D, mRootComponentGroup, consolePos, D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.0f));*/
-	//mRootComponentGroup->SetFocus(mConsole);
+	//mRootComponentGroup->SetFocusedComponent(mConsole);
 
 	// Setup static access variables
 	Components::Component::sViewport = &mViewport;
@@ -30,7 +30,7 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth,
 	mCreateGameState = new State::CreateAGameState(State::C_STATE_CREATE_GAME, mDeviceD3D);
 
 	// Start the application in InGameState
-	State::ApplicationState::sStack.ChangeState(mMenuState);
+	State::ApplicationState::sStack.ChangeState(mInGameState);
 	State::ApplicationState::sStack.UpdateStack();
 }
 

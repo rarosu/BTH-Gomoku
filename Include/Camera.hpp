@@ -27,12 +27,15 @@ public:
 
 	const D3DXVECTOR3& GetPos() const;
 	void SetHeight(float height);
+
+	void MoveLeft(const GameTime& gameTime);
+	void MoveRight(const GameTime& gameTime);
+	void MoveForward(const GameTime& gameTime);
+	void MoveBack(const GameTime& gameTime);
+	void TurnHorizontal(const GameTime& gameTime, bool turnLeft);
+	//void TurnVertical(float angle);
+	void Zoom(short amount);
 	
-	/*
-	void MouseButtonPressed(int index, const InputState& currentState);
-	void MouseButtonReleased(int index, const InputState& currentState);
-	void MouseWheelMoved(short delta, const InputState& currentState);
-	*/
 private:
 	D3DXVECTOR3				mPosition;
 	D3DXVECTOR3				mDirection;
@@ -48,11 +51,5 @@ private:
 	static const float		C_ZOOM_MAX;
 
 	D3DXVECTOR3 GetRight() const;
-	void MoveLeft(const GameTime& gameTime);
-	void MoveRight(const GameTime& gameTime);
-	void MoveForward(const GameTime& gameTime);
-	void MoveBack(const GameTime& gameTime);
-	void TurnHorizontal(float angle);
-	void TurnVertical(float angle);
 };
 #endif

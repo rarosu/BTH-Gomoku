@@ -16,7 +16,6 @@ namespace State
 	InGameState::~InGameState() throw()
 	{
 		SafeDelete(mGrid);
-		SafeDelete(mScene);
 	}
 
 	float CalculateAspectRatio(const Viewport& viewport)
@@ -33,21 +32,20 @@ namespace State
 		mDragonAgeMenu->SetVisible(false);*/
 
 		mGrid = new Logic::Grid();
-		mScene = new Scene(mDevice, CalculateAspectRatio(*sViewport));
+		mScene = new Scene(mDevice, mComponents, CalculateAspectRatio(*sViewport));
+		mComponents->SetFocusedComponent(mScene);
 	}
 
 	void InGameState::OnStatePushed()
 	{
 		CreateComponents();
-		mComponents->GiveFocus();
+		mComponents->SetFocus();
 	}
 
 	void InGameState::OnStatePopped()
 	{
 		SafeDelete(mGrid);
-		SafeDelete(mScene);
 
-		sRootComponentGroup->RemoveComponent(mComponents);
 		mComponents = NULL;
 		//SafeDelete(mDragonAgeMenu);
 	}
@@ -72,7 +70,7 @@ namespace State
 			RECT menuPos = { currInput.Mouse.x - 50, currInput.Mouse.y - 50, 
 							 currInput.Mouse.x + 50, currInput.Mouse.y + 50 };
 			mDragonAgeMenu->SetPosition(menuPos);
-			mComponents->SetFocus(mDragonAgeMenu);
+			mComponents->SetFocusedComponent(mDragonAgeMenu);
 		}
 		else if (!currInput.Mouse.buttonIsPressed[C_MOUSE_RIGHT] && prevInput.Mouse.buttonIsPressed[C_MOUSE_RIGHT])
 			mDragonAgeMenu->SetVisible(false);
