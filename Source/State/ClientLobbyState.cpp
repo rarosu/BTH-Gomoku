@@ -6,10 +6,21 @@ namespace State
 {
 	ClientLobbyState::ClientLobbyState(StateID id, ID3D10Device* device)
 		: ApplicationState(id),
-		  mDevice(device), mComponents(NULL), mSession(NULL)
+		  mDevice(device), 
+		  mBuffer(NULL),
+		  mEffect(NULL),
+		  mComponents(NULL), 
+		  mClientSession(NULL)
 	{
 		CreateBuffer((float)sViewport->GetWidth(), (float)sViewport->GetHeight());
 		CreateEffect();
+	}
+
+	ClientLobbyState::~ClientLobbyState() throw()
+	{
+		SafeDelete(mBuffer);
+		SafeDelete(mEffect);
+		SafeDelete(mClientSession);
 	}
 
 	void ClientLobbyState::CreateBuffer(float width, float height)
@@ -154,22 +165,24 @@ namespace State
 
 	void ClientLobbyState::OnStatePushed()
 	{
+		assert(mClientSession != NULL);
+		
 		CreateComponents();
 		mComponents->GiveFocus();
-		assert(mSession != NULL);
-
 	}
 
 	void ClientLobbyState::OnStatePopped()
 	{
+		mClientSession = NULL;
+
 		sRootComponentGroup->RemoveComponent(mComponents);
 		mComponents = NULL;
-		mSession = NULL;
+		
 		mButtons.clear();
 	}
 
-	void ClientLobbyState::SetSession(Logic::Session* session)
+	void ClientLobbyState::SetSession(Logic::ClientSession* session)
 	{
-		mSession = session;
+		mClientSession = session;
 	}
 }

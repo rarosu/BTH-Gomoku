@@ -12,10 +12,10 @@ namespace Logic
 	class ClientSession : public Session
 	{
 	public:
-		ClientSession(const std::string& IPAddress, );
+		ClientSession(const std::string& IPAddress);	// TODO, add port and playername
 		~ClientSession();
 	private:
-		Network::Client mClient;
+		Network::Client* mClient;
 	};
 
 

@@ -55,27 +55,24 @@ namespace State
 			return;
 		}
 
-		Logic::ClientParameters args;
-		std::stringstream s;
-
 		// Basic check to see if the name is valid (non-empty)
-		args.mPlayerName = mNameField->GetText();
-		if (args.mPlayerName.empty())
+		if (mNameField->Empty())
 		{
 			mJoinButton->SetEnabled(false);
 			return;
 		}
 
-		args.mIPAddress = mIPAddressField->GetText();
-		if (args.mIPAddress.empty())
+		// Basic check to see if the IP/Hostname is valid (non-empty)
+		if (mIPAddressField->Empty())
 		{
 			mJoinButton->SetEnabled(false);
 			return;
 		}
 
 		// Basic check to see if the port is valid
-		s.str(mPortField->GetText());
-		if (!(s >> args.mPort))
+		std::stringstream s;
+		unsigned short port = 0;
+		if (!(s >> port))
 		{
 			mJoinButton->SetEnabled(false);
 			return;
@@ -87,7 +84,7 @@ namespace State
 		if (mJoinButton->GetAndResetClickStatus())
 		{
 			// TODO: Create client and attempt to connect (report errors some way)
-			Network::Client* client = new Network::Client(
+			//Network::Client* client = new Network::Client(
 			// TODO: Send Join message and receive Accept message.
 		}
 	}

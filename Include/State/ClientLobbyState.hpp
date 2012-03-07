@@ -6,7 +6,7 @@
 #include "Label.hpp"
 #include "Effect.hpp"
 #include "Buffer.hpp"
-#include "Session.hpp"
+#include "ClientSession.hpp"
 
 namespace State
 {
@@ -14,6 +14,7 @@ namespace State
 	{
 	public:
 		ClientLobbyState(StateID id, ID3D10Device* device);
+		~ClientLobbyState() throw();
 
 		void Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime);
 		void Draw();
@@ -21,8 +22,7 @@ namespace State
 		void OnStatePushed();
 		void OnStatePopped();
 
-		void SetSession(Logic::Session* session);
-
+		void SetSession(Logic::ClientSession* session);
 	private:
 		struct bgVertex
 		{
@@ -37,7 +37,7 @@ namespace State
 		std::vector<Components::TextButton*>	mButtons;
 		std::vector<Components::Label*>			mPlayerLabels;
 
-		Logic::Session*							mSession;
+		Logic::ClientSession*					mClientSession;
 
 		void CreateComponents();
 		void CreateBuffer(float width, float height);

@@ -2,14 +2,15 @@
 
 namespace Logic
 {
-	ClientSession::ClientSession(const ClientParameters& parameters)
-		: mClient(parameters.mIPAddress.c_str(), parameters.mPort)
+	ClientSession::ClientSession(const std::string& IPAddress)
+		: mClient(NULL)
 	{
+		
 		//mClient.Send(Network::JoinMessage(parameters.PlayerName));
 	}
 
 	ClientSession::~ClientSession()
 	{
-		
+		SafeDelete(mClient);
 	}
 }
