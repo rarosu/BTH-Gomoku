@@ -168,8 +168,8 @@ namespace State
 
 
 		// Set the initial focus, and focus this component group
-		mComponents->SetFocus(mNameField);
-		mComponents->GiveFocus();	
+		mNameField->SetFocus();
+		mComponents->SetFocus();
 	}
 
 	void JoinGameState::CreateBuffer()

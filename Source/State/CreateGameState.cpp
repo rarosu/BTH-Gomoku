@@ -126,8 +126,8 @@ namespace State
 
 
 		// Set the initial focus, and focus this component group
-		mComponents->SetFocus(mIFPort);
-		mComponents->GiveFocus();	
+		mIFName->SetFocus();
+		mComponents->SetFocus();	
 	}
 
 	void CreateGameState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
