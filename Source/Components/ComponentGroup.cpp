@@ -4,16 +4,16 @@
 
 namespace Components
 {
-	ComponentGroup::ComponentGroup(ComponentGroup* ownerGroup, std::string name)
-		: Component(ownerGroup),
+	ComponentGroup::ComponentGroup(ComponentGroup* ownerGroup, std::string name, RECT position)
+		: Component(ownerGroup, position),
 		  mFocusedComponent(NULL), mName(name)
 	{
 		assert(ownerGroup != NULL);
 	}
-	
+
 	ComponentGroup::ComponentGroup()
-		: Component(NULL),
-		  mFocusedComponent(NULL), mName("Root Component Group")
+		: Component(NULL, RECT()),
+		  mFocusedComponent(NULL), mName("Root Component")
 	{
 	}
 
@@ -63,6 +63,9 @@ namespace Components
 
 	void ComponentGroup::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
 	{
+		if(!IsVisible())
+			return;
+
 		std::vector<Component*>::iterator it;
 		
 		for(it = mComponents.begin(); it != mComponents.end(); it++)
@@ -71,6 +74,9 @@ namespace Components
 
 	void ComponentGroup::Draw()
 	{
+		if(!IsVisible())
+			return;
+
 		std::vector<Component*>::iterator it;
 		
 		for(it = mComponents.begin(); it != mComponents.end(); it++)

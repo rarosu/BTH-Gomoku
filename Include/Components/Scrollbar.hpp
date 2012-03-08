@@ -16,10 +16,10 @@ namespace Components
 	class Scrollbar : public Clickable
 	{
 	public:
-		Scrollbar(ComponentGroup* ownerGroup, Scrollable* scrollable);
+		Scrollbar(ComponentGroup* ownerGroup, Scrollable* scrollable, RECT position);
 		~Scrollbar() throw();
 
-		void Initialize(ID3D10Device* device, RECT position);
+		void Initialize(ID3D10Device* device);
 
 		// Methods inherited from Component
 		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);

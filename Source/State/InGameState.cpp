@@ -25,7 +25,8 @@ namespace State
 
 	void InGameState::CreateComponents()
 	{
-		mComponents = new Components::ComponentGroup(sRootComponentGroup, "Ingame group");
+		RECT compPos = { 0, 0, 0, 0 };
+		mComponents = new Components::ComponentGroup(sRootComponentGroup, "Ingame group", compPos);
 
 		/*RECT menuPos = { 100, 100, 200, 200 };
 		mDragonAgeMenu = new Components::Menu(mDevice, mComponents, menuPos);

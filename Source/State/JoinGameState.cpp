@@ -112,10 +112,9 @@ namespace State
 		const int C_LABEL_HEIGHT = mDefaultFont->GetSize();
 		RECT r;
 
-
-
 		// Create all the components and put them in the right place
-		mComponents = new Components::ComponentGroup(sRootComponentGroup, "CreateGameState Group");
+		RECT compPos = { 0, 0, 0, 0 };
+		mComponents = new Components::ComponentGroup(sRootComponentGroup, "CreateGameState Group", compPos);
 
 		r.left = C_OFFSET_LEFT;
 		r.right = r.left + C_LABEL_WIDTH;
@@ -157,13 +156,13 @@ namespace State
 		r.right = r.left + C_BUTTON_WIDTH;
 		r.top = C_OFFSET_TOP + C_LABEL_HEIGHT * 6;
 		r.bottom = r.top + C_BUTTON_HEIGHT;
-		mJoinButton = new Components::TextButton(mComponents);
-		mJoinButton->Initialize(mDevice, r, "Join Game");
+		mJoinButton = new Components::TextButton(mComponents, r);
+		mJoinButton->Initialize(mDevice, "Join Game");
 
 		r.left = C_OFFSET_LEFT + C_BUTTON_WIDTH * 2;
 		r.right = r.left + C_BUTTON_WIDTH;
-		mCancelButton = new Components::TextButton(mComponents);
-		mCancelButton->Initialize(mDevice, r, "Cancel");
+		mCancelButton = new Components::TextButton(mComponents, r);
+		mCancelButton->Initialize(mDevice, "Cancel");
 
 
 

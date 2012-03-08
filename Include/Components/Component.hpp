@@ -16,7 +16,7 @@ namespace Components
 	public:
 		friend class Game;
 
-		Component(ComponentGroup* ownerGroup);
+		Component(ComponentGroup* ownerGroup, RECT position);
 		virtual ~Component() throw();
 
 		virtual void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState) = 0;
@@ -46,7 +46,7 @@ namespace Components
 		// DEBUG
 		virtual std::string GetName() = 0;
 		
-	protected:
+	//protected:
 		RECT						mPositionRect;
 		ComponentGroup*				mOwner;
 
@@ -54,7 +54,7 @@ namespace Components
 
 		float GetWidth() const;
 		float GetHeight() const;
-
+		virtual D3DXVECTOR2 GetPosition() const;
 		
 		void LoseFocus();
 

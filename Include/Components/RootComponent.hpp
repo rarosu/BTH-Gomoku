@@ -20,6 +20,9 @@ namespace Components
 
 		static Console& GetConsole();
 
+	protected:
+		D3DXVECTOR2 GetPosition() const;
+
 	private:
 		static RootComponent*		sInstance;
 

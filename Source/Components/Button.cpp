@@ -10,17 +10,16 @@ namespace Components
 		textureHover = NULL;
 	}
 
-	Button::Button(ComponentGroup* ownerGroup)
-		: Clickable(ownerGroup),
+	Button::Button(ComponentGroup* ownerGroup, RECT position)
+		: Clickable(ownerGroup, position),
 		mDevice(NULL), mTexture(NULL), mTintColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f))
 	{
 	}
 
-	void Button::Initialize(ID3D10Device* device, RECT position, Graphics buttonGraphics)
+	void Button::Initialize(ID3D10Device* device, Graphics buttonGraphics)
 	{
 		mDevice = device;
 		mGraphics = buttonGraphics;
-		mPositionRect = position;
 
 		if(mGraphics.textureUp == NULL)
 		{
@@ -33,16 +32,21 @@ namespace Components
 
 	void Button::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
 	{
+		if(!IsVisible())
+			return;
+
 		if(IsEnabled())
 			Clickable::Update(gameTime, currInputState, prevInputState);
 	}
 
 	void Button::Draw()
 	{
+		if(!IsVisible())
+			return;
+
 		if(mTexture != NULL)
 		{
-			D3DXVECTOR2 position = D3DXVECTOR2(mPositionRect.left, mPositionRect.top);
-			mTexture->Draw(position, mTintColor);
+			mTexture->Draw(GetPosition(), mTintColor);
 		}
 	}
 	

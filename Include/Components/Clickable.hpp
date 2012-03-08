@@ -9,7 +9,7 @@ namespace Components
 	class Clickable : public Component
 	{
 	public:
-		Clickable(/*InputSubscription* manager*/ComponentGroup* ownerGroup);
+		Clickable(ComponentGroup* ownerGroup, RECT position);
 		~Clickable() throw();
 
 		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);

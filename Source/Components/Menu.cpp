@@ -3,11 +3,9 @@
 namespace Components
 {
 	Menu::Menu(ID3D10Device* device, ComponentGroup* ownerGroup, RECT position)
-		: Component(ownerGroup),
+		: Component(ownerGroup, position),
 		  mDevice(device)
 	{
-		mPositionRect = position;
-
 		//Button::Graphics graphQuestion, graphWarning, graphHint, graphOther;
 		//D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/question.png", NULL, NULL, 
 		//									   &graphQuestion.textureUp, NULL);
@@ -84,8 +82,8 @@ namespace Components
 
 		for(int i = 0; i < 4; ++i)
 		{
-			Components::Button* btn = new Components::Button(mOwner);
-			btn->Initialize(mDevice, mPositions[i], mGraphics[i]);
+			Components::Button* btn = new Components::Button(mOwner, mPositions[i]);
+			btn->Initialize(mDevice, mGraphics[i]);
 			
 			mButtons.push_back(btn);
 		}

@@ -7,7 +7,7 @@ const int Scene::C_CELL_SIZE = 32;
 const float Scene::C_BORDER_SIZE = 0.2f;
 
 Scene::Scene(ID3D10Device* device, Components::ComponentGroup* ownerGroup, float aspectRatio) 
-	: Component(ownerGroup),
+	: Component(ownerGroup, RECT()),
 	  mDevice(device),
 	  mVertexBuffer(NULL),
 	  mEffect(NULL),

@@ -23,9 +23,9 @@ namespace Components
 			Graphics();
 		};
 
-		Button(ComponentGroup* ownerGroup);
+		Button(ComponentGroup* ownerGroup, RECT position);
 	
-		virtual void Initialize(ID3D10Device* device, RECT position, Graphics buttonColors);
+		virtual void Initialize(ID3D10Device* device, Graphics buttonColors);
 
 		// Methods inherited from Component
 		virtual void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);

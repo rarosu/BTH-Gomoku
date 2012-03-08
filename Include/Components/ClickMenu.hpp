@@ -10,21 +10,16 @@ namespace Components
 {
 	class ClickMenu;
 
-	namespace ClickMenuState
-	{
-		enum ClickMenuState { Collapsed, Opened };
-	}
-
 	class ClickMenuItem : public Button
 	{
 	public:
-		ClickMenuItem(ClickMenu* ownerGroup);
+		ClickMenuItem(ClickMenu* ownerGroup, RECT position);
 		~ClickMenuItem() throw();
 
 		void AddSubItem(const std::string& caption);
 		ClickMenu* GetSubMenu();
 
-		void Initialize(ID3D10Device* device, RECT position, const std::string& caption);
+		void Initialize(ID3D10Device* device, const std::string& caption);
 		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		void Draw();
 
@@ -32,7 +27,6 @@ namespace Components
 		virtual std::string GetName();
 	private:
 		ClickMenu*						mSubMenu;
-		ClickMenuState::ClickMenuState	mSubMenuState;
 
 		GameFont*						mFont;
 		std::string						mCaption;
@@ -45,7 +39,7 @@ namespace Components
 	public:
 		ClickMenu(ComponentGroup* ownerGroup, 
 				  ID3D10Device* device, 
-				  const POINT& position, 
+				  RECT position, 
 				  int itemWidth, 
 				  int itemHeight);
 

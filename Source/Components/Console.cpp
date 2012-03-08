@@ -7,7 +7,7 @@ namespace Components
 	const int Console::C_NUM_VERTICES = 4;
 
 	Console::Console(ID3D10Device* device, ComponentGroup* ownerGroup, RECT position, D3DXCOLOR bgColor, UINT size)
-		: ComponentGroup(ownerGroup, "Console"),
+		: ComponentGroup(ownerGroup, "Console", position),
 		  mDevice(device), mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0)), mFirstShowRow(0), mBackground(NULL),
 		  C_HISTORY_SIZE(size)
 	{
@@ -27,8 +27,8 @@ namespace Components
 		int scrollWidth = 20;
 		RECT scrollbarPos = { mPositionRect.right - scrollWidth, mPositionRect.top, 
 							  mPositionRect.right, mPositionRect.bottom };
-		mScrollbar = new Scrollbar(this, this);
-		mScrollbar->Initialize(mDevice, scrollbarPos);
+		mScrollbar = new Scrollbar(this, this, scrollbarPos);
+		mScrollbar->Initialize(mDevice);
 
 		SetFocusedComponent(mInputField);
 		mBGColor = C_COLOR_WINDOW_BG;
@@ -38,7 +38,6 @@ namespace Components
 	{
 		SafeDelete(mBackground);
 	}
-
 
 	// Update the console
 	void Console::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
@@ -64,19 +63,20 @@ namespace Components
 		if(!IsVisible())
 			return;
 
+		D3DXVECTOR2 position = GetPosition();
+
 		if(mBackground != NULL)
-		{
-			D3DXVECTOR2 position = D3DXVECTOR2(mPositionRect.left, mPositionRect.top);
+		{	
 			mBackground->Draw(position, mBGColor);
 		}
 
-		POINT position = { mPositionRect.left + 3 , mPositionRect.top };
+		POINT textPos = { position.x + 3 , position.y };
 		int start = std::max<int>(0, mFirstShowRow);
 		int end = std::min<int>(mFirstShowRow + mMaxNumRows, mOutput.size());
 		for(int i = start; i < end; ++i)
 		{
-			mFont->WriteText("> " + mOutput[i].text, position, mOutput[i].color);
-			position.y += mFont->GetSize();
+			mFont->WriteText("> " + mOutput[i].text, textPos, mOutput[i].color);
+			textPos.y += mFont->GetSize();
 		}
 
 		ComponentGroup::Draw();

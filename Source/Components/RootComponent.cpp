@@ -24,6 +24,9 @@ namespace Components
 
 	void RootComponent::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
 	{
+		if(!IsVisible())
+			return;
+
 		ComponentGroup::Update(gameTime, currInputState, prevInputState);
 
 		if(currInputState.Keyboard.keyIsPressed[VK_CONTROL])
@@ -36,6 +39,9 @@ namespace Components
 
 	void RootComponent::Draw()
 	{
+		if(!IsVisible())
+			return;
+
 		for(int i = mComponents.size() - 1; i >= 0; --i)
 		{
 			mComponents[i]->Draw();
@@ -59,6 +65,11 @@ namespace Components
 	bool RootComponent::HasFocus()
 	{
 		return true;
+	}
+
+	D3DXVECTOR2 RootComponent::GetPosition() const
+	{
+		return D3DXVECTOR2(mPositionRect.left, mPositionRect.top);
 	}
 
 	// STATIC METHODS

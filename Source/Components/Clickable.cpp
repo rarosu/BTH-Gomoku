@@ -2,8 +2,8 @@
 
 namespace Components
 {
-	Clickable::Clickable(ComponentGroup* ownerGroup)
-		: Component(ownerGroup),
+	Clickable::Clickable(ComponentGroup* ownerGroup, RECT position)
+		: Component(ownerGroup, position),
 		  mHovered(false), mPressed(false), mIsClicked(false)
 	{
 	}
@@ -14,8 +14,13 @@ namespace Components
 
 	void Clickable::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
 	{
-		if(currInputState.Mouse.x > mPositionRect.left && currInputState.Mouse.x < mPositionRect.right &&
-		   currInputState.Mouse.y > mPositionRect.top && currInputState.Mouse.y < mPositionRect.bottom)
+		if(!IsVisible())
+			return;
+
+		D3DXVECTOR2 position = GetPosition();
+
+		if(currInputState.Mouse.x > position.x && currInputState.Mouse.x < (position.x + GetWidth()) &&
+		   currInputState.Mouse.y > position.y && currInputState.Mouse.y < (position.y + GetHeight()))
 		{
 			if(!mHovered)
 			{

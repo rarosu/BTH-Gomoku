@@ -2,39 +2,34 @@
 
 namespace Components
 {
-	TextButton::TextButton(ComponentGroup* ownerGroup)
-		: Button(ownerGroup),
+	TextButton::TextButton(ComponentGroup* ownerGroup, RECT position)
+		: Button(ownerGroup, position),
 		  mFont (NULL), mTextColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f))
 	{
 	}
 
-	void TextButton::Initialize(ID3D10Device* device, RECT position, std::string caption)
+	void TextButton::Initialize(ID3D10Device* device, std::string caption)
 	{
 		Graphics buttonGraphics;
 		buttonGraphics.activeColor = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 		buttonGraphics.idleColor = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 		buttonGraphics.hoverColor = D3DXCOLOR(0.9f, 0.9f, 0.9f, 1.0f);
+		buttonGraphics.textureUp = new Sprite(device, sViewport, "buttonUp.png", GetWidth(), GetHeight());
+		buttonGraphics.textureDown = new Sprite(device, sViewport, "buttonDown.png", GetWidth(), GetHeight());
 
-		int width = position.right - position.left;
-		int height = position.bottom - position.top;
 
-		buttonGraphics.textureUp = new Sprite(device, sViewport, "buttonUp.png", width, height);
-		buttonGraphics.textureDown = new Sprite(device, sViewport, "buttonDown.png", width, height);
+		Button::Initialize(device, buttonGraphics);
 
-		/*D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/buttonUp.png", NULL, NULL, 
-											   &buttonGraphics.textureUp, NULL);
-		D3DX10CreateShaderResourceViewFromFile(device, "Resources/Textures/buttonDown.png", NULL, NULL, 
-											   &buttonGraphics.textureDown, NULL);*/
-
-		Button::Initialize(device, position, buttonGraphics);
-
-		int textSize = (mPositionRect.bottom - mPositionRect.top) / 2;
+		int textSize = GetHeight() / 2;
 		mFont = new GameFont(device, "Jing Jing", textSize, false, true);
 		mCaption = caption;
 	}
 
 	void TextButton::Draw()
 	{
+		if(!IsVisible())
+			return;
+
 		Button::Draw();
 		if(IsEnabled())
 		{

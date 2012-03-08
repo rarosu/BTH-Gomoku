@@ -4,11 +4,10 @@ namespace Components
 {
 	Label::Label(ID3D10Device* device, ComponentGroup* ownerGroup, std::string caption, RECT position, 
 				 GameFont::AlignHorizontal alignHorizontal, GameFont::AlignVertical alignVertical)
-		: Component(ownerGroup),
+		: Component(ownerGroup, position),
 		  mFont(NULL), mCaption(caption), mTextColor(C_COLOR_TEXT), 
 		  mShadowColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f)), mAlignHor(alignHorizontal), mAlignVer(alignVertical)
 	{
-		mPositionRect = position;
 		int offsetX = 2;
 		int offsetY = 1;
 		mShadowPosition.left = mPositionRect.left + offsetX;
@@ -22,10 +21,16 @@ namespace Components
 
 	void Label::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
 	{
+		if(!IsVisible())
+			return;
+
 	}
 
 	void Label::Draw()
 	{
+		if(!IsVisible())
+			return;
+
 		mFont->WriteText(mCaption, &mShadowPosition, mShadowColor, mAlignHor, mAlignVer);
 		mFont->WriteText(mCaption, &mPositionRect, mTextColor, mAlignHor, mAlignVer);
 	}

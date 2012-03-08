@@ -10,6 +10,7 @@
 #include "Menu.hpp"
 #include "ClickMenu.hpp"
 #include "Sprite.hpp"
+#include "GameFont.hpp"
 
 namespace State
 {
@@ -51,6 +52,8 @@ namespace State
 		Components::ClickMenu*					mMenuButtons;
 		Components::ComponentGroup*				mComponents;
 		Sprite*									mBackground;
+
+		GameFont*								mDebugFont; // DEBUG
 
 		void CreateComponents();
 	};

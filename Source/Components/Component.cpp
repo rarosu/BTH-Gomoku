@@ -5,11 +5,9 @@ namespace Components
 {
 	const Viewport*		Component::sViewport = NULL;
 
-	Component::Component(ComponentGroup* ownerGroup)
-		: mIsEnabled(true), mIsVisible(true), mOwner(ownerGroup)
-	{
-		ZeroMemory(&mPositionRect, sizeof(mPositionRect));
-		
+	Component::Component(ComponentGroup* ownerGroup, RECT position)
+		: mOwner(ownerGroup), mPositionRect(position), mIsEnabled(true), mIsVisible(true)
+	{		
 		if(mOwner)
 			mOwner->AddComponent(this);
 	}
@@ -26,6 +24,11 @@ namespace Components
 	float Component::GetHeight() const
 	{
 		return std::abs((float)mPositionRect.bottom - mPositionRect.top);
+	}
+
+	D3DXVECTOR2 Component::GetPosition() const
+	{
+		return D3DXVECTOR2(mPositionRect.left, mPositionRect.top) + mOwner->GetPosition();
 	}
 
 	void Component::LoseFocus()

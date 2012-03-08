@@ -17,7 +17,7 @@ namespace Components
 	public:
 		friend class RootComponent;
 
-		ComponentGroup(ComponentGroup* ownerGroup, std::string name);
+		ComponentGroup(ComponentGroup* ownerGroup, std::string name, RECT position);
 		virtual ~ComponentGroup() throw();
 
 		void AddComponent(Component* component);

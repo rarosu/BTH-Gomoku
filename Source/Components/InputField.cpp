@@ -7,12 +7,10 @@ namespace Components
 
 	InputField::InputField(ID3D10Device* device, ComponentGroup* ownerGroup, InputReceiver* receiver, 
 		RECT position, GameFont* font)
-		: Clickable(ownerGroup),
+		: Clickable(ownerGroup, position),
 		  mDevice(device), mBackground(NULL), mFont(font), 
 		  mReceiver(receiver), mShowMarker(true), mMSSinceBlink(0.0f), mHasFocus(false)
 	{
-		mPositionRect = position;
-	
 		mBackground = new Sprite(mDevice, sViewport, "whitePixel.png", GetWidth(), GetHeight());
 	}
 
@@ -40,6 +38,9 @@ namespace Components
 
 	void InputField::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
 	{
+		if(!IsVisible())
+			return;
+
 		Clickable::Update(gameTime, currInputState, prevInputState);
 
 		if(mHasFocus)
@@ -59,6 +60,9 @@ namespace Components
 
 	void InputField::Draw()
 	{
+		if(!IsVisible())
+			return;
+
 		if(mBackground != NULL)
 		{
 			D3DXVECTOR2 position = D3DXVECTOR2(mPositionRect.left, mPositionRect.top);

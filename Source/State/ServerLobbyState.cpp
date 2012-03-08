@@ -63,7 +63,8 @@ namespace State
 	void ServerLobbyState::CreateComponents()
 	{
 		// Create new component group
-		mComponents = new Components::ComponentGroup(sRootComponentGroup, "ServerLobbyState Group");
+		RECT compPos = { 0, 0, 0, 0 };
+		mComponents = new Components::ComponentGroup(sRootComponentGroup, "ServerLobbyState Group", compPos);
 
 		// Load background texture
 		ID3D10ShaderResourceView* texture;
@@ -109,26 +110,26 @@ namespace State
 			btnTop += btnHeight;
 			for(int j = 0; j < 2; ++j)
 			{
-				mButtons.push_back(new Components::TextButton(mComponents));
-		
 				RECT buttonPos = { btnLeft, btnTop, btnLeft + btnWidth, btnTop + btnHeight };
-				mButtons[i * 2 + j]->Initialize(mDevice, buttonPos, btnCaptions[i * 2 + j]);
+
+				mButtons.push_back(new Components::TextButton(mComponents, buttonPos));
+				mButtons[i * 2 + j]->Initialize(mDevice, btnCaptions[i * 2 + j]);
 				btnTop += btnHeight;
 			}
 			btnTop += padding;
 		}
 
 		// Create Start Game- and Cancel-buttons
-		mButtons.push_back(new Components::TextButton(mComponents));
 		int btnSGLeft = sViewport->GetWidth() / 2 - (192 + 30);
 		int btnSGCTop = sViewport->GetHeight() - 250;
 		RECT btnSGPos = { btnSGLeft, btnSGCTop, btnSGLeft + btnWidth, btnSGCTop + btnHeight };
-		mButtons[mButtons.size() - 1]->Initialize(mDevice, btnSGPos, "Start Game");
+		mButtons.push_back(new Components::TextButton(mComponents, btnSGPos));
+		mButtons[mButtons.size() - 1]->Initialize(mDevice, "Start Game");
 
-		mButtons.push_back(new Components::TextButton(mComponents));
 		int btnCLeft = sViewport->GetWidth() / 2 + 30;
 		RECT btnCPos = { btnCLeft, btnSGCTop, btnCLeft + btnWidth, btnSGCTop + btnHeight };
-		mButtons[mButtons.size() - 1]->Initialize(mDevice, btnCPos, "Cancel");
+		mButtons.push_back(new Components::TextButton(mComponents, btnCPos));
+		mButtons[mButtons.size() - 1]->Initialize(mDevice, "Cancel");
 
 		// Create chat console
 		RECT chatPos = { 0, sViewport->GetHeight() - 180, sViewport->GetWidth(), sViewport->GetHeight() };
