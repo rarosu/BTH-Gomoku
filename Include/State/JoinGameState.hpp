@@ -3,8 +3,7 @@
 
 #include "WinInclude.hpp"
 #include "ApplicationState.hpp"
-#include "Buffer.hpp"
-#include "Effect.hpp"
+#include "Sprite.hpp"
 #include "InputField.hpp"
 #include "TextButton.hpp"
 
@@ -30,8 +29,7 @@ namespace State
 
 		ID3D10Device*				mDevice;
 		GameFont*					mDefaultFont;
-		VertexBuffer*				mBuffer;
-		Effect*						mEffect;
+		Sprite*						mBackground;
 
 		Components::ComponentGroup*	mComponents;
 
@@ -44,8 +42,6 @@ namespace State
 
 
 		void CreateComponents();
-		void CreateBuffer();
-		void CreateEffect();
 	};
 }
 

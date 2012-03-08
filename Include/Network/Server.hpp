@@ -1,6 +1,7 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
+#include "NetworkInclude.hpp"
 #include "ListenSocket.hpp"
 #include "ComSocket.hpp"
 #include "Message.hpp"
@@ -9,7 +10,6 @@
 namespace Network
 {
 	typedef unsigned int Slot;
-	typedef unsigned short Port;
 
 	class ServerEventInterface
 	{

@@ -1,11 +1,13 @@
 #include "ComSocket.hpp"
 
 #include <sstream>
-#include <iostream>
-#include <stdexcept>
 
 namespace Network
 {
+	ConnectionFailure::ConnectionFailure(const std::string& errorMessage)
+		: std::runtime_error(errorMessage)
+	{}
+
 	ComSocket::ComSocket()
 		: mSocket(INVALID_SOCKET), mConnected(false)
 	{
@@ -41,7 +43,7 @@ namespace Network
 			std::stringstream ss;
 			ss << "getaddrinfo failed: " << result;
 
-			throw std::runtime_error(ss.str());
+			throw ConnectionFailure(ss.str());
 		}
 
 		for (addrinfo* ptr = addrResult; ptr != NULL; ptr = ptr->ai_next)
@@ -52,18 +54,32 @@ namespace Network
 				std::stringstream ss;
 				ss << "socket failed with error: " << WSAGetLastError();
 
-				throw std::runtime_error(ss.str());
+				throw ConnectionFailure(ss.str());
 			}
 
 			// Connect to server
 			result = connect(mSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
 			if (result == SOCKET_ERROR)
 			{
+				int error = WSAGetLastError();
+				if (error == WSAECONNREFUSED)
+				{
+					throw ConnectionFailure("Connection refused.");
+				}
 				closesocket(mSocket);
+				
 				mSocket = INVALID_SOCKET;
 				continue;
 			}
 			break;
+		}
+
+		if (mSocket == INVALID_SOCKET)
+		{
+			std::stringstream ss;
+			ss << "Unable to connect to server with error: " << WSAGetLastError();
+
+			throw ConnectionFailure(ss.str());
 		}
 
 		unsigned long mode = 1;
@@ -71,10 +87,7 @@ namespace Network
 
 		freeaddrinfo(addrResult);
 
-		if (mSocket == INVALID_SOCKET)
-		{
-			throw std::runtime_error("Unable to connect to server!");
-		}
+		
 
 		mConnected = true;
 

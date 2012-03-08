@@ -26,10 +26,10 @@ namespace Network
 
 		int result;
 		result = WSAStartup(MAKEWORD(2,2), &wsaData);
-		if (result == SOCKET_ERROR)
+		if (result != 0)
 		{
 			std::stringstream ss;
-			ss << "WSAStartup failed: " << WSAGetLastError();
+			ss << "WSAStartup failed: " << result;
 
 			throw std::runtime_error(ss.str());
 		}

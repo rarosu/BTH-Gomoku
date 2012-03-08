@@ -3,6 +3,7 @@
 
 namespace Network
 {
+	typedef unsigned short Port;
 
 }
 

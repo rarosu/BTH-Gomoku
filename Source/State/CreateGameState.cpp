@@ -12,23 +12,25 @@ namespace State
 		  mIFName(NULL),
 		  mIFPort(NULL),
 		  mBtnCreate(NULL),
-		  mBtnCancel(NULL)
+		  mBtnCancel(NULL),
+		  mBackground(NULL)
 	{
 
 		mDefaultFont = new GameFont(mDevice, "Segoe Print", 48);
+		mBackground = new Sprite(mDevice, sViewport, "marbleBG1422x800.png", sViewport->GetWidth(), sViewport->GetHeight());
 	}
 
 	CreateGameState::~CreateGameState() throw()
 	{
 		SafeDelete(mDefaultFont);
-		SafeDelete(mComponents);
+		SafeDelete(mBackground);
 	}
 
 	void CreateGameState::CreateComponents()
 	{
 		// Define sizes
 		const int C_OFFSET_LEFT = 100;
-		const int C_OFFSET_TOP = 430;
+		const int C_OFFSET_TOP = 100;
 		const int C_BUTTON_WIDTH = 192;
 		const int C_BUTTON_HEIGHT = mDefaultFont->GetSize();
 		const int C_INPUT_FIELD_WIDTH = 192;
@@ -137,7 +139,7 @@ namespace State
 
 	void CreateGameState::Draw()
 	{
-
+		mBackground->Draw(D3DXVECTOR2(0, 0));
 	}
 
 	void CreateGameState::OnStatePushed()
