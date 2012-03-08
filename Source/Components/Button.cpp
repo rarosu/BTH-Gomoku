@@ -30,13 +30,8 @@ namespace Components
 		mTintColor = mGraphics.idleColor;
 	}
 
-	void Button::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
+	void Button::Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
 	{
-		if(!IsVisible())
-			return;
-
-		if(IsEnabled())
-			Component::Update(gameTime, currInputState, prevInputState);
 	}
 
 	void Button::Draw()

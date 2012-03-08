@@ -40,13 +40,8 @@ namespace Components
 		mBGDrawOffset = buttonHeight / 2;
 	}
 
-	void Scrollbar::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
+	void Scrollbar::Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
 	{
-		if(!IsVisible())
-			return;
-
-		Component::Update(gameTime, currInputState, prevInputState);
-
 		mBtnUp->Update(gameTime, currInputState, prevInputState);
 		mBtnDown->Update(gameTime, currInputState, prevInputState);
 	}

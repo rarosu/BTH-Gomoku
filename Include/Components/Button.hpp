@@ -27,10 +27,10 @@ namespace Components
 		virtual void Initialize(ID3D10Device* device, Graphics buttonColors);
 
 		// Methods inherited from Component
-		virtual void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		virtual void Draw();
 		virtual void LostFocus();
 		virtual void GotFocus();
+		virtual void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 	
 	protected:
 		ID3D10Device*				mDevice;
@@ -46,7 +46,7 @@ namespace Components
 		D3DXCOLOR					mTintColor;
 		Graphics					mGraphics;
 
-		// Inherited from Clickable
+		// Inherited from Component
 		void MouseEntered();
 		void MouseExited();
 		void MousePressed(int buttonIndex);

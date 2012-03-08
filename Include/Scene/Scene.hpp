@@ -26,7 +26,6 @@ public:
 	void HandleKeyPress(const InputState& currentInput, const GameTime& gameTime);
 
 	// Methods inherited from Component
-	void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState) {}
 	void Draw();
 	void LostFocus();
 	void GotFocus();
@@ -47,6 +46,10 @@ public:
 		method.
 	*/
 	void ResizeFrustum(float aspectRatio);
+
+protected:
+	// Methods inherited from Component
+	void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState) {}
 
 private:
 	static const int C_GRID_WIDTH;

@@ -26,12 +26,12 @@ namespace Components
 		RECT position, GameFont* font);
 		~InputField() throw();
 
+		bool IsEmpty() const;
 		std::string GetText() const;
-		bool Empty() const;
 		void SetText(std::string newText);
 
 		// Methods inherited from Component
-		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
+		void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		void Draw();
 		void LostFocus();
 		void GotFocus();

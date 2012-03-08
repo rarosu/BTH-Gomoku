@@ -20,11 +20,14 @@ namespace Components
 		ClickMenu* GetSubMenu();
 
 		void Initialize(ID3D10Device* device, const std::string& caption);
-		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		void Draw();
 
 		// DEBUG
 		virtual std::string GetName();
+
+	protected:
+		virtual void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
+
 	private:
 		ClickMenu*						mSubMenu;
 
@@ -44,11 +47,11 @@ namespace Components
 				  int itemHeight);
 
 		void AddMenuItem(const std::string& caption);
-		//void SetPosition(const POINT& position);
 
 		bool GetAndResetClickStatus(const std::string& caption);
 		ClickMenuItem* GetMenuItem(const std::string& caption);
 		ClickMenu* GetSubMenu(const std::string& caption);
+	
 	private:
 		typedef std::map<std::string, ClickMenuItem*> ItemMap;
 

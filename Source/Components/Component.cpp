@@ -41,6 +41,8 @@ namespace Components
 				MouseExited();
 			}
 		}
+
+		Refresh(gameTime, currInputState, prevInputState);
 	}
 
 	float Component::GetWidth() const

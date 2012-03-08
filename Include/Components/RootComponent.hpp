@@ -13,7 +13,7 @@ namespace Components
 		RootComponent(ID3D10Device* device, int width, int height);
 		virtual ~RootComponent();
 
-		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
+		void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		void Draw();
 		void SetFocusedComponent(Component* component);
 		bool HasFocus();

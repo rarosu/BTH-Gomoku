@@ -30,13 +30,8 @@ namespace Components
 		mCaption = caption;
 	}
 
-	void ClickMenuItem::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
+	void ClickMenuItem::Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
 	{
-		if(!IsVisible())
-			return;
-
-		Button::Update(gameTime, currInputState, prevInputState);
-
 		if (mSubMenu != NULL)
 		{
 			if (GetAndResetClickStatus())
@@ -119,14 +114,7 @@ namespace Components
 		newItem->Initialize(mDevice, caption);
 		
 		mItems[caption] = newItem;
-		//mPositionRect.bottom = yBottom;
 	}
-
-	//void ClickMenu::SetPosition(const POINT& position)
-	//{
-	//	RECT pos = { position.x, position.y, position.x + mItemWidth, position.y + (mPositionRect.bottom - mPositionRect.top) };
-	//	mPositionRect = pos;
-	//}
 
 	bool ClickMenu::GetAndResetClickStatus(const std::string& caption)
 	{

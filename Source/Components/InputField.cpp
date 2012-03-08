@@ -24,25 +24,20 @@ namespace Components
 		return mFirstString.str() + mLastString.str();
 	}
 
-	bool InputField::Empty() const
-	{
-		return GetText().empty();
-	}
-
 	void InputField::SetText(std::string newText)
 	{
 		mFirstString.str("");
 		mFirstString << newText;
 		mLastString.str("");
 	}
-
-	void InputField::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
+	
+	bool InputField::IsEmpty() const
 	{
-		if(!IsVisible())
-			return;
+		return GetText().empty();
+	}
 
-		Component::Update(gameTime, currInputState, prevInputState);
-
+	void InputField::Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
+	{
 		if(mHasFocus)
 		{
 			mMSSinceBlink += (float)gameTime.GetTimeSinceLastTick().Milliseconds;
@@ -55,7 +50,6 @@ namespace Components
 		}
 		else
 			mShowMarker = false;
-		
 	}
 
 	void InputField::Draw()

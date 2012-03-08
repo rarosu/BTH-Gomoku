@@ -22,19 +22,16 @@ namespace Components
 		sInstance = NULL;
 	}
 
-	void RootComponent::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
+	void RootComponent::Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
 	{
-		if(!IsVisible())
-			return;
-
-		ComponentGroup::Update(gameTime, currInputState, prevInputState);
-
 		if(currInputState.Keyboard.keyIsPressed[VK_CONTROL])
 			if(currInputState.Keyboard.keyIsPressed['T'])
 				if(!(prevInputState.Keyboard.keyIsPressed['T']))
 				{
 					mConsole->Toggle();
 				}
+
+		ComponentGroup::Refresh(gameTime, currInputState, prevInputState);
 	}
 
 	void RootComponent::Draw()

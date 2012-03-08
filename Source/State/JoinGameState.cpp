@@ -56,14 +56,14 @@ namespace State
 		}
 
 		// Basic check to see if the name is valid (non-empty)
-		if (mNameField->Empty())
+		if (mNameField->IsEmpty())
 		{
 			mJoinButton->SetEnabled(false);
 			return;
 		}
 
 		// Basic check to see if the IP/Hostname is valid (non-empty)
-		if (mIPAddressField->Empty())
+		if (mIPAddressField->IsEmpty())
 		{
 			mJoinButton->SetEnabled(false);
 			return;

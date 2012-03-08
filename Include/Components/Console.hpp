@@ -25,7 +25,7 @@ namespace Components
 		void SetTextColor(D3DXCOLOR newColor);
 
 		// Methods inherited from Component
-		void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
+		void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		void Draw();
 		void LostFocus();
 		void GotFocus();

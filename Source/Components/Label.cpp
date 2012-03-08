@@ -19,11 +19,8 @@ namespace Components
 		mFont = new GameFont(device, "Segoe Print", GetHeight(), false, true);
 	}
 
-	void Label::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
+	void Label::Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
 	{
-		if(!IsVisible())
-			return;
-
 	}
 
 	void Label::Draw()

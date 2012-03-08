@@ -39,7 +39,7 @@ namespace Components
 	}
 
 	// Update the console
-	void Console::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
+	void Console::Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
 	{
 		if(!IsVisible())
 			return;
@@ -52,8 +52,6 @@ namespace Components
 		{
 			Scroll(false);
 		}
-
-		ComponentGroup::Update(gameTime, currInputState, prevInputState);
 	}
 
 	// Draw the console

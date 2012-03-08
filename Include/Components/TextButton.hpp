@@ -16,11 +16,14 @@ namespace Components
 		TextButton(ComponentGroup* ownerGroup, RECT position);
 	
 		virtual void Initialize(ID3D10Device* device, std::string caption);
-		//void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		void Draw();
 		
 		// DEBUG
 		virtual std::string GetName();
+
+	protected:
+		// Methods inherited from Component
+		virtual void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState) {}
 
 	private:
 		GameFont*					mFont;

@@ -63,6 +63,8 @@ namespace Components
 		virtual void MousePressed(int buttonIndex) = 0;
 		virtual void MouseReleased(int buttonIndex) = 0;
 
+		virtual void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState) = 0;
+
 	private:
 		RECT						mPositionRect;
 		bool						mIsVisible;

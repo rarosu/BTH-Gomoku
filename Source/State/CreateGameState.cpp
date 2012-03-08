@@ -104,7 +104,7 @@ namespace State
 		}
 
 		// Basic check to see if the name is valid (non-empty)
-		if (mIFName->Empty())
+		if (mIFName->IsEmpty())
 		{
 			mBtnCreate->SetEnabled(false);
 			return;

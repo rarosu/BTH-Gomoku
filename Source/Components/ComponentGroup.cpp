@@ -61,11 +61,8 @@ namespace Components
 		return mFocusedComponent;
 	}
 
-	void ComponentGroup::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
+	void ComponentGroup::Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
 	{
-		if(!IsVisible())
-			return;
-
 		std::vector<Component*>::iterator it;
 		
 		for(it = mComponents.begin(); it != mComponents.end(); it++)

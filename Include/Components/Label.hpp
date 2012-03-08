@@ -23,12 +23,15 @@ namespace Components
 		void SetCaption(std::string newCaption);
 
 		// Methods inherited from Component
-		virtual void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		virtual void Draw();
 		void LostFocus();
 		void GotFocus();
 		// DEBUG
 		virtual std::string GetName();
+
+	protected:
+		// Methods inherited from Component
+		virtual void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 
 	private:
 		GameFont*					mFont;

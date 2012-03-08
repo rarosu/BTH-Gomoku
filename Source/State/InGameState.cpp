@@ -62,21 +62,6 @@ namespace State
 			ChangeState(C_STATE_MENU);
 
 		mScene->Update(*mGrid, *sViewport, currInput, prevInput, gameTime);
-
-		/*if(currInput.Mouse.buttonIsPressed[C_MOUSE_RIGHT] && !prevInput.Mouse.buttonIsPressed[C_MOUSE_RIGHT])
-		{
-			mDragonAgeMenu->SetVisible(true);
-
-			RECT menuPos = { currInput.Mouse.x - 50, currInput.Mouse.y - 50, 
-							 currInput.Mouse.x + 50, currInput.Mouse.y + 50 };
-			mDragonAgeMenu->SetPosition(menuPos);
-			mComponents->SetFocusedComponent(mDragonAgeMenu);
-		}
-		else if (!currInput.Mouse.buttonIsPressed[C_MOUSE_RIGHT] && prevInput.Mouse.buttonIsPressed[C_MOUSE_RIGHT])
-			mDragonAgeMenu->SetVisible(false);
-
-		if(mDragonAgeMenu->IsVisible())
-			mDragonAgeMenu->Update(gameTime, currInput, prevInput);*/
 	}
 
 	void InGameState::Draw()

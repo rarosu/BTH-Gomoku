@@ -26,7 +26,7 @@ namespace Components
 		const Component* GetFocusedComponent();
 
 		// Methods inherited from Component
-		virtual void Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
+		virtual void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		virtual void Draw();
 		void LostFocus();
 		void GotFocus();
