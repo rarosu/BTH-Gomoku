@@ -7,9 +7,8 @@ namespace State
 	const std::string MenuState::C_START_GAME_CAPTIONS[] = { "Create Game", "Join Game" };
 
 	MenuState::MenuState(StateID id, ID3D10Device* device) 
-		: ApplicationState(id), mDevice(device), mComponents(NULL), mBackground(NULL), mDebugFont(NULL)
+		: ApplicationState(id), mDevice(device), mComponents(NULL), mBackground(NULL)
 	{
-		mDebugFont = new GameFont(mDevice);
 	}
 
 	MenuState::~MenuState() throw()
@@ -86,17 +85,5 @@ namespace State
 	void MenuState::Draw()
 	{
 		mBackground->Draw(D3DXVECTOR2(0, 0));
-
-		POINT pos = { 0, 0 };
-		std::stringstream ss;
-		ss << "Click Menu Position: (" << mMenuButtons->GetPosition().x << ", ";
-		ss << mMenuButtons->GetPosition().y << ")\tIsVisible(): " << mMenuButtons->IsVisible();
-		for(int i = 0; i < 4; ++i)
-		{
-			D3DXVECTOR2 itemPos = mMenuButtons->GetMenuItem(C_MENU_CAPTIONS[i])->GetPosition();
-			ss << C_MENU_CAPTIONS[i] << " Position: (" << itemPos.x << ", " << itemPos.y << ")";
-		}
-		ss << "\n\tStartGame Position: ";
-		mDebugFont->WriteText(ss.str(), pos, D3DXCOLOR(0.0, 0.0, 1.0, 1.0));
 	}
 }

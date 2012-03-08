@@ -51,6 +51,12 @@ namespace Components
 		std::string					mName;
 
 		ComponentGroup();
+
+		// Methods inherited by Component
+		virtual void MouseEntered() {}
+		virtual void MouseExited() {}
+		virtual void MousePressed(int buttonIndex) {}
+		virtual void MouseReleased(int buttonIndex) {}
 	};
 }
 #endif

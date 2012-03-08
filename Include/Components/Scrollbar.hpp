@@ -1,8 +1,8 @@
 #ifndef SCROLLBAR_HPP
 #define SCROLLBAR_HPP
 
+#include "Component.hpp"
 #include "Button.hpp"
-#include "Clickable.hpp"
 #include "Sprite.hpp"
 
 namespace Components
@@ -13,7 +13,7 @@ namespace Components
 		virtual void Scroll(bool isUp) = 0;
 	};
 
-	class Scrollbar : public Clickable
+	class Scrollbar : public Component
 	{
 	public:
 		Scrollbar(ComponentGroup* ownerGroup, Scrollable* scrollable, RECT position);

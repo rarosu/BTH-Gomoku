@@ -35,7 +35,6 @@ namespace Components
 		// Override method in Component
 		void MouseButtonReleased(int index, const InputState& currentState);
 
-
 		// Methods inherited from Scrollable
 		void Scroll(bool isUp);
 
@@ -63,6 +62,12 @@ namespace Components
 		int							mFirstShowRow;
 
 		const UINT					C_HISTORY_SIZE;
+
+		// Methods inherited by Component
+		void MouseEntered() {}
+		void MouseExited() {}
+		void MousePressed(int buttonIndex) {}
+		void MouseReleased(int buttonIndex) {}
 
 		static const int			C_NUM_VERTICES;
 	};

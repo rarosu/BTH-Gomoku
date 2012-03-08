@@ -3,7 +3,7 @@
 namespace Components
 {
 	Scrollbar::Scrollbar(ComponentGroup* ownerGroup, Scrollable* scrollable, RECT position)
-		: Clickable(ownerGroup, position), 
+		: Component(ownerGroup, position), 
 		  mScrollable(scrollable), mBGColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f)), mBtnUp(NULL), mBtnDown(NULL)
 	{
 		LONG buttonHeight = GetWidth();
@@ -45,7 +45,7 @@ namespace Components
 		if(!IsVisible())
 			return;
 
-		Clickable::Update(gameTime, currInputState, prevInputState);
+		Component::Update(gameTime, currInputState, prevInputState);
 
 		mBtnUp->Update(gameTime, currInputState, prevInputState);
 		mBtnDown->Update(gameTime, currInputState, prevInputState);
@@ -58,7 +58,7 @@ namespace Components
 
 		if(mBackground != NULL)
 		{
-			D3DXVECTOR2 position = D3DXVECTOR2(mPositionRect.left, mPositionRect.top + mBGDrawOffset);
+			D3DXVECTOR2 position = GetPosition() + D3DXVECTOR2(0, mBGDrawOffset);
 			mBackground->Draw(position, mBGColor);
 		}
 

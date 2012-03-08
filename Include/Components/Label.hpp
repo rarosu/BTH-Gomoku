@@ -38,6 +38,12 @@ namespace Components
 		D3DXCOLOR					mShadowColor;
 		GameFont::AlignHorizontal	mAlignHor;
 		GameFont::AlignVertical		mAlignVer;
+
+		// Methods inherited by Component
+		void MouseEntered() {}
+		void MouseExited() {}
+		void MousePressed(int buttonIndex) {}
+		void MouseReleased(int buttonIndex) {}
 	};
 }
 #endif

@@ -6,7 +6,8 @@ namespace Components
 	const Viewport*		Component::sViewport = NULL;
 
 	Component::Component(ComponentGroup* ownerGroup, RECT position)
-		: mOwner(ownerGroup), mPositionRect(position), mIsEnabled(true), mIsVisible(true)
+		: mOwner(ownerGroup), mPositionRect(position), mIsEnabled(true), mIsVisible(true), mIsHovered(false),
+		  mIsPressed(false), mIsClicked(false)
 	{		
 		if(mOwner)
 			mOwner->AddComponent(this);
@@ -14,6 +15,32 @@ namespace Components
 
 	Component::~Component() throw()
 	{
+	}
+
+	void Component::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
+	{
+		if(!IsVisible() & !IsEnabled())
+			return;
+
+		D3DXVECTOR2 position = GetPosition();
+
+		if(currInputState.Mouse.x > position.x && currInputState.Mouse.x < (position.x + GetWidth()) &&
+		   currInputState.Mouse.y > position.y && currInputState.Mouse.y < (position.y + GetHeight()))
+		{
+			if(!mIsHovered)
+			{
+				mIsHovered = true;
+				MouseEntered();
+			}
+		}
+		else
+		{
+			if(mIsHovered)
+			{
+				mIsHovered = false;
+				MouseExited();
+			}
+		}
 	}
 
 	float Component::GetWidth() const
@@ -28,7 +55,11 @@ namespace Components
 
 	D3DXVECTOR2 Component::GetPosition() const
 	{
-		return D3DXVECTOR2(mPositionRect.left, mPositionRect.top) + mOwner->GetPosition();
+		if(mOwner == NULL)
+			return D3DXVECTOR2(mPositionRect.left, mPositionRect.top);
+		else
+			return D3DXVECTOR2(mPositionRect.left, mPositionRect.top) + mOwner->GetPosition();
+
 	}
 
 	void Component::LoseFocus()
@@ -37,7 +68,7 @@ namespace Components
 			mOwner->SetFocusedComponent(NULL);
 	}
 	
-	bool Component::HasFocus()
+	bool Component::HasFocus() const
 	{
 		bool hasFocus = (mOwner->GetFocusedComponent() == this);
 		if(mOwner != NULL)
@@ -52,7 +83,7 @@ namespace Components
 			mOwner->SetFocusedComponent(this);
 	}
 
-	bool Component::IsEnabled()
+	bool Component::IsEnabled() const
 	{
 		return mIsEnabled;
 	}
@@ -60,9 +91,14 @@ namespace Components
 	void Component::SetEnabled(bool isEnabled)
 	{
 		mIsEnabled = isEnabled;
+		if(mIsEnabled = false)
+		{
+			mIsHovered = false;
+			mIsClicked = false;
+		}
 	}
 
-	bool Component::IsVisible()
+	bool Component::IsVisible() const
 	{
 		return mIsVisible;
 	}
@@ -70,6 +106,47 @@ namespace Components
 	void Component::SetVisible(bool isVisible)
 	{
 		mIsVisible = isVisible;
+	}
+
+	bool Component::IsPressed() const
+	{
+		return mIsPressed;
+	}
+
+	bool Component::IsHovered() const
+	{
+		return mIsHovered;
+	}
+
+	bool Component::GetAndResetClickStatus()
+	{
+		bool result = mIsClicked;
+		mIsClicked = false;
+		return result;
+	}
+
+	void Component::MouseButtonPressed(int index, const InputState& currentState)
+	{
+		if(mIsHovered)
+		{
+			mIsPressed = true;
+			MousePressed(index);
+		}
+	}
+
+	void Component::MouseButtonReleased(int index, const InputState& currentState)
+	{
+		if(mIsPressed)
+		{
+			mIsPressed = false;
+
+			if(mIsHovered)
+			{
+				SetFocus();
+				MouseReleased(index);
+				mIsClicked = true;
+			}
+		}
 	}
 
 	const RECT& Component::GetBoundingRect() const

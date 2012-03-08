@@ -44,7 +44,7 @@ namespace Components
 				  int itemHeight);
 
 		void AddMenuItem(const std::string& caption);
-		void SetPosition(const POINT& position);
+		//void SetPosition(const POINT& position);
 
 		bool GetAndResetClickStatus(const std::string& caption);
 		ClickMenuItem* GetMenuItem(const std::string& caption);

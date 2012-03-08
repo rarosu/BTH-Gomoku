@@ -74,9 +74,11 @@ namespace Components
 	{
 		if(mSubMenu == NULL)
 		{
-			int width = mPositionRect.right - mPositionRect.left;
-			int height = mPositionRect.bottom - mPositionRect.top;
-			RECT subPos = { mPositionRect.right, mPositionRect.top, mPositionRect.right + width, mPositionRect.bottom };
+			int width = GetWidth();
+			int height = GetHeight();
+			RECT subPos = GetBoundingRect();
+			subPos.left = subPos.right;
+			subPos.right += width;
 			mSubMenu = new ClickMenu(mOwner, mDevice, subPos, width, height);
 			mSubMenu->SetVisible(false);
 		}
@@ -117,14 +119,14 @@ namespace Components
 		newItem->Initialize(mDevice, caption);
 		
 		mItems[caption] = newItem;
-		mPositionRect.bottom = yBottom;
+		//mPositionRect.bottom = yBottom;
 	}
 
-	void ClickMenu::SetPosition(const POINT& position)
-	{
-		RECT pos = { position.x, position.y, position.x + mItemWidth, position.y + (mPositionRect.bottom - mPositionRect.top) };
-		mPositionRect = pos;
-	}
+	//void ClickMenu::SetPosition(const POINT& position)
+	//{
+	//	RECT pos = { position.x, position.y, position.x + mItemWidth, position.y + (mPositionRect.bottom - mPositionRect.top) };
+	//	mPositionRect = pos;
+	//}
 
 	bool ClickMenu::GetAndResetClickStatus(const std::string& caption)
 	{

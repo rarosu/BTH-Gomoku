@@ -13,7 +13,6 @@
     <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\Scene\Marker.cpp" />
     <ClCompile Include="Source\Framework\InputManager.cpp" />
-    <ClCompile Include="Source\Components\Clickable.cpp" />
     <ClCompile Include="Source\Components\Component.cpp" />
     <ClCompile Include="Source\Components\ComponentGroup.cpp" />
     <ClCompile Include="Source\Components\Button.cpp" />
@@ -78,7 +77,6 @@
     <ClInclude Include="Include\Scene\Scene.hpp" />
     <ClInclude Include="Include\Scene\Marker.hpp" />
     <ClInclude Include="Include\Framework\InputManager.hpp" />
-    <ClInclude Include="Include\Components\Clickable.hpp" />
     <ClInclude Include="Include\Components\Component.hpp" />
     <ClInclude Include="Include\Components\ComponentGroup.hpp" />
     <ClInclude Include="Include\Components\Button.hpp" />

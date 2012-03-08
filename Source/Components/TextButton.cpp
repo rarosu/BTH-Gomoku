@@ -30,16 +30,19 @@ namespace Components
 		if(!IsVisible())
 			return;
 
+		D3DXVECTOR2 pos = GetPosition();
+		RECT posRect = { pos.x, pos.y, pos.x + GetWidth(), pos.y + GetHeight() };
+
 		Button::Draw();
 		if(IsEnabled())
 		{
 			if(IsHovered())
-				mFont->WriteText(mCaption, &mPositionRect, D3DXCOLOR(1.0, 1.0, 0.0, 1.0), GameFont::Center, GameFont::Middle);
+				mFont->WriteText(mCaption, &posRect, D3DXCOLOR(1.0, 1.0, 0.0, 1.0), GameFont::Center, GameFont::Middle);
 			else
-				mFont->WriteText(mCaption, &mPositionRect, mTextColor, GameFont::Center, GameFont::Middle);
+				mFont->WriteText(mCaption, &posRect, mTextColor, GameFont::Center, GameFont::Middle);
 		}
 		else
-			mFont->WriteText(mCaption, &mPositionRect, D3DXCOLOR(0.5, 0.5, 0.5, 1.0), GameFont::Center, GameFont::Middle);
+			mFont->WriteText(mCaption, &posRect, D3DXCOLOR(0.5, 0.5, 0.5, 1.0), GameFont::Center, GameFont::Middle);
 	}
 
 	// DEBUG

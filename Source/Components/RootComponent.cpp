@@ -67,10 +67,10 @@ namespace Components
 		return true;
 	}
 
-	D3DXVECTOR2 RootComponent::GetPosition() const
+	/*D3DXVECTOR2 RootComponent::GetPosition() const
 	{
 		return D3DXVECTOR2(mPositionRect.left, mPositionRect.top);
-	}
+	}*/
 
 	// STATIC METHODS
 	Console& RootComponent::GetConsole()

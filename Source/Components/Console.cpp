@@ -11,7 +11,6 @@ namespace Components
 		  mDevice(device), mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0)), mFirstShowRow(0), mBackground(NULL),
 		  C_HISTORY_SIZE(size)
 	{
-		mPositionRect = position;
 		mBackground = new Sprite(mDevice, sViewport, "whitePixel.png", GetWidth(), GetHeight());
 
 		int textHeight = 18;
@@ -20,13 +19,13 @@ namespace Components
 
 		mMaxNumRows = (int)((GetHeight() - textHeight) / textHeight);
 
-		RECT inputFieldPos = mPositionRect;
+		RECT inputFieldPos = GetBoundingRect();
 		inputFieldPos.top = inputFieldPos.bottom - 20;
 		mInputField = new InputField(mDevice, this, this, inputFieldPos, mFont);
 
 		int scrollWidth = 20;
-		RECT scrollbarPos = { mPositionRect.right - scrollWidth, mPositionRect.top, 
-							  mPositionRect.right, mPositionRect.bottom };
+		RECT scrollbarPos = GetBoundingRect();
+		scrollbarPos.left = scrollbarPos.right - scrollWidth;
 		mScrollbar = new Scrollbar(this, this, scrollbarPos);
 		mScrollbar->Initialize(mDevice);
 
@@ -112,9 +111,7 @@ namespace Components
 		ComponentGroup::MouseButtonReleased(index, currentState);
 
 		if(IsVisible())
-			if(currentState.Mouse.x > mPositionRect.left && currentState.Mouse.x < mPositionRect.right &&
-			   currentState.Mouse.y > mPositionRect.top && currentState.Mouse.y < mPositionRect.bottom &&
-			   !mScrollbar->IsHovered())
+			if(IsHovered() && !mScrollbar->IsHovered())
 				SetFocus();	
 	}
 

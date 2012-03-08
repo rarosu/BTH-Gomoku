@@ -8,15 +8,15 @@ namespace Components
 		  mFont(NULL), mCaption(caption), mTextColor(C_COLOR_TEXT), 
 		  mShadowColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f)), mAlignHor(alignHorizontal), mAlignVer(alignVertical)
 	{
+		D3DXVECTOR2 lblPos = GetPosition();
 		int offsetX = 2;
 		int offsetY = 1;
-		mShadowPosition.left = mPositionRect.left + offsetX;
-		mShadowPosition.right = mPositionRect.right + offsetX;
-		mShadowPosition.top = mPositionRect.top + offsetY;
-		mShadowPosition.bottom = mPositionRect.bottom + offsetY;
+		mShadowPosition.left = lblPos.x + offsetX;
+		mShadowPosition.right = lblPos.x + GetWidth() + offsetX;
+		mShadowPosition.top = lblPos.y + offsetY;
+		mShadowPosition.bottom = lblPos.y + GetHeight() + offsetY;
 		
-		int size = mPositionRect.bottom - mPositionRect.top;
-		mFont = new GameFont(device, "Segoe Print", size, false, true);
+		mFont = new GameFont(device, "Segoe Print", GetHeight(), false, true);
 	}
 
 	void Label::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
@@ -30,9 +30,9 @@ namespace Components
 	{
 		if(!IsVisible())
 			return;
-
+		RECT textPos = GetBoundingRect();
 		mFont->WriteText(mCaption, &mShadowPosition, mShadowColor, mAlignHor, mAlignVer);
-		mFont->WriteText(mCaption, &mPositionRect, mTextColor, mAlignHor, mAlignVer);
+		mFont->WriteText(mCaption, &textPos, mTextColor, mAlignHor, mAlignVer);
 	}
 
 	void Label::LostFocus()

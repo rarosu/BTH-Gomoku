@@ -53,8 +53,6 @@ namespace State
 		Components::ComponentGroup*				mComponents;
 		Sprite*									mBackground;
 
-		GameFont*								mDebugFont; // DEBUG
-
 		void CreateComponents();
 	};
 }

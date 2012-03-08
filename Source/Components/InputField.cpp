@@ -7,7 +7,7 @@ namespace Components
 
 	InputField::InputField(ID3D10Device* device, ComponentGroup* ownerGroup, InputReceiver* receiver, 
 		RECT position, GameFont* font)
-		: Clickable(ownerGroup, position),
+		: Component(ownerGroup, position),
 		  mDevice(device), mBackground(NULL), mFont(font), 
 		  mReceiver(receiver), mShowMarker(true), mMSSinceBlink(0.0f), mHasFocus(false)
 	{
@@ -41,7 +41,7 @@ namespace Components
 		if(!IsVisible())
 			return;
 
-		Clickable::Update(gameTime, currInputState, prevInputState);
+		Component::Update(gameTime, currInputState, prevInputState);
 
 		if(mHasFocus)
 		{
@@ -63,21 +63,19 @@ namespace Components
 		if(!IsVisible())
 			return;
 
+		D3DXVECTOR2 position = GetPosition();
 		if(mBackground != NULL)
-		{
-			D3DXVECTOR2 position = D3DXVECTOR2(mPositionRect.left, mPositionRect.top);
 			mBackground->Draw(position);
-		}
 
 		int offset = 10;
-		POINT position = { mPositionRect.left + offset, mPositionRect.top };
+		POINT textPos = { position.x + offset, position.y };
 
 		std::string marker = " ";
 		if(mShowMarker)
 			marker = "|";
 		
 		mFont->WriteText(mFirstString.str() + marker + mLastString.str(), 
-						 position, D3DXCOLOR(0.0, 0.0, 0.0, 1.0));
+						 textPos, D3DXCOLOR(0.0, 0.0, 0.0, 1.0));
 	}
 
 	void InputField::LostFocus()

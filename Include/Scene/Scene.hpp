@@ -93,6 +93,12 @@ private:
 		this method will return the cell the mouse is hovering over.
 	*/
 	Logic::Cell PickCell(const Viewport& viewport, int mouseX, int mouseY) const;
+
+	// Methods inherited by Component
+	void MouseEntered() {}
+	void MouseExited() {}
+	void MousePressed(int buttonIndex) {}
+	void MouseReleased(int buttonIndex) {}
 };
 
 #endif

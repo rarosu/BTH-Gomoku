@@ -164,7 +164,6 @@
     <ClCompile Include="Source\Components\RootComponent.cpp" />
     <ClCompile Include="Source\Components\Scrollbar.cpp" />
     <ClCompile Include="Source\Components\TextButton.cpp" />
-    <ClCompile Include="Source\Components\Clickable.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\Components\Console.cpp" />
     <ClCompile Include="Source\Framework\D3DApplication.cpp" />
@@ -229,7 +228,6 @@
     <ClInclude Include="Include\Components\RootComponent.hpp" />
     <ClInclude Include="Include\Components\Scrollbar.hpp" />
     <ClInclude Include="Include\Components\TextButton.hpp" />
-    <ClInclude Include="Include\Components\Clickable.hpp" />
     <ClInclude Include="Include\Camera.hpp" />
     <ClInclude Include="Include\Components\Console.hpp" />
     <ClInclude Include="Include\Framework\D3DApplication.hpp" />

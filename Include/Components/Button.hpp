@@ -3,12 +3,11 @@
 
 #include "WinInclude.hpp"
 #include "Component.hpp"
-#include "Clickable.hpp"
 #include "Sprite.hpp"
 
 namespace Components
 {
-	class Button : public Clickable
+	class Button : public Component
 	{
 	public:
 		struct Graphics

@@ -11,7 +11,7 @@ namespace Components
 	}
 
 	Button::Button(ComponentGroup* ownerGroup, RECT position)
-		: Clickable(ownerGroup, position),
+		: Component(ownerGroup, position),
 		mDevice(NULL), mTexture(NULL), mTintColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f))
 	{
 	}
@@ -36,7 +36,7 @@ namespace Components
 			return;
 
 		if(IsEnabled())
-			Clickable::Update(gameTime, currInputState, prevInputState);
+			Component::Update(gameTime, currInputState, prevInputState);
 	}
 
 	void Button::Draw()

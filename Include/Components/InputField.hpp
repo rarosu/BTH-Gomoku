@@ -5,7 +5,7 @@
 #include <sstream>
 #include <string>
 
-#include "Clickable.hpp"
+#include "Component.hpp"
 #include "GameFont.hpp"
 #include "GameTime.hpp"
 #include "InputManager.hpp"
@@ -19,7 +19,7 @@ namespace Components
 		virtual void RecieveInput(std::string input) = 0;
 	};
 
-	class InputField : public Clickable
+	class InputField : public Component
 	{
 	public:
 		InputField(ID3D10Device* device, ComponentGroup* ownerGroup, InputReceiver* receiver, 
