@@ -7,7 +7,7 @@ using namespace Network;
 
 namespace Logic
 {
-	const float ServerSession::C_TIMEOUT = 5.0f;
+	const float ServerSession::C_TIMEOUT = 1.0f;
 
 	ServerSession::ServerSession(Network::Server* server, const std::string& adminName, Ruleset* ruleset) 
 		: mServer(server)
@@ -87,21 +87,31 @@ namespace Logic
 					Network::SetTeamMessage* m = static_cast<Network::SetTeamMessage*>(message.mMessage);
 				} break;
 			}
+
+			SafeDelete(message.mMessage);
 		}
 
 		// Decrease timeout
+		/*
 		float dt = gameTime.GetTimeSinceLastTick().Seconds;
+		std::vector<int> indicesToRemove;
 		for (TimeoutMap::iterator it = mTimeoutCounters.begin(); it != mTimeoutCounters.end(); ++it)
 		{
 			it->second -= dt;
 			if (it->second <= 0.0f)
 			{
-				mServer->DisconnectClient(it->first);
-				
-				mTimeoutCounters.erase(it);
-				it--;
+				indicesToRemove.push_back(it->first);
 			}
 		}
+
+		for (unsigned int i = 0; i < indicesToRemove.size(); ++i)
+		{
+			MessageBox(NULL, "Disconnecting client due to timeout", "Disconnect", MB_OK);
+
+			mServer->DisconnectClient(i);
+			mTimeoutCounters.erase(i);
+		}
+		*/
 	}
 
 	void ServerSession::ClientConnected(Network::Slot slot)

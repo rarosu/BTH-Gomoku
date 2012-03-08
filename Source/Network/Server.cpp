@@ -11,11 +11,6 @@ namespace Network
 	SlotMessage::SlotMessage(Message* message, Slot slot)
 		: mMessage(message), mSlot(slot) {}
 
-	SlotMessage::~SlotMessage()
-	{
-		SafeDelete(mMessage);
-	}
-
 	Server::Server(int maxClients, Port port)
 		: mEventInterface(NULL)
 		, mPort(port)
@@ -41,7 +36,10 @@ namespace Network
 	{
 		mListenSocket.Shutdown();
 		for (unsigned int i = 0; i < mClients.size(); ++i)
-			mClients[i].Shutdown();
+		{
+			mClients[i]->Shutdown();
+			SafeDelete(mClients[i]);
+		}
 
 		WSACleanup();
 
@@ -72,7 +70,7 @@ namespace Network
 			if (s != INVALID_SOCKET)
 			{
 				// Add client and notify connect
-				mClients.push_back(ComSocket(s));
+				mClients.push_back(new ComSocket(s));
 
 				if (mEventInterface != NULL)
 					mEventInterface->ClientConnected(mClients.size() - 1);
@@ -81,11 +79,11 @@ namespace Network
 	
 		for (Slot i = 0; i < mClients.size(); ++i)
 		{
-			if (mClients[i].IsConnected())
+			if (mClients[i]->IsConnected())
 			{
-				mClients[i].Update();
+				mClients[i]->Update();
 				std::string m;
-				while ((m = mClients[i].PopMessage()) != "")
+				while ((m = mClients[i]->PopMessage()) != "")
 					mMessageQueue.push_back(SlotMessage(MessageFactory::Inflate(m), i));
 			}
 			else
@@ -113,7 +111,7 @@ namespace Network
 		assert(slot >= 0);
 		assert(slot < mClients.size());
 
-		mClients[slot].Send(message.Flatten());
+		mClients[slot]->Send(message.Flatten());
 	}
 
 	SlotMessage Server::PopMessage()
@@ -134,7 +132,10 @@ namespace Network
 		assert(slot >= 0);
 		assert(slot < mClients.size());
 		
-		mClients[slot].Shutdown();
+		mClients[slot]->Shutdown();
+		SafeDelete(mClients[slot]);
+		mClients.erase(mClients.begin() + slot);
+
 		if (mEventInterface != NULL)
 			mEventInterface->ClientDisconnected(slot);
 	}

@@ -129,7 +129,9 @@ namespace State
 
 	void ServerLobbyState::SetSessionArguments(Network::Server* server, const std::string& adminName, Logic::Ruleset* ruleset)
 	{
-		assert(mSession != NULL);
+		assert(server != NULL);
+		assert(ruleset != NULL);
+		assert(mSession == NULL);
 		mSession = new Logic::ServerSession(server, adminName, ruleset);
 	}
 }

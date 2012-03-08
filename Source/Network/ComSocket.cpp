@@ -17,7 +17,16 @@ namespace Network
 	ComSocket::ComSocket(SOCKET socket)
 		: mSocket(socket), mConnected(true)
 	{
+		int optVal;
+		int optLen = sizeof(int);
+		int error = getsockopt(mSocket, SOL_SOCKET, SO_ACCEPTCONN, (char*)&optVal, &optLen);
+		if (error == SOCKET_ERROR)
+		{
+			std::stringstream ss;
+			ss << "Socket error: " << error;
 
+			throw std::runtime_error(ss.str());
+		}
 	}
 
 	ComSocket::~ComSocket()
@@ -106,6 +115,7 @@ namespace Network
 		int len = 0;
 		int error = 0;
 		char buf[1024];
+		ZeroMemory(buf, 1024);
 
 		do {
 			len = recv(mSocket, buf, sizeof(buf), 0);

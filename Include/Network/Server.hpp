@@ -9,8 +9,6 @@
 
 namespace Network
 {
-	typedef unsigned int Slot;
-
 	class ServerEventInterface
 	{
 	public:
@@ -18,12 +16,12 @@ namespace Network
 		virtual void ClientDisconnected(Slot slot) = 0;
 	};
 
+	// TODO: Remove copying?
 	struct SlotMessage
 	{
 	public:
 		SlotMessage();
 		SlotMessage(Message* message, Slot slot);
-		~SlotMessage();
 
 		Message* mMessage;
 		Slot mSlot;
@@ -52,7 +50,7 @@ namespace Network
 		Port mPort;
 		unsigned int mMaxClients;
 		ListenSocket mListenSocket;
-		std::vector<ComSocket> mClients;
+		std::vector<ComSocket*> mClients;
 		std::vector<SlotMessage> mMessageQueue;
 	};
 }

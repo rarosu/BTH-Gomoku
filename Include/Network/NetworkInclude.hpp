@@ -4,7 +4,7 @@
 namespace Network
 {
 	typedef unsigned short Port;
-
+	typedef unsigned int Slot;
 }
 
 #endif

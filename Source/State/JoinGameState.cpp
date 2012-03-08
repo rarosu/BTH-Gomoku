@@ -1,13 +1,15 @@
 #include "JoinGameState.hpp"
 #include "Label.hpp"
 #include "ClientSession.hpp"
+#include "MessageInclude.hpp"
 #include <sstream>
 
 namespace State
 {
-	JoinGameState::JoinGameState(StateID id, ID3D10Device* device)
+	JoinGameState::JoinGameState(StateID id, ID3D10Device* device, ClientLobbyState* lobbyState)
 		: ApplicationState(id), 
-		  mDevice(device), 
+		  mDevice(device),
+		  mClientLobbyState(lobbyState),
 		  mDefaultFont(NULL),
 		  mBackground(NULL),
 		  mComponents(NULL),
@@ -15,7 +17,8 @@ namespace State
 		  mIPAddressField(NULL),
 		  mPortField(NULL),
 		  mJoinButton(NULL),
-		  mCancelButton(NULL)
+		  mCancelButton(NULL),
+		  mClient(NULL)
 	{
 		mDefaultFont = new GameFont(mDevice,  "Segoe Print", 48);
 		mBackground = new Sprite(mDevice, sViewport, "marbleBG1422x800.png", sViewport->GetWidth(), sViewport->GetHeight());
@@ -25,6 +28,7 @@ namespace State
 	{
 		SafeDelete(mDefaultFont);
 		SafeDelete(mBackground);
+		SafeDelete(mClient);
 	}
 
 	void JoinGameState::OnStatePushed()
@@ -46,10 +50,57 @@ namespace State
 
 	void JoinGameState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
 	{
+		// Check cancel button
 		if (mCancelButton->GetAndResetClickStatus())
 		{
+			SafeDelete(mClient);
+
 			ChangeState(C_STATE_MENU);
 			return;
+		}
+
+		if (mClient != NULL)
+		{
+			mClient->Update();
+
+			Network::Message* message;
+			while ( (message = mClient->PopMessage()) != NULL )
+			{
+				switch (message->ID())
+				{
+					case Network::C_MESSAGE_ACCEPT:
+					{
+						Network::AcceptMessage* m = static_cast<Network::AcceptMessage*>(message);
+
+						mClientLobbyState->SetSessionArguments(mClient, m->mNumberOfPlayers, m->mSelfID, mNameField->GetText());
+
+						ChangeState(C_STATE_CLIENT_LOBBY);
+					} break;
+
+					case Network::C_MESSAGE_REFUSE:
+					{
+						Network::RefuseMessage* m = static_cast<Network::RefuseMessage*>(message);
+
+						switch (m->mReason)
+						{
+							case Network::RefuseReason::TooManyPlayers:
+								MessageBox(NULL, "Connection refused: Too many players", "Error", MB_OK | MB_ICONERROR);
+							break;
+
+							case Network::RefuseReason::InvalidName:
+								MessageBox(NULL, "Connection refused: Invalid name, please change it", "Error", MB_OK | MB_ICONERROR);
+							break;
+						}
+
+						mNameField->SetEnabled(true);
+						mIPAddressField->SetEnabled(true);
+						mPortField->SetEnabled(true);
+						mJoinButton->SetEnabled(true);
+					} break;
+				}
+			}
+
+			SafeDelete(message);
 		}
 
 		// Basic check to see if the name is valid (non-empty)
@@ -75,22 +126,33 @@ namespace State
 			return;
 		}
 
+		// If we're currently attempting a connect, do not allow joining again
+		if (mClient != NULL)
+		{
+			mJoinButton->SetEnabled(false);
+			return;
+		}
+
 		// All is fine (so far)! Allow creation of client.
 		mJoinButton->SetEnabled(true);
 		
 		if (mJoinButton->GetAndResetClickStatus())
 		{
-			// TODO: Create client and attempt to connect (report errors some way)
 			try
 			{
-				Network::Client* client = new Network::Client(mIPAddressField->GetText().c_str(), port);
+				mClient = new Network::Client(mIPAddressField->GetText().c_str(), port);
+				mClient->Send(Network::JoinMessage(mNameField->GetText()));
+
+				mNameField->SetEnabled(false);
+				mIPAddressField->SetEnabled(false);
+				mPortField->SetEnabled(false);
 			}
 			catch (Network::ConnectionFailure& e)
 			{
 				MessageBox(NULL, e.what(), "Error", MB_OK | MB_ICONERROR);
 			}
 			
-			// TODO: Send Join message and receive Accept message.
+			
 		}
 	}
 
