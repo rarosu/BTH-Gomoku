@@ -250,7 +250,6 @@
     <ClInclude Include="Include\Logic\Grid\Grid.hpp" />
     <ClInclude Include="Include\Logic\ClientSession.hpp" />
     <ClInclude Include="Include\Logic\Player.hpp" />
-    <ClInclude Include="Include\Logic\PlayerController.hpp" />
     <ClInclude Include="Include\Logic\Ruleset.hpp" />
     <ClInclude Include="Include\Logic\ServerSession.hpp" />
     <ClInclude Include="Include\Logic\Session.hpp" />
