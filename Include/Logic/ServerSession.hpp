@@ -38,17 +38,31 @@ namespace Logic
 		*/
 		void ClientConnected(Network::Slot slot);
 		void ClientDisconnected(Network::Slot slot);
-	private:
-		typedef std::map<int, float> TimeoutMap;
+	private:		
+		typedef int PlayerSlot;
+		typedef int ClientSlot;
+		typedef int PlayerSlotStatus;
 
 		static const float C_TIMEOUT;
+		static const PlayerSlotStatus C_STATUS_OPEN = 0;
+		static const PlayerSlotStatus C_STATUS_LOCAL = 1;
+		static const PlayerSlotStatus C_STATUS_OCCUPIED = 2;
+
+		struct PlayerClientPair
+		{
+			PlayerSlot mPlayerSlot;
+			ClientSlot mClientSlot;
+		};
+
+		std::vector<PlayerSlotStatus> mSlotStatus;
+		std::vector<PlayerClientPair> mSlotPairs;
+		//std::vector<Cliet> mTimeoutCounters;
+		//std::vector<PlayerSlot> mClientsToRemove;
 
 		Ruleset* mRuleset;
-
 		Network::Server* mServer;
-		TimeoutMap mTimeoutCounters;
-		std::vector<int> mClientsToBeRemoved;
 
+		PlayerSlot GetPlayerSlot(ClientSlot slot) const;
 		void HandleJoinMessage(Network::Slot clientSlot, const std::string& name);
 	};
 }

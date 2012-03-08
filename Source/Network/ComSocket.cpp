@@ -109,7 +109,7 @@ namespace Network
 		mMessagesToSend.push_back(message); 
 	}
 
-	// Concatenates a message to the receive buffer, returns error or zero
+	// Concatenates a message to the receive buffer, returns true if connected
 	bool ComSocket::Receive()
 	{
 		int len = 0;
@@ -132,6 +132,12 @@ namespace Network
 				error = WSAGetLastError();
 				if (error != WSAEWOULDBLOCK)
 				{
+					if (error == WSAECONNRESET)
+					{
+						mConnected = false;
+						break;
+					}
+
 					std::stringstream s;
 					s << "recv failed: " << error;
 

@@ -10,15 +10,25 @@ namespace Logic
 	const float ServerSession::C_TIMEOUT = 1.0f;
 
 	ServerSession::ServerSession(Network::Server* server, const std::string& adminName, Ruleset* ruleset) 
-		: mServer(server)
+		: Session(ruleset->GetPlayerCount())
+		, mServer(server)
 		, mRuleset(ruleset)
 	{
 		mServer->SetEventInterface(this);
-		mPlayers.resize(mRuleset->GetPlayerCount());
+
+		mSlotStatus.resize(mRuleset->GetPlayerCount());
+		//mTimeoutCounters.resize(mRuleset->GetPlayerCount());
+
+		mPlayers[0] = new Player();
+		mPlayers[0]->SetName(adminName);
 		
-		// TODO: Set admin to local controller
-		mPlayers[0].SetController(NULL);
-		mPlayers[0].SetName(adminName);
+		mSlotStatus[0] = C_STATUS_LOCAL;
+		//mTimeoutCounters[0] = -1.0f;
+		for (Slot s = 1; s < mPlayers.size(); ++s)
+		{
+			mSlotStatus[s] = C_STATUS_OPEN;
+			//mTimeoutCounters[s] = -1.0f;
+		}
 	}
 
 	ServerSession::~ServerSession() throw()
@@ -41,16 +51,21 @@ namespace Logic
 	{
 		// Update the server
 		mServer->Update();
-
+		
 		// Handle all messages
 		Network::SlotMessage message;
 		while ((message = mServer->PopMessage()).mMessage != NULL)
 		{
+			// Get the player this message is about
+			//PlayerSlot slot = GetPlayerSlot(message.mSlot);
+
 			// If we've received a message, update timeout (unless they're marked to be removed)
-			if (std::find(mClientsToBeRemoved.begin(), mClientsToBeRemoved.end(), message.mSlot) == mClientsToBeRemoved.end())
+			/*
+			if (std::find(mClientsToRemove.begin(), mClientsToRemove.end(), message.mSlot) == mClientsToRemove.end())
 			{
-				mTimeoutCounters[message.mSlot] = C_TIMEOUT;
+				mTimeoutCounters[slot] = C_TIMEOUT;
 			}
+			*/
 
 			// Parse the message content
 			switch (message.mMessage->ID())
@@ -92,26 +107,17 @@ namespace Logic
 		}
 
 		// Decrease timeout
-		/*
 		float dt = gameTime.GetTimeSinceLastTick().Seconds;
-		std::vector<int> indicesToRemove;
 		for (TimeoutMap::iterator it = mTimeoutCounters.begin(); it != mTimeoutCounters.end(); ++it)
 		{
 			it->second -= dt;
 			if (it->second <= 0.0f)
 			{
-				indicesToRemove.push_back(it->first);
+				mServer->DisconnectClient(mSlotMap[it->first]);
+
 			}
 		}
-
-		for (unsigned int i = 0; i < indicesToRemove.size(); ++i)
-		{
-			MessageBox(NULL, "Disconnecting client due to timeout", "Disconnect", MB_OK);
-
-			mServer->DisconnectClient(i);
-			mTimeoutCounters.erase(i);
-		}
-		*/
+		
 	}
 
 	void ServerSession::ClientConnected(Network::Slot slot)
@@ -126,35 +132,74 @@ namespace Logic
 
 	void ServerSession::ClientDisconnected(Network::Slot slot)
 	{
+		SafeDelete(mPlayers[mSlotMap[slot]]);
+	}
 
+	ServerSession::PlayerSlot ServerSession::GetPlayerSlot(ClientSlot slot) const
+	{
+		for (PlayerSlot i = 0; i < mSlots.size(); ++i)
+		{
+			if (mSlots[i] == slot)
+				return i;
+		}
+
+		return -1;
 	}
 
 	void ServerSession::HandleJoinMessage(Network::Slot clientSlot, const std::string& name)
 	{
 		bool playerValid = true;
-		for (unsigned int i = 0; i < mPlayers.size(); ++i)
+		RefuseReason::RefuseReason reason = RefuseReason::TooManyPlayers;
+		PlayerSlot s = 0;
+
+		// Find an open slot
+		for (s = 0; s < mPlayers.size(); ++s)
 		{
-			if (mPlayers[i].GetName() == name)
+			if (mSlotMap[s] == C_SLOT_OPEN)
 			{
-				mClientsToBeRemoved.push_back(clientSlot);
-				mServer->Send(clientSlot, RefuseMessage(RefuseReason::InvalidName));
+				break;
+			}
+
+			if (s == mPlayers.size() - 1)
+			{
 				playerValid = false;
+				reason = RefuseReason::TooManyPlayers;
+			}
+		}
+		
+		// If an open slot is found, check the player's name
+		if (playerValid)
+		{
+			for (unsigned int i = 0; i < mPlayers.size(); ++i)
+			{
+				if (mPlayers[i] != NULL && mPlayers[i]->GetName() == name)
+				{
+					playerValid = false;
+					break;
+				}
 			}
 		}
 
+		// If the player is valid, add them to the open slot
 		if (playerValid)
 		{
 			mServer->Send(clientSlot, AcceptMessage(mPlayers.size(), clientSlot));
-			mPlayers[clientSlot].SetName(name);
-			mPlayers[clientSlot].SetController(NULL);	// TODO: Set RemoteController
+			mPlayers[clientSlot] = new Player();
+			mPlayers[clientSlot]->SetName(name);
+			mSlotMap[s] = clientSlot;
 
-			for (unsigned int i = 0; i < mPlayers.size(); ++i)
+			for (PlayerSlot i = 0; i < mPlayers.size(); ++i)
 			{
-				if (i != clientSlot)
+				if (mPlayers[i] != NULL && i != clientSlot)
 				{
-					mServer->Send(clientSlot, AddPlayerMessage(i, mPlayers[i].GetTeam(), mPlayers[i].GetMarkerType(), mPlayers[i].GetName()));
+					mServer->Send(clientSlot, AddPlayerMessage(i, mPlayers[i]->GetTeam(), mPlayers[i]->GetMarkerType(), mPlayers[i]->GetName()));
 				}
 			}
+		}
+		else
+		{
+			mClientsToBeRemoved.push_back(clientSlot);
+			mServer->Send(clientSlot, RefuseMessage(reason));
 		}
 	}
 }
