@@ -4,9 +4,16 @@
 #include "WinInclude.hpp"
 #include <vector>
 #include "Message.hpp"
+#include <stdexcept>
 
 namespace Network
 {
+	class ConnectionFailure : public std::runtime_error
+	{
+	public:
+		ConnectionFailure(const std::string& errorMessage);
+	};
+
 	class ComSocket
 	{
 	public:

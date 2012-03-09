@@ -4,8 +4,7 @@
 #include "ApplicationState.hpp"
 #include "TextButton.hpp"
 #include "Label.hpp"
-#include "Effect.hpp"
-#include "Buffer.hpp"
+#include "Sprite.hpp"
 #include "ServerSession.hpp"
 #include "Server.hpp"
 
@@ -46,8 +45,8 @@ namespace State
 		};
 
 		ID3D10Device*							mDevice;
-		Effect*									mEffect;
-		VertexBuffer*							mBuffer;
+		Sprite*									mBackground;
+
 		Components::ComponentGroup*				mComponents;
 		std::vector<Components::TextButton*>	mButtons;
 		std::vector<Components::Label*>			mPlayerLabels;

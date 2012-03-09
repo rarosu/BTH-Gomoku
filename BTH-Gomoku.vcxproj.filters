@@ -107,7 +107,6 @@
     <ClInclude Include="Include\Logic\ClientSession.hpp" />
     <ClInclude Include="Include\Network\Messages\ChatMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\AcceptMessage.hpp" />
-    <ClInclude Include="Include\Logic\PlayerController.hpp" />
     <ClInclude Include="Include\Network\Messages\AddPlayerMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\RemovePlayerMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\SetTeamMessage.hpp" />

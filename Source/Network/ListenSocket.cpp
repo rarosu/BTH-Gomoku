@@ -87,10 +87,18 @@ namespace Network
 		if (s == INVALID_SOCKET)
 		{
 			result = WSAGetLastError();
-			std::stringstream ss;
-			ss << "accept failed: " << result;
-
-			throw std::runtime_error(ss.str());
+			
+			if (result == WSAEWOULDBLOCK)
+			{
+				return s;
+			}
+			else
+			{
+				std::stringstream ss;
+				ss << "accept failed: " << result;
+			
+				throw std::runtime_error(ss.str());
+			}
 		}
 		else
 		{

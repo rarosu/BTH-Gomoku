@@ -37,6 +37,9 @@ namespace Network
 			case C_MESSAGE_CHAT:
 				m = ChatMessage::Inflate(args);
 				break;
+			case C_MESSAGE_JOIN:
+				m = JoinMessage::Inflate(args);
+				break;
 			case C_MESSAGE_ACCEPT:
 				m = AcceptMessage::Inflate(args);
 				break;

@@ -1,9 +1,10 @@
 #include "Client.hpp"
-#include <iostream>
+#include <stdexcept>
+#include <sstream>
 
 namespace Network
 {
-	Client::Client(const char* ipAddress, unsigned short port)
+	Client::Client(const char* ipAddress, Port port)
 	{
 		WSADATA wsaData;
 
@@ -11,7 +12,10 @@ namespace Network
 		result = WSAStartup(MAKEWORD(2,2), &wsaData);
 		if (result != 0)
 		{
-			std::cerr << "WSAStartup failed: " << result << std::endl;
+			std::stringstream ss;
+			ss << "WSAStartup failed: ";
+			ss << result;
+			throw std::runtime_error(ss.str());
 		}
 
 		mSocket.Connect(ipAddress, port);

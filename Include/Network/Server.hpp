@@ -1,6 +1,7 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
+#include "NetworkInclude.hpp"
 #include "ListenSocket.hpp"
 #include "ComSocket.hpp"
 #include "Message.hpp"
@@ -8,9 +9,6 @@
 
 namespace Network
 {
-	typedef unsigned int Slot;
-	typedef unsigned short Port;
-
 	class ServerEventInterface
 	{
 	public:
@@ -18,12 +16,12 @@ namespace Network
 		virtual void ClientDisconnected(Slot slot) = 0;
 	};
 
+	// TODO: Remove copying?
 	struct SlotMessage
 	{
 	public:
 		SlotMessage();
 		SlotMessage(Message* message, Slot slot);
-		~SlotMessage();
 
 		Message* mMessage;
 		Slot mSlot;
@@ -52,7 +50,7 @@ namespace Network
 		Port mPort;
 		unsigned int mMaxClients;
 		ListenSocket mListenSocket;
-		std::vector<ComSocket> mClients;
+		std::vector<ComSocket*> mClients;
 		std::vector<SlotMessage> mMessageQueue;
 	};
 }

@@ -1,11 +1,13 @@
 #include "ComSocket.hpp"
 
 #include <sstream>
-#include <iostream>
-#include <stdexcept>
 
 namespace Network
 {
+	ConnectionFailure::ConnectionFailure(const std::string& errorMessage)
+		: std::runtime_error(errorMessage)
+	{}
+
 	ComSocket::ComSocket()
 		: mSocket(INVALID_SOCKET), mConnected(false)
 	{
@@ -15,7 +17,16 @@ namespace Network
 	ComSocket::ComSocket(SOCKET socket)
 		: mSocket(socket), mConnected(true)
 	{
+		int optVal;
+		int optLen = sizeof(int);
+		int error = getsockopt(mSocket, SOL_SOCKET, SO_ACCEPTCONN, (char*)&optVal, &optLen);
+		if (error == SOCKET_ERROR)
+		{
+			std::stringstream ss;
+			ss << "Socket error: " << error;
 
+			throw std::runtime_error(ss.str());
+		}
 	}
 
 	ComSocket::~ComSocket()
@@ -41,7 +52,7 @@ namespace Network
 			std::stringstream ss;
 			ss << "getaddrinfo failed: " << result;
 
-			throw std::runtime_error(ss.str());
+			throw ConnectionFailure(ss.str());
 		}
 
 		for (addrinfo* ptr = addrResult; ptr != NULL; ptr = ptr->ai_next)
@@ -52,18 +63,32 @@ namespace Network
 				std::stringstream ss;
 				ss << "socket failed with error: " << WSAGetLastError();
 
-				throw std::runtime_error(ss.str());
+				throw ConnectionFailure(ss.str());
 			}
 
 			// Connect to server
 			result = connect(mSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
 			if (result == SOCKET_ERROR)
 			{
+				int error = WSAGetLastError();
+				if (error == WSAECONNREFUSED)
+				{
+					throw ConnectionFailure("Connection refused.");
+				}
 				closesocket(mSocket);
+				
 				mSocket = INVALID_SOCKET;
 				continue;
 			}
 			break;
+		}
+
+		if (mSocket == INVALID_SOCKET)
+		{
+			std::stringstream ss;
+			ss << "Unable to connect to server with error: " << WSAGetLastError();
+
+			throw ConnectionFailure(ss.str());
 		}
 
 		unsigned long mode = 1;
@@ -71,10 +96,7 @@ namespace Network
 
 		freeaddrinfo(addrResult);
 
-		if (mSocket == INVALID_SOCKET)
-		{
-			throw std::runtime_error("Unable to connect to server!");
-		}
+		
 
 		mConnected = true;
 
@@ -87,12 +109,13 @@ namespace Network
 		mMessagesToSend.push_back(message); 
 	}
 
-	// Concatenates a message to the receive buffer, returns error or zero
+	// Concatenates a message to the receive buffer, returns true if connected
 	bool ComSocket::Receive()
 	{
 		int len = 0;
 		int error = 0;
 		char buf[1024];
+		ZeroMemory(buf, 1024);
 
 		do {
 			len = recv(mSocket, buf, sizeof(buf), 0);
@@ -109,6 +132,12 @@ namespace Network
 				error = WSAGetLastError();
 				if (error != WSAEWOULDBLOCK)
 				{
+					if (error == WSAECONNRESET)
+					{
+						mConnected = false;
+						break;
+					}
+
 					std::stringstream s;
 					s << "recv failed: " << error;
 
