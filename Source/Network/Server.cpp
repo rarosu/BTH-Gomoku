@@ -11,12 +11,19 @@ namespace Network
 	SlotMessage::SlotMessage(Message* message, Slot slot)
 		: mMessage(message), mSlot(slot) {}
 
+
 	Server::Server(int maxClients, Port port)
 		: mEventInterface(NULL)
-		, mPort(port)
-		, mMaxClients(maxClients)
 		, mListenSocket(maxClients)
 	{
+		// Resize the client vector
+		mClients.resize(maxClients);
+		for (unsigned int i = 0; i < mClients.size(); ++i)
+		{
+			mClients[i] = NULL;
+		}
+
+		// Start up WinSock
 		WSADATA wsaData;
 
 		int result;
@@ -29,20 +36,25 @@ namespace Network
 			throw std::runtime_error(ss.str());
 		}
 
+		// Bind to the given port
 		mListenSocket.Bind(port);
 	}
 
 	Server::~Server()
 	{
+		// Stop listening and shutdown all clients
 		mListenSocket.Shutdown();
 		for (unsigned int i = 0; i < mClients.size(); ++i)
 		{
-			mClients[i]->Shutdown();
-			SafeDelete(mClients[i]);
+			if (mClients[i] != NULL)
+			{
+				mClients[i]->Shutdown();
+				SafeDelete(mClients[i]);
+			}
 		}
 
+		// Shutdown WinSock
 		WSACleanup();
-
 	}
 
 	void Server::SetEventInterface(ServerEventInterface* e)
@@ -57,12 +69,14 @@ namespace Network
 
 	Port Server::GetPort() const
 	{
-		return mPort;
+		return mListenSocket.GetPort();
 	}
 
 	void Server::Update()
 	{
-		if (mClients.size() < mMaxClients)
+		// Find a free slot in the client list
+		int slot = -1;
+		if ( (slot = GetFreeSlot()) != -1 )
 		{
 			SOCKET s = INVALID_SOCKET;
 			s = mListenSocket.Accept();
@@ -70,32 +84,31 @@ namespace Network
 			if (s != INVALID_SOCKET)
 			{
 				// Add client and notify connect
-				mClients.push_back(new ComSocket(s));
+				mClients[slot] = new ComSocket(s);
 
 				if (mEventInterface != NULL)
-					mEventInterface->ClientConnected(mClients.size() - 1);
+					mEventInterface->ClientConnected(slot);
 			}
 		}
-	
+
+		// Update the clients
 		for (Slot i = 0; i < mClients.size(); ++i)
 		{
-			if (mClients[i]->IsConnected())
+			if (mClients[i] != NULL)
 			{
-				mClients[i]->Update();
-				std::string m;
-				while ((m = mClients[i]->PopMessage()) != "")
-					mMessageQueue.push_back(SlotMessage(MessageFactory::Inflate(m), i));
-			}
-			else
-			{
-				mClients.erase(mClients.begin() + i);
-				--i;
-
-				if (mEventInterface != NULL)
-					mEventInterface->ClientDisconnected(i);
+				if (mClients[i]->IsConnected())
+				{
+					mClients[i]->Update();
+					std::string m;
+					while ((m = mClients[i]->PopMessage()) != "")
+						mMessageQueue.push_back(SlotMessage(MessageFactory::Inflate(m), i));
+				}
+				else
+				{
+					DisconnectClient(i);
+				}
 			}
 		}
-		
 	}
 
 	void Server::Send(const Message& message)
@@ -131,12 +144,23 @@ namespace Network
 	{
 		assert(slot >= 0);
 		assert(slot < mClients.size());
+		assert(mClients[slot] != NULL);
 		
 		mClients[slot]->Shutdown();
 		SafeDelete(mClients[slot]);
-		mClients.erase(mClients.begin() + slot);
 
 		if (mEventInterface != NULL)
 			mEventInterface->ClientDisconnected(slot);
+	}
+
+	int Server::GetFreeSlot() const
+	{
+		for (unsigned int i = 0; i < mClients.size(); ++i)
+		{
+			if (mClients[i] == NULL)
+				return i;
+		}
+
+		return -1;
 	}
 }

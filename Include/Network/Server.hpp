@@ -16,7 +16,9 @@ namespace Network
 		virtual void ClientDisconnected(Slot slot) = 0;
 	};
 
-	// TODO: Remove copying?
+	/**
+		Owns a message that needs to be manually removed
+	*/
 	struct SlotMessage
 	{
 	public:
@@ -47,11 +49,11 @@ namespace Network
 	private:
 		ServerEventInterface* mEventInterface;
 
-		Port mPort;
-		unsigned int mMaxClients;
 		ListenSocket mListenSocket;
 		std::vector<ComSocket*> mClients;
 		std::vector<SlotMessage> mMessageQueue;
+
+		int GetFreeSlot() const;
 	};
 }
 

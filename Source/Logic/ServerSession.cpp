@@ -16,18 +16,13 @@ namespace Logic
 	{
 		mServer->SetEventInterface(this);
 
-		mSlotStatus.resize(mRuleset->GetPlayerCount());
-		//mTimeoutCounters.resize(mRuleset->GetPlayerCount());
-
 		mPlayers[0] = new Player();
 		mPlayers[0]->SetName(adminName);
 		
-		mSlotStatus[0] = C_STATUS_LOCAL;
-		//mTimeoutCounters[0] = -1.0f;
+		mPlayerClients[0] = C_STATUS_LOCAL;
 		for (Slot s = 1; s < mPlayers.size(); ++s)
 		{
-			mSlotStatus[s] = C_STATUS_OPEN;
-			//mTimeoutCounters[s] = -1.0f;
+			mPlayerClients[s] = C_STATUS_OPEN;
 		}
 	}
 
@@ -107,6 +102,7 @@ namespace Logic
 		}
 
 		// Decrease timeout
+		/*
 		float dt = gameTime.GetTimeSinceLastTick().Seconds;
 		for (TimeoutMap::iterator it = mTimeoutCounters.begin(); it != mTimeoutCounters.end(); ++it)
 		{
@@ -117,54 +113,54 @@ namespace Logic
 
 			}
 		}
-		
+		*/
+	}
+
+	const std::string& ServerSession::GetPlayerName(unsigned int playerSlot) const
+	{
+		if (mPlayers[playerSlot] == NULL)
+			return "";
+		return mPlayers[playerSlot]->GetName();
 	}
 
 	void ServerSession::ClientConnected(Network::Slot slot)
 	{
-		mTimeoutCounters[slot] = C_TIMEOUT;
+		//mTimeoutCounters[slot] = C_TIMEOUT;
 		if (slot >= mPlayers.size())
 		{
 			mServer->Send(slot, RefuseMessage(RefuseReason::TooManyPlayers));
-			mClientsToBeRemoved.push_back(slot);
+			//mClientsToBeRemoved.push_back(slot);
 		}
 	}
 
 	void ServerSession::ClientDisconnected(Network::Slot slot)
 	{
-		SafeDelete(mPlayers[mSlotMap[slot]]);
+		SafeDelete(mPlayers[GetPlayerSlot(slot)]);
 	}
 
 	ServerSession::PlayerSlot ServerSession::GetPlayerSlot(ClientSlot slot) const
 	{
-		for (PlayerSlot i = 0; i < mSlots.size(); ++i)
+		for (SlotMap::const_iterator it = mPlayerClients.begin(); it != mPlayerClients.end(); ++it)
 		{
-			if (mSlots[i] == slot)
-				return i;
+			if (it->second == slot)
+				return it->first;
 		}
 
-		return -1;
+		return C_INVALID_PLAYER;
 	}
 
 	void ServerSession::HandleJoinMessage(Network::Slot clientSlot, const std::string& name)
 	{
 		bool playerValid = true;
-		RefuseReason::RefuseReason reason = RefuseReason::TooManyPlayers;
-		PlayerSlot s = 0;
+		RefuseReason::RefuseReason reason;
 
 		// Find an open slot
-		for (s = 0; s < mPlayers.size(); ++s)
+		PlayerSlot openPlayerSlot = GetPlayerSlot(C_STATUS_OPEN);
+		if (openPlayerSlot == C_INVALID_PLAYER)
 		{
-			if (mSlotMap[s] == C_SLOT_OPEN)
-			{
-				break;
-			}
-
-			if (s == mPlayers.size() - 1)
-			{
-				playerValid = false;
-				reason = RefuseReason::TooManyPlayers;
-			}
+			// There are no open slots
+			playerValid = false;
+			reason = RefuseReason::TooManyPlayers;
 		}
 		
 		// If an open slot is found, check the player's name
@@ -178,15 +174,15 @@ namespace Logic
 					break;
 				}
 			}
-		}
+		}		
 
 		// If the player is valid, add them to the open slot
 		if (playerValid)
 		{
-			mServer->Send(clientSlot, AcceptMessage(mPlayers.size(), clientSlot));
-			mPlayers[clientSlot] = new Player();
-			mPlayers[clientSlot]->SetName(name);
-			mSlotMap[s] = clientSlot;
+			mServer->Send(clientSlot, AcceptMessage(mPlayers.size(), openPlayerSlot));
+			mPlayers[openPlayerSlot] = new Player();
+			mPlayers[openPlayerSlot]->SetName(name);
+			mPlayerClients[openPlayerSlot] = clientSlot;
 
 			for (PlayerSlot i = 0; i < mPlayers.size(); ++i)
 			{
@@ -198,7 +194,7 @@ namespace Logic
 		}
 		else
 		{
-			mClientsToBeRemoved.push_back(clientSlot);
+			mClientsToRemove.push_back(clientSlot);
 			mServer->Send(clientSlot, RefuseMessage(reason));
 		}
 	}

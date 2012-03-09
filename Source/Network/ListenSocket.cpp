@@ -11,8 +11,8 @@ namespace Network
 
 
 
-	ListenSocket::ListenSocket(int maxClients):
-		mSocket(INVALID_SOCKET), mMaxClients(maxClients)
+	ListenSocket::ListenSocket(int maxClients) 
+		: mSocket(INVALID_SOCKET), mMaxClients(maxClients), mPort(0)
 	{
 
 	}
@@ -22,7 +22,7 @@ namespace Network
 		Shutdown();
 	}
 
-	void ListenSocket::Bind(unsigned short port)
+	void ListenSocket::Bind(Port port)
 	{
 		int result;
 		int error = 0;
@@ -65,6 +65,8 @@ namespace Network
 		}
 
 		freeaddrinfo(addrResult);
+
+		mPort = port;
 	}
 
 	SOCKET ListenSocket::Accept()

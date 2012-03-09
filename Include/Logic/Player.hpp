@@ -3,7 +3,6 @@
 
 #include <string>
 #include "Globals.hpp"
-#include "PlayerController.hpp"
 #include "Cell.hpp"
 
 namespace Logic

@@ -21,8 +21,6 @@ namespace State
 	void ClientLobbyState::CreateComponents()
 	{
 		// Create new component group
-		/*RECT compPos = { 0, 0, 0, 0 };
-		mComponents = new Components::ComponentGroup(sRootComponentGroup, "ClientLobbyState Group", compPos);*/
 		const int C_LABEL_WIDTH = 150;
 		const int C_BUTTON_WIDTH = 150;
 
@@ -52,8 +50,8 @@ namespace State
 		r.right = r.left + C_BUTTON_WIDTH;
 		r.top += 100;
 		r.bottom = r.top + 48;
-		mCancelButton = new Components::TextButton(mComponents);
-		mCancelButton->Initialize(mDevice, r, "Cancel");
+		mCancelButton = new Components::TextButton(mComponents, r);
+		mCancelButton->Initialize(mDevice, "Cancel");
 
 		mCancelButton->SetFocus();
 		mComponents->SetFocus();
@@ -178,6 +176,8 @@ namespace State
 
 	void ClientLobbyState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
 	{
+		
+
 		/*if(mButtons[LobbyButton::StartGame]->GetAndResetClickStatus())
 			ChangeState(C_STATE_IN_GAME);
 		if(mButtons[LobbyButton::Cancel]->GetAndResetClickStatus())

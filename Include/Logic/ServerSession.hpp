@@ -34,6 +34,11 @@ namespace Logic
 		void Update(const GameTime& gameTime);
 
 		/**
+			Get the name of a certain player.
+		*/
+		const std::string& GetPlayerName(unsigned int playerSlot) const;
+
+		/**
 			Implemented from ServerEventInterface
 		*/
 		void ClientConnected(Network::Slot slot);
@@ -41,12 +46,13 @@ namespace Logic
 	private:		
 		typedef int PlayerSlot;
 		typedef int ClientSlot;
-		typedef int PlayerSlotStatus;
+		typedef std::map<PlayerSlot, ClientSlot> SlotMap;
+		typedef std::map<ClientSlot, float> TimeoutMap;
 
 		static const float C_TIMEOUT;
-		static const PlayerSlotStatus C_STATUS_OPEN = 0;
-		static const PlayerSlotStatus C_STATUS_LOCAL = 1;
-		static const PlayerSlotStatus C_STATUS_OCCUPIED = 2;
+		static const ClientSlot C_STATUS_OPEN = -1;
+		static const ClientSlot C_STATUS_LOCAL = -2;
+		static const PlayerSlot C_INVALID_PLAYER = -1;
 
 		struct PlayerClientPair
 		{
@@ -54,10 +60,10 @@ namespace Logic
 			ClientSlot mClientSlot;
 		};
 
-		std::vector<PlayerSlotStatus> mSlotStatus;
-		std::vector<PlayerClientPair> mSlotPairs;
-		//std::vector<Cliet> mTimeoutCounters;
-		//std::vector<PlayerSlot> mClientsToRemove;
+		SlotMap mPlayerClients;								// Associates a player with a given client (or determines if the slot is open/local)
+		std::vector<ClientSlot> mPendingClients;			// Holds all the pending clients that we're awaiting a join message from
+		std::vector<ClientSlot> mClientsToRemove;			// Holds all the clients that are to be disconnected
+		TimeoutMap mClientTimeout;							// Holds the timeout values for all clients
 
 		Ruleset* mRuleset;
 		Network::Server* mServer;

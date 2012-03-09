@@ -117,6 +117,8 @@ namespace Logic
 
 	const std::string& ClientSession::GetPlayerName(Network::Slot slot) const
 	{
+		if (mPlayers[slot] == NULL)
+			return "";
 		return mPlayers[slot]->GetName();
 	}
 }

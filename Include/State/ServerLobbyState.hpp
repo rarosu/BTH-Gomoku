@@ -2,6 +2,7 @@
 #define SERVER_LOBBY_STATE_HPP
 
 #include "ApplicationState.hpp"
+#include "Console.hpp"
 #include "TextButton.hpp"
 #include "Label.hpp"
 #include "Sprite.hpp"
@@ -10,20 +11,6 @@
 
 namespace State
 {
-	namespace LobbyButton
-	{
-		enum Button
-		{
-			Team1Player1,
-			Team1Player2,
-			Team2Player1,
-			Team2Player2,
-			StartGame,
-			Cancel,
-			Count
-		};
-	}
-
 	class ServerLobbyState : public ApplicationState
 	{
 	public:
@@ -48,14 +35,14 @@ namespace State
 		Sprite*									mBackground;
 
 		Components::ComponentGroup*				mComponents;
-		std::vector<Components::TextButton*>	mButtons;
 		std::vector<Components::Label*>			mPlayerLabels;
+		Components::TextButton*					mStartButton;
+		Components::TextButton*					mCancelButton;
+		Components::Console*					mChat;
 
 		Logic::ServerSession*					mSession;
 
 		void CreateComponents();
-		void CreateBuffer(float width, float height);
-		void CreateEffect();
 	};
 }
 #endif

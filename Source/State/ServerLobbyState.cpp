@@ -1,5 +1,4 @@
 #include "ServerLobbyState.hpp"
-#include "Console.hpp"
 #include <cassert>
 
 namespace State
@@ -7,9 +6,12 @@ namespace State
 	ServerLobbyState::ServerLobbyState(StateID id, ID3D10Device* device)
 		: ApplicationState(id),
 		  mDevice(device), 
+		  mBackground(NULL),
 		  mComponents(NULL), 
-		  mSession(NULL),
-		  mBackground(NULL)
+		  mStartButton(NULL),
+		  mCancelButton(NULL),
+		  mChat(NULL),
+		  mSession(NULL)
 	{
 		mBackground = new Sprite(mDevice, sViewport, "marbleBG1422x800.png", sViewport->GetWidth(), sViewport->GetHeight());
 	}
@@ -22,6 +24,13 @@ namespace State
 
 	void ServerLobbyState::CreateComponents()
 	{
+		RECT r = {0, 0, 0, 0};
+		mComponents = new Components::ComponentGroup(sRootComponentGroup, "ServerLobbyState Group", r);
+
+
+
+
+		/*
 		// Create new component group
 		RECT compPos = { 0, 0, 0, 0 };
 		mComponents = new Components::ComponentGroup(sRootComponentGroup, "ServerLobbyState Group", compPos);
@@ -91,18 +100,21 @@ namespace State
 
 		chatWindow->SetFocus();
 		mComponents->SetFocus();
+		*/
 	}
 
 	void ServerLobbyState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
 	{
+		// Update the session
 		mSession->Update(gameTime);
 
-		if(mButtons[LobbyButton::StartGame]->GetAndResetClickStatus())
-			ChangeState(C_STATE_IN_GAME);
-		if(mButtons[LobbyButton::Cancel]->GetAndResetClickStatus())
+		// Update the player labels
+		for (unsigned int i = 0; i < mSession->GetRuleset()->GetPlayerCount(); ++i)
 		{
-			SafeDelete(mSession);
-			ChangeState(C_STATE_MENU);
+			std::stringstream s;
+			s << (i + 1) << ". " << mSession->GetPlayerName(i);
+
+			mPlayerLabels[i]->SetCaption(s.str());
 		}
 	}
 
@@ -116,7 +128,6 @@ namespace State
 		assert(mSession != NULL);
 		
 		CreateComponents();
-		
 	}
 
 	void ServerLobbyState::OnStatePopped()
@@ -125,7 +136,10 @@ namespace State
 
 		sRootComponentGroup->RemoveComponent(mComponents);
 		mComponents = NULL;
-		mButtons.clear();
+		mPlayerLabels.clear();
+		mStartButton = NULL;
+		mCancelButton = NULL;
+		mChat = NULL;
 	}
 
 	void ServerLobbyState::SetSessionArguments(Network::Server* server, const std::string& adminName, Logic::Ruleset* ruleset)
