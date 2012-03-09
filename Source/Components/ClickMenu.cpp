@@ -71,9 +71,8 @@ namespace Components
 		{
 			int width = GetWidth();
 			int height = GetHeight();
-			RECT subPos = GetBoundingRect();
-			subPos.left = subPos.right;
-			subPos.right += width;
+			D3DXVECTOR2 position = GetPosition();
+			RECT subPos = { width, 0, width * 2, height };
 			mSubMenu = new ClickMenu(mOwner, mDevice, subPos, width, height);
 			mSubMenu->SetVisible(false);
 		}

@@ -153,6 +153,9 @@ namespace Components
 
 	const RECT& Component::GetBoundingRect() const
 	{
-		return mPositionRect;
+		D3DXVECTOR2 position = GetPosition();
+		RECT posRect = { position.x + mPositionRect.left, position.y + mPositionRect.top,
+						 position.x + mPositionRect.right, position.y + mPositionRect.bottom };
+		return posRect;
 	}
 }
