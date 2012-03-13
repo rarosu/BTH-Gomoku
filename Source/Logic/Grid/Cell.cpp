@@ -108,31 +108,6 @@ namespace Logic
 		return Direction::None;
 	}
 	
-	Alignment::Alignment Cell::GetAlignmentToNeighbour(const Cell& neighbour) const
-	{
-		Direction::Direction direction = GetDirectionToNeighbour(neighbour);
-		
-		switch (direction)
-		{
-			case Direction::Up:
-			case Direction::Down:
-				return Alignment::Vertical;
-			case Direction::UpRight:
-			case Direction::DownLeft:
-				return Alignment::DiagonalLLToUR;
-			case Direction::Right:
-			case Direction::Left:
-				return Alignment::Horizontal;
-			case Direction::DownRight:
-			case Direction::UpLeft:
-				return Alignment::DiagonalULToLR;
-			
-			case Direction::None:
-			default:
-				return Alignment::None;
-		}
-	}
-	
 	bool Cell::operator==(const Cell& cell) const
 	{
 		return (x == cell.x) && (y == cell.y);

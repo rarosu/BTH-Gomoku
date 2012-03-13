@@ -1,6 +1,7 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
+#include "NetworkInclude.hpp"
 #include "ListenSocket.hpp"
 #include "ComSocket.hpp"
 #include "Message.hpp"
@@ -8,9 +9,9 @@
 
 namespace Network
 {
-	typedef unsigned int Slot;
-	typedef unsigned short Port;
-
+	/**
+		An interface for notification on server events
+	*/
 	class ServerEventInterface
 	{
 	public:
@@ -18,17 +19,24 @@ namespace Network
 		virtual void ClientDisconnected(Slot slot) = 0;
 	};
 
+	/**
+		Owns a message that needs to be manually removed
+	*/
 	struct SlotMessage
 	{
 	public:
 		SlotMessage();
 		SlotMessage(Message* message, Slot slot);
-		~SlotMessage();
 
 		Message* mMessage;
 		Slot mSlot;
 	};
 
+	/**
+		A network server, which listens for incoming connections
+		and holds a number of client sockets that it can communicate
+		with.
+	*/
 	class Server
 	{
 	public:
@@ -49,11 +57,11 @@ namespace Network
 	private:
 		ServerEventInterface* mEventInterface;
 
-		Port mPort;
-		unsigned int mMaxClients;
 		ListenSocket mListenSocket;
-		std::vector<ComSocket> mClients;
+		std::vector<ComSocket*> mClients;
 		std::vector<SlotMessage> mMessageQueue;
+
+		int GetFreeSlot() const;
 	};
 }
 

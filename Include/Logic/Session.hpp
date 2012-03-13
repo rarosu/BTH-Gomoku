@@ -9,9 +9,10 @@ namespace Logic
 	class Session
 	{
 	public:
-		virtual ~Session() throw() {}
+		Session(unsigned int playerCount);
+		virtual ~Session() throw();
 	protected:
-		std::vector<Player> mPlayers;
+		std::vector<Player*> mPlayers;
 	};
 }
 

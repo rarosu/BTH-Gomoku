@@ -33,11 +33,6 @@ namespace Logic
 		Direction::Direction GetDirectionToNeighbour(const Cell& neighbour) const;
 		
 		/**
-			Return the alignment between two cells.
-		*/
-		Alignment::Alignment GetAlignmentToNeighbour(const Cell& neighbour) const;
-		
-		/**
 			Comparison operators
 		*/
 		bool operator==(const Cell& cell) const;

@@ -2,10 +2,11 @@
 #define CLIENT_LOBBY_STATE_HPP
 
 #include "ApplicationState.hpp"
-#include "TextButton.hpp"
-#include "Label.hpp"
 #include "Sprite.hpp"
 #include "ClientSession.hpp"
+#include "TextButton.hpp"
+#include "Label.hpp"
+#include "Console.hpp"
 
 namespace State
 {
@@ -21,7 +22,7 @@ namespace State
 		void OnStatePushed();
 		void OnStatePopped();
 
-		void SetSession(Logic::ClientSession* session);
+		void SetSessionArguments(Network::Client* client, int playerCount, int selfID, const std::string& name);
 	private:
 		struct bgVertex
 		{
@@ -31,11 +32,13 @@ namespace State
 
 		ID3D10Device*							mDevice;
 		Sprite*									mBackground;
+
 		Components::ComponentGroup*				mComponents;
-		std::vector<Components::TextButton*>	mButtons;
+		Components::TextButton*					mCancelButton;
+		Components::Console*					mChat;
 		std::vector<Components::Label*>			mPlayerLabels;
 
-		Logic::ClientSession*					mClientSession;
+		Logic::ClientSession*					mSession;
 
 		void CreateComponents();
 	};

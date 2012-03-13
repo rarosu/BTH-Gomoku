@@ -24,6 +24,7 @@ namespace Components
 
 		int scrollWidth = 20;
 		RECT scrollbarPos = { GetWidth() - scrollWidth, 0, GetWidth(), GetHeight() };
+
 		mScrollbar = new Scrollbar(this, this, scrollbarPos);
 		mScrollbar->Initialize(mDevice);
 

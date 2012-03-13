@@ -1,33 +1,34 @@
 #include "JoinGameState.hpp"
 #include "Label.hpp"
 #include "ClientSession.hpp"
+#include "MessageInclude.hpp"
 #include <sstream>
 
 namespace State
 {
-	JoinGameState::JoinGameState(StateID id, ID3D10Device* device)
+	JoinGameState::JoinGameState(StateID id, ID3D10Device* device, ClientLobbyState* lobbyState)
 		: ApplicationState(id), 
-		  mDevice(device), 
+		  mDevice(device),
+		  mClientLobbyState(lobbyState),
 		  mDefaultFont(NULL),
-		  mBuffer(NULL),
-		  mEffect(NULL),
+		  mBackground(NULL),
 		  mComponents(NULL),
 		  mNameField(NULL),
 		  mIPAddressField(NULL),
 		  mPortField(NULL),
 		  mJoinButton(NULL),
-		  mCancelButton(NULL)
+		  mCancelButton(NULL),
+		  mClient(NULL)
 	{
 		mDefaultFont = new GameFont(mDevice,  "Segoe Print", 48);
-		CreateBuffer();
-		CreateEffect();
+		mBackground = new Sprite(mDevice, sViewport, "marbleBG1422x800.png", sViewport->GetWidth(), sViewport->GetHeight());
 	}
 
 	JoinGameState::~JoinGameState() throw()
 	{
 		SafeDelete(mDefaultFont);
-		SafeDelete(mBuffer);
-		SafeDelete(mEffect);
+		SafeDelete(mBackground);
+		SafeDelete(mClient);
 	}
 
 	void JoinGameState::OnStatePushed()
@@ -49,10 +50,57 @@ namespace State
 
 	void JoinGameState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
 	{
+		// Check cancel button
 		if (mCancelButton->GetAndResetClickStatus())
 		{
+			SafeDelete(mClient);
+
 			ChangeState(C_STATE_MENU);
 			return;
+		}
+
+		if (mClient != NULL)
+		{
+			mClient->Update();
+
+			for (int i = mClient->GetQueuedMessageCount(); i >= 0; --i)
+			{
+				switch (mClient->PeekMessageID(i))
+				{
+					case Network::C_MESSAGE_ACCEPT:
+					{
+						Network::AcceptMessage* m = static_cast<Network::AcceptMessage*>(mClient->PopMessage(i));
+
+						mClientLobbyState->SetSessionArguments(mClient, m->mNumberOfPlayers, m->mSelfID, mNameField->GetText());
+						ChangeState(C_STATE_CLIENT_LOBBY);
+
+						SafeDelete(m);
+					} break;
+
+					case Network::C_MESSAGE_REFUSE:
+					{
+						Network::RefuseMessage* m = static_cast<Network::RefuseMessage*>(mClient->PopMessage(i));
+
+						switch (m->mReason)
+						{
+							case Network::RefuseReason::TooManyPlayers:
+								MessageBox(NULL, "Connection refused: Too many players", "Error", MB_OK | MB_ICONERROR);
+							break;
+
+							case Network::RefuseReason::InvalidName:
+								MessageBox(NULL, "Connection refused: Invalid name, please change it", "Error", MB_OK | MB_ICONERROR);
+							break;
+						}
+
+						mNameField->SetEnabled(true);
+						mIPAddressField->SetEnabled(true);
+						mPortField->SetEnabled(true);
+						mJoinButton->SetEnabled(true);
+
+						SafeDelete(m);
+					} break;
+				}
+			}
 		}
 
 		// Basic check to see if the name is valid (non-empty)
@@ -70,9 +118,16 @@ namespace State
 		}
 
 		// Basic check to see if the port is valid
-		std::stringstream s;
+		std::stringstream s(mPortField->GetText());
 		unsigned short port = 0;
 		if (!(s >> port))
+		{
+			mJoinButton->SetEnabled(false);
+			return;
+		}
+
+		// If we're currently attempting a connect, do not allow joining again
+		if (mClient != NULL)
 		{
 			mJoinButton->SetEnabled(false);
 			return;
@@ -83,27 +138,34 @@ namespace State
 		
 		if (mJoinButton->GetAndResetClickStatus())
 		{
-			// TODO: Create client and attempt to connect (report errors some way)
-			//Network::Client* client = new Network::Client(
-			// TODO: Send Join message and receive Accept message.
+			try
+			{
+				mClient = new Network::Client(mIPAddressField->GetText().c_str(), port);
+				mClient->Send(Network::JoinMessage(mNameField->GetText()));
+
+				mNameField->SetEnabled(false);
+				mIPAddressField->SetEnabled(false);
+				mPortField->SetEnabled(false);
+			}
+			catch (Network::ConnectionFailure& e)
+			{
+				MessageBox(NULL, e.what(), "Error", MB_OK | MB_ICONERROR);
+			}
+			
+			
 		}
 	}
 
 	void JoinGameState::Draw()
 	{
-		mBuffer->Bind();
-		for (unsigned int p = 0; p < mEffect->GetTechniqueByIndex(0).GetPassCount(); ++p)
-		{
-			mEffect->GetTechniqueByIndex(0).GetPassByIndex(p).Apply(mDevice);
-			mBuffer->Draw();
-		}
+		mBackground->Draw(D3DXVECTOR2(0, 0));
 	}
 
 	void JoinGameState::CreateComponents()
 	{
 		// Define sizes
 		const int C_OFFSET_LEFT = 100;
-		const int C_OFFSET_TOP = 430;
+		const int C_OFFSET_TOP = 100;
 		const int C_BUTTON_WIDTH = 192;
 		const int C_BUTTON_HEIGHT = mDefaultFont->GetSize();
 		const int C_INPUT_FIELD_WIDTH = 192;
@@ -171,42 +233,5 @@ namespace State
 		mComponents->SetFocus();
 	}
 
-	void JoinGameState::CreateBuffer()
-	{
-		bgVertex vertices[4];
-
-		vertices[0].position = D3DXVECTOR2(-1, 1);
-		vertices[0].uv = D3DXVECTOR2(0, 0);
-		vertices[1].position = D3DXVECTOR2(1, 1);
-		vertices[1].uv = D3DXVECTOR2(1, 0);
-		vertices[2].position = D3DXVECTOR2(-1, -1);
-		vertices[2].uv = D3DXVECTOR2(0, 1);
-		vertices[3].position = D3DXVECTOR2(1, -1);
-		vertices[3].uv = D3DXVECTOR2(1, 1);
-
-		VertexBuffer::Data bufferDesc;
-		bufferDesc.mTopology =				Topology::TriangleStrip;
-		bufferDesc.mUsage =					Usage::Default;
-		bufferDesc.mElementCount =			4;
-		bufferDesc.mElementSize =			sizeof(bgVertex);
-		bufferDesc.mFirstElementPointer =	vertices;
-
-		mBuffer = new VertexBuffer(mDevice);
-		mBuffer->SetData(bufferDesc, NULL);
-	}
-
-	void JoinGameState::CreateEffect()
-	{
-		mEffect = new Effect(mDevice, "Resources/Effects/Background.fx");
-		
-		InputLayoutVector inputLayout;
-		inputLayout.push_back(InputLayoutElement("POSITION", DXGI_FORMAT_R32G32_FLOAT));
-		inputLayout.push_back(InputLayoutElement("TEXCOORD", DXGI_FORMAT_R32G32_FLOAT));
-
-		mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
-
-		ID3D10ShaderResourceView* texture;
-		D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/marbleBG1422x800.png", NULL, NULL, &texture, NULL);
-		mEffect->SetVariable("textureBG", texture);
-	}
+	
 }

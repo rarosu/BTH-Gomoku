@@ -3,17 +3,18 @@
 
 #include "WinInclude.hpp"
 #include "ApplicationState.hpp"
-#include "Buffer.hpp"
-#include "Effect.hpp"
+#include "Sprite.hpp"
 #include "InputField.hpp"
 #include "TextButton.hpp"
+#include "Client.hpp"
+#include "ClientLobbyState.hpp"
 
 namespace State
 {
 	class JoinGameState : public ApplicationState
 	{
 	public:
-		JoinGameState(StateID id, ID3D10Device* device);
+		JoinGameState(StateID id, ID3D10Device* device, ClientLobbyState* lobbyState);
 		~JoinGameState() throw();
 		
 		void OnStatePushed();
@@ -30,8 +31,7 @@ namespace State
 
 		ID3D10Device*				mDevice;
 		GameFont*					mDefaultFont;
-		VertexBuffer*				mBuffer;
-		Effect*						mEffect;
+		Sprite*						mBackground;
 
 		Components::ComponentGroup*	mComponents;
 
@@ -41,11 +41,10 @@ namespace State
 		Components::TextButton*		mJoinButton;
 		Components::TextButton*		mCancelButton;
 
-
+		ClientLobbyState*			mClientLobbyState;
+		Network::Client*			mClient;
 
 		void CreateComponents();
-		void CreateBuffer();
-		void CreateEffect();
 	};
 }
 

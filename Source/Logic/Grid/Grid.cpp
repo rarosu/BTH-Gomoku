@@ -21,8 +21,8 @@ namespace Logic
 		mMarkers[cell] = player;
 		
 		// Check every direction
-		for (int directionIterator = Direction::C_FIRST;
-			 directionIterator <= (Direction::C_COUNT - 1) / 2;
+		for (int directionIterator = Direction::Up;
+			 directionIterator <= Direction::DownRight;
 			 ++directionIterator)
 		{
 			// Enumerate the direction and its opposite

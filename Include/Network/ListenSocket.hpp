@@ -2,6 +2,7 @@
 #define LISTENSOCKET_HPP
 
 #include "WinInclude.hpp"
+#include "NetworkInclude.hpp"
 #include <stdexcept>
 
 
@@ -12,7 +13,7 @@ namespace Network
 	public:
 		BindException(int port, int errorCode);
 
-		int GetPort() const { return mPort; }
+		Port GetPort() const { return mPort; }
 		int GetErrorCode() const { return mErrorCode; }
 	private:
 		int mPort;
@@ -25,10 +26,14 @@ namespace Network
 	public:
 		ListenSocket(int maxClients);
 		~ListenSocket();
-		void Bind(unsigned short port = 6666);
+
+		Port GetPort() const { return mPort; }
+
+		void Bind(Port port = 6666);
 		SOCKET Accept();
 		void Shutdown();
 	private:
+		Port mPort;
 		SOCKET mSocket;
 		int mMaxClients;
 	};

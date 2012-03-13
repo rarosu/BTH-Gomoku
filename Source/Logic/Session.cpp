@@ -1,17 +1,23 @@
 #include "Session.hpp"
-//#include <cassert>
-//
-//namespace Logic
-//{
-//	void Session::SetNumberOfPlayers(int count)
-//	{
-//		mPlayers.resize(count);
-//	}
-//
-//	void Session::AddPlayer(int slot, const Player& player)
-//	{
-//		assert(slot < mPlayers.size());
-//
-//		mPlayers[slot] = player;
-//	}
-//}
+#include "Globals.hpp"
+#include <cassert>
+
+namespace Logic
+{
+	Session::Session(unsigned int playerCount)
+	{
+		mPlayers.resize(playerCount);
+		for (unsigned int i = 0; i < mPlayers.size(); ++i)
+		{
+			mPlayers[i] = NULL;
+		}
+	}
+
+	Session::~Session() throw()
+	{
+		for (unsigned int i = 0; i < mPlayers.size(); ++i)
+		{
+			SafeDelete(mPlayers[i]);
+		}
+	}
+}

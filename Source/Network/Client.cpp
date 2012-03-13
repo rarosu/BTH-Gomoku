@@ -1,9 +1,10 @@
 #include "Client.hpp"
-#include <iostream>
+#include <stdexcept>
+#include <sstream>
 
 namespace Network
 {
-	Client::Client(const char* ipAddress, unsigned short port)
+	Client::Client(const char* ipAddress, Port port)
 	{
 		WSADATA wsaData;
 
@@ -11,7 +12,10 @@ namespace Network
 		result = WSAStartup(MAKEWORD(2,2), &wsaData);
 		if (result != 0)
 		{
-			std::cerr << "WSAStartup failed: " << result << std::endl;
+			std::stringstream ss;
+			ss << "WSAStartup failed: ";
+			ss << result;
+			throw std::runtime_error(ss.str());
 		}
 
 		mSocket.Connect(ipAddress, port);
@@ -29,9 +33,20 @@ namespace Network
 		mSocket.Send(message.Flatten());
 	}
 
-	Message* Client::PopMessage()
+	Message* Client::PopMessage(unsigned int index)
 	{
-		return MessageFactory::Inflate(mSocket.PopMessage());
+		return MessageFactory::Inflate(mSocket.PopMessage(index));
+	}
+
+	int Client::PeekMessageID(unsigned int index) const
+	{
+		Message* m = MessageFactory::Inflate(mSocket.PeekMessage(index));
+		return m->ID();
+	}
+
+	unsigned int Client::GetQueuedMessageCount() const
+	{
+		return mSocket.GetQueuedMessageCount();
 	}
 
 	int Client::Update()
