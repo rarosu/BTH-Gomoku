@@ -62,14 +62,14 @@ namespace Components
 			mBackground->Draw(position);
 
 		int offset = 10;
-		POINT textPos = { position.x + offset, position.y };
+		RECT textPos = { position.x + offset, position.y, position.x + GetWidth(), position.y + GetHeight()};
 
 		std::string marker = " ";
 		if(mShowMarker)
 			marker = "|";
 		
-		mFont->WriteText(mFirstString.str() + marker + mLastString.str(), 
-						 textPos, D3DXCOLOR(0.0, 0.0, 0.0, 1.0));
+		mFont->WriteText(mFirstString.str() + marker + mLastString.str(), &textPos, 
+						 D3DXCOLOR(0.0, 0.0, 0.0, 1.0), GameFont::Left, GameFont::Middle);
 	}
 
 	void InputField::LostFocus()
@@ -154,11 +154,11 @@ namespace Components
 	{
 	}
 	
-	void InputField::MousePressed(int buttonIndex)
+	void InputField::MousePressed(int buttonIndex, const InputState& currentState)
 	{
 	}
 	
-	void InputField::MouseReleased(int buttonIndex)
+	void InputField::MouseReleased(int buttonIndex, const InputState& currentState)
 	{
 	}
 	

@@ -55,8 +55,8 @@ namespace Components
 		// Methods inherited by Component
 		virtual void MouseEntered() {}
 		virtual void MouseExited() {}
-		virtual void MousePressed(int buttonIndex) {}
-		virtual void MouseReleased(int buttonIndex) {}
+		virtual void MousePressed(int buttonIndex, const InputState& currentState) {}
+		virtual void MouseReleased(int buttonIndex, const InputState& currentState) {}
 	};
 }
 #endif

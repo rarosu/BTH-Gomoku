@@ -6,10 +6,10 @@ namespace Components
 		: Component(ownerGroup, position), 
 		  mScrollable(scrollable), mBGColor(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f)), mBtnUp(NULL), mBtnDown(NULL)
 	{
-		LONG buttonHeight = GetWidth();
+		LONG buttonSize = GetWidth();
 		D3DXVECTOR2 scrollPos = GetPosition();
-		RECT pos1 = { scrollPos.x, scrollPos.y, scrollPos.x + GetWidth(), scrollPos.y + buttonHeight };
-		RECT pos2 = { scrollPos.x, scrollPos.y - buttonHeight, scrollPos.x + GetWidth(), scrollPos.y };
+		RECT pos1 = { scrollPos.x, 0, scrollPos.x + GetWidth(), buttonSize };
+		RECT pos2 = { scrollPos.x, GetHeight() - buttonSize, scrollPos.x + GetWidth(), GetHeight() };
 
 		mBtnUp = new Button(ownerGroup, pos1);
 		mBtnDown = new Button(ownerGroup, pos2);
@@ -77,11 +77,11 @@ namespace Components
 	{
 	}
 
-	void Scrollbar::MousePressed(int buttonIndex)
+	void Scrollbar::MousePressed(int buttonIndex, const InputState& currentState)
 	{
 	}
 
-	void Scrollbar::MouseReleased(int buttonIndex)
+	void Scrollbar::MouseReleased(int buttonIndex, const InputState& currentState)
 	{
 		if(mBtnUp->IsHovered() && mScrollable)
 			mScrollable->Scroll(true);

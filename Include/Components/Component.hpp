@@ -56,12 +56,13 @@ namespace Components
 		float GetHeight() const;
 		const RECT& GetBoundingRect() const;
 		D3DXVECTOR2 GetPosition() const;
+		void SetPosition(D3DXVECTOR2 newPosition);
 		void LoseFocus();
 
 		virtual void MouseEntered() = 0;
 		virtual void MouseExited() = 0;
-		virtual void MousePressed(int buttonIndex) = 0;
-		virtual void MouseReleased(int buttonIndex) = 0;
+		virtual void MousePressed(int buttonIndex, const InputState& currentState) = 0;
+		virtual void MouseReleased(int buttonIndex, const InputState& currentState) = 0;
 
 		virtual void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState) = 0;
 

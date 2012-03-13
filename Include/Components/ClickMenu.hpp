@@ -36,7 +36,6 @@ namespace Components
 		D3DXCOLOR						mTextColor;
 	};
 
-
 	class ClickMenu : public ComponentGroup
 	{
 	public:

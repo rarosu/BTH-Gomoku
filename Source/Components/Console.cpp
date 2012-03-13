@@ -19,13 +19,11 @@ namespace Components
 
 		mMaxNumRows = (int)((GetHeight() - textHeight) / textHeight);
 
-		RECT inputFieldPos = GetBoundingRect();
-		inputFieldPos.top = inputFieldPos.bottom - 20;
+		RECT inputFieldPos = { 0, GetHeight() - 20, GetWidth(), GetHeight() };
 		mInputField = new InputField(mDevice, this, this, inputFieldPos, mFont);
 
 		int scrollWidth = 20;
-		RECT scrollbarPos = GetBoundingRect();
-		scrollbarPos.left = scrollbarPos.right - scrollWidth;
+		RECT scrollbarPos = { GetWidth() - scrollWidth, 0, GetWidth(), GetHeight() };
 		mScrollbar = new Scrollbar(this, this, scrollbarPos);
 		mScrollbar->Initialize(mDevice);
 
@@ -41,8 +39,7 @@ namespace Components
 	// Update the console
 	void Console::Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
 	{
-		if(!IsVisible())
-			return;
+		ComponentGroup::Refresh(gameTime, currInputState, prevInputState);
 
 		if(currInputState.Keyboard.keyIsPressed[VK_UP] && !prevInputState.Keyboard.keyIsPressed[VK_UP])
 		{

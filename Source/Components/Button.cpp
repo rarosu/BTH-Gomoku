@@ -76,14 +76,14 @@ namespace Components
 		mTexture = mGraphics.textureUp;
 	}
 
-	void Button::MousePressed(int buttonIndex)
+	void Button::MousePressed(int buttonIndex, const InputState& currentState)
 	{
 		mTintColor = mGraphics.activeColor;
 		if(mGraphics.textureDown)
 			mTexture = mGraphics.textureDown;
 	}
 
-	void Button::MouseReleased(int buttonIndex)
+	void Button::MouseReleased(int buttonIndex, const InputState& currentState)
 	{
 		mTintColor = mGraphics.hoverColor;
 		if(mGraphics.textureHover)

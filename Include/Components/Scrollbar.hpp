@@ -33,8 +33,8 @@ namespace Components
 		void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		void MouseEntered();
 		void MouseExited();
-		void MousePressed(int buttonIndex);
-		void MouseReleased(int buttonIndex);
+		void MousePressed(int buttonIndex, const InputState& currentState);
+		void MouseReleased(int buttonIndex, const InputState& currentState);
 
 	private:
 		ID3D10Device*				mDevice;

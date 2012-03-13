@@ -19,7 +19,7 @@ namespace Components
 
 	void Component::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
 	{
-		if(!IsVisible() & !IsEnabled())
+		if(!IsVisible() || !IsEnabled())
 			return;
 
 		D3DXVECTOR2 position = GetPosition();
@@ -62,6 +62,12 @@ namespace Components
 		else
 			return D3DXVECTOR2(mPositionRect.left, mPositionRect.top) + mOwner->GetPosition();
 
+	}
+
+	void Component::SetPosition(D3DXVECTOR2 newPosition)
+	{
+		RECT newPosRect = { newPosition.x, newPosition.y, newPosition.x + GetWidth(), newPosition.y + GetHeight() };
+		mPositionRect = newPosRect;
 	}
 
 	void Component::LoseFocus()
@@ -132,7 +138,7 @@ namespace Components
 		if(mIsHovered)
 		{
 			mIsPressed = true;
-			MousePressed(index);
+			MousePressed(index, currentState);
 		}
 	}
 
@@ -145,7 +151,7 @@ namespace Components
 			if(mIsHovered)
 			{
 				SetFocus();
-				MouseReleased(index);
+				MouseReleased(index, currentState);
 				mIsClicked = true;
 			}
 		}
@@ -154,8 +160,7 @@ namespace Components
 	const RECT& Component::GetBoundingRect() const
 	{
 		D3DXVECTOR2 position = GetPosition();
-		RECT posRect = { position.x + mPositionRect.left, position.y + mPositionRect.top,
-						 position.x + mPositionRect.right, position.y + mPositionRect.bottom };
+		RECT posRect = { position.x, position.y, position.x + GetWidth(), position.y + GetHeight() };
 		return posRect;
 	}
 }
