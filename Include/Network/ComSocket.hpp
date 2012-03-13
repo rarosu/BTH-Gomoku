@@ -1,10 +1,11 @@
 #ifndef COMSOCKET_HPP
 #define COMSOCKET_HPP
 
-#include "WinInclude.hpp"
 #include <vector>
-#include "Message.hpp"
 #include <stdexcept>
+#include "WinInclude.hpp"
+#include "Message.hpp"
+
 
 namespace Network
 {

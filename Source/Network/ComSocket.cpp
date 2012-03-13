@@ -1,5 +1,4 @@
 #include "ComSocket.hpp"
-
 #include <sstream>
 
 namespace Network
