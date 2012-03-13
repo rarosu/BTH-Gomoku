@@ -99,7 +99,7 @@ namespace Components
 	void Component::SetEnabled(bool isEnabled)
 	{
 		mIsEnabled = isEnabled;
-		if(mIsEnabled = false)
+		if(mIsEnabled == false)
 		{
 			mIsHovered = false;
 			mIsClicked = false;

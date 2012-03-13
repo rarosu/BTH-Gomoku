@@ -46,6 +46,8 @@ namespace State
 		mPortField = NULL;
 		mJoinButton = NULL;
 		mCancelButton = NULL;
+
+		mClient = NULL;
 	}
 
 	void JoinGameState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
@@ -63,7 +65,7 @@ namespace State
 		{
 			mClient->Update();
 
-			for (int i = mClient->GetQueuedMessageCount(); i >= 0; --i)
+			for (int i = mClient->GetQueuedMessageCount() - 1; i >= 0; --i)
 			{
 				switch (mClient->PeekMessageID(i))
 				{

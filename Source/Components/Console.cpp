@@ -8,7 +8,7 @@ namespace Components
 
 	Console::Console(ID3D10Device* device, ComponentGroup* ownerGroup, RECT position, D3DXCOLOR bgColor, UINT size)
 		: ComponentGroup(ownerGroup, "Console", position),
-		  mDevice(device), mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0)), mFirstShowRow(0), mBackground(NULL),
+		  mDevice(device), mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0)), mFirstShowRow(0), mBackground(NULL), mInputReceiver(NULL),
 		  C_HISTORY_SIZE(size)
 	{
 		mBackground = new Sprite(mDevice, sViewport, "whitePixel.png", GetWidth(), GetHeight());
@@ -35,6 +35,16 @@ namespace Components
 	Console::~Console() throw()
 	{
 		SafeDelete(mBackground);
+	}
+
+	void Console::SetInputReceiver(InputReceiver* receiver)
+	{
+		mInputReceiver = receiver;
+	}
+
+	const InputReceiver* Console::GetInputReceiver() const
+	{
+		return mInputReceiver;
 	}
 
 	// Update the console
@@ -138,6 +148,9 @@ namespace Components
 
 		if(mOutput.size() > (UINT)mMaxNumRows)
 			mFirstShowRow = mOutput.size() - mMaxNumRows;
+		
+		if (mInputReceiver != NULL)
+			mInputReceiver->RecieveInput(input);
 	}
 
 	void Console::SetTextColor(D3DXCOLOR newColor)

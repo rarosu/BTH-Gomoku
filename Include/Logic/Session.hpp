@@ -6,12 +6,22 @@
 
 namespace Logic
 {
+	class ChatReceiver
+	{
+	public:
+		virtual void ReceiveChatMessage(const std::string& message, unsigned int sourceID) = 0;
+	};
+
 	class Session
 	{
 	public:
 		Session(unsigned int playerCount);
 		virtual ~Session() throw();
+
+		void SetChatReceiver(ChatReceiver* receiver);
+		ChatReceiver* GetChatReceiver();
 	protected:
+		ChatReceiver* mChatReceiver;
 		std::vector<Player*> mPlayers;
 	};
 }

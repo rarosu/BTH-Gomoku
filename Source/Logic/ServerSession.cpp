@@ -74,6 +74,28 @@ namespace Logic
 				case Network::C_MESSAGE_CHAT:
 				{
 					Network::ChatMessage* m = static_cast<Network::ChatMessage*>(message.mMessage);
+
+					switch (m->mRecipient)
+					{
+						case Network::Recipient::Broadcast:
+							for (PlayerSlot s = 0; s < mPlayers.size(); ++s)
+							{
+								if (mPlayers[s] != NULL && mPlayerClients[s] != C_STATUS_LOCAL)
+								{
+									mServer->Send(mPlayerClients[s], Network::ChatMessage(m->mSourceID, m->mTargetID, m->mRecipient, m->mMessage));
+								}
+							}
+
+							if (mChatReceiver != NULL)
+							{
+								mChatReceiver->ReceiveChatMessage(m->mMessage, m->mSourceID);
+							}
+							break;
+						case Network::Recipient::Team:
+							break;
+						case Network::Recipient::Private:
+							break;
+					}
 				} break;
 
 				case Network::C_MESSAGE_JOIN:
@@ -122,6 +144,11 @@ namespace Logic
 		*/
 	}
 
+	void ServerSession::SendChatMessage(const std::string& message, int targetID, Network::Recipient::Recipient recipient)
+	{
+		mServer->Send(Network::ChatMessage(0, targetID, recipient, message));
+	}
+
 	void ServerSession::ClientConnected(Network::Slot slot)
 	{
 		//mTimeoutCounters[slot] = C_TIMEOUT;
@@ -143,7 +170,8 @@ namespace Logic
 		PlayerSlot playerSlot = GetPlayerSlot(slot);
 		if (playerSlot != C_INVALID_PLAYER)
 		{
-			SafeDelete(mPlayers[GetPlayerSlot(slot)]);
+			SafeDelete(mPlayers[playerSlot]);
+			mPlayerClients[playerSlot] = C_STATUS_OPEN;
 		}
 		else
 		{
@@ -219,5 +247,9 @@ namespace Logic
 			mClientsToRemove.push_back(clientSlot);
 			mServer->Send(clientSlot, RefuseMessage(reason));
 		}
+
+		std::vector<ClientSlot>::iterator it = std::find(mPendingClients.begin(), mPendingClients.end(), clientSlot);
+		if (it != mPendingClients.end())
+			mPendingClients.erase(it);
 	}
 }

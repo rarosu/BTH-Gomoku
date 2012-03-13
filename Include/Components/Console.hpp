@@ -21,6 +21,9 @@ namespace Components
 			/*InputSubscription* manager,*/ UINT size = 100);
 		~Console() throw();
 
+		void SetInputReceiver(InputReceiver* receiver);
+		const InputReceiver* GetInputReceiver() const;
+
 		void Toggle();
 		void SetTextColor(D3DXCOLOR newColor);
 
@@ -55,6 +58,8 @@ namespace Components
 		Scrollbar*					mScrollbar;
 		Sprite*						mBackground;
 		D3DXCOLOR					mBGColor;
+
+		InputReceiver*				mInputReceiver;
 
 		std::stringstream			mStream;
 		std::deque<TextLine>		mOutput;

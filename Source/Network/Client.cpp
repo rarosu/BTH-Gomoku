@@ -41,7 +41,11 @@ namespace Network
 	int Client::PeekMessageID(unsigned int index) const
 	{
 		Message* m = MessageFactory::Inflate(mSocket.PeekMessage(index));
-		return m->ID();
+
+		if (m != NULL)
+			return m->ID();
+		else
+			return -1;
 	}
 
 	unsigned int Client::GetQueuedMessageCount() const

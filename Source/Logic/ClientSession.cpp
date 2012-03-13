@@ -7,6 +7,7 @@ namespace Logic
 	ClientSession::ClientSession(Network::Client* client, const std::string& playerName, unsigned int playerCount, unsigned int selfID)
 		: Session(playerCount)
 		, mClient(client)
+		, mSelfID(selfID)
 	{
 		mPlayers[selfID] = new Player(playerName, 0, 0);	// TODO: Get initial team/marker from Accept message
 	}
@@ -20,13 +21,18 @@ namespace Logic
 	{
 		mClient->Update();
 
-		for (int i = mClient->GetQueuedMessageCount(); i >= 0; --i)
+		for (int i = mClient->GetQueuedMessageCount() - 1; i >= 0; --i)
 		{
 			switch (mClient->PeekMessageID(i))
 			{
 				case Network::C_MESSAGE_CHAT:
 				{
 					Network::ChatMessage* m = static_cast<Network::ChatMessage*>(mClient->PopMessage(i));
+
+					if (mChatReceiver != NULL)
+					{
+						mChatReceiver->ReceiveChatMessage(m->mMessage, m->mSourceID);
+					}
 
 					SafeDelete(m);
 				} break;
@@ -115,6 +121,11 @@ namespace Logic
 				} break;
 			}
 		}
+	}
+
+	void ClientSession::SendChatMessage(const std::string& message, int targetID, Network::Recipient::Recipient recipient)
+	{
+		mClient->Send(Network::ChatMessage(mSelfID, targetID, recipient, message));
 	}
 
 	unsigned int ClientSession::GetPlayerCount() const

@@ -9,6 +9,7 @@
 #include "Ruleset.hpp"
 #include "Player.hpp"
 #include "GameTime.hpp"
+#include "ChatMessage.hpp"
 
 namespace Logic
 {
@@ -37,6 +38,7 @@ namespace Logic
 			Update the session
 		*/
 		void Update(const GameTime& gameTime);
+		void SendChatMessage(const std::string& message, int targetID, Network::Recipient::Recipient recipient);
 
 		/**
 			Implemented from ServerEventInterface

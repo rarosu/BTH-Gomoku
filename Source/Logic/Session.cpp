@@ -5,6 +5,7 @@
 namespace Logic
 {
 	Session::Session(unsigned int playerCount)
+		: mChatReceiver(NULL)
 	{
 		mPlayers.resize(playerCount);
 		for (unsigned int i = 0; i < mPlayers.size(); ++i)
@@ -19,5 +20,15 @@ namespace Logic
 		{
 			SafeDelete(mPlayers[i]);
 		}
+	}
+
+	void Session::SetChatReceiver(ChatReceiver* receiver)
+	{
+		mChatReceiver = receiver;
+	}
+
+	ChatReceiver* Session::GetChatReceiver()
+	{
+		return mChatReceiver;
 	}
 }

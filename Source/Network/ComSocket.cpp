@@ -175,6 +175,9 @@ namespace Network
 
 	std::string ComSocket::PopMessage(unsigned int index)
 	{
+		if (mReceivedMessages.empty())
+			return "";
+
 		assert(index >= 0);
 		assert(index < mReceivedMessages.size());
 
@@ -190,6 +193,9 @@ namespace Network
 
 	std::string ComSocket::PeekMessage(unsigned int index) const
 	{
+		if (mReceivedMessages.empty())
+			return "";
+
 		assert(index >= 0);
 		assert(index < mReceivedMessages.size());
 

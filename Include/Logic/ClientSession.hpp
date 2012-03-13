@@ -6,6 +6,7 @@
 #include "Session.hpp"
 #include "Client.hpp"
 #include "Player.hpp"
+#include "ChatMessage.hpp"
 
 namespace Logic
 {
@@ -16,11 +17,13 @@ namespace Logic
 		~ClientSession();
 
 		void Update();
+		void SendChatMessage(const std::string& message, int targetID, Network::Recipient::Recipient recipient);
 
 		unsigned int GetPlayerCount() const;
 		std::string GetPlayerName(Network::Slot slot) const;
 	private:
 		Network::Client* mClient;
+		unsigned int mSelfID;
 	};
 }
 #endif

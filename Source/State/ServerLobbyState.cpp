@@ -57,15 +57,14 @@ namespace State
 		mCancelButton = new Components::TextButton(mComponents, r);
 		mCancelButton->Initialize(mDevice, "Cancel");
 
-		/*
 		r.left = 0;
 		r.right = sViewport->GetWidth();
 		r.top = sViewport->GetHeight() - C_CHAT_HEIGHT;
-		r.bottom = sViewport->GetHeight() - 50;
+		r.bottom = sViewport->GetHeight();
 		mChat = new Components::Console(mDevice, mComponents, r, D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.0f));
-		*/
+		mChat->SetInputReceiver(this);
 
-		//mChat->SetFocus();
+		mChat->SetFocus();
 		mComponents->SetFocus();
 	}
 
@@ -122,5 +121,17 @@ namespace State
 		assert(ruleset != NULL);
 		assert(mSession == NULL);
 		mSession = new Logic::ServerSession(server, adminName, ruleset);
+	}
+
+	void ServerLobbyState::RecieveInput(std::string input)
+	{
+		mSession->SendChatMessage(input, -1, Network::Recipient::Broadcast);
+	}
+
+	void ServerLobbyState::ReceiveChatMessage(const std::string& message, unsigned int sourceID)
+	{
+		std::string entry = mSession->GetPlayerName(sourceID) + ": " + message;
+
+		mChat->RecieveInput(entry);
 	}
 }
