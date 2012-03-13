@@ -25,6 +25,9 @@ namespace Components
 
 	void Label::Draw()
 	{
+		if(!IsVisible())
+			return;
+
 		RECT textPos = GetBoundingRect();
 		mFont->WriteText(mCaption, &mShadowPosition, mShadowColor, mAlignHor, mAlignVer);
 		mFont->WriteText(mCaption, &textPos, mTextColor, mAlignHor, mAlignVer);

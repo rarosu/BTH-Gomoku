@@ -33,6 +33,10 @@ namespace Components
 		bool IsPressed() const;
 		bool IsHovered() const;
 		bool GetAndResetClickStatus();
+		float GetWidth() const;
+		float GetHeight() const;
+		D3DXVECTOR2 GetPosition() const;
+		void SetPosition(D3DXVECTOR2 newPosition);
 
 		// Methods inherited from MouseListener
 		virtual void MouseButtonPressed(int index, const InputState& currentState);
@@ -52,11 +56,7 @@ namespace Components
 
 		static const Viewport*		sViewport;
 
-		float GetWidth() const;
-		float GetHeight() const;
 		const RECT& GetBoundingRect() const;
-		D3DXVECTOR2 GetPosition() const;
-		void SetPosition(D3DXVECTOR2 newPosition);
 		void LoseFocus();
 
 		virtual void MouseEntered() = 0;

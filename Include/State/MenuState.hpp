@@ -7,7 +7,7 @@
 #include "ApplicationState.hpp"
 #include "ComponentGroup.hpp"
 #include "TextButton.hpp"
-#include "Menu.hpp"
+#include "PieMenu.hpp"
 #include "ClickMenu.hpp"
 #include "Sprite.hpp"
 #include "GameFont.hpp"
@@ -31,7 +31,6 @@ namespace State
 	public:
 		MenuState(StateID id, ID3D10Device* device);
 		~MenuState() throw();
-		
 		
 		// Inherited from Application State
 		void Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime);

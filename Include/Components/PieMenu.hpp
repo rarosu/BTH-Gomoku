@@ -7,6 +7,7 @@
 #include "Component.hpp"
 #include "ComponentGroup.hpp"
 #include "Sprite.hpp"
+#include "GameFont.hpp"
 
 namespace Components
 {
@@ -15,8 +16,10 @@ namespace Components
 	public:
 		PieMenuItem(ComponentGroup* ownerGroup, RECT position, ID3D10Device* device, std::string idleSpriteFilename, 
 					std::string hoveredSpriteFilename);
+		~PieMenuItem() throw();
 
-		bool GetAndResetClickStatus(const std::string& caption);
+		bool GetAndResetClickStatus(const std::string& caption) { return false; }
+		bool IsSelected();
 		void SetSelected(bool isSelected);
 
 		// Methods inherited from Component
@@ -24,6 +27,8 @@ namespace Components
 		void LostFocus();
 		void GotFocus();
 		std::string GetName();			// DEBUG
+
+		static const int			C_ITEM_SIZE;
 
 	protected:
 		void MouseEntered();
@@ -43,16 +48,35 @@ namespace Components
 	class PieMenu : public ComponentGroup
 	{
 	public:
-		PieMenu(ComponentGroup* ownerGroup, RECT position);
+		static const int			C_ITEM_NONE;
+		static const int			C_ITEM_NEXT;
+		static const int			C_ITEM_WARNING;
+		static const int			C_ITEM_HINT;
+		static const int			C_ITEM_OTHER;
+		static const int			C_ITEM_COUNT;
 
-		void AddItem(std::string idleSpriteFilename, std::string hoveredSpriteFilename);
+		PieMenu(ComponentGroup* ownerGroup, ID3D10Device* device, RECT position);
+		~PieMenu() throw();
 
-		// Methods inherited from Component
-		void MousePressed(int buttonIndex, const InputState& currentState);
-		void MouseReleased(int buttonIndex, const InputState& currentState);
+		int GetAndResetClickedItemIndex();
+
+		// Override methods in ComponentGroup
+		virtual void MouseButtonPressed(int index, const InputState& currentState);
+		virtual void MouseButtonReleased(int index, const InputState& currentState);
+		virtual void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
+		
+		// DEBUG
+		void Draw();
 
 	private:
-		std::vector<PieMenuItem>	mItems;
+		ID3D10Device*				mDevice;
+		float						mMinDist;
+		float						mMaxDist;
+		int							mClickedItemIndex;
+
+		// DEBUG
+		GameFont*					mDefaultFont;
+		std::string					mOutput;
 	};
 }
 #endif
