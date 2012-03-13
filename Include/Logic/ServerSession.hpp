@@ -29,14 +29,14 @@ namespace Logic
 		const Ruleset* GetRuleset() const;
 
 		/**
+			Get the name of a certain player.
+		*/
+		std::string GetPlayerName(unsigned int playerSlot) const;
+
+		/**
 			Update the session
 		*/
 		void Update(const GameTime& gameTime);
-
-		/**
-			Get the name of a certain player.
-		*/
-		const std::string& GetPlayerName(unsigned int playerSlot) const;
 
 		/**
 			Implemented from ServerEventInterface
@@ -53,12 +53,6 @@ namespace Logic
 		static const ClientSlot C_STATUS_OPEN = -1;
 		static const ClientSlot C_STATUS_LOCAL = -2;
 		static const PlayerSlot C_INVALID_PLAYER = -1;
-
-		struct PlayerClientPair
-		{
-			PlayerSlot mPlayerSlot;
-			ClientSlot mClientSlot;
-		};
 
 		SlotMap mPlayerClients;								// Associates a player with a given client (or determines if the slot is open/local)
 		std::vector<ClientSlot> mPendingClients;			// Holds all the pending clients that we're awaiting a join message from

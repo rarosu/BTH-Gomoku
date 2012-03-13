@@ -100,7 +100,6 @@
     <ClInclude Include="Include\Network\Server.hpp" />
     <ClInclude Include="Include\WinInclude.hpp" />
     <ClInclude Include="Include\Logic\Grid\Cell.hpp" />
-    <ClInclude Include="Include\Logic\Grid\Direction.hpp" />
     <ClInclude Include="Include\Logic\Grid\Grid.hpp" />
     <ClInclude Include="Include\Logic\Session.hpp" />
     <ClInclude Include="Include\Logic\ServerSession.hpp" />
@@ -130,6 +129,7 @@
     <ClInclude Include="Include\State\ClientLobbyState.hpp" />
     <ClInclude Include="Include\Network\Messages\RefuseMessage.hpp" />
     <ClInclude Include="Include\Network\NetworkInclude.hpp" />
+    <ClInclude Include="Include\Logic\Grid\Direction.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

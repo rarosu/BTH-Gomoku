@@ -8,8 +8,8 @@ namespace Components
 	{
 		LONG buttonHeight = GetWidth();
 		D3DXVECTOR2 scrollPos = GetPosition();
-		RECT pos1 = { scrollPos.x, scrollPos.y, scrollPos.x + GetWidth(), scrollPos.y + buttonHeight };
-		RECT pos2 = { scrollPos.x, scrollPos.y - buttonHeight, scrollPos.x + GetWidth(), scrollPos.y };
+		RECT pos1 = { 0, 0, buttonHeight, buttonHeight };
+		RECT pos2 = { 0, GetHeight() - buttonHeight, GetWidth(), GetHeight() };
 
 		mBtnUp = new Button(ownerGroup, pos1);
 		mBtnDown = new Button(ownerGroup, pos2);

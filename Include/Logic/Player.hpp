@@ -2,6 +2,7 @@
 #define PLAYER_HPP
 
 #include <string>
+#include <cassert>
 #include "Globals.hpp"
 #include "Cell.hpp"
 
@@ -18,7 +19,7 @@ namespace Logic
 		typedef unsigned int Team;
 		typedef unsigned int MarkerType;
 
-		Player();
+		Player(const std::string& name, Team team, MarkerType markerType);
 		~Player() throw();
 		
 		void SetName(const std::string& name);
@@ -32,6 +33,9 @@ namespace Logic
 		std::string mName;
 		Team mTeam;
 		MarkerType mMarker;
+
+		Player(const Player& copy) { assert(false); }
+		Player& operator=(const Player& copy) { assert(false); }
 	};
 }
 

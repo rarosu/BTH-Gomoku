@@ -16,10 +16,9 @@ namespace Logic
 	{
 		mServer->SetEventInterface(this);
 
-		mPlayers[0] = new Player();
-		mPlayers[0]->SetName(adminName);
-		
+		mPlayers[0] = new Player(adminName, 0, 0);
 		mPlayerClients[0] = C_STATUS_LOCAL;
+
 		for (Slot s = 1; s < mPlayers.size(); ++s)
 		{
 			mPlayerClients[s] = C_STATUS_OPEN;
@@ -40,6 +39,13 @@ namespace Logic
 	const Ruleset* ServerSession::GetRuleset() const
 	{
 		return mRuleset;
+	}
+
+	std::string ServerSession::GetPlayerName(unsigned int playerSlot) const
+	{
+		if (mPlayers[playerSlot] == NULL)
+			return "";
+		return mPlayers[playerSlot]->GetName();
 	}
 
 	void ServerSession::Update(const GameTime& gameTime)
@@ -116,26 +122,41 @@ namespace Logic
 		*/
 	}
 
-	const std::string& ServerSession::GetPlayerName(unsigned int playerSlot) const
-	{
-		if (mPlayers[playerSlot] == NULL)
-			return "";
-		return mPlayers[playerSlot]->GetName();
-	}
-
 	void ServerSession::ClientConnected(Network::Slot slot)
 	{
 		//mTimeoutCounters[slot] = C_TIMEOUT;
-		if (slot >= mPlayers.size())
+		if (GetPlayerSlot(C_STATUS_OPEN) == C_INVALID_PLAYER)
 		{
+			// Refuse the player, since we have too many players
 			mServer->Send(slot, RefuseMessage(RefuseReason::TooManyPlayers));
-			//mClientsToBeRemoved.push_back(slot);
+			mClientsToRemove.push_back(slot);
+		}
+		else
+		{
+			// Add client as pending client
+			mPendingClients.push_back(slot);
 		}
 	}
 
 	void ServerSession::ClientDisconnected(Network::Slot slot)
 	{
-		SafeDelete(mPlayers[GetPlayerSlot(slot)]);
+		PlayerSlot playerSlot = GetPlayerSlot(slot);
+		if (playerSlot != C_INVALID_PLAYER)
+		{
+			SafeDelete(mPlayers[GetPlayerSlot(slot)]);
+		}
+		else
+		{
+			std::vector<ClientSlot>::iterator it;
+
+			it = std::find(mPendingClients.begin(), mPendingClients.end(), slot);
+			if (it != mPendingClients.end())
+				mPendingClients.erase(it);
+
+			it = std::find(mClientsToRemove.begin(), mClientsToRemove.end(), slot);
+			if (it != mClientsToRemove.end())
+				mClientsToRemove.erase(it);
+		}
 	}
 
 	ServerSession::PlayerSlot ServerSession::GetPlayerSlot(ClientSlot slot) const
@@ -166,7 +187,7 @@ namespace Logic
 		// If an open slot is found, check the player's name
 		if (playerValid)
 		{
-			for (unsigned int i = 0; i < mPlayers.size(); ++i)
+			for (PlayerSlot i = 0; i < mPlayers.size(); ++i)
 			{
 				if (mPlayers[i] != NULL && mPlayers[i]->GetName() == name)
 				{
@@ -180,13 +201,13 @@ namespace Logic
 		if (playerValid)
 		{
 			mServer->Send(clientSlot, AcceptMessage(mPlayers.size(), openPlayerSlot));
-			mPlayers[openPlayerSlot] = new Player();
-			mPlayers[openPlayerSlot]->SetName(name);
+			
+			mPlayers[openPlayerSlot] = new Player(name, 0, 0);	// TODO: Set a valid team/marker here
 			mPlayerClients[openPlayerSlot] = clientSlot;
 
 			for (PlayerSlot i = 0; i < mPlayers.size(); ++i)
 			{
-				if (mPlayers[i] != NULL && i != clientSlot)
+				if (mPlayers[i] != NULL && i != openPlayerSlot)
 				{
 					mServer->Send(clientSlot, AddPlayerMessage(i, mPlayers[i]->GetTeam(), mPlayers[i]->GetMarkerType(), mPlayers[i]->GetName()));
 				}
@@ -194,6 +215,7 @@ namespace Logic
 		}
 		else
 		{
+			// Refuse the player
 			mClientsToRemove.push_back(clientSlot);
 			mServer->Send(clientSlot, RefuseMessage(reason));
 		}

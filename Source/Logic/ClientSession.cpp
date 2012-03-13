@@ -8,9 +8,7 @@ namespace Logic
 		: Session(playerCount)
 		, mClient(client)
 	{
-		mPlayers[selfID] = new Player();
-		mPlayers[selfID]->SetName(playerName);
-		// TODO: Set mPlayers[selfID] to LocalPlayer
+		mPlayers[selfID] = new Player(playerName, 0, 0);	// TODO: Get initial team/marker from Accept message
 	}
 
 	ClientSession::~ClientSession()
@@ -37,10 +35,7 @@ namespace Logic
 					Network::AddPlayerMessage* m = static_cast<Network::AddPlayerMessage*>(message);
 					
 					assert(mPlayers[m->mPlayerID] == NULL);
-					mPlayers[m->mPlayerID] = new Player();
-					mPlayers[m->mPlayerID]->SetName(m->mName);
-					mPlayers[m->mPlayerID]->SetMarkerType(m->mMarkerID);
-					mPlayers[m->mPlayerID]->SetTeam(m->mTeam);
+					mPlayers[m->mPlayerID] = new Player(m->mName, m->mTeam, m->mMarkerID);
 				} break;
 
 				case Network::C_MESSAGE_REMOVE_PLAYER:
@@ -115,7 +110,7 @@ namespace Logic
 		return mPlayers.size();
 	}
 
-	const std::string& ClientSession::GetPlayerName(Network::Slot slot) const
+	std::string ClientSession::GetPlayerName(Network::Slot slot) const
 	{
 		if (mPlayers[slot] == NULL)
 			return "";

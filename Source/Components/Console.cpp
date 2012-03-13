@@ -19,13 +19,11 @@ namespace Components
 
 		mMaxNumRows = (int)((GetHeight() - textHeight) / textHeight);
 
-		RECT inputFieldPos = GetBoundingRect();
-		inputFieldPos.top = inputFieldPos.bottom - 20;
+		RECT inputFieldPos = { 0, 0, GetWidth(), GetHeight() - 20 };
 		mInputField = new InputField(mDevice, this, this, inputFieldPos, mFont);
 
 		int scrollWidth = 20;
-		RECT scrollbarPos = GetBoundingRect();
-		scrollbarPos.left = scrollbarPos.right - scrollWidth;
+		RECT scrollbarPos = { 0, 0, GetWidth() - scrollWidth, GetHeight() };
 		mScrollbar = new Scrollbar(this, this, scrollbarPos);
 		mScrollbar->Initialize(mDevice);
 

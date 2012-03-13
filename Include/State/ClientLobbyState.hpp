@@ -38,7 +38,7 @@ namespace State
 		Components::Console*					mChat;
 		std::vector<Components::Label*>			mPlayerLabels;
 
-		Logic::ClientSession*					mClientSession;
+		Logic::ClientSession*					mSession;
 
 		void CreateComponents();
 	};

@@ -2,16 +2,14 @@
 
 namespace Logic
 {
-	Player::Player()
-		: mTeam(0)
-		, mMarker(0)
-	{
-
-	}
+	Player::Player(const std::string& name, Team team, MarkerType markerType)
+		: mName(name)
+		, mTeam(team)
+		, mMarker(markerType)
+	{}
 
 	Player::~Player() throw()
-	{
-	}
+	{}
 
 
 	void Player::SetName(const std::string& name)

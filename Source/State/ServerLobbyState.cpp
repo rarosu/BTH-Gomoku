@@ -24,87 +24,61 @@ namespace State
 
 	void ServerLobbyState::CreateComponents()
 	{
+		const int C_LABEL_WIDTH = 150;
+		const int C_LABEL_HEIGHT = 48;
+		const int C_BUTTON_WIDTH = 150;
+		const int C_BUTTON_HEIGHT = 48;
+		const int C_CHAT_HEIGHT = 150;
+
 		RECT r = {0, 0, 0, 0};
 		mComponents = new Components::ComponentGroup(sRootComponentGroup, "ServerLobbyState Group", r);
 
+		r.left = 50;
+		r.right = r.left + C_LABEL_WIDTH;
+		r.top = 50;
+		r.bottom = r.top + C_LABEL_HEIGHT;
 
+		for (unsigned int i = 0; i < mSession->GetRuleset()->GetPlayerCount(); ++i)
+		{
+			mPlayerLabels.push_back(new Components::Label(mDevice, mComponents, "1.", r, GameFont::Left));
 
+			r.top = r.bottom + C_LABEL_HEIGHT;
+			r.bottom = r.top + C_LABEL_HEIGHT;
+		}
+
+		r.right = r.left + C_BUTTON_WIDTH;
+		r.top += 100;
+		r.bottom = r.top + C_BUTTON_HEIGHT;
+		mStartButton = new Components::TextButton(mComponents, r);
+		mStartButton->Initialize(mDevice, "Start");
+
+		r.left += C_BUTTON_WIDTH + 100;
+		r.right = r.left + C_BUTTON_WIDTH;
+		mCancelButton = new Components::TextButton(mComponents, r);
+		mCancelButton->Initialize(mDevice, "Cancel");
 
 		/*
-		// Create new component group
-		RECT compPos = { 0, 0, 0, 0 };
-		mComponents = new Components::ComponentGroup(sRootComponentGroup, "ServerLobbyState Group", compPos);
-
-		// Create title label
-		int lblCenterX = sViewport->GetWidth() / 2;
-		int lblHalfWidth = 300;
-		RECT labelTPos = { lblCenterX - lblHalfWidth, 50, lblCenterX + lblHalfWidth, 150 };
-		Components::Label* labelTitle = new Components::Label(mDevice, mComponents, "GAME LOBBY", labelTPos);
-
-		// Create player list
-		LONG lblTop = 200;
-		LONG lblLeft = 0;
-		LONG lblHeight = 40;
-		LONG lblWidth = 200;
-
-		const std::string playerCaptions[] = { "PLAYERS: ", "1. ", "2. ", "3. ", "4. " };
-
-		for(int h = 0; h < 5; ++h)
-		{
-			RECT plblPos = { lblLeft, lblTop, lblLeft + lblWidth, lblTop + lblHeight };
-			mPlayerLabels.push_back(new Components::Label(mDevice, mComponents, playerCaptions[h], plblPos, GameFont::Left));
-			lblTop += lblHeight;
-		}
-
-		// Create the team buttons and labels
-		const std::string lblCaptions[] = { "Team 1: ", "Team 2: " };
-		const std::string btnCaptions[] = { "Team 1: Player 1", "Team 1: Player 2", 
-											"Team 2: Player 1", "Team 2: Player 2" };
-		LONG btnWidth = 200;
-		LONG btnHeight = 40;
-		LONG btnLeft = (LONG)sViewport->GetWidth() - (btnWidth + 30);
-		LONG btnTop = 200;
-		const int padding = 20;
-
-		for(int i = 0; i < 2; ++i)
-		{
-			RECT lblPos = { btnLeft, btnTop, btnLeft + btnWidth, btnTop + btnHeight };
-			Components::Label* labelTitle = new Components::Label(mDevice, mComponents, lblCaptions[i], lblPos);
-			btnTop += btnHeight;
-			for(int j = 0; j < 2; ++j)
-			{
-				RECT buttonPos = { btnLeft, btnTop, btnLeft + btnWidth, btnTop + btnHeight };
-
-				mButtons.push_back(new Components::TextButton(mComponents, buttonPos));
-				mButtons[i * 2 + j]->Initialize(mDevice, btnCaptions[i * 2 + j]);
-				btnTop += btnHeight;
-			}
-			btnTop += padding;
-		}
-
-		// Create Start Game- and Cancel-buttons
-		int btnSGLeft = sViewport->GetWidth() / 2 - (192 + 30);
-		int btnSGCTop = sViewport->GetHeight() - 250;
-		RECT btnSGPos = { btnSGLeft, btnSGCTop, btnSGLeft + btnWidth, btnSGCTop + btnHeight };
-		mButtons.push_back(new Components::TextButton(mComponents, btnSGPos));
-		mButtons[mButtons.size() - 1]->Initialize(mDevice, "Start Game");
-
-		int btnCLeft = sViewport->GetWidth() / 2 + 30;
-		RECT btnCPos = { btnCLeft, btnSGCTop, btnCLeft + btnWidth, btnSGCTop + btnHeight };
-		mButtons.push_back(new Components::TextButton(mComponents, btnCPos));
-		mButtons[mButtons.size() - 1]->Initialize(mDevice, "Cancel");
-
-		// Create chat console
-		RECT chatPos = { 0, sViewport->GetHeight() - 180, sViewport->GetWidth(), sViewport->GetHeight() };
-		Components::Console* chatWindow = new Components::Console(mDevice, mComponents, chatPos, C_COLOR_WINDOW_BG);
-
-		chatWindow->SetFocus();
-		mComponents->SetFocus();
+		r.left = 0;
+		r.right = sViewport->GetWidth();
+		r.top = sViewport->GetHeight() - C_CHAT_HEIGHT;
+		r.bottom = sViewport->GetHeight() - 50;
+		mChat = new Components::Console(mDevice, mComponents, r, D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.0f));
 		*/
+
+		//mChat->SetFocus();
+		mComponents->SetFocus();
 	}
 
 	void ServerLobbyState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
 	{
+		// Check cancel button
+		if (mCancelButton->GetAndResetClickStatus())
+		{
+			ChangeState(C_STATE_MENU);
+			SafeDelete(mSession);
+			return;
+		}
+
 		// Update the session
 		mSession->Update(gameTime);
 

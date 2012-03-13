@@ -18,7 +18,7 @@ namespace Logic
 		void Update();
 
 		unsigned int GetPlayerCount() const;
-		const std::string& GetPlayerName(Network::Slot slot) const;
+		std::string GetPlayerName(Network::Slot slot) const;
 	private:
 		Network::Client* mClient;
 	};

@@ -19,12 +19,15 @@ namespace Network
 		int playerID;
 		int team;
 		int markerID;
+		std::string name;
 
 		s >> playerID;
 		s >> team;
 		s >> markerID;
+		s.ignore();
+		std::getline(s, name);
 
-		return new AddPlayerMessage(playerID, team, markerID, s.str());
+		return new AddPlayerMessage(playerID, team, markerID, name);
 	}
 
 	int AddPlayerMessage::ID() const

@@ -9,6 +9,9 @@
 
 namespace Network
 {
+	/**
+		An interface for notification on server events
+	*/
 	class ServerEventInterface
 	{
 	public:
@@ -29,6 +32,11 @@ namespace Network
 		Slot mSlot;
 	};
 
+	/**
+		A network server, which listens for incoming connections
+		and holds a number of client sockets that it can communicate
+		with.
+	*/
 	class Server
 	{
 	public:

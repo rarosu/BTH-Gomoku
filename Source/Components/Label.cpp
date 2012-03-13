@@ -16,7 +16,7 @@ namespace Components
 		mShadowPosition.top = lblPos.y + offsetY;
 		mShadowPosition.bottom = lblPos.y + GetHeight() + offsetY;
 		
-		mFont = new GameFont(device, "Segoe Print", GetHeight(), false, true);
+		mFont = new GameFont(device, "Segoe Print", static_cast<int>(GetHeight()), false, true);
 	}
 
 	void Label::Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
