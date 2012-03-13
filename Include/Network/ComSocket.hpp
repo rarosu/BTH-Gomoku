@@ -29,8 +29,9 @@ namespace Network
 
 		int Update();
 		std::string PopMessage();
-		std::string PeekMessage() const;
-		bool HasQueuedMessages() const;
+		std::string PopMessage(unsigned int index);
+		std::string PeekMessage(unsigned int index) const;
+		unsigned int GetQueuedMessageCount() const;
 
 		void Shutdown();
 		bool IsConnected() const;
@@ -43,9 +44,6 @@ namespace Network
 		std::vector<std::string> mMessagesToSend;
 		std::vector<std::string> mReceivedMessages;
 		std::string mReceiveBuffer;
-
-		std::ofstream mDebugFile;
-		void OpenDebugFile();
 	};
 }
 

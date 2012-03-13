@@ -20,27 +20,30 @@ namespace Logic
 	{
 		mClient->Update();
 
-		Network::Message* message;
-		while ( (message = mClient->PopMessage()) != NULL )
+		for (int i = mClient->GetQueuedMessageCount(); i >= 0; --i)
 		{
-			switch (message->ID())
+			switch (mClient->PeekMessageID(i))
 			{
 				case Network::C_MESSAGE_CHAT:
 				{
-					Network::ChatMessage* m = static_cast<Network::ChatMessage*>(message);
+					Network::ChatMessage* m = static_cast<Network::ChatMessage*>(mClient->PopMessage(i));
+
+					SafeDelete(m);
 				} break;
 
 				case Network::C_MESSAGE_ADD_PLAYER:
 				{
-					Network::AddPlayerMessage* m = static_cast<Network::AddPlayerMessage*>(message);
+					Network::AddPlayerMessage* m = static_cast<Network::AddPlayerMessage*>(mClient->PopMessage(i));
 					
 					assert(mPlayers[m->mPlayerID] == NULL);
 					mPlayers[m->mPlayerID] = new Player(m->mName, m->mTeam, m->mMarkerID);
+
+					SafeDelete(m);
 				} break;
 
 				case Network::C_MESSAGE_REMOVE_PLAYER:
 				{
-					Network::RemovePlayerMessage* m = static_cast<Network::RemovePlayerMessage*>(message);
+					Network::RemovePlayerMessage* m = static_cast<Network::RemovePlayerMessage*>(mClient->PopMessage(i));
 
 					assert(mPlayers[m->mPlayerID] != NULL);
 					SafeDelete(mPlayers[m->mPlayerID]);
@@ -59,50 +62,59 @@ namespace Logic
 							// Report timeout in chat
 						break;
 					}
+
+					SafeDelete(m);
 				} break;
 
 				case Network::C_MESSAGE_SET_TEAM:
 				{
-					Network::SetTeamMessage* m = static_cast<Network::SetTeamMessage*>(message);
+					Network::SetTeamMessage* m = static_cast<Network::SetTeamMessage*>(mClient->PopMessage(i));
 
 					assert(mPlayers[m->mPlayerID] != NULL);
 					mPlayers[m->mPlayerID]->SetTeam(m->mTeam);
+
+					SafeDelete(m);
 				} break;
 
 				case Network::C_MESSAGE_SET_MARKER:
 				{
-					Network::SetMarkerMessage* m = static_cast<Network::SetMarkerMessage*>(message);
+					Network::SetMarkerMessage* m = static_cast<Network::SetMarkerMessage*>(mClient->PopMessage(i));
 
 					assert(mPlayers[m->mPlayerID] != NULL);
 					mPlayers[m->mPlayerID]->SetMarkerType(m->mMarkerID);
+
+					SafeDelete(m);
 				} break;
 
 				case Network::C_MESSAGE_PLACE_PIECE:
 				{
-					Network::PlacePieceMessage* m = static_cast<Network::PlacePieceMessage*>(message);
+					Network::PlacePieceMessage* m = static_cast<Network::PlacePieceMessage*>(mClient->PopMessage(i));
 
-					
+					SafeDelete(m);
 				} break;
 
 				case Network::C_MESSAGE_REMOVE_PIECE:
 				{
-					Network::RemovePieceMessage* m = static_cast<Network::RemovePieceMessage*>(message);
+					Network::RemovePieceMessage* m = static_cast<Network::RemovePieceMessage*>(mClient->PopMessage(i));
 
+					SafeDelete(m);
 				} break;
 
 				case Network::C_MESSAGE_TURN:
 				{
-					Network::TurnMessage* m = static_cast<Network::TurnMessage*>(message);
+					Network::TurnMessage* m = static_cast<Network::TurnMessage*>(mClient->PopMessage(i));
+
+					SafeDelete(m);
 				} break;
 
 				case Network::C_MESSAGE_START_GAME:
 				{
-					Network::StartGameMessage* m = static_cast<Network::StartGameMessage*>(message);
+					Network::StartGameMessage* m = static_cast<Network::StartGameMessage*>(mClient->PopMessage(i));
+
+					SafeDelete(m);
 				} break;
 			}
 		}
-
-		SafeDelete(message);
 	}
 
 	unsigned int ClientSession::GetPlayerCount() const

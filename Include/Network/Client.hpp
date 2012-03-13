@@ -15,9 +15,9 @@ namespace Network
 
 		void Send(const Message& message);
 
-		Message* PopMessage();
-		int PeekMessageID() const;
-		int GetQueuedMessageCount() const;
+		Message* PopMessage(unsigned int index);
+		int PeekMessageID(unsigned int index) const;
+		unsigned int GetQueuedMessageCount() const;
 
 		int Update();
 	private:

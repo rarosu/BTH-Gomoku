@@ -33,20 +33,20 @@ namespace Network
 		mSocket.Send(message.Flatten());
 	}
 
-	Message* Client::PopMessage()
+	Message* Client::PopMessage(unsigned int index)
 	{
-		return MessageFactory::Inflate(mSocket.PopMessage());
+		return MessageFactory::Inflate(mSocket.PopMessage(index));
 	}
 
-	int Client::PeekMessageID() const
+	int Client::PeekMessageID(unsigned int index) const
 	{
-		Message* m = MessageFactory::Inflate(mSocket.PeekMessage());
+		Message* m = MessageFactory::Inflate(mSocket.PeekMessage(index));
 		return m->ID();
 	}
 
-	int Client::GetQueuedMessageCount() const
+	unsigned int Client::GetQueuedMessageCount() const
 	{
-		
+		return mSocket.GetQueuedMessageCount();
 	}
 
 	int Client::Update()

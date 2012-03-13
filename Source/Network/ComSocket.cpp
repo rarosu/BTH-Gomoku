@@ -1,5 +1,6 @@
 #include "ComSocket.hpp"
 #include <sstream>
+#include <cassert>
 
 namespace Network
 {
@@ -26,14 +27,11 @@ namespace Network
 
 			throw std::runtime_error(ss.str());
 		}
-
-		OpenDebugFile();
 	}
 
 	ComSocket::~ComSocket()
 	{
 		Shutdown();
-		mDebugFile.close();
 	}
 
 	int ComSocket::Connect(const char* ipAddress, unsigned short port)
@@ -99,7 +97,6 @@ namespace Network
 		freeaddrinfo(addrResult);
 
 		mConnected = true;
-		OpenDebugFile();
 
 		return result;
 	}
@@ -125,8 +122,6 @@ namespace Network
 			{
 				std::string msg(buf, len);
 				mReceiveBuffer += msg;
-
-				mDebugFile << msg;
 			}
 			else if (len == 0)
 				mConnected = false;
@@ -175,30 +170,41 @@ namespace Network
 	// Returns first message in the receive queue, or NULL
 	std::string ComSocket::PopMessage()
 	{
+		return PopMessage(GetQueuedMessageCount() - 1);
+	}
+
+	std::string ComSocket::PopMessage(unsigned int index)
+	{
+		assert(index >= 0);
+		assert(index < mReceivedMessages.size());
+
 		std::string m;
 		if (!mReceivedMessages.empty())
 		{
-			m = mReceivedMessages.front();
-			mReceivedMessages.erase(mReceivedMessages.begin());
+			m = mReceivedMessages[index];
+			mReceivedMessages.erase(mReceivedMessages.begin() + index);
 		}
 
 		return m;
 	}
 
-	std::string ComSocket::PeekMessage() const
+	std::string ComSocket::PeekMessage(unsigned int index) const
 	{
+		assert(index >= 0);
+		assert(index < mReceivedMessages.size());
+
 		std::string m;
 		if (!mReceivedMessages.empty())
 		{
-			m = mReceivedMessages.front();
+			m = mReceivedMessages[index];
 		}
 
 		return m;
 	}
 
-	bool ComSocket::HasQueuedMessages() const
+	unsigned int ComSocket::GetQueuedMessageCount() const
 	{
-		return !mReceivedMessages.empty();
+		return mReceivedMessages.size();
 	}
 
 	// Shuts down a socket if it's active
@@ -265,13 +271,5 @@ namespace Network
 	bool ComSocket::IsConnected() const
 	{
 		return mConnected;
-	}
-
-	void ComSocket::OpenDebugFile()
-	{
-		std::stringstream s;
-		s << "comsocket-" << mSocket << ".thomas";
-
-		mDebugFile.open(s.str(), std::ios_base::trunc);
 	}
 }
