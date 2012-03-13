@@ -38,6 +38,17 @@ namespace Network
 		return MessageFactory::Inflate(mSocket.PopMessage());
 	}
 
+	int Client::PeekMessageID() const
+	{
+		Message* m = MessageFactory::Inflate(mSocket.PeekMessage());
+		return m->ID();
+	}
+
+	int Client::GetQueuedMessageCount() const
+	{
+		
+	}
+
 	int Client::Update()
 	{
 		return mSocket.Update();

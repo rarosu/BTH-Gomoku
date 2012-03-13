@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <stdexcept>
+#include <fstream>
 #include "WinInclude.hpp"
 #include "Message.hpp"
 
@@ -21,11 +22,16 @@ namespace Network
 		ComSocket();
 		ComSocket(SOCKET socket);
 		~ComSocket();
+
 		int Connect(const char* ipAddress = "127.0.0.1", unsigned short port = 6666);
 		void Send(const std::string& message);
 		bool Receive();
+
 		int Update();
 		std::string PopMessage();
+		std::string PeekMessage() const;
+		bool HasQueuedMessages() const;
+
 		void Shutdown();
 		bool IsConnected() const;
 	private:
@@ -37,6 +43,9 @@ namespace Network
 		std::vector<std::string> mMessagesToSend;
 		std::vector<std::string> mReceivedMessages;
 		std::string mReceiveBuffer;
+
+		std::ofstream mDebugFile;
+		void OpenDebugFile();
 	};
 }
 

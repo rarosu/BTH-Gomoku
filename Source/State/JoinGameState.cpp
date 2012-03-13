@@ -63,14 +63,14 @@ namespace State
 		{
 			mClient->Update();
 
-			Network::Message* message;
-			while ( (message = mClient->PopMessage()) != NULL )
+			while ( mClient->HasQueuedMessages() )
 			{
-				switch (message->ID())
+				Network::Message* message = NULL;
+				switch (mClient->PeekMessageID())
 				{
 					case Network::C_MESSAGE_ACCEPT:
 					{
-						Network::AcceptMessage* m = static_cast<Network::AcceptMessage*>(message);
+						Network::AcceptMessage* m = static_cast<Network::AcceptMessage*>(mClient->PopMessage());
 
 						mClientLobbyState->SetSessionArguments(mClient, m->mNumberOfPlayers, m->mSelfID, mNameField->GetText());
 
@@ -79,7 +79,7 @@ namespace State
 
 					case Network::C_MESSAGE_REFUSE:
 					{
-						Network::RefuseMessage* m = static_cast<Network::RefuseMessage*>(message);
+						Network::RefuseMessage* m = static_cast<Network::RefuseMessage*>(mClient->PopMessage());
 
 						switch (m->mReason)
 						{
@@ -98,9 +98,11 @@ namespace State
 						mJoinButton->SetEnabled(true);
 					} break;
 				}
+
+				SafeDelete(m);
 			}
 
-			SafeDelete(message);
+			
 		}
 
 		// Basic check to see if the name is valid (non-empty)

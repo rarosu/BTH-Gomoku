@@ -10,7 +10,7 @@ namespace Network
 	ComSocket::ComSocket()
 		: mSocket(INVALID_SOCKET), mConnected(false)
 	{
-
+		
 	}
 
 	ComSocket::ComSocket(SOCKET socket)
@@ -26,11 +26,14 @@ namespace Network
 
 			throw std::runtime_error(ss.str());
 		}
+
+		OpenDebugFile();
 	}
 
 	ComSocket::~ComSocket()
 	{
 		Shutdown();
+		mDebugFile.close();
 	}
 
 	int ComSocket::Connect(const char* ipAddress, unsigned short port)
@@ -95,9 +98,8 @@ namespace Network
 
 		freeaddrinfo(addrResult);
 
-		
-
 		mConnected = true;
+		OpenDebugFile();
 
 		return result;
 	}
@@ -123,6 +125,8 @@ namespace Network
 			{
 				std::string msg(buf, len);
 				mReceiveBuffer += msg;
+
+				mDebugFile << msg;
 			}
 			else if (len == 0)
 				mConnected = false;
@@ -179,6 +183,22 @@ namespace Network
 		}
 
 		return m;
+	}
+
+	std::string ComSocket::PeekMessage() const
+	{
+		std::string m;
+		if (!mReceivedMessages.empty())
+		{
+			m = mReceivedMessages.front();
+		}
+
+		return m;
+	}
+
+	bool ComSocket::HasQueuedMessages() const
+	{
+		return !mReceivedMessages.empty();
 	}
 
 	// Shuts down a socket if it's active
@@ -245,5 +265,13 @@ namespace Network
 	bool ComSocket::IsConnected() const
 	{
 		return mConnected;
+	}
+
+	void ComSocket::OpenDebugFile()
+	{
+		std::stringstream s;
+		s << "comsocket-" << mSocket << ".thomas";
+
+		mDebugFile.open(s.str(), std::ios_base::trunc);
 	}
 }
