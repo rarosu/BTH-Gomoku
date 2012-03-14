@@ -176,7 +176,7 @@ namespace Logic
 			// TODO: Think about boot
 			for (unsigned int i = 0; i < mPlayers.size(); ++i)
 			{
-				if (mPlayers[i] != NULL && mPlayers[i] >= 0)
+				if (mPlayers[i] != NULL && mPlayerClients[i] >= 0 && mPlayers[i] >= 0)
 				{
 					mServer->Send(mPlayerClients[i], Network::RemovePlayerMessage(playerSlot, Network::RemovePlayerReason::Left));
 				}
