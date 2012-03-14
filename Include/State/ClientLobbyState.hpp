@@ -24,7 +24,7 @@ namespace State
 
 		void SetSessionArguments(Network::Client* client, int playerCount, int selfID, const std::string& name);
 
-		void RecieveInput(std::string input);
+		void ReceiveInput(std::string input);
 		void ReceiveChatMessage(const std::string& message, unsigned int sourceID);
 	private:
 		struct bgVertex

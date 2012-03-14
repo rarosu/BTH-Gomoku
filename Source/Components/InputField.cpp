@@ -93,7 +93,7 @@ namespace Components
 				{
 					if(mReceiver)
 					{
-						mReceiver->RecieveInput(mFirstString.str() + mLastString.str());
+						mReceiver->ReceiveInput(mFirstString.str() + mLastString.str());
 						mFirstString.str("");
 						mLastString.str("");
 					}

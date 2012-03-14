@@ -123,7 +123,7 @@ namespace State
 		mSession = new Logic::ServerSession(server, adminName, ruleset);
 	}
 
-	void ServerLobbyState::RecieveInput(std::string input)
+	void ServerLobbyState::ReceiveInput(std::string input)
 	{
 		mSession->SendChatMessage(input, -1, Network::Recipient::Broadcast);
 	}
@@ -132,6 +132,6 @@ namespace State
 	{
 		std::string entry = mSession->GetPlayerName(sourceID) + ": " + message;
 
-		mChat->RecieveInput(entry);
+		mChat->ReceiveInput(entry);
 	}
 }

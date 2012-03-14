@@ -135,7 +135,7 @@ namespace Components
 		}
 	}
 
-	void Console::RecieveInput(std::string input)
+	void Console::ReceiveInput(std::string input)
 	{
 		TextLine text;
 		text.text = input;
@@ -150,7 +150,7 @@ namespace Components
 			mFirstShowRow = mOutput.size() - mMaxNumRows;
 		
 		if (mInputReceiver != NULL)
-			mInputReceiver->RecieveInput(input);
+			mInputReceiver->ReceiveInput(input);
 	}
 
 	void Console::SetTextColor(D3DXCOLOR newColor)

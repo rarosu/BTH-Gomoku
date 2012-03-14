@@ -42,7 +42,7 @@ namespace Components
 		void Scroll(bool isUp);
 
 		// Methods inherited from InputReceiver
-		void RecieveInput(std::string input);
+		void ReceiveInput(std::string input);
 
 	private:
 		struct TextLine

@@ -16,7 +16,7 @@ namespace Components
 	class InputReceiver
 	{
 	public:
-		virtual void RecieveInput(std::string input) = 0;
+		virtual void ReceiveInput(std::string input) = 0;
 	};
 
 	class InputField : public Component
