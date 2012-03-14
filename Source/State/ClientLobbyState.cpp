@@ -113,9 +113,12 @@ namespace State
 		mSession->SetChatReceiver(this);
 	}
 	
-	void ClientLobbyState::ReceiveInput(std::string input)
+	void ClientLobbyState::ConsoleInputEntered(const Components::Console* consoleInstance, const std::string& message)
 	{
-		mSession->SendChatMessage(input, -1, Network::Recipient::Broadcast);
+		if (consoleInstance == mChat)
+		{
+			mSession->SendChatMessage(message, -1, Network::Recipient::Broadcast);
+		}
 	}
 
 	void ClientLobbyState::ReceiveChatMessage(const std::string& message, unsigned int sourceID)

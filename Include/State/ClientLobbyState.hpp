@@ -10,7 +10,7 @@
 
 namespace State
 {
-	class ClientLobbyState : public ApplicationState, public Logic::ChatReceiver, public Components::InputReceiver
+	class ClientLobbyState : public ApplicationState, public Logic::ChatReceiver, public Components::ConsoleInputReceiver
 	{
 	public:
 		ClientLobbyState(StateID id, ID3D10Device* device);
@@ -24,7 +24,7 @@ namespace State
 
 		void SetSessionArguments(Network::Client* client, int playerCount, int selfID, const std::string& name);
 
-		void ReceiveInput(std::string input);
+		void ConsoleInputEntered(const Components::Console* consoleInstance, const std::string& message);
 		void ReceiveChatMessage(const std::string& message, unsigned int sourceID);
 	private:
 		struct bgVertex

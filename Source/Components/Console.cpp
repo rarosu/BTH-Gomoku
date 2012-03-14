@@ -37,12 +37,12 @@ namespace Components
 		SafeDelete(mBackground);
 	}
 
-	void Console::SetInputReceiver(InputReceiver* receiver)
+	void Console::SetInputReceiver(ConsoleInputReceiver* receiver)
 	{
 		mInputReceiver = receiver;
 	}
 
-	const InputReceiver* Console::GetInputReceiver() const
+	const ConsoleInputReceiver* Console::GetInputReceiver() const
 	{
 		return mInputReceiver;
 	}
@@ -150,7 +150,7 @@ namespace Components
 			mFirstShowRow = mOutput.size() - mMaxNumRows;
 		
 		if (mInputReceiver != NULL)
-			mInputReceiver->ReceiveInput(input);
+			mInputReceiver->ConsoleInputEntered(this, input);
 	}
 
 	void Console::SetTextColor(D3DXCOLOR newColor)

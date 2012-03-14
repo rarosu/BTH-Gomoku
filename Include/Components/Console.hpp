@@ -14,6 +14,14 @@
 
 namespace Components
 {
+	class Console;
+
+	class ConsoleInputReceiver
+	{
+	public:
+		virtual void ConsoleInputEntered(const Console* consoleInstance, const std::string& message) = 0;
+	};
+
 	class Console : public ComponentGroup, public Scrollable, public InputReceiver
 	{
 	public:
@@ -21,8 +29,8 @@ namespace Components
 			/*InputSubscription* manager,*/ UINT size = 100);
 		~Console() throw();
 
-		void SetInputReceiver(InputReceiver* receiver);
-		const InputReceiver* GetInputReceiver() const;
+		void SetInputReceiver(ConsoleInputReceiver* receiver);
+		const ConsoleInputReceiver* GetInputReceiver() const;
 
 		void Toggle();
 		void SetTextColor(D3DXCOLOR newColor);
@@ -59,7 +67,7 @@ namespace Components
 		Sprite*						mBackground;
 		D3DXCOLOR					mBGColor;
 
-		InputReceiver*				mInputReceiver;
+		ConsoleInputReceiver*		mInputReceiver;
 
 		std::stringstream			mStream;
 		std::deque<TextLine>		mOutput;
