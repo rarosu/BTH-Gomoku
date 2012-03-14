@@ -242,7 +242,14 @@ namespace Network
 					std::stringstream s;
 					s << "send failed: " << error;
 				
-					throw std::runtime_error(s.str());
+					if (error == WSAECONNRESET)
+					{
+						throw ConnectionFailure("Connection reset by peer");
+					}
+					else
+					{
+						throw std::runtime_error(s.str());
+					}
 				}
 				break;
 			}

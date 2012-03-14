@@ -121,6 +121,7 @@ namespace State
 		assert(ruleset != NULL);
 		assert(mSession == NULL);
 		mSession = new Logic::ServerSession(server, adminName, ruleset);
+		mSession->SetChatReceiver(this);
 	}
 
 	void ServerLobbyState::ReceiveInput(std::string input)

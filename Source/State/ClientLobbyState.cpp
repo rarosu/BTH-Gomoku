@@ -110,6 +110,7 @@ namespace State
 		assert(mSession == NULL);
 
 		mSession = new Logic::ClientSession(client, name, playerCount, selfID);
+		mSession->SetChatReceiver(this);
 	}
 	
 	void ClientLobbyState::ReceiveInput(std::string input)

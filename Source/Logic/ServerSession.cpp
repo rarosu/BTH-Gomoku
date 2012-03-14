@@ -80,7 +80,7 @@ namespace Logic
 						case Network::Recipient::Broadcast:
 							for (PlayerSlot s = 0; s < mPlayers.size(); ++s)
 							{
-								if (mPlayers[s] != NULL && mPlayerClients[s] != C_STATUS_LOCAL)
+								if (mPlayers[s] != NULL && mPlayerClients[s] != C_STATUS_LOCAL && s != m->mSourceID)
 								{
 									mServer->Send(mPlayerClients[s], Network::ChatMessage(m->mSourceID, m->mTargetID, m->mRecipient, m->mMessage));
 								}

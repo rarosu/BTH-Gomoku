@@ -98,10 +98,20 @@ namespace Network
 			{
 				if (mClients[i]->IsConnected())
 				{
-					mClients[i]->Update();
-					std::string m;
-					while ((m = mClients[i]->PopMessage()) != "")
-						mMessageQueue.push_back(SlotMessage(MessageFactory::Inflate(m), i));
+					try
+					{
+						mClients[i]->Update();
+
+						std::string m;
+						while ((m = mClients[i]->PopMessage()) != "")
+							mMessageQueue.push_back(SlotMessage(MessageFactory::Inflate(m), i));
+					}
+					catch (ConnectionFailure& e)
+					{
+						// Connection was reset
+						DisconnectClient(i);
+						MessageBox(NULL, e.what(), "Error", MB_OK | MB_ICONERROR);
+					}
 				}
 				else
 				{
@@ -115,7 +125,10 @@ namespace Network
 	{
 		for (Slot i = 0; i < mClients.size(); ++i)
 		{
-			Send(i, message);
+			if (mClients[i] != NULL)
+			{
+				Send(i, message);
+			}
 		}
 	}
 
@@ -123,6 +136,7 @@ namespace Network
 	{
 		assert(slot >= 0);
 		assert(slot < mClients.size());
+		assert(mClients[slot] != NULL);
 
 		mClients[slot]->Send(message.Flatten());
 	}
