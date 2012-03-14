@@ -26,6 +26,8 @@ namespace State
 	{
 		const int C_LABEL_WIDTH = 150;
 		const int C_LABEL_HEIGHT = 48;
+		const int C_LABEL_MARGIN = 10;
+		const int C_BUTTON_YOFFSET = 60;
 		const int C_BUTTON_WIDTH = 150;
 		const int C_BUTTON_HEIGHT = 48;
 		const int C_CHAT_HEIGHT = 150;
@@ -42,12 +44,12 @@ namespace State
 		{
 			mPlayerLabels.push_back(new Components::Label(mDevice, mComponents, "1.", r, GameFont::Left));
 
-			r.top = r.bottom + C_LABEL_HEIGHT;
+			r.top = r.bottom + C_LABEL_MARGIN;
 			r.bottom = r.top + C_LABEL_HEIGHT;
 		}
 
 		r.right = r.left + C_BUTTON_WIDTH;
-		r.top += 100;
+		r.top += C_BUTTON_YOFFSET;
 		r.bottom = r.top + C_BUTTON_HEIGHT;
 		mStartButton = new Components::TextButton(mComponents, r);
 		mStartButton->Initialize(mDevice, "Start");
