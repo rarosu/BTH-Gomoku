@@ -129,10 +129,10 @@ namespace Logic
 
 		// Decrease timeout
 		float dt = gameTime.GetTimeSinceLastTick().Seconds;
-		for (TimeoutMap::iterator it = mClientTimeout.begin(); it != mClientTimeout.end(); ++it)
+		for (TimeoutMap::iterator it = mClientTimeout.begin(); it != mClientTimeout.end(); it++)
 		{
 			it->second -= dt;
-			if (it->second <= 0.0f)
+			if (it->second <= 0.0f && mServer->IsConnected(it->first))
 			{
 				mServer->DisconnectClient(it->first);
 			}
@@ -162,8 +162,6 @@ namespace Logic
 
 	void ServerSession::ClientDisconnected(Network::Slot slot)
 	{
-		mClientTimeout.erase(slot);
-
 		PlayerSlot playerSlot = GetPlayerSlot(slot);
 		if (playerSlot != C_INVALID_PLAYER)
 		{

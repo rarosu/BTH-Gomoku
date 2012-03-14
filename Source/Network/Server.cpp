@@ -167,6 +167,13 @@ namespace Network
 			mEventInterface->ClientDisconnected(slot);
 	}
 
+	bool Server::IsConnected(Slot slot) const
+	{
+		if (mClients[slot] != NULL)
+			return mClients[slot]->IsConnected();
+		return false;
+	}
+
 	int Server::GetFreeSlot() const
 	{
 		for (unsigned int i = 0; i < mClients.size(); ++i)

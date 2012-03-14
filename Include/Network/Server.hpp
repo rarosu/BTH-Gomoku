@@ -54,6 +54,7 @@ namespace Network
 		SlotMessage PopMessage();
 
 		void DisconnectClient(Slot slot);
+		bool IsConnected(Slot slot) const;
 	private:
 		ServerEventInterface* mEventInterface;
 
