@@ -76,7 +76,7 @@ namespace State
 		// Update the session
 		try
 		{
-			mSession->Update();
+			mSession->Update(gameTime);
 		} catch (Network::ConnectionFailure& e)
 		{
 			MessageBox(NULL, e.what(), "Error", MB_OK | MB_ICONERROR);

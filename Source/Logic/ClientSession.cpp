@@ -4,10 +4,13 @@
 
 namespace Logic
 {
+	const float ClientSession::C_KEEP_ALIVE_DELAY = 0.1f;
+
 	ClientSession::ClientSession(Network::Client* client, const std::string& playerName, unsigned int playerCount, unsigned int selfID)
 		: Session(playerCount)
 		, mClient(client)
 		, mSelfID(selfID)
+		, mKeepAliveCounter(0.0f)
 	{
 		mPlayers[selfID] = new Player(playerName, 0, 0);	// TODO: Get initial team/marker from Accept message
 	}
@@ -17,10 +20,9 @@ namespace Logic
 		SafeDelete(mClient);
 	}
 
-	void ClientSession::Update()
+	void ClientSession::Update(const GameTime& gameTime)
 	{
 		mClient->Update();
-		
 
 		for (int i = mClient->GetQueuedMessageCount() - 1; i >= 0; --i)
 		{
@@ -121,6 +123,14 @@ namespace Logic
 					SafeDelete(m);
 				} break;
 			}
+		}
+
+		float dt = gameTime.GetTimeSinceLastTick().Seconds;
+		mKeepAliveCounter += dt;
+		if (mKeepAliveCounter >= C_KEEP_ALIVE_DELAY)
+		{
+			mClient->Send(Network::StayAliveMessage(mSelfID));
+			mKeepAliveCounter = 0.0f;
 		}
 	}
 
