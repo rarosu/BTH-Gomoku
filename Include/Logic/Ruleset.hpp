@@ -13,7 +13,7 @@ namespace Logic
 	class StandardRuleset : public Ruleset
 	{
 	public:
-		unsigned int GetPlayerCount() const { return 3; }
+		unsigned int GetPlayerCount() const { return 4; }
 		unsigned int GetWinningRowLength() const { return 5; }
 	};
 }
