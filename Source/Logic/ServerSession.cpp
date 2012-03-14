@@ -172,6 +172,15 @@ namespace Logic
 		{
 			SafeDelete(mPlayers[playerSlot]);
 			mPlayerClients[playerSlot] = C_STATUS_OPEN;
+
+			// TODO: Think about boot
+			for (unsigned int i = 0; i < mPlayers.size(); ++i)
+			{
+				if (mPlayers[i] != NULL && mPlayers[i] >= 0)
+				{
+					mServer->Send(mPlayerClients[i], Network::RemovePlayerMessage(playerSlot, Network::RemovePlayerReason::Left));
+				}
+			}
 		}
 		else
 		{
