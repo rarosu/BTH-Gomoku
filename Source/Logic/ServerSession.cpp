@@ -229,6 +229,7 @@ namespace Logic
 				if (mPlayers[i] != NULL && mPlayers[i]->GetName() == name)
 				{
 					playerValid = false;
+					reason = RefuseReason::InvalidName;
 					break;
 				}
 			}
