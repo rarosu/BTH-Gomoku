@@ -35,6 +35,7 @@ namespace State
 	void JoinGameState::OnStatePushed()
 	{
 		CreateComponents();
+		mConnectState = C_CONNECT_STATE_IDLE;
 	}
 
 	void JoinGameState::OnStatePopped()
