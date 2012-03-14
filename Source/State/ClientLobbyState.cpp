@@ -71,7 +71,19 @@ namespace State
 		}
 
 		// Update the session
-		mSession->Update();
+		try
+		{
+			mSession->Update();
+		} catch (Network::ConnectionFailure& e)
+		{
+			MessageBox(NULL, e.what(), "Error", MB_OK | MB_ICONERROR);
+			
+			SafeDelete(mSession);
+			ChangeState(C_STATE_MENU);
+
+			return;
+		}
+		
 
 		// Update the player labels
 		for (unsigned int i = 0; i < mSession->GetPlayerCount(); ++i)

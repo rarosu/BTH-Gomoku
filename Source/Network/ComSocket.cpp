@@ -139,6 +139,11 @@ namespace Network
 					std::stringstream s;
 					s << "recv failed: " << error;
 
+					if (error == WSAECONNABORTED)
+					{
+						throw ConnectionFailure("Connection aborted");
+					}
+
 					throw std::runtime_error(s.str());
 				}
 			}

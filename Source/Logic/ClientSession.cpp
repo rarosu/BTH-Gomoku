@@ -20,6 +20,7 @@ namespace Logic
 	void ClientSession::Update()
 	{
 		mClient->Update();
+		
 
 		for (int i = mClient->GetQueuedMessageCount() - 1; i >= 0; --i)
 		{
