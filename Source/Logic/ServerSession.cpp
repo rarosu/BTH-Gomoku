@@ -244,9 +244,17 @@ namespace Logic
 
 			for (PlayerSlot i = 0; i < mPlayers.size(); ++i)
 			{
-				if (mPlayers[i] != NULL && i != openPlayerSlot)
+				if (mPlayers[i] != NULL)
 				{
-					mServer->Send(clientSlot, AddPlayerMessage(i, mPlayers[i]->GetTeam(), mPlayers[i]->GetMarkerType(), mPlayers[i]->GetName()));
+					if (i != openPlayerSlot)
+					{
+						mServer->Send(clientSlot, AddPlayerMessage(i, mPlayers[i]->GetTeam(), mPlayers[i]->GetMarkerType(), mPlayers[i]->GetName()));
+					
+						if (mPlayerClients[i] >= 0)
+						{
+							mServer->Send(mPlayerClients[i], Network::AddPlayerMessage(openPlayerSlot, mPlayers[openPlayerSlot]->GetTeam(), mPlayers[openPlayerSlot]->GetMarkerType(), mPlayers[openPlayerSlot]->GetName()));
+						}
+					}
 				}
 			}
 		}
