@@ -61,12 +61,10 @@ namespace Logic
 			//PlayerSlot slot = GetPlayerSlot(message.mSlot);
 
 			// If we've received a message, update timeout (unless they're marked to be removed)
-			/*
 			if (std::find(mClientsToRemove.begin(), mClientsToRemove.end(), message.mSlot) == mClientsToRemove.end())
 			{
-				mTimeoutCounters[slot] = C_TIMEOUT;
+				mClientTimeout[message.mSlot] = C_TIMEOUT;
 			}
-			*/
 
 			// Parse the message content
 			switch (message.mMessage->ID())
@@ -130,18 +128,15 @@ namespace Logic
 		}
 
 		// Decrease timeout
-		/*
 		float dt = gameTime.GetTimeSinceLastTick().Seconds;
-		for (TimeoutMap::iterator it = mTimeoutCounters.begin(); it != mTimeoutCounters.end(); ++it)
+		for (TimeoutMap::iterator it = mClientTimeout.begin(); it != mClientTimeout.end(); ++it)
 		{
 			it->second -= dt;
 			if (it->second <= 0.0f)
 			{
-				mServer->DisconnectClient(mSlotMap[it->first]);
-
+				mServer->DisconnectClient(it->first);
 			}
 		}
-		*/
 	}
 
 	void ServerSession::SendChatMessage(const std::string& message, int targetID, Network::Recipient::Recipient recipient)
@@ -151,7 +146,7 @@ namespace Logic
 
 	void ServerSession::ClientConnected(Network::Slot slot)
 	{
-		//mTimeoutCounters[slot] = C_TIMEOUT;
+		mClientTimeout[slot] = C_TIMEOUT;
 		if (GetPlayerSlot(C_STATUS_OPEN) == C_INVALID_PLAYER)
 		{
 			// Refuse the player, since we have too many players
@@ -167,6 +162,8 @@ namespace Logic
 
 	void ServerSession::ClientDisconnected(Network::Slot slot)
 	{
+		mClientTimeout.erase(slot);
+
 		PlayerSlot playerSlot = GetPlayerSlot(slot);
 		if (playerSlot != C_INVALID_PLAYER)
 		{
