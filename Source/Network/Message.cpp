@@ -43,6 +43,9 @@ namespace Network
 			case C_MESSAGE_ACCEPT:
 				m = AcceptMessage::Inflate(args);
 				break;
+			case C_MESSAGE_REFUSE:
+				m = RefuseMessage::Inflate(args);
+				break;
 			case C_MESSAGE_ADD_PLAYER:
 				m = AddPlayerMessage::Inflate(args);
 				break;
