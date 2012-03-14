@@ -113,14 +113,12 @@ namespace State
 		if (mNameField->IsEmpty())
 		{
 			mConnectState = C_CONNECT_STATE_INVALID;
-			return;
 		}
 
 		// Basic check to see if the IP/Hostname is valid (non-empty)
 		if (mIPAddressField->IsEmpty())
 		{
 			mConnectState = C_CONNECT_STATE_INVALID;
-			return;
 		}
 
 		// Basic check to see if the port is valid
@@ -129,7 +127,6 @@ namespace State
 		if (!(s >> port))
 		{
 			mConnectState = C_CONNECT_STATE_INVALID;
-			return;
 		}
 
 		// All is fine (so far)! Allow creation of client.
@@ -151,8 +148,6 @@ namespace State
 				mJoinButton->SetEnabled(false);
 				break;
 		}
-
-		mJoinButton->SetEnabled(true);
 		
 		if (mJoinButton->GetAndResetClickStatus())
 		{
