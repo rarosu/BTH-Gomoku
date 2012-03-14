@@ -29,6 +29,10 @@ namespace State
 			D3DXVECTOR2		uv;
 		};
 
+		static const int C_CONNECT_STATE_IDLE = 0;
+		static const int C_CONNECT_STATE_INVALID = 1;
+		static const int C_CONNECT_STATE_CONNECTING = 2;
+
 		ID3D10Device*				mDevice;
 		GameFont*					mDefaultFont;
 		Sprite*						mBackground;
@@ -43,6 +47,8 @@ namespace State
 
 		ClientLobbyState*			mClientLobbyState;
 		Network::Client*			mClient;
+
+		int							mConnectState;
 
 		void CreateComponents();
 	};

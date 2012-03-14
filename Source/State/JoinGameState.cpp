@@ -18,7 +18,8 @@ namespace State
 		  mPortField(NULL),
 		  mJoinButton(NULL),
 		  mCancelButton(NULL),
-		  mClient(NULL)
+		  mClient(NULL),
+		  mConnectState(C_CONNECT_STATE_IDLE)
 	{
 		mDefaultFont = new GameFont(mDevice,  "Segoe Print", 48);
 		mBackground = new Sprite(mDevice, sViewport, "marbleBG1422x800.png", sViewport->GetWidth(), sViewport->GetHeight());
@@ -91,13 +92,13 @@ namespace State
 
 							case Network::RefuseReason::InvalidName:
 								MessageBox(NULL, "Connection refused: Invalid name, please change it", "Error", MB_OK | MB_ICONERROR);
+
 							break;
 						}
 
-						mNameField->SetEnabled(true);
-						mIPAddressField->SetEnabled(true);
-						mPortField->SetEnabled(true);
-						mJoinButton->SetEnabled(true);
+						mConnectState = C_CONNECT_STATE_IDLE;
+
+						
 
 						SafeDelete(m);
 					} break;
@@ -105,17 +106,20 @@ namespace State
 			}
 		}
 
+		if (mConnectState != C_CONNECT_STATE_CONNECTING)
+			mConnectState = C_CONNECT_STATE_IDLE;
+
 		// Basic check to see if the name is valid (non-empty)
 		if (mNameField->IsEmpty())
 		{
-			mJoinButton->SetEnabled(false);
+			mConnectState = C_CONNECT_STATE_INVALID;
 			return;
 		}
 
 		// Basic check to see if the IP/Hostname is valid (non-empty)
 		if (mIPAddressField->IsEmpty())
 		{
-			mJoinButton->SetEnabled(false);
+			mConnectState = C_CONNECT_STATE_INVALID;
 			return;
 		}
 
@@ -124,18 +128,30 @@ namespace State
 		unsigned short port = 0;
 		if (!(s >> port))
 		{
-			mJoinButton->SetEnabled(false);
-			return;
-		}
-
-		// If we're currently attempting a connect, do not allow joining again
-		if (mClient != NULL)
-		{
-			mJoinButton->SetEnabled(false);
+			mConnectState = C_CONNECT_STATE_INVALID;
 			return;
 		}
 
 		// All is fine (so far)! Allow creation of client.
+		switch (mConnectState)
+		{
+			case C_CONNECT_STATE_IDLE:
+				mNameField->SetEnabled(true);
+				mIPAddressField->SetEnabled(true);
+				mPortField->SetEnabled(true);
+				mJoinButton->SetEnabled(true);
+				break;
+			case C_CONNECT_STATE_CONNECTING:
+				mNameField->SetEnabled(false);
+				mIPAddressField->SetEnabled(false);
+				mPortField->SetEnabled(false);
+				mJoinButton->SetEnabled(false);
+				break;
+			case C_CONNECT_STATE_INVALID:
+				mJoinButton->SetEnabled(false);
+				break;
+		}
+
 		mJoinButton->SetEnabled(true);
 		
 		if (mJoinButton->GetAndResetClickStatus())
@@ -145,9 +161,7 @@ namespace State
 				mClient = new Network::Client(mIPAddressField->GetText().c_str(), port);
 				mClient->Send(Network::JoinMessage(mNameField->GetText()));
 
-				mNameField->SetEnabled(false);
-				mIPAddressField->SetEnabled(false);
-				mPortField->SetEnabled(false);
+				mConnectState = C_CONNECT_STATE_CONNECTING;
 			}
 			catch (Network::ConnectionFailure& e)
 			{
