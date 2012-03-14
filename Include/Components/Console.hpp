@@ -52,6 +52,8 @@ namespace Components
 		// Methods inherited from InputReceiver
 		void ReceiveInput(std::string input);
 
+		// Add a line to the console, but do not notify the input receivers.
+		void AddLine(const std::string& input);
 	private:
 		struct TextLine
 		{

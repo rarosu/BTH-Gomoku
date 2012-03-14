@@ -136,6 +136,6 @@ namespace State
 	{
 		std::string entry = mSession->GetPlayerName(sourceID) + ": " + message;
 
-		mChat->ReceiveInput(entry);
+		mChat->AddLine(entry);
 	}
 }
