@@ -73,27 +73,7 @@ namespace Logic
 				{
 					Network::ChatMessage* m = static_cast<Network::ChatMessage*>(message.mMessage);
 
-					switch (m->mRecipient)
-					{
-						case Network::Recipient::Broadcast:
-							for (PlayerSlot s = 0; s < mPlayers.size(); ++s)
-							{
-								if (mPlayers[s] != NULL && mPlayerClients[s] != C_STATUS_LOCAL && s != m->mSourceID)
-								{
-									mServer->Send(mPlayerClients[s], Network::ChatMessage(m->mSourceID, m->mTargetID, m->mRecipient, m->mMessage));
-								}
-							}
-
-							if (mChatReceiver != NULL)
-							{
-								mChatReceiver->ReceiveChatMessage(m->mMessage, m->mSourceID);
-							}
-							break;
-						case Network::Recipient::Team:
-							break;
-						case Network::Recipient::Private:
-							break;
-					}
+					HandleChatMessage(m->mSourceID, m->mTargetID, m->mRecipient, m->mMessage);
 				} break;
 
 				case Network::C_MESSAGE_JOIN:
@@ -106,6 +86,8 @@ namespace Logic
 				case Network::C_MESSAGE_LEAVE_GAME:
 				{
 					Network::LeaveGameMessage* m = static_cast<Network::LeaveGameMessage*>(message.mMessage);
+
+					// Do we need this? Notice this on timeout instead?
 				} break;
 
 				case Network::C_MESSAGE_PLACE_PIECE:
@@ -264,5 +246,30 @@ namespace Logic
 		std::vector<ClientSlot>::iterator it = std::find(mPendingClients.begin(), mPendingClients.end(), clientSlot);
 		if (it != mPendingClients.end())
 			mPendingClients.erase(it);
+	}
+
+	void ServerSession::HandleChatMessage(PlayerSlot sourceID, PlayerSlot targetID, Network::Recipient::Recipient recipient, const std::string& message)
+	{
+		switch (recipient)
+		{
+			case Network::Recipient::Broadcast:
+				for (PlayerSlot s = 0; s < mPlayers.size(); ++s)
+				{
+					if (mPlayers[s] != NULL && mPlayerClients[s] != C_STATUS_LOCAL && s != sourceID)
+					{
+						mServer->Send(mPlayerClients[s], Network::ChatMessage(sourceID, targetID, recipient, message));
+					}
+				}
+
+				if (mChatReceiver != NULL)
+				{
+					mChatReceiver->ReceiveChatMessage(message, sourceID);
+				}
+				break;
+			case Network::Recipient::Team:
+				break;
+			case Network::Recipient::Private:
+				break;
+		}
 	}
 }

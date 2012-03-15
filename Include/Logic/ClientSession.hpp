@@ -17,7 +17,16 @@ namespace Logic
 		ClientSession(Network::Client* client, const std::string& playerName, unsigned int playerCount, unsigned int selfID);
 		~ClientSession();
 
+		/**
+			
+		*/
 		void Update(const GameTime& gameTime);
+
+		/**
+			Send a chat message to the specified target player
+
+			If broadcast or team is used, targetID is ignored.
+		*/
 		void SendChatMessage(const std::string& message, int targetID, Network::Recipient::Recipient recipient);
 
 		unsigned int GetPlayerCount() const;

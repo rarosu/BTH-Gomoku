@@ -38,6 +38,12 @@ namespace Logic
 			Update the session
 		*/
 		void Update(const GameTime& gameTime);
+
+		/**
+			Send a chat message to the specified target player
+
+			If broadcast or team is used, targetID is ignored.
+		*/
 		void SendChatMessage(const std::string& message, int targetID, Network::Recipient::Recipient recipient);
 
 		/**
@@ -66,6 +72,7 @@ namespace Logic
 
 		PlayerSlot GetPlayerSlot(ClientSlot slot) const;
 		void HandleJoinMessage(Network::Slot clientSlot, const std::string& name);
+		void HandleChatMessage(PlayerSlot sourceID, PlayerSlot targetID, Network::Recipient::Recipient recipient, const std::string& message);
 	};
 }
 #endif
