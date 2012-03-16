@@ -35,7 +35,7 @@ namespace Logic
 		std::string GetPlayerName(unsigned int playerSlot) const;
 
 		/**
-			Update the session
+			Update the server session (listen to all clients, handle messages, listen for stay alive messages)
 		*/
 		void Update(const GameTime& gameTime);
 

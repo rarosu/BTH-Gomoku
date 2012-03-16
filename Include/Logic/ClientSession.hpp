@@ -18,7 +18,7 @@ namespace Logic
 		~ClientSession();
 
 		/**
-			
+			Update the client session (listen to server, handle messages, send stay alive messages)
 		*/
 		void Update(const GameTime& gameTime);
 
