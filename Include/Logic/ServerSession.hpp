@@ -29,10 +29,6 @@ namespace Logic
 		unsigned short GetPort() const;
 		const Ruleset* GetRuleset() const;
 
-		/**
-			Get the name of a certain player.
-		*/
-		std::string GetPlayerName(unsigned int playerSlot) const;
 
 		/**
 			Update the server session (listen to all clients, handle messages, listen for stay alive messages)

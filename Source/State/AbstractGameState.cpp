@@ -1,4 +1,5 @@
 #include "AbstractGameState.hpp"
+#include "ComSocket.hpp"
 
 namespace State
 {
@@ -13,7 +14,6 @@ namespace State
 
 	AbstractGameState::~AbstractGameState() throw()
 	{
-		SafeDelete(mScene);
 		SafeDelete(mSession);
 	}
 
@@ -28,7 +28,6 @@ namespace State
 		sRootComponentGroup->RemoveComponent(mComponents);
 		mComponents = NULL;
 
-		SafeDelete(mScene);
 		SafeDelete(mSession);
 	}
 
@@ -41,9 +40,17 @@ namespace State
 
 	void AbstractGameState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
 	{
-		mSession->Update(gameTime);
+		try
+		{
+			mSession->Update(gameTime);
+		} catch (Network::ConnectionFailure& e)
+		{
+			MessageBox(NULL, e.what(), "Error", MB_OK | MB_ICONERROR);
+			ChangeState(State::C_STATE_MENU);
+			return;
+		}
 
-		if (currInput.Keyboard.keyIsPressed[VK_RETURN] && !prevInput.Keyboard.keyIsPressed[VK_RETURN])
+		if (currInput.Keyboard.keyIsPressed[VK_TAB] && !prevInput.Keyboard.keyIsPressed[VK_TAB])
 		{
 			if (!mChat->IsVisible())
 			{
@@ -52,11 +59,8 @@ namespace State
 			}
 			else
 			{
-				if (mChat->GetInputFieldContent() == "")
-				{
-					mChat->SetVisible(false);
-					mScene->SetFocus();
-				}
+				mChat->SetVisible(false);
+				mScene->SetFocus();
 			}
 		}
 
@@ -71,6 +75,21 @@ namespace State
 	void AbstractGameState::SetSession(Logic::Session* session)
 	{
 		mSession = session;
+		mSession->SetChatReceiver(this);
+	}
+
+	void AbstractGameState::ConsoleInputEntered(const Components::Console* consoleInstance, const std::string& message)
+	{
+		mSession->SendChatMessage(message, -1, Network::Recipient::Broadcast);
+	}
+
+	void AbstractGameState::ReceiveChatMessage(const std::string& message, unsigned int sourceID)
+	{
+		std::string finalMessage = mSession->GetPlayerName(sourceID) + ": " + message; 
+		
+		mChat->AddLine(finalMessage);
+		mChat->SetVisible(true);
+		mChat->SetFocus();
 	}
 
 	void AbstractGameState::CreateComponents()
@@ -87,6 +106,8 @@ namespace State
 		r.bottom = sViewport->GetHeight();
 		r.top = r.bottom - C_CHAT_HEIGHT;
 		mChat = new Components::Console(mDevice, mComponents, r, D3DXCOLOR(0.6, 0.6, 0.6, 1.0f));
+		mChat->SetInputReceiver(this);
+		mChat->SetVisible(false);
 
 		mScene->SetFocus();
 		mComponents->SetFocus();

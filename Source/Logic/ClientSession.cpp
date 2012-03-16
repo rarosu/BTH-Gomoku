@@ -152,16 +152,4 @@ namespace Logic
 	{
 		mClient->Send(Network::ChatMessage(mSelfID, targetID, recipient, message));
 	}
-
-	unsigned int ClientSession::GetPlayerCount() const
-	{
-		return mPlayers.size();
-	}
-
-	std::string ClientSession::GetPlayerName(Network::Slot slot) const
-	{
-		if (mPlayers[slot] == NULL)
-			return "";
-		return mPlayers[slot]->GetName();
-	}
 }

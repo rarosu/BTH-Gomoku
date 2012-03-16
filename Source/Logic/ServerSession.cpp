@@ -41,13 +41,6 @@ namespace Logic
 		return mRuleset;
 	}
 
-	std::string ServerSession::GetPlayerName(unsigned int playerSlot) const
-	{
-		if (mPlayers[playerSlot] == NULL)
-			return "";
-		return mPlayers[playerSlot]->GetName();
-	}
-
 	void ServerSession::Update(const GameTime& gameTime)
 	{
 		// Update the server
@@ -116,7 +109,7 @@ namespace Logic
 			it->second -= dt;
 			if (it->second <= 0.0f && mServer->IsConnected(it->first))
 			{
-				mServer->DisconnectClient(it->first);
+				//mServer->DisconnectClient(it->first);
 			}
 		}
 	}

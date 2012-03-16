@@ -252,7 +252,7 @@ namespace Network
 					case WSAECONNRESET:
 						throw ConnectionFailure("Connection reset by peer");
 					case WSAECONNABORTED:
-						throw ConnectionFailure("Connection aborted. Check your firewall options.");
+						throw ConnectionFailure("Connection aborted");
 					default:
 						throw std::runtime_error(s.str());
 					}

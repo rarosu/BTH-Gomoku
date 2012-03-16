@@ -9,7 +9,7 @@
 
 namespace State
 {
-	class AbstractGameState : public ApplicationState
+	class AbstractGameState : public ApplicationState, public Logic::ChatReceiver, public Components::ConsoleInputReceiver
 	{
 	public:
 		AbstractGameState(StateID id, ID3D10Device* device);
@@ -22,6 +22,9 @@ namespace State
 
 		void Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime);
 		void Draw();
+
+		void ConsoleInputEntered(const Components::Console* consoleInstance, const std::string& message);
+		void ReceiveChatMessage(const std::string& message, unsigned int sourceID);
 	protected:
 		void SetSession(Logic::Session* session);
 	private:

@@ -36,7 +36,7 @@ namespace State
 		r.top = 50;
 		r.bottom = r.top + C_LABEL_HEIGHT;
 
-		for (unsigned int i = 0; i < mSession->GetPlayerCount(); ++i)
+		for (unsigned int i = 0; i < mSession->GetSlotCount(); ++i)
 		{
 			mPlayerLabels.push_back(new Components::Label(mDevice, mComponents, "1.", r, GameFont::Left));
 
@@ -89,7 +89,7 @@ namespace State
 		
 
 		// Update the player labels
-		for (unsigned int i = 0; i < mSession->GetPlayerCount(); ++i)
+		for (unsigned int i = 0; i < mSession->GetSlotCount(); ++i)
 		{
 			std::stringstream s;
 			s << (i + 1) << ". " << mSession->GetPlayerName(i);
@@ -146,9 +146,9 @@ namespace State
 
 	void ClientLobbyState::GameStarted()
 	{
-		mClientGameState->SetClientSession(mSession);
-		ChangeState(C_STATE_CLIENT_GAME);
 		mSession->SetChatReceiver(NULL);
 		mSession->SetClientNotifiee(NULL);
+		mClientGameState->SetClientSession(mSession);
+		ChangeState(C_STATE_CLIENT_GAME);
 	}
 }

@@ -41,8 +41,6 @@ namespace Logic
 		*/
 		void SendChatMessage(const std::string& message, int targetID, Network::Recipient::Recipient recipient);
 
-		unsigned int GetPlayerCount() const;
-		std::string GetPlayerName(Network::Slot slot) const;
 	private:
 		static const float C_KEEP_ALIVE_DELAY;
 

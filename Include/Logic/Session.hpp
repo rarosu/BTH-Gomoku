@@ -31,6 +31,7 @@ namespace Logic
 
 		unsigned int GetPlayerCount() const;
 		unsigned int GetSlotCount() const;
+		std::string GetPlayerName(unsigned int index) const;
 
 		/**
 			Set/Get the current chat receiver (which will have chat messages

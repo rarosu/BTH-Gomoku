@@ -38,10 +38,20 @@ namespace Logic
 		return mPlayers.size();
 	}
 
+	std::string Session::GetPlayerName(unsigned int index) const
+	{
+		std::string result;
+		if (mPlayers[index] != NULL)
+			result = mPlayers[index]->GetName();
+
+		return result;
+	}
+
 	const Grid& Session::GetGrid() const
 	{
 		return mGrid;
 	}
+
 
 	void Session::SetChatReceiver(ChatReceiver* receiver)
 	{
