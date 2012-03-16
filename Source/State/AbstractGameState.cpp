@@ -48,12 +48,14 @@ namespace State
 			if (!mChat->IsVisible())
 			{
 				mChat->SetVisible(true);
+				mChat->SetFocus();
 			}
 			else
 			{
 				if (mChat->GetInputFieldContent() == "")
 				{
 					mChat->SetVisible(false);
+					mScene->SetFocus();
 				}
 			}
 		}
