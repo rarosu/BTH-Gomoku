@@ -158,6 +158,11 @@ namespace Components
 			mFirstShowRow = mOutput.size() - mMaxNumRows;
 	}
 
+	std::string Console::GetInputFieldContent() const
+	{
+		return mInputField->GetText();
+	}
+
 	void Console::SetTextColor(D3DXCOLOR newColor)
 	{
 		mTextColor = newColor;

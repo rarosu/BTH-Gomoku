@@ -5,7 +5,8 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth,
 	mCurrentState(NULL),
 	mNextState(NULL),
 	mMenuState(NULL),
-	mInGameState(NULL),
+	mServerGameState(NULL),
+	mClientGameState(NULL),
 	mCreateGameState(NULL),
 	mJoinGameState(NULL),
 	mDefaultFont(NULL),
@@ -27,11 +28,12 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth,
 
 	// Create the states
 	mMenuState = new State::MenuState(State::C_STATE_MENU, mDeviceD3D);
-	mServerLobbyState = new State::ServerLobbyState(State::C_STATE_SERVER_LOBBY, mDeviceD3D);
-	mClientLobbyState = new State::ClientLobbyState(State::C_STATE_CLIENT_LOBBY, mDeviceD3D);
+	mServerGameState = new State::ServerGameState(State::C_STATE_SERVER_GAME, mDeviceD3D);
+	mClientGameState = new State::ClientGameState(State::C_STATE_CLIENT_GAME, mDeviceD3D);
+	mServerLobbyState = new State::ServerLobbyState(State::C_STATE_SERVER_LOBBY, mDeviceD3D, mServerGameState);
+	mClientLobbyState = new State::ClientLobbyState(State::C_STATE_CLIENT_LOBBY, mDeviceD3D, mClientGameState);
 	mCreateGameState = new State::CreateGameState(State::C_STATE_CREATE_GAME, mDeviceD3D, mServerLobbyState);
 	mJoinGameState = new State::JoinGameState(State::C_STATE_JOIN_GAME, mDeviceD3D, mClientLobbyState);
-	mInGameState = new State::InGameState(State::C_STATE_IN_GAME, mDeviceD3D);
 
 	// Set the starting state
 	mCurrentState = mMenuState;
@@ -52,7 +54,8 @@ Game::~Game()
 	SafeDelete(mCreateGameState);
 	SafeDelete(mJoinGameState);
 	SafeDelete(mServerLobbyState);
-	SafeDelete(mInGameState);
+	SafeDelete(mServerGameState);
+	SafeDelete(mClientGameState);
 
 	SafeDelete(mRootComponentGroup);
 }

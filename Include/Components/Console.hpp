@@ -54,6 +54,11 @@ namespace Components
 
 		// Add a line to the console, but do not notify the input receivers.
 		void AddLine(const std::string& input);
+
+		/**
+			Get the written contents in the input field
+		*/
+		std::string GetInputFieldContent() const;
 	private:
 		struct TextLine
 		{

@@ -11,11 +11,23 @@
 
 namespace Logic
 {
+	class ClientNotificationInterface
+	{
+	public:
+		virtual void GameStarted() = 0;
+	};
+
 	class ClientSession : public Session
 	{
 	public:
 		ClientSession(Network::Client* client, const std::string& playerName, unsigned int playerCount, unsigned int selfID);
 		~ClientSession();
+
+		/**
+			Set the listener for client events
+		*/
+		void SetClientNotifiee(ClientNotificationInterface* notifiee);
+		const ClientNotificationInterface* GetNotifiee() const;
 
 		/**
 			Update the client session (listen to server, handle messages, send stay alive messages)
@@ -33,6 +45,8 @@ namespace Logic
 		std::string GetPlayerName(Network::Slot slot) const;
 	private:
 		static const float C_KEEP_ALIVE_DELAY;
+
+		ClientNotificationInterface* mNotifiee;
 
 		Network::Client* mClient;
 		unsigned int mSelfID;

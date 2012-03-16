@@ -29,12 +29,20 @@ namespace Logic
 		Session(unsigned int playerCount);
 		virtual ~Session() throw();
 
+		unsigned int GetPlayerCount() const;
+		unsigned int GetSlotCount() const;
+
 		/**
 			Set/Get the current chat receiver (which will have chat messages
 			sent over network echoed to it)
 		*/
 		void SetChatReceiver(ChatReceiver* receiver);
 		ChatReceiver* GetChatReceiver();
+
+		/**
+			Get the current state of the grid
+		*/
+		const Grid& GetGrid() const;
 
 		/**
 			Update the logic in this session

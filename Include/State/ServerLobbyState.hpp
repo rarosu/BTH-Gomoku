@@ -5,6 +5,7 @@
 #include "Console.hpp"
 #include "TextButton.hpp"
 #include "Label.hpp"
+#include "ServerGameState.hpp"
 #include "Sprite.hpp"
 #include "ServerSession.hpp"
 #include "Server.hpp"
@@ -14,7 +15,7 @@ namespace State
 	class ServerLobbyState : public ApplicationState, public Logic::ChatReceiver, public Components::ConsoleInputReceiver
 	{
 	public:
-		ServerLobbyState(StateID id, ID3D10Device* device);
+		ServerLobbyState(StateID id, ID3D10Device* device, State::ServerGameState* serverGameState);
 		~ServerLobbyState() throw();
 
 		void Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime);
@@ -44,6 +45,8 @@ namespace State
 		Components::Console*					mChat;
 
 		Logic::ServerSession*					mSession;
+
+		State::ServerGameState*					mServerGameState;
 
 		void CreateComponents();
 	};

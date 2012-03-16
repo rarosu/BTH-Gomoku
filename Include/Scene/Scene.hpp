@@ -72,18 +72,13 @@ private:
 	Effect*						mEffect;
 	VertexBuffer*				mVertexBuffer;
 	ID3D10ShaderResourceView*	mCellTexture;
-	GameFont*					mFont;
 
 	Frustum						mFrustum;
 	Camera*						mCamera;
+	std::vector<Marker>			mMarkers;
+	Logic::Cell					mHoveredCell;
 
 	D3DXMATRIX					mModelMatrix;
-	Logic::Grid					mGrid;
-	Logic::Cell					mHoveredCell;
-	Marker*						mMarker[2];
-	Logic::PlayerID				mCurrentPlayer;
-
-	std::string					mOutputText;
 
 	/**
 		Methods for creating the buffer- and effect objects, for rendering.

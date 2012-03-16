@@ -22,6 +22,27 @@ namespace Logic
 		}
 	}
 
+	unsigned int Session::GetPlayerCount() const
+	{
+		int count = 0;
+		
+		for (int i = 0; i < mPlayers.size(); ++i)
+			if (mPlayers[i] != NULL)
+				++count;
+
+		return count;
+	}
+
+	unsigned int Session::GetSlotCount() const
+	{
+		return mPlayers.size();
+	}
+
+	const Grid& Session::GetGrid() const
+	{
+		return mGrid;
+	}
+
 	void Session::SetChatReceiver(ChatReceiver* receiver)
 	{
 		mChatReceiver = receiver;

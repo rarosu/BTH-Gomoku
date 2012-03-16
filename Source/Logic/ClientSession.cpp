@@ -8,6 +8,7 @@ namespace Logic
 
 	ClientSession::ClientSession(Network::Client* client, const std::string& playerName, unsigned int playerCount, unsigned int selfID)
 		: Session(playerCount)
+		, mNotifiee(NULL)
 		, mClient(client)
 		, mSelfID(selfID)
 		, mKeepAliveCounter(0.0f)
@@ -18,6 +19,16 @@ namespace Logic
 	ClientSession::~ClientSession()
 	{
 		SafeDelete(mClient);
+	}
+
+	void ClientSession::SetClientNotifiee(ClientNotificationInterface* notifiee)
+	{
+		mNotifiee = notifiee;
+	}
+
+	const ClientNotificationInterface* ClientSession::GetNotifiee() const
+	{
+		return mNotifiee;
 	}
 
 	void ClientSession::Update(const GameTime& gameTime)
@@ -119,6 +130,9 @@ namespace Logic
 				case Network::C_MESSAGE_START_GAME:
 				{
 					Network::StartGameMessage* m = static_cast<Network::StartGameMessage*>(mClient->PopMessage(i));
+
+					if (mNotifiee)
+						mNotifiee->GameStarted();
 
 					SafeDelete(m);
 				} break;

@@ -5,9 +5,9 @@
 
 namespace State
 {
-	ClientLobbyState::ClientLobbyState(StateID id, ID3D10Device* device)
+	ClientLobbyState::ClientLobbyState(StateID id, ID3D10Device* device, State::ClientGameState* clientGameState)
 		: ApplicationState(id),
-		  mDevice(device), mComponents(NULL), mBackground(NULL), mSession(NULL)
+		  mDevice(device), mComponents(NULL), mBackground(NULL), mSession(NULL), mClientGameState(clientGameState)
 	{
 		mBackground = new Sprite(mDevice, sViewport, "marbleBG1422x800.png", sViewport->GetWidth(), sViewport->GetHeight());
 	}
@@ -126,6 +126,7 @@ namespace State
 
 		mSession = new Logic::ClientSession(client, name, playerCount, selfID);
 		mSession->SetChatReceiver(this);
+		mSession->SetClientNotifiee(this);
 	}
 	
 	void ClientLobbyState::ConsoleInputEntered(const Components::Console* consoleInstance, const std::string& message)
@@ -141,5 +142,13 @@ namespace State
 		std::string entry = mSession->GetPlayerName(sourceID) + ": " + message;
 
 		mChat->AddLine(entry);
+	}
+
+	void ClientLobbyState::GameStarted()
+	{
+		mClientGameState->SetClientSession(mSession);
+		ChangeState(C_STATE_CLIENT_GAME);
+		mSession->SetChatReceiver(NULL);
+		mSession->SetClientNotifiee(NULL);
 	}
 }

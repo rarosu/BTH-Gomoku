@@ -126,6 +126,11 @@ namespace Logic
 		mServer->Send(Network::ChatMessage(0, targetID, recipient, message));
 	}
 
+	void ServerSession::SendStartMessage()
+	{
+		mServer->Send(Network::StartGameMessage());
+	}
+
 	void ServerSession::ClientConnected(Network::Slot slot)
 	{
 		mClientTimeout[slot] = C_TIMEOUT;

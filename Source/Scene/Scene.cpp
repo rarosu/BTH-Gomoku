@@ -12,21 +12,23 @@ Scene::Scene(ID3D10Device* device, Components::ComponentGroup* ownerGroup, float
 	  mVertexBuffer(NULL),
 	  mEffect(NULL),
 	  mCellTexture(NULL),
-	  mFont(NULL),
-	  mCamera(NULL),
-	  mCurrentPlayer(1)
+	  mCamera(NULL)
 {
+	// Create vertex buffer and compile effect
 	CreateBuffer();
 	CreateEffect();
 
+	// Load resources
 	if (FAILED(D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/cell.png", NULL, NULL, &mCellTexture, NULL)))
-		throw std::runtime_error("Failed to load texture: cell.png");
+		throw std::ios::failure("Failed to load texture: cell.png");
 
+	// Set effect constants
 	mEffect->SetVariable("gWidth", C_CELL_SIZE);
 	mEffect->SetVariable("gInterval", C_BORDER_SIZE * 0.5f);
 	mEffect->SetVariable("gGridColor", D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
 	mEffect->SetVariable("gCellTexture", mCellTexture);
 
+	// Setup model matrix
 	D3DXVECTOR2 translation;
 	translation.x = -C_GRID_WIDTH * C_CELL_SIZE * 0.5f;
 	translation.y = -C_GRID_HEIGHT * C_CELL_SIZE * 0.5f;
@@ -35,16 +37,15 @@ Scene::Scene(ID3D10Device* device, Components::ComponentGroup* ownerGroup, float
 
 	D3DXMatrixTranslation(&mModelMatrix, translation.x, 0.0f, translation.y);
 
+	// Setup camera
 	mFrustum.nearDistance = 1.0f;
 	mFrustum.farDistance = 1000.0f;
 	mFrustum.fovY = D3DX_PI * 0.25f;
 	mFrustum.aspectRatio = aspectRatio;
 
-	mFont = new GameFont(mDevice, "Courier New", 24, false, false);
 	mCamera = new Camera(D3DXVECTOR3(0.0f, 10.0f, 0.0f), D3DXVECTOR3(1.0f, -1.0f, 1.0f), D3DXVECTOR3(0.0f, 1.0f, 0.0f), mFrustum);
-	mMarker[0] = new Marker(mDevice, C_CELL_SIZE, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-	mMarker[1] = new Marker(mDevice, C_CELL_SIZE, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
-
+	
+	// TODO: Setup markers
 }
 
 Scene::~Scene() throw()
@@ -52,10 +53,7 @@ Scene::~Scene() throw()
 	SafeDelete(mVertexBuffer);
 	SafeDelete(mEffect);
 	SafeRelease(mCellTexture);
-	SafeDelete(mFont);
 	SafeDelete(mCamera);
-	SafeDelete(mMarker[0]);
-	SafeDelete(mMarker[1]);
 }
 
 void Scene::CreateBuffer()
@@ -96,11 +94,11 @@ void Scene::CreateBuffer()
 	mVertexBuffer = new VertexBuffer(mDevice);
 
 	VertexBuffer::Data bufferDesc;
-	bufferDesc.mUsage =					Usage::Default;
-	bufferDesc.mTopology =				Topology::TriangleList;
-	bufferDesc.mElementCount =			C_VERTEX_COUNT;
-	bufferDesc.mElementSize	=			sizeof(GridVertex);
-	bufferDesc.mFirstElementPointer	=	vertices;
+	bufferDesc.mUsage				= Usage::Default;
+	bufferDesc.mTopology			= Topology::TriangleList;
+	bufferDesc.mElementCount		= C_VERTEX_COUNT;
+	bufferDesc.mElementSize			= sizeof(GridVertex);
+	bufferDesc.mFirstElementPointer	= vertices;
 	
 	mVertexBuffer->SetData(bufferDesc, NULL);
 
@@ -147,12 +145,6 @@ void Scene::Update(const Logic::Grid& grid, const Viewport& viewport, const Inpu
 	if(!HasFocus())
 		return;
 
-	if (currentInput.Mouse.buttonIsPressed[C_MOUSE_LEFT] && !previousInput.Mouse.buttonIsPressed[C_MOUSE_LEFT])
-	{
-		mGrid.AddMarker(mHoveredCell, mCurrentPlayer);
-		mCurrentPlayer = (mCurrentPlayer == 1) ? 2 : 1;
-	}
-
 	HandleKeyPress(currentInput, gameTime);
 }
 
@@ -166,9 +158,6 @@ void Scene::Draw()
 	float up = mHoveredCell.y * C_CELL_SIZE + c;
 	float right = mHoveredCell.x * C_CELL_SIZE + c;
 	float down = mHoveredCell.y * C_CELL_SIZE - c;
-
-	//mFile << "(" << mHoveredCell.x << ", " << mHoveredCell.y << ")" << std::endl;
-	//mFile << "(" << left << ", " << right << ") (" << down << ", " << up << ")" << std::endl;
 
 	mEffect->SetVariable("gLeft", left);
 	mEffect->SetVariable("gUp", up);
@@ -186,25 +175,6 @@ void Scene::Draw()
 		mEffect->GetTechniqueByIndex(0).GetPassByIndex(p).Apply(mDevice);
 		mVertexBuffer->Draw();
 	}
-
-	int count = 0;
-	for (Logic::Grid::MarkerMap::const_iterator it = mGrid.GetMarkerMapStart(); 
-		 it != mGrid.GetMarkerMapEnd(); 
-		 it++)
-	{
-		mMarker[it->second - 1]->Draw(*mCamera, D3DXVECTOR3(it->first.x * C_CELL_SIZE, 1.0f, it->first.y * C_CELL_SIZE));
-		count++;
-	}
-
-	std::stringstream s;
-	s << "Marker count: " << count << std::endl;
-	s << "Longest Row Count: " << mGrid.GetLeadingRow().size() << std::endl;
-	s << "Leading Player: " << mGrid.GetLeadingPlayer() << std::endl;
-	mOutputText += s.str();
-
-	mFont->WriteText(mOutputText, POINT(), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-
-	mOutputText = "";
 }
 
 void Scene::LostFocus()

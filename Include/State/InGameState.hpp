@@ -26,7 +26,6 @@ namespace State
 	private:
 		ID3D10Device*					mDevice;
 
-		Logic::Grid*					mGrid;
 		Scene*							mScene;
 
 		Components::ComponentGroup*		mComponents;

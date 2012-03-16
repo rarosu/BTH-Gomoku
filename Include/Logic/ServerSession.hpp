@@ -47,6 +47,11 @@ namespace Logic
 		void SendChatMessage(const std::string& message, int targetID, Network::Recipient::Recipient recipient);
 
 		/**
+			Send start game message
+		*/
+		void SendStartMessage();
+
+		/**
 			Implemented from ServerEventInterface
 		*/
 		void ClientConnected(Network::Slot slot);

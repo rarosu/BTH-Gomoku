@@ -3,7 +3,7 @@
 
 namespace State
 {
-	ServerLobbyState::ServerLobbyState(StateID id, ID3D10Device* device)
+	ServerLobbyState::ServerLobbyState(StateID id, ID3D10Device* device, State::ServerGameState* serverGameState)
 		: ApplicationState(id),
 		  mDevice(device), 
 		  mBackground(NULL),
@@ -11,7 +11,8 @@ namespace State
 		  mStartButton(NULL),
 		  mCancelButton(NULL),
 		  mChat(NULL),
-		  mSession(NULL)
+		  mSession(NULL),
+		  mServerGameState(serverGameState)
 	{
 		mBackground = new Sprite(mDevice, sViewport, "marbleBG1422x800.png", sViewport->GetWidth(), sViewport->GetHeight());
 	}
@@ -90,6 +91,21 @@ namespace State
 			s << (i + 1) << ". " << mSession->GetPlayerName(i);
 
 			mPlayerLabels[i]->SetCaption(s.str());
+		}
+
+		if (mSession->GetPlayerCount() < mSession->GetSlotCount())
+			mStartButton->SetEnabled(false);
+		else
+			mStartButton->SetEnabled(true);
+
+
+		// Check if we can start the game
+		if (mStartButton->GetAndResetClickStatus())
+		{
+			// Start the game!
+			mServerGameState->SetServerSession(mSession);
+			mSession->SendStartMessage();
+			ChangeState(C_STATE_SERVER_GAME);
 		}
 	}
 
