@@ -31,6 +31,11 @@ namespace Logic
 		SafeDelete(mRuleset);
 	}
 
+	bool ServerSession::IsLocalPlayerTurn() const
+	{
+		return mPlayerClients.find(mCurrentPlayer)->second == C_STATUS_LOCAL;
+	}
+
 	unsigned short ServerSession::GetPort() const
 	{
 		return mServer->GetPort();
@@ -86,6 +91,18 @@ namespace Logic
 				case Network::C_MESSAGE_PLACE_PIECE:
 				{
 					Network::PlacePieceMessage* m = static_cast<Network::PlacePieceMessage*>(message.mMessage);
+
+					if (mGrid.GetMarkerInCell(m->mX, m->mY) != C_PLAYER_NONE)
+					{
+						if (mCurrentPlayer == m->mPlayerID)
+						{
+							mGrid.AddMarker(Logic::Cell(m->mX, m->mY), m->mPlayerID);
+							mServer->Send(Network::PlacePieceMessage(m->mPlayerID, m->mX, m->mY, -1));
+
+							mCurrentPlayer = mRuleset->GetNextPlayer(mCurrentPlayer);
+							mServer->Send(Network::TurnMessage(mCurrentPlayer));
+						}
+					}
 				} break;
 
 				case Network::C_MESSAGE_SET_MARKER:
@@ -119,9 +136,21 @@ namespace Logic
 		mServer->Send(Network::ChatMessage(0, targetID, recipient, message));
 	}
 
+	void ServerSession::SendPlacePieceMessage(const Logic::Cell& cell)
+	{
+		if (mGrid.GetMarkerInCell(cell) != C_PLAYER_NONE)
+		{
+			mGrid.AddMarker(cell, mCurrentPlayer);
+			mServer->Send(Network::PlacePieceMessage(mCurrentPlayer, cell.x, cell.y, -1));
+		}
+	}
+
 	void ServerSession::SendStartMessage()
 	{
+		mCurrentPlayer = mRuleset->GetStartingPlayer();
+
 		mServer->Send(Network::StartGameMessage());
+		mServer->Send(Network::TurnMessage(mCurrentPlayer));
 	}
 
 	void ServerSession::ClientConnected(Network::Slot slot)

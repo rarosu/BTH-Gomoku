@@ -20,7 +20,7 @@
 class Scene : public Components::Component
 {
 public:
-	Scene(ID3D10Device* device, Components::ComponentGroup* ownerGroup, float aspectRatio);
+	Scene(ID3D10Device* device, Components::ComponentGroup* ownerGroup, float aspectRatio, const Logic::Grid* grid, unsigned int playerCount);
 	~Scene() throw();
 
 	void HandleKeyPress(const InputState& currentInput, const GameTime& gameTime);
@@ -38,8 +38,7 @@ public:
 	/**
 		Create a texture of the grid from the model
 	*/
-	void Update(const Logic::Grid& grid, const Viewport& viewport, const InputState& currentInput, 
-				const InputState& previousInput, const GameTime& gameTime);
+	void Update(const Logic::Grid& grid, const InputState& currentInput, const InputState& previousInput, const GameTime& gameTime);
 
 	/**
 		When the frustum's dimensions have been resized, call this
@@ -47,6 +46,11 @@ public:
 	*/
 	void ResizeFrustum(float aspectRatio);
 
+	/**
+		Given the position of the mouse and the orientation of the camera,
+		this method will return the cell the mouse is hovering over.
+	*/
+	Logic::Cell PickCell(int mouseX, int mouseY) const;
 protected:
 	// Methods inherited from Component
 	void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState) {}
@@ -77,6 +81,7 @@ private:
 	Camera*						mCamera;
 	std::vector<Marker>			mMarkers;
 	Logic::Cell					mHoveredCell;
+	const Logic::Grid*			mGrid;
 
 	D3DXMATRIX					mModelMatrix;
 
@@ -85,12 +90,6 @@ private:
 	*/
 	void CreateBuffer();
 	void CreateEffect();
-
-	/**
-		Given the position of the mouse and the orientation of the camera,
-		this method will return the cell the mouse is hovering over.
-	*/
-	Logic::Cell PickCell(const Viewport& viewport, int mouseX, int mouseY) const;
 
 	// Methods inherited by Component
 	void MouseEntered() {}

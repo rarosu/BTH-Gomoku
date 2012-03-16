@@ -1,6 +1,7 @@
 #include "Session.hpp"
 #include "Globals.hpp"
 #include <cassert>
+#include <cstdlib>
 
 namespace Logic
 {
@@ -12,6 +13,8 @@ namespace Logic
 		{
 			mPlayers[i] = NULL;
 		}
+
+		mCurrentPlayer = rand() % mPlayers.size();
 	}
 
 	Session::~Session() throw()
@@ -36,6 +39,11 @@ namespace Logic
 	unsigned int Session::GetSlotCount() const
 	{
 		return mPlayers.size();
+	}
+
+	unsigned int Session::GetCurrentPlayer() const
+	{
+		return mCurrentPlayer;
 	}
 
 	std::string Session::GetPlayerName(unsigned int index) const

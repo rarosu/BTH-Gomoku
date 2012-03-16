@@ -27,6 +27,9 @@ namespace State
 		void ReceiveChatMessage(const std::string& message, unsigned int sourceID);
 	protected:
 		void SetSession(Logic::Session* session);
+
+		virtual void InitializeGame() {}
+		virtual void EndGame() {}
 	private:
 		ID3D10Device* mDevice;
 		Logic::Session* mSession;

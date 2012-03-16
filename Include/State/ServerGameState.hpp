@@ -17,6 +17,9 @@ namespace State
 		~ServerGameState() throw();
 
 		void SetServerSession(Logic::ServerSession* serverSession);
+	protected:
+		void InitializeGame();
+		void EndGame();
 	private:
 		ID3D10Device* mDevice;
 

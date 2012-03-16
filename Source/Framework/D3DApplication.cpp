@@ -1,4 +1,6 @@
 #include "D3DApplication.hpp"
+#include <cstdlib>
+#include <ctime>
 
 // Handle window messages
 LRESULT CALLBACK WindowProc(HWND windowHandle, UINT message, WPARAM wParam, LPARAM lParam)
@@ -24,6 +26,9 @@ D3DApplication::D3DApplication(HINSTANCE applicationInstance, LPCTSTR windowTitl
 		mDepthStencilBuffer(NULL), mDepthStencilView(NULL), mClearColor(0, 0, 0, 0), mDeviceD3D(NULL),
 		mViewport(clientWidth, clientHeight, 0.0f, 1.0f)
 {
+	// Seed the PRNG
+	srand(time(NULL));
+	 
 	// Try to create and initialize the application window, if failed - return with code 0
 	if(!InitWindowsApplication(applicationInstance, windowTitle, SW_SHOW))
 		exit(0);

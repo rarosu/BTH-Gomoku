@@ -12,6 +12,7 @@ namespace Logic
 		, mClient(client)
 		, mSelfID(selfID)
 		, mKeepAliveCounter(0.0f)
+		, mClientTurn(false)
 	{
 		mPlayers[selfID] = new Player(playerName, 0, 0);	// TODO: Get initial team/marker from Accept message
 	}
@@ -19,6 +20,11 @@ namespace Logic
 	ClientSession::~ClientSession()
 	{
 		SafeDelete(mClient);
+	}
+
+	bool ClientSession::IsLocalPlayerTurn() const
+	{
+		return mCurrentPlayer == mSelfID;
 	}
 
 	void ClientSession::SetClientNotifiee(ClientNotificationInterface* notifiee)
@@ -110,6 +116,8 @@ namespace Logic
 				{
 					Network::PlacePieceMessage* m = static_cast<Network::PlacePieceMessage*>(mClient->PopMessage(i));
 
+					mGrid.AddMarker(Logic::Cell(m->mX, m->mY), m->mPlayerID);
+
 					SafeDelete(m);
 				} break;
 
@@ -117,12 +125,17 @@ namespace Logic
 				{
 					Network::RemovePieceMessage* m = static_cast<Network::RemovePieceMessage*>(mClient->PopMessage(i));
 
+					mGrid.RemoveMarker(Logic::Cell(m->mX, m->mY));
+
 					SafeDelete(m);
 				} break;
 
 				case Network::C_MESSAGE_TURN:
 				{
 					Network::TurnMessage* m = static_cast<Network::TurnMessage*>(mClient->PopMessage(i));
+
+					if (m->mPlayerID == mSelfID)
+						mClientTurn = true;
 
 					SafeDelete(m);
 				} break;
@@ -151,5 +164,12 @@ namespace Logic
 	void ClientSession::SendChatMessage(const std::string& message, int targetID, Network::Recipient::Recipient recipient)
 	{
 		mClient->Send(Network::ChatMessage(mSelfID, targetID, recipient, message));
+	}
+
+	void ClientSession::SendPlacePieceMessage(const Logic::Cell& cell)
+	{
+		if (mGrid.GetMarkerInCell(cell) != C_PLAYER_NONE)
+			mClient->Send(Network::PlacePieceMessage(mSelfID, cell.x, cell.y, -1));
+		mClientTurn = false;
 	}
 }

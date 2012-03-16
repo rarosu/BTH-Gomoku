@@ -19,4 +19,14 @@ namespace State
 		mServerSession = serverSession;
 		SetSession(mServerSession);
 	}
+
+	void ServerGameState::InitializeGame()
+	{
+		mServerSession->SendStartMessage();
+	}
+
+	void ServerGameState::EndGame()
+	{
+
+	}
 }

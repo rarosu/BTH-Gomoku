@@ -31,7 +31,13 @@ namespace Logic
 
 		unsigned int GetPlayerCount() const;
 		unsigned int GetSlotCount() const;
+		unsigned int GetCurrentPlayer() const;
 		std::string GetPlayerName(unsigned int index) const;
+
+		/**
+			Check whether it is a local player's turn
+		*/
+		virtual bool IsLocalPlayerTurn() const = 0;
 
 		/**
 			Set/Get the current chat receiver (which will have chat messages
@@ -56,10 +62,16 @@ namespace Logic
 			If broadcast or team is used, targetID is ignored.
 		*/
 		virtual void SendChatMessage(const std::string& message, int targetID, Network::Recipient::Recipient recipient) = 0;
+
+		/**
+			Place a piece
+		*/
+		virtual void SendPlacePieceMessage(const Logic::Cell& cell) = 0;
 	protected:
 		ChatReceiver* mChatReceiver;
 		Grid mGrid;
 		std::vector<Player*> mPlayers;
+		unsigned int mCurrentPlayer;
 	};
 }
 

@@ -104,7 +104,6 @@ namespace State
 		{
 			// Start the game!
 			mServerGameState->SetServerSession(mSession);
-			mSession->SendStartMessage();
 			ChangeState(C_STATE_SERVER_GAME);
 		}
 	}

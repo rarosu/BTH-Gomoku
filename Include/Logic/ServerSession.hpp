@@ -23,6 +23,8 @@ namespace Logic
 		ServerSession(Network::Server* server, const std::string& adminName, Ruleset* ruleset);
 		~ServerSession() throw();
 
+		bool IsLocalPlayerTurn() const;
+
 		/**
 			Getters
 		*/
@@ -41,6 +43,8 @@ namespace Logic
 			If broadcast or team is used, targetID is ignored.
 		*/
 		void SendChatMessage(const std::string& message, int targetID, Network::Recipient::Recipient recipient);
+
+		void SendPlacePieceMessage(const Logic::Cell& cell);
 
 		/**
 			Send start game message

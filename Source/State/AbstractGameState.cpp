@@ -21,10 +21,14 @@ namespace State
 	void AbstractGameState::OnStatePushed()
 	{
 		CreateComponents();
+
+		InitializeGame();
 	}
 
 	void AbstractGameState::OnStatePopped()
 	{
+		EndGame();		
+
 		sRootComponentGroup->RemoveComponent(mComponents);
 		mComponents = NULL;
 
@@ -64,7 +68,16 @@ namespace State
 			}
 		}
 
-		mScene->Update(mSession->GetGrid(), *sViewport, currInput, prevInput, gameTime);
+		mScene->Update(mSession->GetGrid(), currInput, prevInput, gameTime);
+
+		if (mSession->IsLocalPlayerTurn())
+		{
+			if (currInput.Mouse.buttonIsPressed[C_MOUSE_LEFT] && !prevInput.Mouse.buttonIsPressed[C_MOUSE_LEFT])
+			{
+				Logic::Cell cell = mScene->PickCell(currInput.Mouse.x, currInput.Mouse.y);
+				mSession->SendPlacePieceMessage(cell);
+			}
+		}
 	}
 
 	void AbstractGameState::Draw()
@@ -99,7 +112,7 @@ namespace State
 		RECT r = { 0, 0, 0, 0 };
 
 		mComponents = new Components::ComponentGroup(sRootComponentGroup, "InGameState Group", r);
-		mScene = new Scene(mDevice, mComponents, GetAspectRatio());
+		mScene = new Scene(mDevice, mComponents, GetAspectRatio(), &mSession->GetGrid(), mSession->GetSlotCount());
 
 		r.left = 0;
 		r.right = sViewport->GetWidth();

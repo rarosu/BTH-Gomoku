@@ -6,13 +6,14 @@ const int Scene::C_GRID_HEIGHT = 64;
 const int Scene::C_CELL_SIZE = 32;
 const float Scene::C_BORDER_SIZE = 0.2f;
 
-Scene::Scene(ID3D10Device* device, Components::ComponentGroup* ownerGroup, float aspectRatio) 
+Scene::Scene(ID3D10Device* device, Components::ComponentGroup* ownerGroup, float aspectRatio, const Logic::Grid* grid, unsigned int playerCount) 
 	: Component(ownerGroup, RECT()),
 	  mDevice(device),
 	  mVertexBuffer(NULL),
 	  mEffect(NULL),
 	  mCellTexture(NULL),
-	  mCamera(NULL)
+	  mCamera(NULL),
+	  mGrid(grid)
 {
 	// Create vertex buffer and compile effect
 	CreateBuffer();
@@ -45,7 +46,11 @@ Scene::Scene(ID3D10Device* device, Components::ComponentGroup* ownerGroup, float
 
 	mCamera = new Camera(D3DXVECTOR3(0.0f, 10.0f, 0.0f), D3DXVECTOR3(1.0f, -1.0f, 1.0f), D3DXVECTOR3(0.0f, 1.0f, 0.0f), mFrustum);
 	
-	// TODO: Setup markers
+	// TODO: Setup markers PROPERLY
+	for (unsigned int i = 0; i < playerCount; ++i)
+	{
+		mMarkers.push_back(Marker(mDevice, C_CELL_SIZE * 0.5f, D3DXCOLOR(0.05 * i, 0.1 * i, 0.2 * i, 1.0f)));
+	}
 }
 
 Scene::~Scene() throw()
@@ -135,12 +140,12 @@ void Scene::HandleKeyPress(const InputState& currentInput, const GameTime& gameT
 		mCamera->TurnHorizontal(gameTime, false);
 }
 
-void Scene::Update(const Logic::Grid& grid, const Viewport& viewport, const InputState& currentInput, const InputState& previousInput, const GameTime& gameTime)
+void Scene::Update(const Logic::Grid& grid, const InputState& currentInput, const InputState& previousInput, const GameTime& gameTime)
 {
 	mCamera->Update(previousInput, currentInput, gameTime);
 
 	// Pick cell
-	mHoveredCell = PickCell(viewport, currentInput.Mouse.x, currentInput.Mouse.y);
+	mHoveredCell = PickCell(currentInput.Mouse.x, currentInput.Mouse.y);
 
 	if(!HasFocus())
 		return;
@@ -168,12 +173,18 @@ void Scene::Draw()
 	mEffect->SetVariable("gMVP", modelViewProjection);
 	mEffect->SetVariable("gMarkedCell", D3DXVECTOR2(mHoveredCell.x, mHoveredCell.y));
 
-	// Render the buffer
+	// Render the grid
 	mVertexBuffer->Bind();
 	for(UINT p = 0; p < mEffect->GetTechniqueByIndex(0).GetPassCount(); ++p)
 	{
 		mEffect->GetTechniqueByIndex(0).GetPassByIndex(p).Apply(mDevice);
 		mVertexBuffer->Draw();
+	}
+
+	// Render the markers
+	for (Logic::Grid::MarkerMap::const_iterator it = mGrid->GetMarkerMapStart(); it != mGrid->GetMarkerMapEnd(); it++)
+	{
+		mMarkers[it->second].Draw(*mCamera, D3DXVECTOR3(it->first.x * C_CELL_SIZE, 1.0f, it->first.y * C_CELL_SIZE));
 	}
 }
 
@@ -221,9 +232,9 @@ float FindClosestMultiple(float x, float interval)
 		return a + interval;
 }
 
-Logic::Cell Scene::PickCell(const Viewport& viewport, int mouseX, int mouseY) const
+Logic::Cell Scene::PickCell(int mouseX, int mouseY) const
 {
-	D3DXVECTOR2 screenSpaceCoordinates = viewport.TransformToViewport(D3DXVECTOR2((float)mouseX, (float)mouseY));
+	D3DXVECTOR2 screenSpaceCoordinates = sViewport->TransformToViewport(D3DXVECTOR2((float)mouseX, (float)mouseY));
 	D3DXMATRIX inverseProjection = mCamera->GetProjectionMatrix();
 	D3DXMATRIX inverseView = mCamera->GetViewMatrix();
 

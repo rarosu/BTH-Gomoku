@@ -23,6 +23,8 @@ namespace Logic
 		ClientSession(Network::Client* client, const std::string& playerName, unsigned int playerCount, unsigned int selfID);
 		~ClientSession();
 
+		bool IsLocalPlayerTurn() const;
+
 		/**
 			Set the listener for client events
 		*/
@@ -41,6 +43,7 @@ namespace Logic
 		*/
 		void SendChatMessage(const std::string& message, int targetID, Network::Recipient::Recipient recipient);
 
+		void SendPlacePieceMessage(const Logic::Cell& cell);
 	private:
 		static const float C_KEEP_ALIVE_DELAY;
 
@@ -49,6 +52,8 @@ namespace Logic
 		Network::Client* mClient;
 		unsigned int mSelfID;
 		float mKeepAliveCounter;
+
+		bool mClientTurn;
 	};
 }
 #endif
