@@ -80,8 +80,9 @@ namespace State
 
 	void AbstractLobbyState::OnStatePopped()
 	{
-		// We shouldn't have removed the session until this point
-		assert(mSession != NULL);
+		// Allow the subclass to do cleanup of its own.
+		AppendStatePopped();
+
 		mSession = NULL;
 
 		sRootComponentGroup->RemoveComponent(mComponents);

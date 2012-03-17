@@ -161,7 +161,8 @@ namespace Logic
 		mKeepAliveCounter += dt;
 		if (mKeepAliveCounter >= C_KEEP_ALIVE_DELAY)
 		{
-			mClient->Send(Network::StayAliveMessage(mSelfID));
+			// TODO: Resume sending stay alive messages
+			//mClient->Send(Network::StayAliveMessage(mSelfID));
 			mKeepAliveCounter = 0.0f;
 		}
 	}
@@ -173,8 +174,10 @@ namespace Logic
 
 	void ClientSession::SendPlacePieceMessage(const Logic::Cell& cell)
 	{
-		if (mGrid.GetMarkerInCell(cell) != C_PLAYER_NONE)
+		if (mGrid.GetMarkerInCell(cell) == C_PLAYER_NONE)
+		{
 			mClient->Send(Network::PlacePieceMessage(mSelfID, cell.x, cell.y, -1));
-		mClientTurn = false;
+			mClientTurn = false;
+		}
 	}
 }

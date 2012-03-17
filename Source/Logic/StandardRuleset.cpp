@@ -16,7 +16,8 @@ namespace Logic
 
 	unsigned int StandardRuleset::GetStartingPlayer() const
 	{
-		return rand() % GetPlayerCount();
+		//return rand() % GetPlayerCount();
+		return 0;
 	}
 
 	unsigned int StandardRuleset::GetNextPlayer(unsigned int currentPlayer) const

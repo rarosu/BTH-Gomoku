@@ -10,7 +10,7 @@ namespace Logic
 {
 	typedef int PlayerID;
 
-	const PlayerID C_PLAYER_NONE = 0;
+	const PlayerID C_PLAYER_NONE = -1;
 
 	
 	class Player

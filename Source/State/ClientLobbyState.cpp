@@ -26,6 +26,11 @@ namespace State
 		ChangeState(C_STATE_CLIENT_GAME);
 	}
 
+	void ClientLobbyState::AppendStatePopped()
+	{
+		mClientSession = NULL;
+	}
+
 	void ClientLobbyState::AppendComponents()
 	{
 		mChat->SetName(mClientSession->GetPlayerName(mClientSession->GetSelfID()));

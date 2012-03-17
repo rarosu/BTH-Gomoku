@@ -16,6 +16,7 @@ namespace State
 
 		void GameStarted();
 	protected:
+		void AppendStatePopped();
 		void AppendComponents();
 	private:
 		Logic::ClientSession*					mClientSession;

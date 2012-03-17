@@ -92,7 +92,7 @@ namespace Logic
 				{
 					Network::PlacePieceMessage* m = static_cast<Network::PlacePieceMessage*>(message.mMessage);
 
-					if (mGrid.GetMarkerInCell(m->mX, m->mY) != C_PLAYER_NONE)
+					if (mGrid.GetMarkerInCell(m->mX, m->mY) == C_PLAYER_NONE)
 					{
 						if (mCurrentPlayer == m->mPlayerID)
 						{
@@ -100,9 +100,10 @@ namespace Logic
 							mServer->Send(Network::PlacePieceMessage(m->mPlayerID, m->mX, m->mY, -1));
 
 							mCurrentPlayer = mRuleset->GetNextPlayer(mCurrentPlayer);
-							mServer->Send(Network::TurnMessage(mCurrentPlayer));
 						}
 					}
+
+					mServer->Send(Network::TurnMessage(mCurrentPlayer));
 				} break;
 
 				case Network::C_MESSAGE_SET_MARKER:
@@ -126,6 +127,7 @@ namespace Logic
 			it->second -= dt;
 			if (it->second <= 0.0f && mServer->IsConnected(it->first))
 			{
+				// TODO: Enable timeout again
 				//mServer->DisconnectClient(it->first);
 			}
 		}
@@ -138,10 +140,14 @@ namespace Logic
 
 	void ServerSession::SendPlacePieceMessage(const Logic::Cell& cell)
 	{
-		if (mGrid.GetMarkerInCell(cell) != C_PLAYER_NONE)
+		if (mGrid.GetMarkerInCell(cell) == C_PLAYER_NONE)
 		{
 			mGrid.AddMarker(cell, mCurrentPlayer);
 			mServer->Send(Network::PlacePieceMessage(mCurrentPlayer, cell.x, cell.y, -1));
+			
+			mCurrentPlayer = mRuleset->GetNextPlayer(mCurrentPlayer);
+
+			mServer->Send(Network::TurnMessage(mCurrentPlayer));
 		}
 	}
 

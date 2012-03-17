@@ -21,6 +21,11 @@ namespace State
 		SetSession(mServerSession);
 	}
 
+	void ServerLobbyState::AppendStatePopped()
+	{
+		mServerSession = NULL;
+	}
+
 	void ServerLobbyState::AppendComponents()
 	{
 		RECT r = mCancelButton->GetBoundingRect();

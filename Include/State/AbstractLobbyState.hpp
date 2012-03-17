@@ -38,6 +38,7 @@ namespace State
 
 		void SetSession(Logic::Session* session);
 
+		virtual void AppendStatePopped() {}
 		virtual void AppendComponents() {}
 		virtual void AppendUpdate() {}
 

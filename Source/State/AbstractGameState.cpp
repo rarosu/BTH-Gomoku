@@ -8,9 +8,7 @@ namespace State
 		, mDevice(device)
 		, mScene(NULL)
 		, mSession(NULL)
-	{
-
-	}
+	{}
 
 	AbstractGameState::~AbstractGameState() throw()
 	{
@@ -31,6 +29,8 @@ namespace State
 
 		sRootComponentGroup->RemoveComponent(mComponents);
 		mComponents = NULL;
+		mScene = NULL;
+		mChat = NULL;
 
 		SafeDelete(mSession);
 	}
@@ -44,16 +44,19 @@ namespace State
 
 	void AbstractGameState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
 	{
+		// Update the session
 		try
 		{
 			mSession->Update(gameTime);
-		} catch (Network::ConnectionFailure& e)
+		} 
+		catch (Network::ConnectionFailure& e)
 		{
 			MessageBox(NULL, e.what(), "Error", MB_OK | MB_ICONERROR);
 			ChangeState(State::C_STATE_MENU);
 			return;
 		}
 
+		// Toggle chat with TAB
 		if (currInput.Keyboard.keyIsPressed[VK_TAB] && !prevInput.Keyboard.keyIsPressed[VK_TAB])
 		{
 			if (!mChat->IsVisible())
@@ -68,6 +71,7 @@ namespace State
 			}
 		}
 
+		// Update the scene
 		mScene->Update(mSession->GetGrid(), currInput, prevInput, gameTime);
 
 		if (mSession->IsLocalPlayerTurn())
