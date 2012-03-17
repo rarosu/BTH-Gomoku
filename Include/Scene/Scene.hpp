@@ -54,7 +54,6 @@ public:
 protected:
 	// Methods inherited from Component
 	void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState) {}
-
 private:
 	static const int C_GRID_WIDTH;
 	static const int C_GRID_HEIGHT;
@@ -79,7 +78,7 @@ private:
 
 	Frustum						mFrustum;
 	Camera*						mCamera;
-	std::vector<Marker>			mMarkers;
+	std::vector<Marker*>		mMarkers;
 	Logic::Cell					mHoveredCell;
 	const Logic::Grid*			mGrid;
 

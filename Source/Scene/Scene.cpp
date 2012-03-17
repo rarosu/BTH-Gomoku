@@ -47,14 +47,20 @@ Scene::Scene(ID3D10Device* device, Components::ComponentGroup* ownerGroup, float
 	mCamera = new Camera(D3DXVECTOR3(0.0f, 10.0f, 0.0f), D3DXVECTOR3(1.0f, -1.0f, 1.0f), D3DXVECTOR3(0.0f, 1.0f, 0.0f), mFrustum);
 	
 	// TODO: Setup markers PROPERLY
+	// Reminder: Markers do not have a proper copy constructor, thus vector must contain pointers
 	for (unsigned int i = 0; i < playerCount; ++i)
 	{
-		mMarkers.push_back(Marker(mDevice, C_CELL_SIZE * 0.5f, D3DXCOLOR(0.05 * i, 0.1 * i, 0.2 * i, 1.0f)));
+		mMarkers.push_back(new Marker(mDevice, C_CELL_SIZE * 0.5f, D3DXCOLOR(0.05 * i, 0.1 * i, 0.2 * i, 1.0f)));
 	}
 }
 
 Scene::~Scene() throw()
 {
+	for (unsigned int i = 0; i < mMarkers.size(); ++i)
+	{
+		delete mMarkers[i];
+	}
+
 	SafeDelete(mVertexBuffer);
 	SafeDelete(mEffect);
 	SafeRelease(mCellTexture);
@@ -184,7 +190,7 @@ void Scene::Draw()
 	// Render the markers
 	for (Logic::Grid::MarkerMap::const_iterator it = mGrid->GetMarkerMapStart(); it != mGrid->GetMarkerMapEnd(); it++)
 	{
-		mMarkers[it->second].Draw(*mCamera, D3DXVECTOR3(it->first.x * C_CELL_SIZE, 1.0f, it->first.y * C_CELL_SIZE));
+		mMarkers[it->second]->Draw(*mCamera, D3DXVECTOR3(it->first.x * C_CELL_SIZE, 1.0f, it->first.y * C_CELL_SIZE));
 	}
 }
 
