@@ -76,7 +76,7 @@ namespace State
 
 		if (mSession->IsLocalPlayerTurn())
 		{
-			if (currInput.Mouse.buttonIsPressed[C_MOUSE_LEFT] && !prevInput.Mouse.buttonIsPressed[C_MOUSE_LEFT])
+			if (currInput.Mouse.buttonIsPressed[C_MOUSE_LEFT] && !prevInput.Mouse.buttonIsPressed[C_MOUSE_LEFT] && mScene->HasFocus())
 			{
 				Logic::Cell cell = mScene->PickCell(currInput.Mouse.x, currInput.Mouse.y);
 				mSession->SendPlacePieceMessage(cell);

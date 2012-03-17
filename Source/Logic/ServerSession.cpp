@@ -102,7 +102,7 @@ namespace Logic
 							mCurrentPlayer = mRuleset->GetNextPlayer(mCurrentPlayer);
 						}
 					}
-
+					Sleep(1);
 					mServer->Send(Network::TurnMessage(mCurrentPlayer));
 				} break;
 
