@@ -47,15 +47,16 @@ namespace Components
 		// DEBUG
 		virtual std::string GetName() = 0;
 		
+		// Get the dimensions & position of the component
+		float GetWidth() const;
+		float GetHeight() const;
+		const RECT& GetBoundingRect() const;
+		D3DXVECTOR2 GetPosition() const;
 	protected:
 		ComponentGroup*				mOwner;
 
 		static const Viewport*		sViewport;
 
-		float GetWidth() const;
-		float GetHeight() const;
-		const RECT& GetBoundingRect() const;
-		D3DXVECTOR2 GetPosition() const;
 		void SetPosition(D3DXVECTOR2 newPosition);
 		void LoseFocus();
 

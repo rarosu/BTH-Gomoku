@@ -1,54 +1,26 @@
 #ifndef SERVER_LOBBY_STATE_HPP
 #define SERVER_LOBBY_STATE_HPP
 
-#include "ApplicationState.hpp"
-#include "ChatConsole.hpp"
-#include "TextButton.hpp"
-#include "Label.hpp"
-#include "ServerGameState.hpp"
-#include "Sprite.hpp"
+#include "AbstractLobbyState.hpp"
 #include "ServerSession.hpp"
-#include "Server.hpp"
+#include "ServerGameState.hpp"
 
 namespace State
 {
-	class ServerLobbyState : public ApplicationState, public Logic::ChatReceiver, public Components::ChatInputReceiver
+	class ServerLobbyState : public AbstractLobbyState
 	{
 	public:
 		ServerLobbyState(StateID id, ID3D10Device* device, State::ServerGameState* serverGameState);
-		~ServerLobbyState() throw();
-
-		void Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime);
-		void Draw();
-
-		void OnStatePushed();
-		void OnStatePopped();
 
 		void SetSessionArguments(Network::Server* server, const std::string& adminName, Logic::Ruleset* ruleset);
-
-		void ChatInputEntered(const Components::ChatConsole* consoleInstance, const std::string& message);
-		void ReceiveChatMessage(const std::string& message, unsigned int sourceID);
+	protected:
+		void AppendComponents();
+		void AppendUpdate();
 	private:
-		struct bgVertex
-		{
-			D3DXVECTOR2		position;
-			D3DXVECTOR2		uv;
-		};
-
-		ID3D10Device*							mDevice;
-		Sprite*									mBackground;
-
-		Components::ComponentGroup*				mComponents;
-		std::vector<Components::Label*>			mPlayerLabels;
 		Components::TextButton*					mStartButton;
-		Components::TextButton*					mCancelButton;
-		Components::ChatConsole*				mChat;
 
-		Logic::ServerSession*					mSession;
-
+		Logic::ServerSession*					mServerSession;
 		State::ServerGameState*					mServerGameState;
-
-		void CreateComponents();
 	};
 }
 #endif

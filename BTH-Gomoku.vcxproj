@@ -212,6 +212,7 @@
     <ClCompile Include="Source\Scene\Marker.cpp" />
     <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\State\AbstractGameState.cpp" />
+    <ClCompile Include="Source\State\AbstractLobbyState.cpp" />
     <ClCompile Include="Source\State\ApplicationState.cpp" />
     <ClCompile Include="Source\State\ClientGameState.cpp" />
     <ClCompile Include="Source\State\ClientLobbyState.cpp" />
@@ -283,6 +284,7 @@
     <ClInclude Include="Include\Scene\Marker.hpp" />
     <ClInclude Include="Include\Scene\Scene.hpp" />
     <ClInclude Include="Include\State\AbstractGameState.hpp" />
+    <ClInclude Include="Include\State\AbstractLobbyState.hpp" />
     <ClInclude Include="Include\State\ApplicationState.hpp" />
     <ClInclude Include="Include\State\ClientGameState.hpp" />
     <ClInclude Include="Include\State\ClientLobbyState.hpp" />
