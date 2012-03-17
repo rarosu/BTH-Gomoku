@@ -23,6 +23,7 @@ namespace State
 	void ServerGameState::InitializeGame()
 	{
 		mServerSession->SendStartMessage();
+		SetChatName(mServerSession->GetPlayerName(0));
 	}
 
 	void ServerGameState::EndGame()

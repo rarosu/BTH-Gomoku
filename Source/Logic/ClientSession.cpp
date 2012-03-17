@@ -27,6 +27,11 @@ namespace Logic
 		return mCurrentPlayer == mSelfID;
 	}
 
+	unsigned int ClientSession::GetSelfID() const
+	{
+		return mSelfID;
+	}
+
 	void ClientSession::SetClientNotifiee(ClientNotificationInterface* notifiee)
 	{
 		mNotifiee = notifiee;

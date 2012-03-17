@@ -23,7 +23,15 @@ namespace Logic
 		ClientSession(Network::Client* client, const std::string& playerName, unsigned int playerCount, unsigned int selfID);
 		~ClientSession();
 
+		/**
+			Returns true if the current player is self ID
+		*/
 		bool IsLocalPlayerTurn() const;
+
+		/**
+			Return the ID of the local player
+		*/
+		unsigned int GetSelfID() const;
 
 		/**
 			Set the listener for client events

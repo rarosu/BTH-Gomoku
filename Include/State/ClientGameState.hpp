@@ -17,6 +17,9 @@ namespace State
 		~ClientGameState() throw();
 
 		void SetClientSession(Logic::ClientSession* clientSession);
+	protected:
+		void InitializeGame();
+		void EndGame();
 	private:
 		ID3D10Device* mDevice;
 

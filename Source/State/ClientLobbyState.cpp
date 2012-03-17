@@ -55,8 +55,8 @@ namespace State
 		r.right = sViewport->GetWidth();
 		r.top = sViewport->GetHeight() - C_CHAT_HEIGHT;
 		r.bottom = sViewport->GetHeight();
-		mChat = new Components::Console(mDevice, mComponents, r, D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.0f));
-		mChat->SetInputReceiver(this);
+		mChat = new Components::ChatConsole(mDevice, mComponents, r, D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.0f), mSession->GetPlayerName(mSession->GetSelfID()));
+		mChat->SetChatReceiver(this);
 
 		mChat->SetFocus();
 		mComponents->SetFocus();
@@ -129,7 +129,7 @@ namespace State
 		mSession->SetClientNotifiee(this);
 	}
 	
-	void ClientLobbyState::ConsoleInputEntered(const Components::Console* consoleInstance, const std::string& message)
+	void ClientLobbyState::ChatInputEntered(const Components::ChatConsole* consoleInstance, const std::string& message)
 	{
 		if (consoleInstance == mChat)
 		{

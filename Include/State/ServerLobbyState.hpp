@@ -2,7 +2,7 @@
 #define SERVER_LOBBY_STATE_HPP
 
 #include "ApplicationState.hpp"
-#include "Console.hpp"
+#include "ChatConsole.hpp"
 #include "TextButton.hpp"
 #include "Label.hpp"
 #include "ServerGameState.hpp"
@@ -12,7 +12,7 @@
 
 namespace State
 {
-	class ServerLobbyState : public ApplicationState, public Logic::ChatReceiver, public Components::ConsoleInputReceiver
+	class ServerLobbyState : public ApplicationState, public Logic::ChatReceiver, public Components::ChatInputReceiver
 	{
 	public:
 		ServerLobbyState(StateID id, ID3D10Device* device, State::ServerGameState* serverGameState);
@@ -26,7 +26,7 @@ namespace State
 
 		void SetSessionArguments(Network::Server* server, const std::string& adminName, Logic::Ruleset* ruleset);
 
-		void ConsoleInputEntered(const Components::Console* consoleInstance, const std::string& message);
+		void ChatInputEntered(const Components::ChatConsole* consoleInstance, const std::string& message);
 		void ReceiveChatMessage(const std::string& message, unsigned int sourceID);
 	private:
 		struct bgVertex
@@ -42,7 +42,7 @@ namespace State
 		std::vector<Components::Label*>			mPlayerLabels;
 		Components::TextButton*					mStartButton;
 		Components::TextButton*					mCancelButton;
-		Components::Console*					mChat;
+		Components::ChatConsole*				mChat;
 
 		Logic::ServerSession*					mSession;
 

@@ -17,4 +17,14 @@ namespace State
 		mClientSession = clientSession;
 		SetSession(mClientSession);
 	}
+
+	void ClientGameState::InitializeGame()
+	{
+		SetChatName(mClientSession->GetPlayerName(mClientSession->GetSelfID()));
+	}
+
+	void ClientGameState::EndGame()
+	{
+
+	}
 }

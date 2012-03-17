@@ -7,11 +7,11 @@
 #include "ClientGameState.hpp"
 #include "TextButton.hpp"
 #include "Label.hpp"
-#include "Console.hpp"
+#include "ChatConsole.hpp"
 
 namespace State
 {
-	class ClientLobbyState : public ApplicationState, public Logic::ChatReceiver, public Logic::ClientNotificationInterface, public Components::ConsoleInputReceiver
+	class ClientLobbyState : public ApplicationState, public Logic::ChatReceiver, public Logic::ClientNotificationInterface, public Components::ChatInputReceiver
 	{
 	public:
 		ClientLobbyState(StateID id, ID3D10Device* device, State::ClientGameState* clientGameState);
@@ -25,7 +25,7 @@ namespace State
 
 		void SetSessionArguments(Network::Client* client, int playerCount, int selfID, const std::string& name);
 
-		void ConsoleInputEntered(const Components::Console* consoleInstance, const std::string& message);
+		void ChatInputEntered(const Components::ChatConsole* consoleInstance, const std::string& message);
 		void ReceiveChatMessage(const std::string& message, unsigned int sourceID);
 
 		void GameStarted();
@@ -41,7 +41,7 @@ namespace State
 
 		Components::ComponentGroup*				mComponents;
 		Components::TextButton*					mCancelButton;
-		Components::Console*					mChat;
+		Components::ChatConsole*				mChat;
 		std::vector<Components::Label*>			mPlayerLabels;
 
 		Logic::ClientSession*					mSession;

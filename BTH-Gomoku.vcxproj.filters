@@ -67,6 +67,7 @@
     <ClCompile Include="Source\State\ServerGameState.cpp" />
     <ClCompile Include="Source\State\AbstractGameState.cpp" />
     <ClCompile Include="Source\Logic\StandardRuleset.cpp" />
+    <ClCompile Include="Source\Components\ChatConsole.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -138,6 +139,7 @@
     <ClInclude Include="Include\State\ServerGameState.hpp" />
     <ClInclude Include="Include\State\AbstractGameState.hpp" />
     <ClInclude Include="Include\Logic\StandardRuleset.hpp" />
+    <ClInclude Include="Include\Components\ChatConsole.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

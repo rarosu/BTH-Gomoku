@@ -4,12 +4,12 @@
 #include "ApplicationState.hpp"
 #include "Scene.hpp"
 #include "ComponentGroup.hpp"
-#include "Console.hpp"
+#include "ChatConsole.hpp"
 #include "Session.hpp"
 
 namespace State
 {
-	class AbstractGameState : public ApplicationState, public Logic::ChatReceiver, public Components::ConsoleInputReceiver
+	class AbstractGameState : public ApplicationState, public Logic::ChatReceiver, public Components::ChatInputReceiver
 	{
 	public:
 		AbstractGameState(StateID id, ID3D10Device* device);
@@ -23,20 +23,22 @@ namespace State
 		void Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime);
 		void Draw();
 
-		void ConsoleInputEntered(const Components::Console* consoleInstance, const std::string& message);
+		void ChatInputEntered(const Components::ChatConsole* consoleInstance, const std::string& message);
 		void ReceiveChatMessage(const std::string& message, unsigned int sourceID);
 	protected:
 		void SetSession(Logic::Session* session);
 
 		virtual void InitializeGame() {}
 		virtual void EndGame() {}
+
+		void SetChatName(const std::string& name);
 	private:
 		ID3D10Device* mDevice;
 		Logic::Session* mSession;
 
 		Components::ComponentGroup*	mComponents;
 		Scene* mScene;
-		Components::Console* mChat;
+		Components::ChatConsole* mChat;
 
 		void CreateComponents();
 		float GetAspectRatio();

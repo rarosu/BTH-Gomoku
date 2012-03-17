@@ -91,7 +91,7 @@ namespace State
 		mSession->SetChatReceiver(this);
 	}
 
-	void AbstractGameState::ConsoleInputEntered(const Components::Console* consoleInstance, const std::string& message)
+	void AbstractGameState::ChatInputEntered(const Components::ChatConsole* consoleInstance, const std::string& message)
 	{
 		mSession->SendChatMessage(message, -1, Network::Recipient::Broadcast);
 	}
@@ -103,6 +103,11 @@ namespace State
 		mChat->AddLine(finalMessage);
 		mChat->SetVisible(true);
 		mChat->SetFocus();
+	}
+
+	void AbstractGameState::SetChatName(const std::string& name)
+	{
+		mChat->SetName(name);
 	}
 
 	void AbstractGameState::CreateComponents()
@@ -118,8 +123,8 @@ namespace State
 		r.right = sViewport->GetWidth();
 		r.bottom = sViewport->GetHeight();
 		r.top = r.bottom - C_CHAT_HEIGHT;
-		mChat = new Components::Console(mDevice, mComponents, r, D3DXCOLOR(0.6, 0.6, 0.6, 1.0f));
-		mChat->SetInputReceiver(this);
+		mChat = new Components::ChatConsole(mDevice, mComponents, r, D3DXCOLOR(0.6, 0.6, 0.6, 1.0f), "");
+		mChat->SetChatReceiver(this);
 		mChat->SetVisible(false);
 
 		mScene->SetFocus();
