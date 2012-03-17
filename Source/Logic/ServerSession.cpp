@@ -92,6 +92,7 @@ namespace Logic
 				{
 					Network::PlacePieceMessage* m = static_cast<Network::PlacePieceMessage*>(message.mMessage);
 
+					// If the move is valid, add the marker and move to the next player
 					if (mGrid.GetMarkerInCell(m->mX, m->mY) == C_PLAYER_NONE)
 					{
 						if (mCurrentPlayer == m->mPlayerID)
@@ -102,7 +103,7 @@ namespace Logic
 							mCurrentPlayer = mRuleset->GetNextPlayer(mCurrentPlayer);
 						}
 					}
-					Sleep(1);
+					
 					mServer->Send(Network::TurnMessage(mCurrentPlayer));
 				} break;
 

@@ -139,6 +139,7 @@ namespace Logic
 				{
 					Network::TurnMessage* m = static_cast<Network::TurnMessage*>(mClient->PopMessage(i));
 
+					mCurrentPlayer = m->mPlayerID;
 					if (m->mPlayerID == mSelfID)
 						mClientTurn = true;
 
@@ -176,8 +177,12 @@ namespace Logic
 	{
 		if (mGrid.GetMarkerInCell(cell) == C_PLAYER_NONE)
 		{
-			mClient->Send(Network::PlacePieceMessage(mSelfID, cell.x, cell.y, -1));
-			mClientTurn = false;
+			// Make a sanity check before sending any messages
+			if (mCurrentPlayer == mSelfID && mClientTurn)
+			{
+				mClient->Send(Network::PlacePieceMessage(mSelfID, cell.x, cell.y, -1));
+				mClientTurn = false;
+			}		
 		}
 	}
 }
