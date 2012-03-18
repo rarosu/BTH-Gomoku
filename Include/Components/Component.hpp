@@ -4,6 +4,7 @@
 #include "GameTime.hpp"
 #include "InputManager.hpp"
 #include "Viewport.hpp"
+#include "SoundManager.hpp"
 
 class Game;
 
@@ -50,11 +51,15 @@ namespace Components
 
 		// DEBUG
 		virtual std::string GetName() = 0;
+
+		// Static methods
+		static void Initialize();
 		
 	protected:
 		ComponentGroup*				mOwner;
 
 		static const Viewport*		sViewport;
+		static Sound*				sButtonClick;
 
 		const RECT& GetBoundingRect() const;
 		void LoseFocus();

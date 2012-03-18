@@ -63,6 +63,7 @@
     <ClCompile Include="Source\State\ClientLobbyState.cpp" />
     <ClCompile Include="Source\Network\Messages\RefuseMessage.cpp" />
     <ClCompile Include="Source\Components\PieMenu.cpp" />
+    <ClCompile Include="Source\Framework\SoundManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -130,6 +131,7 @@
     <ClInclude Include="Include\Network\NetworkInclude.hpp" />
     <ClInclude Include="Include\Logic\Grid\Direction.hpp" />
     <ClInclude Include="Include\Components\PieMenu.hpp" />
+    <ClInclude Include="Include\Framework\SoundManager.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
