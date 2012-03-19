@@ -29,7 +29,9 @@ namespace State
 
 		// Make a quick sanity check - if we don't have a session, the game shouldn't be able to be played.
 		if (mSession == NULL)
+		{
 			mGameOver = true;
+		}
 	}
 
 	void AbstractGameState::OnStatePopped()
