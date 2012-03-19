@@ -28,7 +28,6 @@
     <ClCompile Include="Source\Framework\Effect\Pass.cpp" />
     <ClCompile Include="Source\Framework\Effect\Technique.cpp" />
     <ClCompile Include="Source\Components\Label.cpp" />
-    <ClCompile Include="Source\Components\Menu.cpp" />
     <ClCompile Include="Source\Components\RootComponent.cpp" />
     <ClCompile Include="Source\Network\Client.cpp" />
     <ClCompile Include="Source\Network\ComSocket.cpp" />
@@ -64,6 +63,7 @@
     <ClCompile Include="Source\State\ClientLobbyState.cpp" />
     <ClCompile Include="Source\Network\Messages\RefuseMessage.cpp" />
     <ClCompile Include="Source\Components\PieMenu.cpp" />
+    <ClCompile Include="Source\Framework\SoundManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -93,7 +93,6 @@
     <ClInclude Include="Include\Framework\Effect\Pass.hpp" />
     <ClInclude Include="Include\Framework\Effect\Technique.hpp" />
     <ClInclude Include="Include\Components\Label.hpp" />
-    <ClInclude Include="Include\Components\Menu.hpp" />
     <ClInclude Include="Include\Network\Client.hpp" />
     <ClInclude Include="Include\Network\ComSocket.hpp" />
     <ClInclude Include="Include\Network\ListenSocket.hpp" />
@@ -132,6 +131,7 @@
     <ClInclude Include="Include\Network\NetworkInclude.hpp" />
     <ClInclude Include="Include\Logic\Grid\Direction.hpp" />
     <ClInclude Include="Include\Components\PieMenu.hpp" />
+    <ClInclude Include="Include\Framework\SoundManager.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

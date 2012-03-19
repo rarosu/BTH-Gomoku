@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include "SoundManager.hpp"
 
 Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth, UINT clientHeight) : 
 	D3DApplication(applicationInstance, windowTitle, clientWidth, clientHeight),
@@ -24,6 +25,8 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth,
 	mInputManager.AddKeyListener(mRootComponentGroup);
 	mInputManager.AddMouseListener(mRootComponentGroup);
 	State::ApplicationState::sRootComponentGroup = mRootComponentGroup;
+
+	Components::Component::Initialize();
 
 	// Create the states
 	mMenuState = new State::MenuState(State::C_STATE_MENU, mDeviceD3D);
@@ -93,6 +96,9 @@ void Game::Update()
 
 	// Update the input
 	mInputManager.Update();
+
+	// Update the sound manager
+	mSoundManager.Update();
 }
 
 // Draw the scene

@@ -4,6 +4,7 @@
 #include "GameTime.hpp"
 #include "InputManager.hpp"
 #include "Viewport.hpp"
+#include "SoundManager.hpp"
 
 class Game;
 
@@ -33,6 +34,10 @@ namespace Components
 		bool IsPressed() const;
 		bool IsHovered() const;
 		bool GetAndResetClickStatus();
+		float GetWidth() const;
+		float GetHeight() const;
+		D3DXVECTOR2 GetPosition() const;
+		void SetPosition(D3DXVECTOR2 newPosition);
 
 		// Methods inherited from MouseListener
 		virtual void MouseButtonPressed(int index, const InputState& currentState);
@@ -46,17 +51,17 @@ namespace Components
 
 		// DEBUG
 		virtual std::string GetName() = 0;
+
+		// Static methods
+		static void Initialize();
 		
 	protected:
 		ComponentGroup*				mOwner;
 
 		static const Viewport*		sViewport;
+		static Sound*				sButtonClick;
 
-		float GetWidth() const;
-		float GetHeight() const;
 		const RECT& GetBoundingRect() const;
-		D3DXVECTOR2 GetPosition() const;
-		void SetPosition(D3DXVECTOR2 newPosition);
 		void LoseFocus();
 
 		virtual void MouseEntered() = 0;

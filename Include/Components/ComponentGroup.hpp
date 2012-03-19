@@ -43,9 +43,11 @@ namespace Components
 		virtual void KeyReleased(int code, const InputState& currentState);
 		virtual void CharEntered(unsigned char symbol, const InputState& currentState);
 
+	protected:
+		std::vector<Component*>		mComponents;
+
 	private:
 		Component*					mFocusedComponent;
-		std::vector<Component*>		mComponents;
 		
 		// DEBUG
 		std::string					mName;

@@ -4,6 +4,7 @@
 namespace Components
 {
 	const Viewport*		Component::sViewport = NULL;
+	Sound*				Component::sButtonClick = NULL;
 
 	Component::Component(ComponentGroup* ownerGroup, RECT position)
 		: mOwner(ownerGroup), mPositionRect(position), mIsEnabled(true), mIsVisible(true), mIsHovered(false),
@@ -15,6 +16,11 @@ namespace Components
 
 	Component::~Component() throw()
 	{
+	}
+
+	void Component::Initialize()
+	{
+		sButtonClick = SoundManager::GetInstance().CreateSound("Resources/Sounds/buttonClick.wav");
 	}
 
 	void Component::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
@@ -153,6 +159,10 @@ namespace Components
 				SetFocus();
 				MouseReleased(index, currentState);
 				mIsClicked = true;
+				if(sButtonClick != NULL)
+					SoundManager::GetInstance().PlaySound(sButtonClick);
+				else
+					mIsClicked = mIsClicked;
 			}
 		}
 	}

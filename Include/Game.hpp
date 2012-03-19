@@ -34,6 +34,7 @@ private:
 	GameTime					mGameTime;
 	GameFont*					mDefaultFont;
 	InputManager				mInputManager;
+	SoundManager				mSoundManager;
 	Components::RootComponent*	mRootComponentGroup;
 
 	State::MenuState*			mMenuState;
@@ -45,6 +46,7 @@ private:
 
 	State::ApplicationState*	mCurrentState;
 	State::ApplicationState*	mNextState;
+
 protected:
 	void ProgramLoop();
 	void OnResize();
