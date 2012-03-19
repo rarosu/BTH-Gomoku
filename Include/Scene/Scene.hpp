@@ -72,7 +72,8 @@ private:
 	struct GridVertex
 	{
 		D3DXVECTOR3				position;
-		D3DXVECTOR2				uv;
+		D3DXVECTOR2				cellUV;
+		D3DXVECTOR2				boardUV;
 	};
 
 	struct CellFace
@@ -83,7 +84,6 @@ private:
 	ID3D10Device*				mDevice;
 	Effect*						mEffect;
 	VertexBuffer*				mVertexBuffer;
-	ID3D10ShaderResourceView*	mCellTexture;
 
 	Frustum						mFrustum;
 	Camera*						mCamera;

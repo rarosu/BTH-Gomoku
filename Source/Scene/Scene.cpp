@@ -13,7 +13,6 @@ Scene::Scene(ID3D10Device* device, Components::ComponentGroup* ownerGroup, float
 	  mDevice(device),
 	  mVertexBuffer(NULL),
 	  mEffect(NULL),
-	  mCellTexture(NULL),
 	  mCamera(NULL),
 	  mGrid(grid)
 {
@@ -22,14 +21,22 @@ Scene::Scene(ID3D10Device* device, Components::ComponentGroup* ownerGroup, float
 	CreateEffect();
 
 	// Load resources
-	if (FAILED(D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/cell.png", NULL, NULL, &mCellTexture, NULL)))
+	ID3D10ShaderResourceView*	cellTexture;
+	ID3D10ShaderResourceView*	boardTexture;
+	if (FAILED(D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/cell.png", NULL, NULL, &cellTexture, NULL)))
 		throw std::ios::failure("Failed to load texture: cell.png");
+	if (FAILED(D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/marbleBG1422x800.png", 
+		NULL, NULL, &boardTexture, NULL)))
+		throw std::ios::failure("Failed to load texture: marbleBG1422x800.png");
 
 	// Set effect constants
 	mEffect->SetVariable("gWidth", C_CELL_SIZE);
 	mEffect->SetVariable("gInterval", C_BORDER_SIZE * 0.5f);
-	mEffect->SetVariable("gGridColor", D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
-	mEffect->SetVariable("gCellTexture", mCellTexture);
+	mEffect->SetVariable("gPickColor", D3DXVECTOR4(0.3f, 0.1f, 0.1f, 0.5f));
+	mEffect->SetVariable("gCellTexture", cellTexture);
+	mEffect->SetVariable("gBoardTexture", boardTexture);
+	SafeRelease(cellTexture);
+	SafeRelease(boardTexture);
 
 	// Setup model matrix
 	D3DXVECTOR2 translation;
@@ -66,7 +73,6 @@ Scene::~Scene() throw()
 
 	SafeDelete(mVertexBuffer);
 	SafeDelete(mEffect);
-	SafeRelease(mCellTexture);
 	SafeDelete(mCamera);
 }
 
@@ -80,19 +86,37 @@ void Scene::CreateBuffer()
 	{
 		for (int x = 0; x < C_GRID_WIDTH; ++x)
 		{
+			float fx = x;
+			float fz = z;
+			D3DXVECTOR2 farLeft = D3DXVECTOR2(fx * C_CELL_SIZE / 400.0, (fz + 1.0) * C_CELL_SIZE / 300.0);
+			D3DXVECTOR2 farRight = D3DXVECTOR2((fx + 1.0) * C_CELL_SIZE / 400.0, (fz + 1.0) * C_CELL_SIZE / 300.0);
+			D3DXVECTOR2 nearLeft = D3DXVECTOR2(fx * C_CELL_SIZE / 400.0, fz * C_CELL_SIZE / 300.0);
+			D3DXVECTOR2 nearRight = D3DXVECTOR2((fx + 1.0) * C_CELL_SIZE / 400.0, fz * C_CELL_SIZE / 300.0);
+
 			CellFace face;
 			face.mVertices[0].position = D3DXVECTOR3(x * C_CELL_SIZE, 0.0f, z * C_CELL_SIZE);
-			face.mVertices[0].uv = D3DXVECTOR2(0, 0);
+			face.mVertices[0].cellUV = D3DXVECTOR2(0, 0);
+			face.mVertices[0].boardUV = nearLeft;
+
 			face.mVertices[1].position = D3DXVECTOR3(x * C_CELL_SIZE, 0.0f, (z + 1) * C_CELL_SIZE);
-			face.mVertices[1].uv = D3DXVECTOR2(0, 1);
+			face.mVertices[1].cellUV = D3DXVECTOR2(0, 1);
+			face.mVertices[1].boardUV = farLeft;
+
 			face.mVertices[2].position = D3DXVECTOR3((x + 1) * C_CELL_SIZE, 0.0f, z * C_CELL_SIZE);
-			face.mVertices[2].uv = D3DXVECTOR2(1, 0);
+			face.mVertices[2].cellUV = D3DXVECTOR2(1, 0);
+			face.mVertices[2].boardUV = nearRight;
+						
 			face.mVertices[3].position = D3DXVECTOR3(x * C_CELL_SIZE, 0.0f, (z + 1) * C_CELL_SIZE);
-			face.mVertices[3].uv = D3DXVECTOR2(0, 1);
+			face.mVertices[3].cellUV = D3DXVECTOR2(0, 1);
+			face.mVertices[3].boardUV = farLeft;
+
 			face.mVertices[4].position = D3DXVECTOR3((x + 1) * C_CELL_SIZE, 0.0f, z * C_CELL_SIZE);
-			face.mVertices[4].uv = D3DXVECTOR2(1, 0);
+			face.mVertices[4].cellUV = D3DXVECTOR2(1, 0);
+			face.mVertices[4].boardUV = nearRight;
+
 			face.mVertices[5].position = D3DXVECTOR3((x + 1) * C_CELL_SIZE, 0.0f, (z + 1) * C_CELL_SIZE);
-			face.mVertices[5].uv = D3DXVECTOR2(1, 1);
+			face.mVertices[5].cellUV = D3DXVECTOR2(1, 1);
+			face.mVertices[5].boardUV = farRight;
 
 			vertices[k] = face.mVertices[0];
 			vertices[k + 1] = face.mVertices[1];
@@ -126,6 +150,7 @@ void Scene::CreateEffect()
 	InputLayoutVector inputLayout;
 	inputLayout.push_back(InputLayoutElement("POSITION", DXGI_FORMAT_R32G32B32_FLOAT));
 	inputLayout.push_back(InputLayoutElement("TEXCOORD", DXGI_FORMAT_R32G32_FLOAT));
+	inputLayout.push_back(InputLayoutElement("UV", DXGI_FORMAT_R32G32_FLOAT));
 
 	mEffect->GetTechniqueByIndex(0).GetPassByIndex(0).SetInputLayout(inputLayout);
 }
