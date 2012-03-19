@@ -27,4 +27,9 @@ namespace State
 	{
 
 	}
+
+	bool ClientGameState::CanSendChatMessage() const
+	{
+		return mClientSession->IsConnected();
+	}
 }

@@ -109,10 +109,13 @@ void Game::Draw()
 	mCurrentState->Draw();
 
 	// Draw the HUD
-	mRootComponentGroup->Draw();
+	mRootComponentGroup->Draw();	
+
+
 
 	// DEBUG - Output the name of the component that currently has focus
-	POINT pos = { 10, mViewport.GetHeight() - 40};
+	//POINT pos = { 10, mViewport.GetHeight() - 40};
+	POINT pos = { 10, 10};
 	mDefaultFont->WriteText(mRootComponentGroup->GetName(), pos, D3DXCOLOR(1.0, 0.0, 0.0, 1.0));
 	// /DEBUG
 

@@ -14,5 +14,6 @@ DEFAULT FOR ID = -1;
 10		Remove piece		PLAYER_ID (int), X (int), Y (int)																SERVER TO CLIENT
 11		Turn				PLAYER_ID (int)																					SERVER TO CLIENT
 12		Start game			NULL																							SERVER TO CLIENT
-13		Leave game			PLAYER_ID (int)																					CLIENT TO SERVER
-14		Stay alive			PLAYER_ID (int)																					CLIENT TO SERVER
+13		Game Over			WINNER_ID (int)																					SERVER TO CLIENT
+14		Leave game			PLAYER_ID (int)																					CLIENT TO SERVER
+15		Stay alive			PLAYER_ID (int)																					CLIENT TO SERVER

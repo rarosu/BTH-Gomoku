@@ -20,6 +20,8 @@ namespace State
 	protected:
 		void InitializeGame();
 		void EndGame();
+
+		bool CanSendChatMessage() const;
 	private:
 		ID3D10Device* mDevice;
 

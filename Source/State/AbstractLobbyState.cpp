@@ -101,7 +101,7 @@ namespace State
 		}
 	}
 
-	void AbstractLobbyState::ReceiveChatMessage(const std::string& message, unsigned int sourceID)
+	void AbstractLobbyState::ReceiveChatMessage(const std::string& message, Logic::PlayerID sourceID)
 	{
 		std::string entry = mSession->GetPlayerName(sourceID) + ": " + message;
 
@@ -109,10 +109,26 @@ namespace State
 			mChat->AddLine(entry);
 	}
 
+	void AbstractLobbyState::GameOver(Logic::PlayerID winningPlayer)
+	{
+		assert(false && "Game over event cannot happen in the lobby");
+	}
+
+	void AbstractLobbyState::PlayerConnected(Logic::PlayerID id)
+	{
+		mChat->AddLine("! Player connected: " + mSession->GetPlayerName(id));
+	}
+
+	void AbstractLobbyState::PlayerDisconnected(Logic::PlayerID id, const std::string& name, Network::RemovePlayerReason::RemovePlayerReason reason)
+	{
+		mChat->AddLine("! Player disconnected: " + name);
+	}
+	
+
 	void AbstractLobbyState::SetSession(Logic::Session* session)
 	{
 		mSession = session;
-		mSession->SetChatReceiver(this);
+		mSession->SetSessionNotifiee(this);
 	}
 
 

@@ -20,6 +20,7 @@ namespace Network
 		unsigned int GetQueuedMessageCount() const;
 
 		int Update();
+		bool IsConnected() const;
 	private:
 		ComSocket mSocket;
 	};

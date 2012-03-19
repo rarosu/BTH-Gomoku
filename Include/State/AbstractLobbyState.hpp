@@ -13,7 +13,7 @@
 
 namespace State
 {
-	class AbstractLobbyState : public ApplicationState, public Logic::ChatReceiver, public Components::ChatInputReceiver
+	class AbstractLobbyState : public ApplicationState, public Logic::SessionNotificationInterface, public Components::ChatInputReceiver
 	{
 	public:
 		AbstractLobbyState(StateID id, ID3D10Device* device);
@@ -25,8 +25,33 @@ namespace State
 		void OnStatePushed();
 		void OnStatePopped();
 
+		/**
+			Called when a line has been entered in the chat
+		*/
 		void ChatInputEntered(const Components::ChatConsole* consoleInstance, const std::string& message);
-		void ReceiveChatMessage(const std::string& message, unsigned int sourceID);
+		
+		/**
+			Sent when a chat message is received from the network.
+		*/
+		void ReceiveChatMessage(const std::string& message, Logic::PlayerID sourceID);
+
+		/**
+			Sent when the game is over and has been won.
+
+			This can, of course, not happen in the lobby, thus we are asserting against it.
+		*/
+		void GameOver(Logic::PlayerID winningPlayer);
+
+		/**
+			Sent when a player has connected.
+		*/
+		void PlayerConnected(Logic::PlayerID id);
+		
+		/**
+			Sent when a player disconnects - the name is sent along since the player is
+			removed from the player list.
+		*/
+		void PlayerDisconnected(Logic::PlayerID id, const std::string& name, Network::RemovePlayerReason::RemovePlayerReason reason);
 	protected:
 		static const int C_LABEL_WIDTH		= 150;
 		static const int C_LABEL_HEIGHT		= 48;

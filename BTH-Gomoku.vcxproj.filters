@@ -69,6 +69,7 @@
     <ClCompile Include="Source\Logic\StandardRuleset.cpp" />
     <ClCompile Include="Source\Components\ChatConsole.cpp" />
     <ClCompile Include="Source\State\AbstractLobbyState.cpp" />
+    <ClCompile Include="Source\Network\Messages\GameOverMessage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="Include\Logic\StandardRuleset.hpp" />
     <ClInclude Include="Include\Components\ChatConsole.hpp" />
     <ClInclude Include="Include\State\AbstractLobbyState.hpp" />
+    <ClInclude Include="Include\Network\Messages\GameOverMessage.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

@@ -70,6 +70,9 @@ namespace Network
 			case C_MESSAGE_START_GAME:
 				m = new StartGameMessage();
 				break;
+			case C_MESSAGE_GAME_OVER:
+				m = GameOverMessage::Inflate(args);
+				break;
 			case C_MESSAGE_LEAVE_GAME:
 				m = LeaveGameMessage::Inflate(args);
 				break;

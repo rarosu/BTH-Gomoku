@@ -57,4 +57,9 @@ namespace Network
 	{
 		return mSocket.Update();
 	}
+
+	bool Client::IsConnected() const
+	{
+		return mSocket.IsConnected();
+	}
 }

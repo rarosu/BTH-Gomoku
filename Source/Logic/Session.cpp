@@ -6,15 +6,15 @@
 namespace Logic
 {
 	Session::Session(unsigned int playerCount)
-		: mChatReceiver(NULL)
+		: mSessionNotifiee(NULL)
+		, mWinner(C_PLAYER_NONE)
+		, mCurrentPlayer(C_PLAYER_NONE)
 	{
 		mPlayers.resize(playerCount);
 		for (unsigned int i = 0; i < mPlayers.size(); ++i)
 		{
 			mPlayers[i] = NULL;
 		}
-
-		mCurrentPlayer = rand() % mPlayers.size();
 	}
 
 	Session::~Session() throw()
@@ -46,11 +46,12 @@ namespace Logic
 		return mCurrentPlayer;
 	}
 
-	std::string Session::GetPlayerName(unsigned int index) const
+	std::string Session::GetPlayerName(PlayerID index) const
 	{
 		std::string result;
-		if (mPlayers[index] != NULL)
-			result = mPlayers[index]->GetName();
+		if (index >= 0 && index < mPlayers.size())
+			if (mPlayers[index] != NULL)
+				result = mPlayers[index]->GetName();
 
 		return result;
 	}
@@ -61,13 +62,29 @@ namespace Logic
 	}
 
 
-	void Session::SetChatReceiver(ChatReceiver* receiver)
+	void Session::SetSessionNotifiee(SessionNotificationInterface* notifiee)
 	{
-		mChatReceiver = receiver;
+		mSessionNotifiee = notifiee;
 	}
 
-	ChatReceiver* Session::GetChatReceiver()
+	const SessionNotificationInterface* Session::GetSessionNotifiee() const
 	{
-		return mChatReceiver;
+		return mSessionNotifiee;
+	}
+
+	bool Session::HasOpenSlot() const
+	{
+		for (unsigned int i = 0; i < mPlayers.size(); ++i)
+		{
+			if (mPlayers[i] == NULL)
+				return true;
+		}
+
+		return false;
+	}
+
+	PlayerID Session::GetWinner() const
+	{
+		return mWinner;
 	}
 }
