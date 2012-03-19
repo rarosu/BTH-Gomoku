@@ -22,6 +22,11 @@ namespace Network
 		Shutdown();
 	}
 
+	bool ListenSocket::IsBound() const
+	{
+		return mSocket != INVALID_SOCKET;
+	}
+
 	void ListenSocket::Bind(Port port)
 	{
 		int result;

@@ -16,6 +16,7 @@ namespace Components
 	{
 	public:
 		friend class Game;
+		friend class ComponentGroup;
 
 		Component(ComponentGroup* ownerGroup, RECT position);
 		virtual ~Component() throw();
@@ -32,7 +33,7 @@ namespace Components
 		bool IsVisible() const;
 		void SetVisible(bool isVisible);
 		bool IsPressed() const;
-		bool IsHovered() const;
+		virtual bool IsHovered() const;
 		bool GetAndResetClickStatus();
 
 		// Get the dimensions & position of the component
@@ -80,6 +81,8 @@ namespace Components
 		bool						mIsHovered;
 		bool						mIsPressed;
 		bool						mIsClicked;
+
+		void SetBoundingRect(const RECT& r);
 	};
 }
 #endif

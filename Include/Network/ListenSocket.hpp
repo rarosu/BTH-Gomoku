@@ -28,6 +28,7 @@ namespace Network
 		~ListenSocket();
 
 		Port GetPort() const { return mPort; }
+		bool IsBound() const;
 
 		void Bind(Port port = 6666);
 		SOCKET Accept();

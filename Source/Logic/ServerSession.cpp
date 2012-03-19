@@ -142,8 +142,8 @@ namespace Logic
 			it->second -= dt;
 			if (it->second <= 0.0f && mServer->IsConnected(it->first))
 			{
-				// TODO: Enable timeout again
-				//mServer->DisconnectClient(it->first);
+				// TODO: Disable timeout again
+				mServer->DisconnectClient(it->first);
 			}
 		}
 	}
@@ -177,6 +177,8 @@ namespace Logic
 
 		mServer->Send(Network::StartGameMessage());
 		mServer->Send(Network::TurnMessage(mCurrentPlayer));
+
+		mServer->ShutdownListenSocket();
 	}
 
 	void ServerSession::ClientConnected(Network::Slot slot)
@@ -206,6 +208,14 @@ namespace Logic
 			// TODO: Think about timeout?
 			// TODO: Should we think about timeout?
 			// TODO: Don't think about timeout.
+
+			// TODO: Forget about boot.
+			// TODO: Forget about timeout (keep it in mind, though)
+
+			// REDO: Think about timeout.
+			// TODO: Ponder meaning of life.
+
+			// TODO: Give up.
 
 			Network::RemovePlayerReason::RemovePlayerReason reason = Network::RemovePlayerReason::Left;
 			for (unsigned int i = 0; i < mPlayers.size(); ++i)

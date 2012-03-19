@@ -97,6 +97,11 @@ namespace Logic
 		bool HasOpenSlot() const;
 
 		/**
+			Returns true if the slot is open.
+		*/
+		bool IsOpenSlot(PlayerID playerID) const;
+
+		/**
 			Get the winning player (or C_PLAYER_NONE if no player has won yet)
 
 			This will only return the winner if the mGameWon flag has been set, in which case

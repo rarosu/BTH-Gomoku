@@ -43,6 +43,8 @@ namespace Components
 		virtual void KeyReleased(int code, const InputState& currentState);
 		virtual void CharEntered(unsigned char symbol, const InputState& currentState);
 
+		bool IsHovered() const;
+		void SetBoundingRect(const RECT& r);
 	protected:
 		std::vector<Component*>		mComponents;
 

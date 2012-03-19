@@ -9,6 +9,7 @@
 #include "ChatConsole.hpp"
 #include "PieMenu.hpp"
 #include "ClickMenu.hpp"
+#include "PlayerList.hpp"
 
 #include "Sprite.hpp"
 
@@ -56,11 +57,14 @@ namespace State
 	protected:
 		void SetSession(Logic::Session* session);
 
+		virtual void OnConnectionFailure() {}
 		virtual void InitializeGame() {}
 		virtual void EndGame() {}
 		virtual bool CanSendChatMessage() const { return true; }
 
 		void SetChatName(const std::string& name);
+
+		Components::ChatConsole* mChat;
 	private:
 		ID3D10Device* mDevice;
 
@@ -74,12 +78,11 @@ namespace State
 		// grid and all the markers.
 		Components::ComponentGroup*	mComponents;
 		Scene* mScene;
-		Components::ChatConsole* mChat;
-
+		Components::ClickMenu* mGameMenu;
+		Components::PlayerList*	mPlayerList;
 
 		// Indicates that either the game is over, or a disconnect happened.
 		bool mGameOver;
-		Sprite* mGameOverOverlay;
 		
 
 

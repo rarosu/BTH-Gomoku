@@ -141,6 +141,26 @@ namespace Components
 			mFocusedComponent->CharEntered(symbol, currentState);
 	}
 
+	bool ComponentGroup::IsHovered() const
+	{
+		bool result = false;
+		for (unsigned int i = 0; i < mComponents.size(); ++i)
+		{
+			if (mComponents[i]->IsHovered())
+			{
+				result = true;
+				break;
+			}
+		}
+
+		return result;
+	}
+
+	void ComponentGroup::SetBoundingRect(const RECT& r)
+	{
+		Component::SetBoundingRect(r);
+	}
+
 	// DEBUG
 	std::string ComponentGroup::GetName()
 	{

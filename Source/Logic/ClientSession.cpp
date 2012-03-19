@@ -166,8 +166,8 @@ namespace Logic
 		mKeepAliveCounter += dt;
 		if (mKeepAliveCounter >= C_KEEP_ALIVE_DELAY)
 		{
-			// TODO: Resume sending stay alive messages
-			//mClient->Send(Network::StayAliveMessage(mSelfID));
+			// TODO: Stop sending stay alive messages
+			mClient->Send(Network::StayAliveMessage(mSelfID));
 			mKeepAliveCounter = 0.0f;
 		}
 	}

@@ -18,6 +18,13 @@ namespace State
 		SetSession(mClientSession);
 	}
 
+	void ClientGameState::OnConnectionFailure()
+	{
+		mChat->AddLine("! Connection to server lost");
+		mChat->SetVisible(true);
+		mChat->SetFocus();
+	}
+
 	void ClientGameState::InitializeGame()
 	{
 		SetChatName(mClientSession->GetPlayerName(mClientSession->GetSelfID()));

@@ -83,6 +83,11 @@ namespace Logic
 		return false;
 	}
 
+	bool Session::IsOpenSlot(PlayerID playerID) const
+	{
+		return mPlayers[playerID] == NULL;
+	}
+
 	PlayerID Session::GetWinner() const
 	{
 		return mWinner;
