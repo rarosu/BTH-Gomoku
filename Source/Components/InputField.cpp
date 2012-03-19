@@ -6,10 +6,10 @@ namespace Components
 	const float InputField::C_MARKER_SPEED = 500;
 
 	InputField::InputField(ID3D10Device* device, ComponentGroup* ownerGroup, InputReceiver* receiver, 
-		RECT position, GameFont* font)
+		RECT position, GameFont* font, int maxChars)
 		: Component(ownerGroup, position),
 		  mDevice(device), mBackground(NULL), mFont(font), 
-		  mReceiver(receiver), mShowMarker(true), mMSSinceBlink(0.0f), mHasFocus(false)
+		  mReceiver(receiver), mShowMarker(true), mMSSinceBlink(0.0f), mHasFocus(false), mMaxCharacters(maxChars)
 	{
 		mBackground = new Sprite(mDevice, sViewport, "whitePixel.png", GetWidth(), GetHeight());
 	}
@@ -27,8 +27,14 @@ namespace Components
 	void InputField::SetText(std::string newText)
 	{
 		mFirstString.str("");
-		mFirstString << newText;
+		if(newText != "")
+			mFirstString << newText.substr(0, mMaxCharacters);
 		mLastString.str("");
+	}
+
+	void InputField::SetMaxCharacters(int maxChars)
+	{
+		mMaxCharacters = maxChars;
 	}
 	
 	bool InputField::IsEmpty() const
@@ -143,6 +149,13 @@ namespace Components
 
 	void InputField::CharEntered(unsigned char symbol, const InputState& currentState)
 	{
+		if(mMaxCharacters > 0 && mFirstString.str().size() + mLastString.str().size() >= mMaxCharacters)
+		{
+			if(sSndButtonClick != NULL)
+					SoundManager::GetInstance().PlaySound(sSndInputFull);
+			return;
+		}
+
 		mFirstString << symbol;
 	}
 

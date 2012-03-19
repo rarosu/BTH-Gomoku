@@ -9,8 +9,6 @@
 #include "TextButton.hpp"
 #include "Label.hpp"
 
-
-
 namespace State
 {
 	class AbstractLobbyState : public ApplicationState, public Logic::SessionNotificationInterface, public Components::ChatInputReceiver
@@ -52,15 +50,8 @@ namespace State
 			removed from the player list.
 		*/
 		void PlayerDisconnected(Logic::PlayerID id, const std::string& name, Network::RemovePlayerReason::RemovePlayerReason reason);
+	
 	protected:
-		static const int C_LABEL_WIDTH		= 150;
-		static const int C_LABEL_HEIGHT		= 48;
-		static const int C_LABEL_MARGIN		= 10;
-		static const int C_BUTTON_YOFFSET	= 60;
-		static const int C_BUTTON_WIDTH		= 150;
-		static const int C_BUTTON_HEIGHT	= 48;
-		static const int C_CHAT_HEIGHT		= 150;
-
 		void SetSession(Logic::Session* session);
 
 		virtual void AppendStatePopped() {}

@@ -3,7 +3,7 @@
 namespace Components
 {
 	Label::Label(ID3D10Device* device, ComponentGroup* ownerGroup, std::string caption, RECT position, 
-				 GameFont::AlignHorizontal alignHorizontal, GameFont::AlignVertical alignVertical)
+				 int textSize, GameFont::AlignHorizontal alignHorizontal, GameFont::AlignVertical alignVertical)
 		: Component(ownerGroup, position),
 		  mFont(NULL), mCaption(caption), mTextColor(C_COLOR_TEXT), 
 		  mShadowColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f)), mAlignHor(alignHorizontal), mAlignVer(alignVertical)
@@ -15,8 +15,11 @@ namespace Components
 		mShadowPosition.right = lblPos.x + GetWidth() + offsetX;
 		mShadowPosition.top = lblPos.y + offsetY;
 		mShadowPosition.bottom = lblPos.y + GetHeight() + offsetY;
-		
-		mFont = new GameFont(device, "Segoe Print", static_cast<int>(GetHeight()), false, true);
+
+		if(textSize <= 0)
+			textSize = static_cast<int>(GetHeight());
+
+		mFont = new GameFont(device, "Segoe Print", textSize, false, true);
 	}
 
 	void Label::Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
@@ -49,6 +52,11 @@ namespace Components
 	void Label::SetCaption(std::string newCaption)
 	{
 		mCaption = newCaption;
+	}
+
+	void Label::SetFont(GameFont* newFont)
+	{
+		mFont = newFont;
 	}
 
 	// DEBUG

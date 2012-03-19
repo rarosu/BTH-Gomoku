@@ -15,12 +15,14 @@ namespace Components
 		Label(ID3D10Device* device,
 			  ComponentGroup* ownerGroup,
 			  std::string caption, 
-			  RECT position, 
+			  RECT position,
+			  int textSize = 0,
 			  GameFont::AlignHorizontal alignHorizontal = GameFont::Center, 
 			  GameFont::AlignVertical alignVertical = GameFont::Middle);
 		
 		std::string GetCaption();
 		void SetCaption(std::string newCaption);
+		void SetFont(GameFont* newFont);
 
 		// Methods inherited from Component
 		virtual void Draw();

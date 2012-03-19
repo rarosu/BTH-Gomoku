@@ -6,13 +6,13 @@
 namespace State
 {
 	AbstractLobbyState::AbstractLobbyState(StateID id, ID3D10Device* device)
-		: ApplicationState(id)
-		, mDevice(device)
-		, mBackground(NULL)
-		, mComponents(NULL)
-		, mCancelButton(NULL)
-		, mChat(NULL)
-		, mSession(NULL)
+		: ApplicationState(id),
+		mDevice(device),
+		mBackground(NULL),
+		mComponents(NULL),
+		mCancelButton(NULL),
+		mChat(NULL),
+		mSession(NULL)
 	{
 		mBackground = new Sprite(mDevice, sViewport, "marbleBG1422x800.png", sViewport->GetWidth(), sViewport->GetHeight());
 	}
@@ -22,8 +22,6 @@ namespace State
 		SafeDelete(mBackground);
 		SafeDelete(mSession);
 	}
-
-
 
 	void AbstractLobbyState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
 	{
@@ -69,7 +67,6 @@ namespace State
 		mBackground->Draw(D3DXVECTOR2(0.0f, 0.0f));
 	}
 
-
 	void AbstractLobbyState::OnStatePushed()
 	{
 		// We shouldn't enter this state until the session has been set
@@ -91,7 +88,6 @@ namespace State
 		mChat = NULL;
 		mPlayerLabels.clear();
 	}
-
 
 	void AbstractLobbyState::ChatInputEntered(const Components::ChatConsole* consoleInstance, const std::string& message)
 	{
@@ -124,17 +120,22 @@ namespace State
 		mChat->AddLine("! Player disconnected: " + name);
 	}
 	
-
 	void AbstractLobbyState::SetSession(Logic::Session* session)
 	{
 		mSession = session;
 		mSession->SetSessionNotifiee(this);
 	}
 
-
-
 	void AbstractLobbyState::CreateComponents()
 	{
+		const int C_LABEL_WIDTH		= 150;
+		const int C_LABEL_HEIGHT	= 48;
+		const int C_LABEL_MARGIN	= 10;
+		const int C_BUTTON_YOFFSET	= 60;
+		const int C_BUTTON_WIDTH	= 150;
+		const int C_BUTTON_HEIGHT	= 48;
+		const int C_CHAT_HEIGHT		= 150;
+
 		// Create the component groups
 		RECT r = { 0, 0, 0, 0 };
 		mComponents = new Components::ComponentGroup(sRootComponentGroup, "LobbyState Group", r);
@@ -147,14 +148,14 @@ namespace State
 
 		for (unsigned int i = 0; i < mSession->GetSlotCount(); ++i)
 		{
-			mPlayerLabels.push_back(new Components::Label(mDevice, mComponents, "1.", r, GameFont::Left));
+			mPlayerLabels.push_back(new Components::Label(mDevice, mComponents, "1.", r, 0, GameFont::Left));
 
 			r.top = r.bottom + C_LABEL_MARGIN;
 			r.bottom = r.top + C_LABEL_HEIGHT;
 		}
 
 		// Create the cancel button
-		r.left = 50;
+		r.left = 250;
 		r.right = r.left + C_BUTTON_WIDTH;
 		r.top += C_BUTTON_YOFFSET;
 		r.bottom = r.top + C_BUTTON_HEIGHT;

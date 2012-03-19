@@ -219,6 +219,7 @@
     <ClCompile Include="Source\State\ClientGameState.cpp" />
     <ClCompile Include="Source\State\ClientLobbyState.cpp" />
     <ClCompile Include="Source\State\CreateGameState.cpp" />
+    <ClCompile Include="Source\State\CreditsState.cpp" />
     <ClCompile Include="Source\State\JoinGameState.cpp" />
     <ClCompile Include="Source\State\ServerGameState.cpp" />
     <ClCompile Include="Source\State\ServerLobbyState.cpp" />
@@ -293,6 +294,7 @@
     <ClInclude Include="Include\State\ClientGameState.hpp" />
     <ClInclude Include="Include\State\ClientLobbyState.hpp" />
     <ClInclude Include="Include\State\CreateGameState.hpp" />
+    <ClInclude Include="Include\State\CreditsState.hpp" />
     <ClInclude Include="Include\State\JoinGameState.hpp" />
     <ClInclude Include="Include\State\ServerGameState.hpp" />
     <ClInclude Include="Include\State\ServerLobbyState.hpp" />
@@ -312,6 +314,9 @@
     <None Include="Effects\InputField.fx" />
     <None Include="Resources\Effects\Marker.fx" />
     <None Include="Resources\Effects\Sprite.fx" />
+    <None Include="Resources\Sounds\buttonClick.wav" />
+    <None Include="Resources\Sounds\inputFull.wav" />
+    <None Include="Resources\Sounds\placeMarker.wav" />
     <None Include="Resources\Textures\btnDIdle.png" />
     <None Include="Resources\Textures\btnDPressed.png" />
     <None Include="Resources\Textures\btnUIdle.png" />

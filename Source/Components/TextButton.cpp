@@ -45,6 +45,11 @@ namespace Components
 			mFont->WriteText(mCaption, &posRect, D3DXCOLOR(0.5, 0.5, 0.5, 1.0), GameFont::Center, GameFont::Middle);
 	}
 
+	void TextButton::SetCaption(std::string caption)
+	{
+		mCaption = caption;
+	}
+
 	// DEBUG
 	std::string TextButton::GetName()
 	{

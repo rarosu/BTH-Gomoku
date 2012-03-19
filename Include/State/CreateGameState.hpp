@@ -30,6 +30,17 @@ namespace State
 			D3DXVECTOR2		uv;
 		};
 
+		struct GameType
+		{
+			enum Type { Normal, Crazy, NotChosenT };
+			enum Players { Players1v1, Players2v2, NotChosenP };
+
+			Type		mType;
+			Players		mPlayers;
+
+			GameType() : mType(Type::NotChosenT), mPlayers(Players::NotChosenP) {}
+		};
+
 		ID3D10Device*							mDevice;
 		Components::ComponentGroup*				mComponents;
 		Sprite*									mBackground;
@@ -41,6 +52,10 @@ namespace State
 		Components::InputField*					mIFPort;
 		Components::TextButton*					mBtnCreate;
 		Components::TextButton*					mBtnCancel;
+		Components::ClickMenu*					mGameType;
+		Components::ClickMenu*					mPlayerType;
+
+		GameType								mChosenGame;
 
 		void CreateComponents();
 	};

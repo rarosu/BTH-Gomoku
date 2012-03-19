@@ -62,7 +62,8 @@ namespace Components
 		ComponentGroup*				mOwner;
 
 		static const Viewport*		sViewport;
-		static Sound*				sButtonClick;
+		static Sound*				sSndButtonClick;
+		static Sound*				sSndInputFull;
 
 		void LoseFocus();
 
