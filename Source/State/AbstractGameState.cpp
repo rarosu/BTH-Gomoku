@@ -105,7 +105,7 @@ namespace State
 			if (mSession->IsLocalPlayerTurn())
 			{
 				if (currInput.Mouse.buttonIsPressed[C_MOUSE_LEFT] && !prevInput.Mouse.buttonIsPressed[C_MOUSE_LEFT] && mScene->HasFocus()
-					&& !mGameMenu->IsHovered() && !mPlayerList->IsHovered())
+					&& !(mGameMenu->IsHovered() || mPlayerList->IsHovered()))
 				{
 					Logic::Cell cell = mScene->PickCell(currInput.Mouse.x, currInput.Mouse.y);
 					mSession->SendPlacePieceMessage(cell);
