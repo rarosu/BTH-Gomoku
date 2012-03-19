@@ -19,7 +19,7 @@ namespace Logic
 		/**
 			Sent when a chat message is received from the network.
 		*/
-		virtual void ReceiveChatMessage(const std::string& message, PlayerID sourceID) = 0;
+		virtual void ReceiveChatMessage(const std::string& message, Network::Recipient::Recipient recipient, PlayerID sourceID) = 0;
 
 		/**
 			Sent when the game is over and has been won.
@@ -56,6 +56,7 @@ namespace Logic
 		unsigned int GetSlotCount() const;
 		unsigned int GetCurrentPlayer() const;
 		std::string GetPlayerName(PlayerID index) const;
+		PlayerID GetPlayerByName(const std::string& name) const;
 
 		/**
 			Check whether it is a local player's turn

@@ -60,7 +60,7 @@ namespace Logic
 					Network::ChatMessage* m = static_cast<Network::ChatMessage*>(mClient->PopMessage(i));
 
 					if (mSessionNotifiee != NULL)
-						mSessionNotifiee->ReceiveChatMessage(m->mMessage, m->mSourceID);
+						mSessionNotifiee->ReceiveChatMessage(m->mMessage, m->mRecipient, m->mSourceID);
 
 					SafeDelete(m);
 				} break;

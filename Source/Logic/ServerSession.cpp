@@ -329,6 +329,7 @@ namespace Logic
 		switch (recipient)
 		{
 			case Network::Recipient::Broadcast:
+			{
 				for (PlayerID s = 0; s < mPlayers.size(); ++s)
 				{
 					if (mPlayers[s] != NULL && mPlayerClients[s] != C_STATUS_LOCAL && s != sourceID)
@@ -339,13 +340,39 @@ namespace Logic
 
 				if (mSessionNotifiee != NULL)
 				{
-					mSessionNotifiee->ReceiveChatMessage(message, sourceID);
+					mSessionNotifiee->ReceiveChatMessage(message, recipient, sourceID);
 				}
-				break;
+			} break;
+
 			case Network::Recipient::Team:
-				break;
+			{
+				Player::Team team = mPlayers[sourceID]->GetTeam();
+				for (PlayerID s = 0; s < mPlayers.size(); ++s)
+				{
+					if (mPlayers[s] != NULL && mPlayerClients[s] != C_STATUS_LOCAL && s != sourceID && mPlayers[s]->GetTeam() == team)
+					{
+						mServer->Send(mPlayerClients[s], Network::ChatMessage(sourceID, targetID, recipient, message));
+					}
+
+					if (mPlayerClients[s] == C_STATUS_LOCAL && mPlayers[s]->GetTeam() == team)
+					{
+						mSessionNotifiee->ReceiveChatMessage(message, recipient, sourceID);
+					}
+				}
+			} break;
+
 			case Network::Recipient::Private:
-				break;
+			{
+				if (mPlayers[targetID] != NULL && mPlayerClients[targetID] != C_STATUS_LOCAL && targetID != sourceID)
+				{
+					mServer->Send(mPlayerClients[targetID], Network::ChatMessage(sourceID, targetID, recipient, message));
+				}
+
+				if (mPlayerClients[targetID] == C_STATUS_LOCAL)
+				{
+					mSessionNotifiee->ReceiveChatMessage(message, recipient, sourceID);
+				}
+			} break;
 		}
 	}
 

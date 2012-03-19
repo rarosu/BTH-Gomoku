@@ -93,20 +93,18 @@ namespace State
 	}
 
 
-	void AbstractLobbyState::ChatInputEntered(const Components::ChatConsole* consoleInstance, const std::string& message)
+	void AbstractLobbyState::ChatInputEntered(const Components::ChatConsole* consoleInstance, const std::string& message, Logic::PlayerID target, Network::Recipient::Recipient recipient)
 	{
 		if (consoleInstance == mChat)
 		{
-			mSession->SendChatMessage(message, -1, Network::Recipient::Broadcast);
+			mSession->SendChatMessage(message, target, recipient);
 		}
 	}
 
-	void AbstractLobbyState::ReceiveChatMessage(const std::string& message, Logic::PlayerID sourceID)
+	void AbstractLobbyState::ReceiveChatMessage(const std::string& message, Network::Recipient::Recipient recipient, Logic::PlayerID sourceID)
 	{
-		std::string entry = mSession->GetPlayerName(sourceID) + ": " + message;
-
 		if (mChat != NULL)
-			mChat->AddLine(entry);
+			mChat->AddIncomingMessage(message, recipient, sourceID);
 	}
 
 	void AbstractLobbyState::GameOver(Logic::PlayerID winningPlayer)
@@ -166,7 +164,7 @@ namespace State
 		r.right = sViewport->GetWidth();
 		r.top = sViewport->GetHeight() - C_CHAT_HEIGHT;
 		r.bottom = sViewport->GetHeight();
-		mChat = new Components::ChatConsole(mDevice, mComponents, r, D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.0f), "");
+		mChat = new Components::ChatConsole(mSession, mDevice, mComponents, r, D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.0f), "");
 		mChat->SetChatReceiver(this);
 
 		// Set initial focus
