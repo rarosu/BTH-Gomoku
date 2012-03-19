@@ -1,13 +1,15 @@
 struct VS_INPUT
 {
 	float3		position	: POSITION;
-	float2		uv			: TEXCOORD;
+	float2		cellUV		: TEXCOORD;
+	float2		boardUV		: UV;
 };
 
 struct PS_INPUT
 {
 	float4		position	: SV_POSITION;
-	float2		uv			: TEXCOORD;
+	float2		cellUV		: TEXCOORD;
+	float2		boardUV		: UV;
 	float3		worldPos	: POSITION;
 };
 
@@ -36,8 +38,9 @@ cbuffer cbEveryFrame
 
 int gWidth;
 float gInterval;
-float4 gGridColor;
+float4 gPickColor;
 Texture2D gCellTexture;
+Texture2D gBoardTexture;
 
 
 PS_INPUT VS(VS_INPUT input)
@@ -46,19 +49,24 @@ PS_INPUT VS(VS_INPUT input)
 
 	output.position = mul(float4(input.position, 1.0), gMVP);
 	output.worldPos = mul(float4(input.position, 1.0), gModel).xyz;
-	output.uv = input.uv;
+	output.cellUV = input.cellUV;
+	output.boardUV = input.boardUV;
 
 	return output;
 }
 
 float4 PS(PS_INPUT input) : SV_TARGET0
 {
-	float4 col = gGridColor;
+	float4 col = gCellTexture.Sample(LinearSampler, input.cellUV) * gBoardTexture.Sample(LinearSampler, input.boardUV);
+
 	if (input.worldPos.x > gLeft && input.worldPos.x < gRight &&
 		input.worldPos.z > gDown && input.worldPos.z < gUp)
-		return float4(0.0f, 0.0f, 0.0f, 1.0f);
+	{
+		col = col * (1 - gPickColor.w) + gPickColor * gPickColor.w;
+		col.w = 1.0;
+	}
 
-	return col * gCellTexture.Sample(LinearSampler, input.uv);
+	return col;
 }
 
 technique10 DrawTechnique
