@@ -15,6 +15,16 @@
 
 namespace State
 {
+	namespace GameStage
+	{
+		enum GameStage
+		{
+			During,
+			Won,
+			Aborted
+		};
+	}
+
 	class AbstractGameState : public ApplicationState, public Logic::SessionNotificationInterface, public Components::ChatInputReceiver
 	{
 	public:
@@ -81,8 +91,8 @@ namespace State
 		Components::ClickMenu* mGameMenu;
 		Components::PlayerList*	mPlayerList;
 
-		// Indicates that either the game is over, or a disconnect happened.
-		bool mGameOver;
+		// Indicates the stage the game is in, currently
+		GameStage::GameStage mGameStage;
 		
 
 

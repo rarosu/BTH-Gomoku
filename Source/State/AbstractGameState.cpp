@@ -12,7 +12,7 @@ namespace State
 		, mGameMenu(NULL)
 		, mPlayerList(NULL)
 		, mSession(NULL)
-		, mGameOver(false)
+		, mGameStage(GameStage::During)
 	{}
 
 	AbstractGameState::~AbstractGameState() throw()
@@ -23,16 +23,14 @@ namespace State
 
 	void AbstractGameState::OnStatePushed()
 	{
-		mGameOver = false;
+		
 		CreateComponents();
 
 		InitializeGame();
 
 		// Make a quick sanity check - if we don't have a session, the game shouldn't be able to be played.
-		if (mSession == NULL)
-		{
-			mGameOver = true;
-		}
+		assert(mSession != NULL);
+		mGameStage = GameStage::During;
 	}
 
 	void AbstractGameState::OnStatePopped()
@@ -72,9 +70,9 @@ namespace State
 		catch (Network::ConnectionFailure& e)
 		{
 			// On a disconnect, we simply set the game as game over, but allow the players to remain in game if they wish.
-			if (!mGameOver)
+			if (mGameStage == GameStage::During)
 				OnConnectionFailure();
-			mGameOver = true;
+			mGameStage = GameStage::Aborted;
 		}
 
 		// Toggle chat with TAB
@@ -103,7 +101,7 @@ namespace State
 		// Update the scene
 		mScene->Update(mSession->GetGrid(), currInput, prevInput, gameTime);
 
-		if (!mGameOver)
+		if (mGameStage == GameStage::During)
 		{
 			if (mSession->IsLocalPlayerTurn())
 			{
@@ -138,7 +136,7 @@ namespace State
 	void AbstractGameState::GameOver(Logic::PlayerID winningPlayer)
 	{
 		// Set the game over flag and notify the players in the chat
-		mGameOver = true;
+		mGameStage = GameStage::Won;
 
 		std::string winner = "! Game won: " + mSession->GetPlayerName(mSession->GetWinner());
 		mChat->AddLine(winner);

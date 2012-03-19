@@ -142,8 +142,8 @@ namespace Logic
 			it->second -= dt;
 			if (it->second <= 0.0f && mServer->IsConnected(it->first))
 			{
-				// TODO: Disable timeout again
-				mServer->DisconnectClient(it->first);
+				// TODO: Enable timeout again
+				//mServer->DisconnectClient(it->first);
 			}
 		}
 	}
