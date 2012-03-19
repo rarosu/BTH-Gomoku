@@ -111,9 +111,6 @@ const Technique& Effect::GetTechniqueByName(const std::string& name) const
 	throw std::runtime_error("No technique by the name: " + name);
 }
 
-
-
-
 void Effect::SetVariable(const std::string& variableName, int value)
 {
 	mEffect->GetVariableByName(variableName.c_str())->AsScalar()->SetInt(value);
