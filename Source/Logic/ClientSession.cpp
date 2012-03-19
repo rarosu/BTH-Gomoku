@@ -117,6 +117,8 @@ namespace Logic
 					Network::PlacePieceMessage* m = static_cast<Network::PlacePieceMessage*>(mClient->PopMessage(i));
 
 					mGrid.AddMarker(Logic::Cell(m->mX, m->mY), m->mPlayerID);
+					if (mSessionNotifiee != NULL)
+						mSessionNotifiee->PlacePiece(m->mPlayerID, Logic::Cell(m->mX, m->mY));
 
 					SafeDelete(m);
 				} break;

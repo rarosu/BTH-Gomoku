@@ -35,6 +35,8 @@ namespace State
 		*/
 		void ReceiveChatMessage(const std::string& message, Network::Recipient::Recipient recipient, Logic::PlayerID sourceID);
 
+		void PlacePiece(Logic::PlayerID id, const Logic::Cell& cell);
+
 		/**
 			Sent when the game is over and has been won.
 

@@ -94,7 +94,9 @@ namespace State
 		{
 			if (mPlayerList->GetAndResetClickStatus(i) && !mSession->IsOpenSlot(i))
 			{
-				// TODO: Set input in chat input field
+				mChat->SetInputFieldContent("/" + mSession->GetPlayerName(i) + " ");
+				mChat->SetVisible(true);
+				mChat->SetFocus();
 			}
 		}
 
@@ -132,6 +134,12 @@ namespace State
 			mChat->SetFocus();
 			mChat->SetVisible(true);
 		}
+	}
+
+	void AbstractGameState::PlacePiece(Logic::PlayerID id, const Logic::Cell& cell)
+	{
+		// Ugly
+		//mScene->LookAtCell(cell);
 	}
 
 	void AbstractGameState::GameOver(Logic::PlayerID winningPlayer)

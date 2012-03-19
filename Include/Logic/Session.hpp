@@ -22,6 +22,12 @@ namespace Logic
 		virtual void ReceiveChatMessage(const std::string& message, Network::Recipient::Recipient recipient, PlayerID sourceID) = 0;
 
 		/**
+			Put a piece on the board and perform actions connected to this.
+		*/
+
+		virtual void PlacePiece(PlayerID id, const Cell& cell) = 0;
+
+		/**
 			Sent when the game is over and has been won.
 		*/
 		virtual void GameOver(PlayerID winningPlayer) = 0;

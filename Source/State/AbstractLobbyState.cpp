@@ -107,6 +107,11 @@ namespace State
 			mChat->AddIncomingMessage(message, recipient, sourceID);
 	}
 
+	void AbstractLobbyState::PlacePiece(Logic::PlayerID id, const Logic::Cell& cell)
+	{
+		// TODO: Stuff
+	}
+
 	void AbstractLobbyState::GameOver(Logic::PlayerID winningPlayer)
 	{
 		assert(false && "Game over event cannot happen in the lobby");

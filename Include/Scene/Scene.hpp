@@ -52,6 +52,10 @@ public:
 	*/
 	Logic::Cell PickCell(int mouseX, int mouseY) const;
 
+	/**
+		Make the camera look at a specific cell.
+	*/
+	void LookAtCell(const Logic::Cell& cell);
 protected:
 	// Methods inherited from Component
 	void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState) {}

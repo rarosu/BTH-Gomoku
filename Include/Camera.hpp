@@ -35,6 +35,7 @@ public:
 	void TurnHorizontal(const GameTime& gameTime, bool turnLeft);
 	//void TurnVertical(float angle);
 	void Zoom(short amount);
+	void LookAt(const D3DXVECTOR3& target);
 	
 private:
 	D3DXVECTOR3				mPosition;

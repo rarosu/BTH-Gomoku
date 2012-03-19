@@ -109,6 +109,9 @@ namespace Logic
 						if (mCurrentPlayer == m->mPlayerID)
 						{
 							mGrid.AddMarker(Logic::Cell(m->mX, m->mY), m->mPlayerID);
+							if (mSessionNotifiee != NULL)
+								mSessionNotifiee->PlacePiece(m->mPlayerID, Logic::Cell(m->mX, m->mY));
+
 							mServer->Send(Network::PlacePieceMessage(m->mPlayerID, m->mX, m->mY, -1));
 
 							if (!CheckAndHandleWin())
@@ -150,7 +153,27 @@ namespace Logic
 
 	void ServerSession::SendChatMessage(const std::string& message, PlayerID targetID, Network::Recipient::Recipient recipient)
 	{
-		mServer->Send(Network::ChatMessage(0, targetID, recipient, message));
+		switch (recipient)
+		{
+			case Network::Recipient::Broadcast:
+				mServer->Send(Network::ChatMessage(0, targetID, recipient, message));
+			break;
+
+			case Network::Recipient::Private:
+				if (mPlayers[targetID] != NULL && mPlayerClients[targetID] != C_STATUS_LOCAL)
+					mServer->Send(mPlayerClients[targetID], Network::ChatMessage(0, targetID, recipient, message));
+			break;
+
+			case Network::Recipient::Team:
+				for (PlayerID s = 0; s < mPlayers.size(); ++s)
+				{
+					if (mPlayers[s] != NULL && mPlayers[s]->GetTeam() == mPlayers[0]->GetTeam())
+					{
+						mServer->Send(mPlayerClients[s], Network::ChatMessage(0, s, recipient, message));
+					}
+				}
+			break;
+		}
 	}
 
 	void ServerSession::SendPlacePieceMessage(const Logic::Cell& cell)

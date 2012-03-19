@@ -145,6 +145,11 @@ namespace Components
 		return mInputField->GetText();
 	}
 
+	void Console::SetInputFieldContent(const std::string& input)
+	{
+		mInputField->SetText(input);
+	}
+
 	void Console::SetTextColor(D3DXCOLOR newColor)
 	{
 		mTextColor = newColor;
