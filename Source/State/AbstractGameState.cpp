@@ -23,6 +23,7 @@ namespace State
 
 	void AbstractGameState::OnStatePushed()
 	{
+		mGameOver = false;
 		CreateComponents();
 
 		InitializeGame();
