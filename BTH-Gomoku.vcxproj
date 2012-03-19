@@ -212,6 +212,7 @@
     <ClCompile Include="Source\Network\Messages\TurnMessage.cpp" />
     <ClCompile Include="Source\Network\Server.cpp" />
     <ClCompile Include="Source\Scene\Marker.cpp" />
+    <ClCompile Include="Source\Scene\ObjModel.cpp" />
     <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\State\AbstractGameState.cpp" />
     <ClCompile Include="Source\State\AbstractLobbyState.cpp" />
@@ -285,6 +286,7 @@
     <ClInclude Include="Include\Network\NetworkInclude.hpp" />
     <ClInclude Include="Include\Network\Server.hpp" />
     <ClInclude Include="Include\Scene\Marker.hpp" />
+    <ClInclude Include="Include\Scene\ObjModel.hpp" />
     <ClInclude Include="Include\Scene\Scene.hpp" />
     <ClInclude Include="Include\State\AbstractGameState.hpp" />
     <ClInclude Include="Include\State\AbstractLobbyState.hpp" />
@@ -307,6 +309,7 @@
     <None Include="Resources\Effects\Background.fx" />
     <None Include="Resources\Effects\Button.fx" />
     <None Include="Resources\Effects\Basic2D.fx" />
+    <None Include="Resources\Effects\ObjModel.fx" />
     <None Include="Resources\Effects\Grid.fx" />
     <None Include="Effects\InputField.fx" />
     <None Include="Resources\Effects\Marker.fx" />

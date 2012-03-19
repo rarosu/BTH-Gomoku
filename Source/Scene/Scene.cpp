@@ -2,6 +2,7 @@
 #include <sstream>
 
 const D3DXCOLOR Scene::C_MARKER_COLORS[] = { D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f), D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f) };
+const Marker::MarkerType Scene::C_MARKER_TYPES[] = { Marker::Ring, Marker::Triangle, Marker::Quad, Marker::Cross};
 const int Scene::C_GRID_WIDTH = 64;
 const int Scene::C_GRID_HEIGHT = 64;
 const int Scene::C_CELL_SIZE = 32;
@@ -51,7 +52,8 @@ Scene::Scene(ID3D10Device* device, Components::ComponentGroup* ownerGroup, float
 	// Reminder: Markers do not have a proper copy constructor, thus vector must contain pointers
 	for (unsigned int i = 0; i < playerCount; ++i)
 	{
-		mMarkers.push_back(new Marker(mDevice, C_CELL_SIZE * 0.5f, C_MARKER_COLORS[i]));
+		//mMarkers.push_back(new Marker(mDevice, C_CELL_SIZE * 0.5f, C_MARKER_COLORS[i]));
+		mMarkers.push_back(new Marker(mDevice, C_MARKER_TYPES[i]));
 	}
 }
 

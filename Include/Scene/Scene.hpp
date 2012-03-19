@@ -51,11 +51,14 @@ public:
 		this method will return the cell the mouse is hovering over.
 	*/
 	Logic::Cell PickCell(int mouseX, int mouseY) const;
+
 protected:
 	// Methods inherited from Component
 	void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState) {}
+
 private:
 	static const D3DXCOLOR C_MARKER_COLORS[];
+	static const Marker::MarkerType C_MARKER_TYPES[];
 
 	static const int C_GRID_WIDTH;
 	static const int C_GRID_HEIGHT;
