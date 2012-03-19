@@ -11,6 +11,7 @@
 #include "SetMarkerMessage.hpp"
 #include "SetTeamMessage.hpp"
 #include "StartGameMessage.hpp"
+#include "GameOverMessage.hpp"
 #include "StayAliveMessage.hpp"
 #include "TurnMessage.hpp"
 #include "JoinMessage.hpp"

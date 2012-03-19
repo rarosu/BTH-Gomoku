@@ -8,7 +8,7 @@ namespace Components
 
 	Console::Console(ID3D10Device* device, ComponentGroup* ownerGroup, RECT position, D3DXCOLOR bgColor, UINT size)
 		: ComponentGroup(ownerGroup, "Console", position),
-		  mDevice(device), mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0)), mFirstShowRow(0), mBackground(NULL), mInputReceiver(NULL),
+		  mDevice(device), mTextColor(D3DXCOLOR(0.0, 0.0, 0.0, 1.0)), mFirstShowRow(0), mBackground(NULL),
 		  C_HISTORY_SIZE(size)
 	{
 		mBackground = new Sprite(mDevice, sViewport, "whitePixel.png", GetWidth(), GetHeight());
@@ -35,16 +35,6 @@ namespace Components
 	Console::~Console() throw()
 	{
 		SafeDelete(mBackground);
-	}
-
-	void Console::SetInputReceiver(ConsoleInputReceiver* receiver)
-	{
-		mInputReceiver = receiver;
-	}
-
-	const ConsoleInputReceiver* Console::GetInputReceiver() const
-	{
-		return mInputReceiver;
 	}
 
 	// Update the console
@@ -137,14 +127,6 @@ namespace Components
 
 	void Console::ReceiveInput(std::string input)
 	{
-		AddLine(input);
-		
-		if (mInputReceiver != NULL)
-			mInputReceiver->ConsoleInputEntered(this, input);
-	}
-
-	void Console::AddLine(const std::string& input)
-	{
 		TextLine text;
 		text.text = input;
 		text.color = mTextColor;
@@ -156,6 +138,11 @@ namespace Components
 
 		if(mOutput.size() > (UINT)mMaxNumRows)
 			mFirstShowRow = mOutput.size() - mMaxNumRows;
+	}
+
+	std::string Console::GetInputFieldContent() const
+	{
+		return mInputField->GetText();
 	}
 
 	void Console::SetTextColor(D3DXCOLOR newColor)

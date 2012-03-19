@@ -31,6 +31,11 @@ namespace Logic
 		SafeDelete(mRuleset);
 	}
 
+	bool ServerSession::IsLocalPlayerTurn() const
+	{
+		return mPlayerClients.find(mCurrentPlayer)->second == C_STATUS_LOCAL;
+	}
+
 	unsigned short ServerSession::GetPort() const
 	{
 		return mServer->GetPort();
@@ -41,12 +46,16 @@ namespace Logic
 		return mRuleset;
 	}
 
-	std::string ServerSession::GetPlayerName(unsigned int playerSlot) const
+	PlayerID ServerSession::GetWinner() const
 	{
-		if (mPlayers[playerSlot] == NULL)
-			return "";
-		return mPlayers[playerSlot]->GetName();
+		if (mGrid.GetLeadingRow().size() >= mRuleset->GetWinningRowLength())
+		{
+			return mGrid.GetLeadingPlayer();
+		}
+
+		return C_PLAYER_NONE;
 	}
+
 
 	void ServerSession::Update(const GameTime& gameTime)
 	{
@@ -58,7 +67,7 @@ namespace Logic
 		while ((message = mServer->PopMessage()).mMessage != NULL)
 		{
 			// Get the player this message is about
-			//PlayerSlot slot = GetPlayerSlot(message.mSlot);
+			//PlayerID slot = GetPlayerID(message.mSlot);
 
 			// If we've received a message, update timeout (unless they're marked to be removed)
 			if (std::find(mClientsToRemove.begin(), mClientsToRemove.end(), message.mSlot) == mClientsToRemove.end())
@@ -73,27 +82,7 @@ namespace Logic
 				{
 					Network::ChatMessage* m = static_cast<Network::ChatMessage*>(message.mMessage);
 
-					switch (m->mRecipient)
-					{
-						case Network::Recipient::Broadcast:
-							for (PlayerSlot s = 0; s < mPlayers.size(); ++s)
-							{
-								if (mPlayers[s] != NULL && mPlayerClients[s] != C_STATUS_LOCAL && s != m->mSourceID)
-								{
-									mServer->Send(mPlayerClients[s], Network::ChatMessage(m->mSourceID, m->mTargetID, m->mRecipient, m->mMessage));
-								}
-							}
-
-							if (mChatReceiver != NULL)
-							{
-								mChatReceiver->ReceiveChatMessage(m->mMessage, m->mSourceID);
-							}
-							break;
-						case Network::Recipient::Team:
-							break;
-						case Network::Recipient::Private:
-							break;
-					}
+					HandleChatMessage(m->mSourceID, m->mTargetID, m->mRecipient, m->mMessage);
 				} break;
 
 				case Network::C_MESSAGE_JOIN:
@@ -106,11 +95,30 @@ namespace Logic
 				case Network::C_MESSAGE_LEAVE_GAME:
 				{
 					Network::LeaveGameMessage* m = static_cast<Network::LeaveGameMessage*>(message.mMessage);
+
+					// Do we need this? Notice this on timeout instead?
 				} break;
 
 				case Network::C_MESSAGE_PLACE_PIECE:
 				{
 					Network::PlacePieceMessage* m = static_cast<Network::PlacePieceMessage*>(message.mMessage);
+
+					// If the move is valid, add the marker and move to the next player
+					if (mGrid.GetMarkerInCell(m->mX, m->mY) == C_PLAYER_NONE)
+					{
+						if (mCurrentPlayer == m->mPlayerID)
+						{
+							mGrid.AddMarker(Logic::Cell(m->mX, m->mY), m->mPlayerID);
+							mServer->Send(Network::PlacePieceMessage(m->mPlayerID, m->mX, m->mY, -1));
+
+							if (!CheckAndHandleWin())
+							{
+								mCurrentPlayer = mRuleset->GetNextPlayer(mCurrentPlayer);
+							}
+						}
+					}
+					
+					mServer->Send(Network::TurnMessage(mCurrentPlayer));
 				} break;
 
 				case Network::C_MESSAGE_SET_MARKER:
@@ -134,20 +142,47 @@ namespace Logic
 			it->second -= dt;
 			if (it->second <= 0.0f && mServer->IsConnected(it->first))
 			{
-				mServer->DisconnectClient(it->first);
+				// TODO: Enable timeout again
+				//mServer->DisconnectClient(it->first);
 			}
 		}
 	}
 
-	void ServerSession::SendChatMessage(const std::string& message, int targetID, Network::Recipient::Recipient recipient)
+	void ServerSession::SendChatMessage(const std::string& message, PlayerID targetID, Network::Recipient::Recipient recipient)
 	{
 		mServer->Send(Network::ChatMessage(0, targetID, recipient, message));
+	}
+
+	void ServerSession::SendPlacePieceMessage(const Logic::Cell& cell)
+	{
+		if (mGrid.GetMarkerInCell(cell) == C_PLAYER_NONE)
+		{
+			assert(mPlayerClients[mCurrentPlayer] == C_STATUS_LOCAL);
+
+			mGrid.AddMarker(cell, mCurrentPlayer);
+			mServer->Send(Network::PlacePieceMessage(mCurrentPlayer, cell.x, cell.y, -1));
+			
+			if (!CheckAndHandleWin())
+			{
+				mCurrentPlayer = mRuleset->GetNextPlayer(mCurrentPlayer);
+			}
+
+			mServer->Send(Network::TurnMessage(mCurrentPlayer));
+		}
+	}
+
+	void ServerSession::SendStartMessage()
+	{
+		mCurrentPlayer = mRuleset->GetStartingPlayer();
+
+		mServer->Send(Network::StartGameMessage());
+		mServer->Send(Network::TurnMessage(mCurrentPlayer));
 	}
 
 	void ServerSession::ClientConnected(Network::Slot slot)
 	{
 		mClientTimeout[slot] = C_TIMEOUT;
-		if (GetPlayerSlot(C_STATUS_OPEN) == C_INVALID_PLAYER)
+		if (GetPlayerSlot(C_STATUS_OPEN) == C_PLAYER_NONE)
 		{
 			// Refuse the player, since we have too many players
 			mServer->Send(slot, RefuseMessage(RefuseReason::TooManyPlayers));
@@ -162,20 +197,30 @@ namespace Logic
 
 	void ServerSession::ClientDisconnected(Network::Slot slot)
 	{
-		PlayerSlot playerSlot = GetPlayerSlot(slot);
-		if (playerSlot != C_INVALID_PLAYER)
+		PlayerID playerSlot = GetPlayerSlot(slot);
+		if (playerSlot != C_PLAYER_NONE)
 		{
-			SafeDelete(mPlayers[playerSlot]);
-			mPlayerClients[playerSlot] = C_STATUS_OPEN;
-
 			// TODO: Think about boot
+			// TODO: Don't think about boot
+
+			// TODO: Think about timeout?
+			// TODO: Should we think about timeout?
+			// TODO: Don't think about timeout.
+
+			Network::RemovePlayerReason::RemovePlayerReason reason = Network::RemovePlayerReason::Left;
 			for (unsigned int i = 0; i < mPlayers.size(); ++i)
 			{
-				if (mPlayers[i] != NULL && mPlayerClients[i] >= 0 && mPlayers[i] >= 0)
+				if (mPlayers[i] != NULL && mPlayerClients[i] >= 0 && mServer->IsConnected(mPlayerClients[i]))
 				{
-					mServer->Send(mPlayerClients[i], Network::RemovePlayerMessage(playerSlot, Network::RemovePlayerReason::Left));
+					mServer->Send(mPlayerClients[i], Network::RemovePlayerMessage(playerSlot, reason));
 				}
 			}
+
+			if (mSessionNotifiee != NULL)
+				mSessionNotifiee->PlayerDisconnected(playerSlot, mPlayers[playerSlot]->GetName(), reason);
+
+			SafeDelete(mPlayers[playerSlot]);	// Delete player? More proper to make it into an open slot?
+			mPlayerClients[playerSlot] = C_STATUS_OPEN;
 		}
 		else
 		{
@@ -191,7 +236,7 @@ namespace Logic
 		}
 	}
 
-	ServerSession::PlayerSlot ServerSession::GetPlayerSlot(ClientSlot slot) const
+	PlayerID ServerSession::GetPlayerSlot(ClientSlot slot) const
 	{
 		for (SlotMap::const_iterator it = mPlayerClients.begin(); it != mPlayerClients.end(); ++it)
 		{
@@ -199,7 +244,7 @@ namespace Logic
 				return it->first;
 		}
 
-		return C_INVALID_PLAYER;
+		return C_PLAYER_NONE;
 	}
 
 	void ServerSession::HandleJoinMessage(Network::Slot clientSlot, const std::string& name)
@@ -208,8 +253,8 @@ namespace Logic
 		RefuseReason::RefuseReason reason;
 
 		// Find an open slot
-		PlayerSlot openPlayerSlot = GetPlayerSlot(C_STATUS_OPEN);
-		if (openPlayerSlot == C_INVALID_PLAYER)
+		PlayerID openPlayerID = GetPlayerSlot(C_STATUS_OPEN);
+		if (openPlayerID == C_PLAYER_NONE)
 		{
 			// There are no open slots
 			playerValid = false;
@@ -219,7 +264,7 @@ namespace Logic
 		// If an open slot is found, check the player's name
 		if (playerValid)
 		{
-			for (PlayerSlot i = 0; i < mPlayers.size(); ++i)
+			for (PlayerID i = 0; i < mPlayers.size(); ++i)
 			{
 				if (mPlayers[i] != NULL && mPlayers[i]->GetName() == name)
 				{
@@ -233,26 +278,29 @@ namespace Logic
 		// If the player is valid, add them to the open slot
 		if (playerValid)
 		{
-			mServer->Send(clientSlot, AcceptMessage(mPlayers.size(), openPlayerSlot));
+			mServer->Send(clientSlot, AcceptMessage(mPlayers.size(), openPlayerID));
 			
-			mPlayers[openPlayerSlot] = new Player(name, 0, 0);	// TODO: Set a valid team/marker here
-			mPlayerClients[openPlayerSlot] = clientSlot;
+			mPlayers[openPlayerID] = new Player(name, 0, 0);	// TODO: Set a valid team/marker here
+			mPlayerClients[openPlayerID] = clientSlot;
 
-			for (PlayerSlot i = 0; i < mPlayers.size(); ++i)
+			for (PlayerID i = 0; i < mPlayers.size(); ++i)
 			{
 				if (mPlayers[i] != NULL)
 				{
-					if (i != openPlayerSlot)
+					if (i != openPlayerID)
 					{
 						mServer->Send(clientSlot, AddPlayerMessage(i, mPlayers[i]->GetTeam(), mPlayers[i]->GetMarkerType(), mPlayers[i]->GetName()));
 					
 						if (mPlayerClients[i] >= 0)
 						{
-							mServer->Send(mPlayerClients[i], Network::AddPlayerMessage(openPlayerSlot, mPlayers[openPlayerSlot]->GetTeam(), mPlayers[openPlayerSlot]->GetMarkerType(), mPlayers[openPlayerSlot]->GetName()));
+							mServer->Send(mPlayerClients[i], Network::AddPlayerMessage(openPlayerID, mPlayers[openPlayerID]->GetTeam(), mPlayers[openPlayerID]->GetMarkerType(), mPlayers[openPlayerID]->GetName()));
 						}
 					}
 				}
 			}
+
+			if (mSessionNotifiee != NULL)
+				mSessionNotifiee->PlayerConnected(openPlayerID);
 		}
 		else
 		{
@@ -264,5 +312,47 @@ namespace Logic
 		std::vector<ClientSlot>::iterator it = std::find(mPendingClients.begin(), mPendingClients.end(), clientSlot);
 		if (it != mPendingClients.end())
 			mPendingClients.erase(it);
+	}
+
+	void ServerSession::HandleChatMessage(PlayerID sourceID, PlayerID targetID, Network::Recipient::Recipient recipient, const std::string& message)
+	{
+		switch (recipient)
+		{
+			case Network::Recipient::Broadcast:
+				for (PlayerID s = 0; s < mPlayers.size(); ++s)
+				{
+					if (mPlayers[s] != NULL && mPlayerClients[s] != C_STATUS_LOCAL && s != sourceID)
+					{
+						mServer->Send(mPlayerClients[s], Network::ChatMessage(sourceID, targetID, recipient, message));
+					}
+				}
+
+				if (mSessionNotifiee != NULL)
+				{
+					mSessionNotifiee->ReceiveChatMessage(message, sourceID);
+				}
+				break;
+			case Network::Recipient::Team:
+				break;
+			case Network::Recipient::Private:
+				break;
+		}
+	}
+
+	bool ServerSession::CheckAndHandleWin()
+	{
+		if (mWinner == C_PLAYER_NONE)
+		{
+			if (mGrid.GetLeadingRow().size() >= mRuleset->GetWinningRowLength())
+			{
+				mWinner = mGrid.GetLeadingPlayer();
+				mServer->Send(Network::GameOverMessage(mWinner));
+
+				if (mSessionNotifiee != NULL)
+					mSessionNotifiee->GameOver(mWinner);
+			}
+		}
+
+		return mWinner != C_PLAYER_NONE;
 	}
 }

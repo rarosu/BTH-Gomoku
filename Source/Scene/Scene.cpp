@@ -1,32 +1,36 @@
 #include "Scene.hpp"
 #include <sstream>
 
+const D3DXCOLOR Scene::C_MARKER_COLORS[] = { D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f), D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f) };
 const int Scene::C_GRID_WIDTH = 64;
 const int Scene::C_GRID_HEIGHT = 64;
 const int Scene::C_CELL_SIZE = 32;
 const float Scene::C_BORDER_SIZE = 0.2f;
 
-Scene::Scene(ID3D10Device* device, Components::ComponentGroup* ownerGroup, float aspectRatio) 
+Scene::Scene(ID3D10Device* device, Components::ComponentGroup* ownerGroup, float aspectRatio, const Logic::Grid* grid, unsigned int playerCount) 
 	: Component(ownerGroup, RECT()),
 	  mDevice(device),
 	  mVertexBuffer(NULL),
 	  mEffect(NULL),
 	  mCellTexture(NULL),
-	  mFont(NULL),
 	  mCamera(NULL),
-	  mCurrentPlayer(1)
+	  mGrid(grid)
 {
+	// Create vertex buffer and compile effect
 	CreateBuffer();
 	CreateEffect();
 
+	// Load resources
 	if (FAILED(D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/cell.png", NULL, NULL, &mCellTexture, NULL)))
-		throw std::runtime_error("Failed to load texture: cell.png");
+		throw std::ios::failure("Failed to load texture: cell.png");
 
+	// Set effect constants
 	mEffect->SetVariable("gWidth", C_CELL_SIZE);
 	mEffect->SetVariable("gInterval", C_BORDER_SIZE * 0.5f);
 	mEffect->SetVariable("gGridColor", D3DXVECTOR4(1.0f, 1.0f, 1.0f, 1.0f));
 	mEffect->SetVariable("gCellTexture", mCellTexture);
 
+	// Setup model matrix
 	D3DXVECTOR2 translation;
 	translation.x = -C_GRID_WIDTH * C_CELL_SIZE * 0.5f;
 	translation.y = -C_GRID_HEIGHT * C_CELL_SIZE * 0.5f;
@@ -35,27 +39,33 @@ Scene::Scene(ID3D10Device* device, Components::ComponentGroup* ownerGroup, float
 
 	D3DXMatrixTranslation(&mModelMatrix, translation.x, 0.0f, translation.y);
 
+	// Setup camera
 	mFrustum.nearDistance = 1.0f;
 	mFrustum.farDistance = 1000.0f;
 	mFrustum.fovY = D3DX_PI * 0.25f;
 	mFrustum.aspectRatio = aspectRatio;
 
-	mFont = new GameFont(mDevice, "Courier New", 24, false, false);
 	mCamera = new Camera(D3DXVECTOR3(0.0f, 10.0f, 0.0f), D3DXVECTOR3(1.0f, -1.0f, 1.0f), D3DXVECTOR3(0.0f, 1.0f, 0.0f), mFrustum);
-	mMarker[0] = new Marker(mDevice, C_CELL_SIZE, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-	mMarker[1] = new Marker(mDevice, C_CELL_SIZE, D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f));
-
+	
+	// TODO: Setup markers PROPERLY
+	// Reminder: Markers do not have a proper copy constructor, thus vector must contain pointers
+	for (unsigned int i = 0; i < playerCount; ++i)
+	{
+		mMarkers.push_back(new Marker(mDevice, C_CELL_SIZE * 0.5f, C_MARKER_COLORS[i]));
+	}
 }
 
 Scene::~Scene() throw()
 {
+	for (unsigned int i = 0; i < mMarkers.size(); ++i)
+	{
+		delete mMarkers[i];
+	}
+
 	SafeDelete(mVertexBuffer);
 	SafeDelete(mEffect);
 	SafeRelease(mCellTexture);
-	SafeDelete(mFont);
 	SafeDelete(mCamera);
-	SafeDelete(mMarker[0]);
-	SafeDelete(mMarker[1]);
 }
 
 void Scene::CreateBuffer()
@@ -96,11 +106,11 @@ void Scene::CreateBuffer()
 	mVertexBuffer = new VertexBuffer(mDevice);
 
 	VertexBuffer::Data bufferDesc;
-	bufferDesc.mUsage =					Usage::Default;
-	bufferDesc.mTopology =				Topology::TriangleList;
-	bufferDesc.mElementCount =			C_VERTEX_COUNT;
-	bufferDesc.mElementSize	=			sizeof(GridVertex);
-	bufferDesc.mFirstElementPointer	=	vertices;
+	bufferDesc.mUsage				= Usage::Default;
+	bufferDesc.mTopology			= Topology::TriangleList;
+	bufferDesc.mElementCount		= C_VERTEX_COUNT;
+	bufferDesc.mElementSize			= sizeof(GridVertex);
+	bufferDesc.mFirstElementPointer	= vertices;
 	
 	mVertexBuffer->SetData(bufferDesc, NULL);
 
@@ -137,21 +147,15 @@ void Scene::HandleKeyPress(const InputState& currentInput, const GameTime& gameT
 		mCamera->TurnHorizontal(gameTime, false);
 }
 
-void Scene::Update(const Logic::Grid& grid, const Viewport& viewport, const InputState& currentInput, const InputState& previousInput, const GameTime& gameTime)
+void Scene::Update(const Logic::Grid& grid, const InputState& currentInput, const InputState& previousInput, const GameTime& gameTime)
 {
 	mCamera->Update(previousInput, currentInput, gameTime);
 
 	// Pick cell
-	mHoveredCell = PickCell(viewport, currentInput.Mouse.x, currentInput.Mouse.y);
+	mHoveredCell = PickCell(currentInput.Mouse.x, currentInput.Mouse.y);
 
 	if(!HasFocus())
 		return;
-
-	if (currentInput.Mouse.buttonIsPressed[C_MOUSE_LEFT] && !previousInput.Mouse.buttonIsPressed[C_MOUSE_LEFT])
-	{
-		mGrid.AddMarker(mHoveredCell, mCurrentPlayer);
-		mCurrentPlayer = (mCurrentPlayer == 1) ? 2 : 1;
-	}
 
 	HandleKeyPress(currentInput, gameTime);
 }
@@ -167,9 +171,6 @@ void Scene::Draw()
 	float right = mHoveredCell.x * C_CELL_SIZE + c;
 	float down = mHoveredCell.y * C_CELL_SIZE - c;
 
-	//mFile << "(" << mHoveredCell.x << ", " << mHoveredCell.y << ")" << std::endl;
-	//mFile << "(" << left << ", " << right << ") (" << down << ", " << up << ")" << std::endl;
-
 	mEffect->SetVariable("gLeft", left);
 	mEffect->SetVariable("gUp", up);
 	mEffect->SetVariable("gRight", right);
@@ -179,7 +180,7 @@ void Scene::Draw()
 	mEffect->SetVariable("gMVP", modelViewProjection);
 	mEffect->SetVariable("gMarkedCell", D3DXVECTOR2(mHoveredCell.x, mHoveredCell.y));
 
-	// Render the buffer
+	// Render the grid
 	mVertexBuffer->Bind();
 	for(UINT p = 0; p < mEffect->GetTechniqueByIndex(0).GetPassCount(); ++p)
 	{
@@ -187,24 +188,11 @@ void Scene::Draw()
 		mVertexBuffer->Draw();
 	}
 
-	int count = 0;
-	for (Logic::Grid::MarkerMap::const_iterator it = mGrid.GetMarkerMapStart(); 
-		 it != mGrid.GetMarkerMapEnd(); 
-		 it++)
+	// Render the markers
+	for (Logic::Grid::MarkerMap::const_iterator it = mGrid->GetMarkerMapStart(); it != mGrid->GetMarkerMapEnd(); it++)
 	{
-		mMarker[it->second - 1]->Draw(*mCamera, D3DXVECTOR3(it->first.x * C_CELL_SIZE, 1.0f, it->first.y * C_CELL_SIZE));
-		count++;
+		mMarkers[it->second]->Draw(*mCamera, D3DXVECTOR3(it->first.x * C_CELL_SIZE, 1.0f, it->first.y * C_CELL_SIZE));
 	}
-
-	std::stringstream s;
-	s << "Marker count: " << count << std::endl;
-	s << "Longest Row Count: " << mGrid.GetLeadingRow().size() << std::endl;
-	s << "Leading Player: " << mGrid.GetLeadingPlayer() << std::endl;
-	mOutputText += s.str();
-
-	mFont->WriteText(mOutputText, POINT(), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-
-	mOutputText = "";
 }
 
 void Scene::LostFocus()
@@ -251,9 +239,9 @@ float FindClosestMultiple(float x, float interval)
 		return a + interval;
 }
 
-Logic::Cell Scene::PickCell(const Viewport& viewport, int mouseX, int mouseY) const
+Logic::Cell Scene::PickCell(int mouseX, int mouseY) const
 {
-	D3DXVECTOR2 screenSpaceCoordinates = viewport.TransformToViewport(D3DXVECTOR2((float)mouseX, (float)mouseY));
+	D3DXVECTOR2 screenSpaceCoordinates = sViewport->TransformToViewport(D3DXVECTOR2((float)mouseX, (float)mouseY));
 	D3DXMATRIX inverseProjection = mCamera->GetProjectionMatrix();
 	D3DXMATRIX inverseView = mCamera->GetViewMatrix();
 

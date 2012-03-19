@@ -24,21 +24,45 @@ namespace Logic
 		~ServerSession() throw();
 
 		/**
+			Check if the current player is one without a client, thus
+			a local player.
+		*/
+		bool IsLocalPlayerTurn() const;
+
+		/**
 			Getters
 		*/
 		unsigned short GetPort() const;
 		const Ruleset* GetRuleset() const;
 
 		/**
-			Get the name of a certain player.
+			Check if the game is over, and return the winner in such case.
+
+			If the game has not been won, return C_PLAYER_NONE.
 		*/
-		std::string GetPlayerName(unsigned int playerSlot) const;
+		PlayerID GetWinner() const;
 
 		/**
-			Update the session
+			Update the server session (listen to all clients, handle messages, listen for stay alive messages)
 		*/
 		void Update(const GameTime& gameTime);
-		void SendChatMessage(const std::string& message, int targetID, Network::Recipient::Recipient recipient);
+
+		/**
+			Send a chat message to the specified target player
+
+			If broadcast or team is used, targetID is ignored.
+		*/
+		void SendChatMessage(const std::string& message, PlayerID targetID, Network::Recipient::Recipient recipient);
+
+		/**
+			Send a place piece message.
+		*/
+		void SendPlacePieceMessage(const Logic::Cell& cell);
+
+		/**
+			Send start game message
+		*/
+		void SendStartMessage();
 
 		/**
 			Implemented from ServerEventInterface
@@ -46,26 +70,27 @@ namespace Logic
 		void ClientConnected(Network::Slot slot);
 		void ClientDisconnected(Network::Slot slot);
 	private:		
-		typedef int PlayerSlot;
 		typedef int ClientSlot;
-		typedef std::map<PlayerSlot, ClientSlot> SlotMap;
+		typedef std::map<PlayerID, ClientSlot> SlotMap;
 		typedef std::map<ClientSlot, float> TimeoutMap;
 
 		static const float C_TIMEOUT;
 		static const ClientSlot C_STATUS_OPEN = -1;
 		static const ClientSlot C_STATUS_LOCAL = -2;
-		static const PlayerSlot C_INVALID_PLAYER = -1;
 
 		SlotMap mPlayerClients;								// Associates a player with a given client (or determines if the slot is open/local)
 		std::vector<ClientSlot> mPendingClients;			// Holds all the pending clients that we're awaiting a join message from
 		std::vector<ClientSlot> mClientsToRemove;			// Holds all the clients that are to be disconnected
 		TimeoutMap mClientTimeout;							// Holds the timeout values for all clients
 
-		Ruleset* mRuleset;
-		Network::Server* mServer;
+		Ruleset* mRuleset;									// The ruleset determines all the rules for the game
+		Network::Server* mServer;							// The server holds all network clients, and queues their messages
 
-		PlayerSlot GetPlayerSlot(ClientSlot slot) const;
+		PlayerID GetPlayerSlot(ClientSlot slot) const;
 		void HandleJoinMessage(Network::Slot clientSlot, const std::string& name);
+		void HandleChatMessage(PlayerID sourceID, PlayerID targetID, Network::Recipient::Recipient recipient, const std::string& message);
+
+		bool CheckAndHandleWin();
 	};
 }
 #endif

@@ -14,23 +14,12 @@
 
 namespace Components
 {
-	class Console;
-
-	class ConsoleInputReceiver
-	{
-	public:
-		virtual void ConsoleInputEntered(const Console* consoleInstance, const std::string& message) = 0;
-	};
-
 	class Console : public ComponentGroup, public Scrollable, public InputReceiver
 	{
 	public:
 		Console(ID3D10Device* device, ComponentGroup* ownerGroup, RECT position, D3DXCOLOR bgColor,
 			/*InputSubscription* manager,*/ UINT size = 100);
 		~Console() throw();
-
-		void SetInputReceiver(ConsoleInputReceiver* receiver);
-		const ConsoleInputReceiver* GetInputReceiver() const;
 
 		void Toggle();
 		void SetTextColor(D3DXCOLOR newColor);
@@ -50,10 +39,12 @@ namespace Components
 		void Scroll(bool isUp);
 
 		// Methods inherited from InputReceiver
-		void ReceiveInput(std::string input);
+		virtual void ReceiveInput(std::string input);
 
-		// Add a line to the console, but do not notify the input receivers.
-		void AddLine(const std::string& input);
+		/**
+			Get the written contents in the input field
+		*/
+		std::string GetInputFieldContent() const;
 	private:
 		struct TextLine
 		{
@@ -68,8 +59,6 @@ namespace Components
 		Scrollbar*					mScrollbar;
 		Sprite*						mBackground;
 		D3DXCOLOR					mBGColor;
-
-		ConsoleInputReceiver*		mInputReceiver;
 
 		std::stringstream			mStream;
 		std::deque<TextLine>		mOutput;

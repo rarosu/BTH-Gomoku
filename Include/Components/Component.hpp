@@ -55,13 +55,18 @@ namespace Components
 		// Static methods
 		static void Initialize();
 		
+		// Get the dimensions & position of the component
+		float GetWidth() const;
+		float GetHeight() const;
+		const RECT& GetBoundingRect() const;
+		D3DXVECTOR2 GetPosition() const;
 	protected:
 		ComponentGroup*				mOwner;
 
 		static const Viewport*		sViewport;
 		static Sound*				sButtonClick;
 
-		const RECT& GetBoundingRect() const;
+		void SetPosition(D3DXVECTOR2 newPosition);
 		void LoseFocus();
 
 		virtual void MouseEntered() = 0;

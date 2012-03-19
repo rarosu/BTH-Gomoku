@@ -3,141 +3,55 @@
 
 namespace State
 {
-	ServerLobbyState::ServerLobbyState(StateID id, ID3D10Device* device)
-		: ApplicationState(id),
-		  mDevice(device), 
-		  mBackground(NULL),
-		  mComponents(NULL), 
-		  mStartButton(NULL),
-		  mCancelButton(NULL),
-		  mChat(NULL),
-		  mSession(NULL)
-	{
-		mBackground = new Sprite(mDevice, sViewport, "marbleBG1422x800.png", sViewport->GetWidth(), sViewport->GetHeight());
-	}
-
-	ServerLobbyState::~ServerLobbyState() throw()
-	{
-		SafeDelete(mBackground);
-		SafeDelete(mSession);
-	}
-
-	void ServerLobbyState::CreateComponents()
-	{
-		const int C_LABEL_WIDTH = 150;
-		const int C_LABEL_HEIGHT = 48;
-		const int C_LABEL_MARGIN = 10;
-		const int C_BUTTON_YOFFSET = 60;
-		const int C_BUTTON_WIDTH = 150;
-		const int C_BUTTON_HEIGHT = 48;
-		const int C_CHAT_HEIGHT = 150;
-
-		RECT r = {0, 0, 0, 0};
-		mComponents = new Components::ComponentGroup(sRootComponentGroup, "ServerLobbyState Group", r);
-
-		r.left = 50;
-		r.right = r.left + C_LABEL_WIDTH;
-		r.top = 50;
-		r.bottom = r.top + C_LABEL_HEIGHT;
-
-		for (unsigned int i = 0; i < mSession->GetRuleset()->GetPlayerCount(); ++i)
-		{
-			mPlayerLabels.push_back(new Components::Label(mDevice, mComponents, "1.", r, GameFont::Left));
-
-			r.top = r.bottom + C_LABEL_MARGIN;
-			r.bottom = r.top + C_LABEL_HEIGHT;
-		}
-
-		r.right = r.left + C_BUTTON_WIDTH;
-		r.top += C_BUTTON_YOFFSET;
-		r.bottom = r.top + C_BUTTON_HEIGHT;
-		mStartButton = new Components::TextButton(mComponents, r);
-		mStartButton->Initialize(mDevice, "Start");
-
-		r.left += C_BUTTON_WIDTH + 100;
-		r.right = r.left + C_BUTTON_WIDTH;
-		mCancelButton = new Components::TextButton(mComponents, r);
-		mCancelButton->Initialize(mDevice, "Cancel");
-
-		r.left = 0;
-		r.right = sViewport->GetWidth();
-		r.top = sViewport->GetHeight() - C_CHAT_HEIGHT;
-		r.bottom = sViewport->GetHeight();
-		mChat = new Components::Console(mDevice, mComponents, r, D3DXCOLOR(0.6f, 0.6f, 0.6f, 1.0f));
-		mChat->SetInputReceiver(this);
-
-		mChat->SetFocus();
-		mComponents->SetFocus();
-	}
-
-	void ServerLobbyState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
-	{
-		// Check cancel button
-		if (mCancelButton->GetAndResetClickStatus())
-		{
-			ChangeState(C_STATE_MENU);
-			SafeDelete(mSession);
-			return;
-		}
-
-		// Update the session
-		mSession->Update(gameTime);
-
-		// Update the player labels
-		for (unsigned int i = 0; i < mSession->GetRuleset()->GetPlayerCount(); ++i)
-		{
-			std::stringstream s;
-			s << (i + 1) << ". " << mSession->GetPlayerName(i);
-
-			mPlayerLabels[i]->SetCaption(s.str());
-		}
-	}
-
-	void ServerLobbyState::Draw()
-	{
-		mBackground->Draw(D3DXVECTOR2(0, 0));
-	}
-
-	void ServerLobbyState::OnStatePushed()
-	{
-		assert(mSession != NULL);
-		
-		CreateComponents();
-	}
-
-	void ServerLobbyState::OnStatePopped()
-	{
-		mSession = NULL;
-
-		sRootComponentGroup->RemoveComponent(mComponents);
-		mComponents = NULL;
-		mPlayerLabels.clear();
-		mStartButton = NULL;
-		mCancelButton = NULL;
-		mChat = NULL;
-	}
+	ServerLobbyState::ServerLobbyState(StateID id, ID3D10Device* device, State::ServerGameState* serverGameState)
+		: AbstractLobbyState(id, device)
+		, mStartButton(NULL)
+		, mServerSession(NULL)
+		, mServerGameState(serverGameState)
+	{}
 
 	void ServerLobbyState::SetSessionArguments(Network::Server* server, const std::string& adminName, Logic::Ruleset* ruleset)
 	{
 		assert(server != NULL);
 		assert(ruleset != NULL);
-		assert(mSession == NULL);
-		mSession = new Logic::ServerSession(server, adminName, ruleset);
-		mSession->SetChatReceiver(this);
+		assert(mServerSession == NULL);
+
+		mServerSession = new Logic::ServerSession(server, adminName, ruleset);
+
+		SetSession(mServerSession);
 	}
 
-	void ServerLobbyState::ConsoleInputEntered(const Components::Console* consoleInstance, const std::string& message)
+	void ServerLobbyState::AppendStatePopped()
 	{
-		if (consoleInstance == mChat)
+		mServerSession = NULL;
+	}
+
+	void ServerLobbyState::AppendComponents()
+	{
+		RECT r = mCancelButton->GetBoundingRect();
+		r.left = r.right + 50;
+		r.right = r.left + C_BUTTON_WIDTH;
+
+		mStartButton = new Components::TextButton(mComponents, r);
+		mStartButton->Initialize(mDevice, "Start");
+
+		mChat->SetName(mServerSession->GetPlayerName(0));
+	}
+
+	void ServerLobbyState::AppendUpdate()
+	{
+		// Enable start button only if we have enough players
+		if (mServerSession->GetPlayerCount() < mServerSession->GetSlotCount())
+			mStartButton->SetEnabled(false);
+		else
+			mStartButton->SetEnabled(true);
+
+		// Check if we can start the game
+		if (mStartButton->GetAndResetClickStatus())
 		{
-			mSession->SendChatMessage(message, -1, Network::Recipient::Broadcast);
+			// Start the game!
+			mServerGameState->SetServerSession(mServerSession);
+			ChangeState(C_STATE_SERVER_GAME);
 		}
-	}
-
-	void ServerLobbyState::ReceiveChatMessage(const std::string& message, unsigned int sourceID)
-	{
-		std::string entry = mSession->GetPlayerName(sourceID) + ": " + message;
-
-		mChat->AddLine(entry);
 	}
 }

@@ -17,8 +17,9 @@ namespace Network
 	const int C_MESSAGE_REMOVE_PIECE = 10;
 	const int C_MESSAGE_TURN = 11;
 	const int C_MESSAGE_START_GAME = 12;
-	const int C_MESSAGE_LEAVE_GAME = 13;
-	const int C_MESSAGE_STAY_ALIVE = 14;
+	const int C_MESSAGE_GAME_OVER = 13;
+	const int C_MESSAGE_LEAVE_GAME = 14;
+	const int C_MESSAGE_STAY_ALIVE = 15;
 
 	class Message
 	{

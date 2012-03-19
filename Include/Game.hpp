@@ -13,7 +13,8 @@
 #include "CreateGameState.hpp"
 #include "ServerLobbyState.hpp"
 #include "ClientLobbyState.hpp"
-#include "InGameState.hpp"
+#include "ServerGameState.hpp"
+#include "ClientGameState.hpp"
 
 class Game : public D3DApplication, public State::StateManager
 {
@@ -42,7 +43,8 @@ private:
 	State::JoinGameState*		mJoinGameState;
 	State::ServerLobbyState*	mServerLobbyState;
 	State::ClientLobbyState*	mClientLobbyState;
-	State::InGameState*			mInGameState;
+	State::ServerGameState*		mServerGameState;
+	State::ClientGameState*		mClientGameState;
 
 	State::ApplicationState*	mCurrentState;
 	State::ApplicationState*	mNextState;

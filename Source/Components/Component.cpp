@@ -84,6 +84,9 @@ namespace Components
 	
 	bool Component::HasFocus() const
 	{
+		if (mOwner == NULL)
+			return true;
+
 		bool hasFocus = (mOwner->GetFocusedComponent() == this);
 		if(mOwner != NULL)
 			hasFocus = hasFocus && mOwner->HasFocus();

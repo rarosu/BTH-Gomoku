@@ -1,5 +1,6 @@
 #include "CreateGameState.hpp"
 #include "ServerSession.hpp"
+#include "StandardRuleset.hpp"
 
 namespace State
 {
