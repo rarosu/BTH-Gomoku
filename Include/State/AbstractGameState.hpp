@@ -10,6 +10,7 @@
 #include "PieMenu.hpp"
 #include "ClickMenu.hpp"
 #include "PlayerList.hpp"
+#include "Label.hpp"
 
 #include "Sprite.hpp"
 
@@ -67,6 +68,8 @@ namespace State
 		*/
 		void PlayerDisconnected(Logic::PlayerID id, const std::string& name, Network::RemovePlayerReason::RemovePlayerReason reason);
 	protected:
+		Components::ChatConsole*	mChat;
+
 		void SetSession(Logic::Session* session);
 
 		virtual void OnConnectionFailure() {}
@@ -75,26 +78,26 @@ namespace State
 		virtual bool CanSendChatMessage() const { return true; }
 
 		void SetChatName(const std::string& name);
-
-		Components::ChatConsole* mChat;
+		
 	private:
-		ID3D10Device* mDevice;
+		ID3D10Device*				mDevice;
 
 
 		// The session, containing the logical grid and markers, and the connection
 		// between server/client.
-		Logic::Session* mSession;
+		Logic::Session*				mSession;
 
 
 		// The components of the game, including the actual scene which displays the
 		// grid and all the markers.
 		Components::ComponentGroup*	mComponents;
-		Scene* mScene;
-		Components::ClickMenu* mGameMenu;
-		Components::PlayerList*	mPlayerList;
+		Scene*						mScene;
+		Components::ClickMenu*		mGameMenu;
+		Components::PlayerList*		mPlayerList;
+		Components::Label*			mGameOverLabel;
 
 		// Indicates the stage the game is in, currently
-		GameStage::GameStage mGameStage;
+		GameStage::GameStage		mGameStage;
 		
 
 

@@ -4,15 +4,16 @@
 namespace State
 {
 	AbstractGameState::AbstractGameState(StateID id, ID3D10Device* device)
-		: ApplicationState(id)
-		, mDevice(device)
-		, mComponents(NULL)
-		, mScene(NULL)
-		, mChat(NULL)
-		, mGameMenu(NULL)
-		, mPlayerList(NULL)
-		, mSession(NULL)
-		, mGameStage(GameStage::During)
+		: ApplicationState(id),
+		  mDevice(device),
+		  mComponents(NULL),
+		  mScene(NULL),
+		  mChat(NULL),
+		  mGameMenu(NULL),
+		  mPlayerList(NULL),
+		  mSession(NULL),
+		  mGameStage(GameStage::During),
+		  mGameOverLabel(NULL)
 	{}
 
 	AbstractGameState::~AbstractGameState() throw()
@@ -41,16 +42,15 @@ namespace State
 		mComponents = NULL;
 		mScene = NULL;
 		mChat = NULL;
+		mGameOverLabel = NULL;
 
 		SafeDelete(mSession);
 	}
-
 
 	void AbstractGameState::OnResize()
 	{
 		mScene->ResizeFrustum(GetAspectRatio());
 	}
-
 
 	void AbstractGameState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
 	{
@@ -151,6 +151,7 @@ namespace State
 		mChat->AddLine(winner);
 		mChat->SetFocus();
 		mChat->SetVisible(true);
+		mGameOverLabel->SetVisible(true);
 	}
 
 	void AbstractGameState::PlayerConnected(Logic::PlayerID id)
@@ -166,8 +167,6 @@ namespace State
 		mChat->SetFocus();
 		mChat->SetVisible(true);
 	}
-
-
 
 	void AbstractGameState::SetSession(Logic::Session* session)
 	{
@@ -194,14 +193,6 @@ namespace State
 		mScene = new Scene(mDevice, mComponents, GetAspectRatio(), &mSession->GetGrid(), mSession->GetSlotCount());
 
 		r.left = 0;
-		r.right = sViewport->GetWidth();
-		r.bottom = sViewport->GetHeight();
-		r.top = r.bottom - C_CHAT_HEIGHT;
-		mChat = new Components::ChatConsole(mSession, mDevice, mComponents, r, D3DXCOLOR(0.6, 0.6, 0.6, 1.0f), "");
-		mChat->SetChatReceiver(this);
-		mChat->SetVisible(false);
-
-		r.left = 0;
 		r.right = 0;
 		r.top = 0;
 		r.bottom = 0;
@@ -212,6 +203,21 @@ namespace State
 		r.left = sViewport->GetWidth() - C_PLIST_WIDTH;
 		r.top = 0;
 		mPlayerList = new Components::PlayerList(mSession, mDevice, mComponents, r, C_PLIST_WIDTH, C_PLIST_HEIGHT);
+
+		r.left = 0;
+		r.right = sViewport->GetWidth();
+		r.top = 0;
+		r.bottom = 100;
+		mGameOverLabel = new Components::Label(mDevice, mComponents, "GAME OVER", r);
+		mGameOverLabel->SetVisible(false);
+
+		r.left = 0;
+		r.right = sViewport->GetWidth();
+		r.bottom = sViewport->GetHeight();
+		r.top = r.bottom - C_CHAT_HEIGHT;
+		mChat = new Components::ChatConsole(mSession, mDevice, mComponents, r, D3DXCOLOR(0.6, 0.6, 0.6, 1.0f), "");
+		mChat->SetChatReceiver(this);
+		mChat->SetVisible(false);
 
 		mScene->SetFocus();
 		mComponents->SetFocus();
