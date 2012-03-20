@@ -60,7 +60,6 @@ namespace Components
 
 		void AddMenuItem(const std::string& caption);
 		void LostFocus();
-		void Draw();
 
 		bool GetAndResetClickStatus(const std::string& caption);
 		bool GetAndResetClickStatus(const int index);

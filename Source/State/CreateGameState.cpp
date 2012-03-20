@@ -42,6 +42,7 @@ namespace State
 		const int C_LABEL_HEIGHT = mDefaultFont->GetSize();
 		const int C_OFFSET_LEFT = 180;
 		const int C_OFFSET_TOP = 180 - C_LABEL_HEIGHT * 1.5; // DEBUG: When Game Type is invisible
+
 		RECT r;
 
 		// Create all the components and put them in the right place
@@ -56,7 +57,7 @@ namespace State
 
 		r.left = C_OFFSET_LEFT;
 		r.right = r.left + C_LABEL_WIDTH;
-		r.top = C_OFFSET_TOP + C_LABEL_HEIGHT * 3;
+		r.top = C_OFFSET_TOP + C_LABEL_HEIGHT * 3.0;
 		r.bottom = r.top + C_LABEL_HEIGHT;
 		new Components::Label(mDevice, mComponents, "Name:", r, 0, GameFont::Right);
 
@@ -80,16 +81,17 @@ namespace State
 
 		LoadSetupInfo();
 
-		r.left = r.right - C_BUTTON_WIDTH;
-		r.top = C_OFFSET_TOP + C_LABEL_HEIGHT * 6;
-		r.bottom = r.top + C_BUTTON_HEIGHT;
-		mBtnCancel = new Components::TextButton(mComponents, r);
-		mBtnCancel->Initialize(mDevice, "Cancel");
-
-		r.left = C_OFFSET_LEFT;
-		r.right = r.left + C_BUTTON_WIDTH;
+		r.top = C_OFFSET_TOP + C_LABEL_HEIGHT * 6.0;
+		r.bottom = r.top + C_LABEL_HEIGHT;
 		mBtnCreate = new Components::TextButton(mComponents, r);
 		mBtnCreate->Initialize(mDevice, "Create Game");
+
+		/*r.right = sViewport->GetWidth() - 20;
+		r.left = r.right - mBtnCreate->GetWidth();*/
+		r.top = C_OFFSET_TOP + C_LABEL_HEIGHT * 7.5;
+		r.bottom = r.top + C_LABEL_HEIGHT;
+		mBtnCancel = new Components::TextButton(mComponents, r);
+		mBtnCancel->Initialize(mDevice, "Cancel");
 
 		r.left = C_OFFSET_LEFT + C_LABEL_WIDTH + 20;
 		r.right = r.left + C_INPUT_FIELD_WIDTH;
