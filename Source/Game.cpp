@@ -22,7 +22,7 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth,
 	State::ApplicationState::sViewport = &mViewport;
 	State::ApplicationState::sInputManager = &mInputManager;
 	State::ApplicationState::sManager = this;
-	Components::Component::Initialize(mDeviceD3D);
+	Components::Component::Initialize();
 
 	mRootComponentGroup = new Components::RootComponent(mDeviceD3D, mViewport.GetWidth(), mViewport.GetHeight());
 	mInputManager.AddKeyListener(mRootComponentGroup);
@@ -118,16 +118,6 @@ void Game::Draw()
 
 	// Draw the HUD
 	mRootComponentGroup->Draw();	
-
-
-
-	// DEBUG - Output the name of the component that currently has focus
-	//POINT pos = { 10, mViewport.GetHeight() - 40};
-	POINT pos = { 10, 10};
-	mDefaultFont->WriteText(mRootComponentGroup->GetName(), pos, D3DXCOLOR(1.0, 0.0, 0.0, 1.0));
-	// /DEBUG
-
-
 	
 	// Swap backbuffer
 	RenderScene();

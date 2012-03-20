@@ -7,11 +7,9 @@ namespace Components
 	ComponentGroup::ComponentGroup(ComponentGroup* ownerGroup, std::string name, RECT position)
 		: Component(ownerGroup, position),
 		  mFocusedComponent(NULL), 
-		  mName(name),				// DEBUG
-		  mBoundingSprite(NULL)		// DEBUG
+		  mName(name)				// DEBUG
 	{
 		assert(ownerGroup != NULL);
-		mBoundingSprite = new Sprite(sDevice, sViewport, "whitePixel.png", GetWidth(), GetHeight());
 	}
 
 	ComponentGroup::ComponentGroup()
@@ -83,18 +81,6 @@ namespace Components
 			(*it)->Draw();
 	}
 
-	void ComponentGroup::Draw(bool drawBounding)
-	{
-		ComponentGroup::Draw();
-
-		if(!IsVisible())
-			return;
-
-		// DEBUG
-		if(drawBounding)
-			mBoundingSprite->Draw(GetPosition(), D3DXCOLOR(1.0, 0.0, 0.0, 0.5));
-	}
-
 	void ComponentGroup::LostFocus()
 	{
 		std::vector<Component*>::iterator it;
@@ -105,11 +91,6 @@ namespace Components
 
 	void ComponentGroup::GotFocus()
 	{
-		/*std::vector<Component*>::iterator it;
-		
-		for(it = mComponents.begin(); it != mComponents.end(); it++)
-			(*it)->GotFocus();*/
-
 		if(mFocusedComponent)
 			mFocusedComponent->GotFocus();
 	}
