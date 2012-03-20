@@ -3,12 +3,17 @@
 
 namespace Components
 {
+	const D3DXCOLOR	PlayerItem::sPlayerColors[] = { D3DXCOLOR(1.0, 0.0, 0.0, 1.0),
+													D3DXCOLOR(0.0, 1.0, 0.0, 1.0),
+													D3DXCOLOR(0.0, 0.0, 1.0, 1.0),
+													D3DXCOLOR(1.0, 1.0, 0.0, 1.0) };
+
 	PlayerItem::PlayerItem(const Logic::Session* session, Logic::PlayerID playerID, ComponentGroup* ownerGroup, const RECT& position)
-		: Button(ownerGroup, position)
-		, mSession(session)
-		, mPlayerID(playerID)
-		, mFont(NULL)
-		, mHighlightBackground(NULL)
+		: Button(ownerGroup, position),
+		  mSession(session),
+		  mPlayerID(playerID),
+		  mFont(NULL),
+		  mHighlightBackground(NULL)
 	{
 	
 	}
@@ -60,7 +65,7 @@ namespace Components
 			if(IsHovered())
 				mFont->WriteText(caption, &r, D3DXCOLOR(1.0, 1.0, 0.0, 1.0), GameFont::Center, GameFont::Middle);
 			else
-				mFont->WriteText(caption, &r, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f), GameFont::Center, GameFont::Middle);
+				mFont->WriteText(caption, &r, sPlayerColors[mPlayerID], GameFont::Center, GameFont::Middle);
 		}
 		else
 			mFont->WriteText(caption, &r, D3DXCOLOR(0.5, 0.5, 0.5, 1.0), GameFont::Center, GameFont::Middle);
