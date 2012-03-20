@@ -200,8 +200,11 @@
     <ClCompile Include="Source\Network\ListenSocket.cpp" />
     <ClCompile Include="Source\Network\Message.cpp" />
     <ClCompile Include="Source\Network\Messages\GameOverMessage.cpp" />
+    <ClCompile Include="Source\Network\Messages\GeneralMessage.cpp" />
+    <ClCompile Include="Source\Network\Messages\HintMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\JoinMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\LeaveGameMessage.cpp" />
+    <ClCompile Include="Source\Network\Messages\MineMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\PlacePieceMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\RefuseMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\RemovePieceMessage.cpp" />
@@ -210,6 +213,7 @@
     <ClCompile Include="Source\Network\Messages\StartGameMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\StayAliveMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\TurnMessage.cpp" />
+    <ClCompile Include="Source\Network\Messages\WarningMessage.cpp" />
     <ClCompile Include="Source\Network\Server.cpp" />
     <ClCompile Include="Source\Scene\Marker.cpp" />
     <ClCompile Include="Source\Scene\ObjModel.cpp" />
@@ -273,9 +277,12 @@
     <ClInclude Include="Include\Network\ListenSocket.hpp" />
     <ClInclude Include="Include\Network\Message.hpp" />
     <ClInclude Include="Include\Network\Messages\GameOverMessage.hpp" />
+    <ClInclude Include="Include\Network\Messages\GeneralMessage.hpp" />
+    <ClInclude Include="Include\Network\Messages\HintMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\JoinMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\LeaveGameMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\MessageInclude.hpp" />
+    <ClInclude Include="Include\Network\Messages\MineMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\PlacePieceMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\RefuseMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\RemovePieceMessage.hpp" />
@@ -284,6 +291,7 @@
     <ClInclude Include="Include\Network\Messages\StartGameMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\StayAliveMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\TurnMessage.hpp" />
+    <ClInclude Include="Include\Network\Messages\WarningMessage.hpp" />
     <ClInclude Include="Include\Network\NetworkInclude.hpp" />
     <ClInclude Include="Include\Network\Server.hpp" />
     <ClInclude Include="Include\Scene\Marker.hpp" />

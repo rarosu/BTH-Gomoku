@@ -15,5 +15,9 @@
 #include "TurnMessage.hpp"
 #include "JoinMessage.hpp"
 #include "RefuseMessage.hpp"
+#include "HintMessage.hpp"
+#include "WarningMessage.hpp"
+#include "GeneralMessage.hpp"
+#include "MineMessage.hpp"
 
 #endif

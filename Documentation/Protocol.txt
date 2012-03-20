@@ -16,3 +16,7 @@ DEFAULT FOR ID = -1;
 12		Game Over			WINNER_ID (int)																					SERVER TO CLIENT
 13		Leave game			PLAYER_ID (int)																					CLIENT TO SERVER
 14		Stay alive			PLAYER_ID (int)																					CLIENT TO SERVER
+15		Hint				X (int), Y (int)																				BOTH
+16		Warning				X (int), Y (int)																				BOTH
+17		General				X (int), Y (int)																				BOTH
+18		Mine				X (int), Y (int)																				BOTH

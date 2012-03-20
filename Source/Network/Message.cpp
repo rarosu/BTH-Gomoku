@@ -76,6 +76,18 @@ namespace Network
 			case C_MESSAGE_STAY_ALIVE:
 				m = StayAliveMessage::Inflate(args);
 				break;
+			case C_MESSAGE_HINT:
+				m = HintMessage::Inflate(args);
+				break;
+			case C_MESSAGE_WARNING:
+				m = WarningMessage::Inflate(args);
+				break;
+			case C_MESSAGE_GENERAL:
+				m = GeneralMessage::Inflate(args);
+				break;
+			case C_MESSAGE_MINE:
+				m = MineMessage::Inflate(args);
+				break;
 		}
 
 		return m;
