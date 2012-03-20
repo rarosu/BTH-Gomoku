@@ -23,6 +23,8 @@ namespace State
 
 	void ServerLobbyState::AppendStatePushed()
 	{
+		//mServerSession->Set
+
 		mSlotMenu->GetMenuItem(0)->SetCaption(GetCaptionForSlot(Logic::Session::C_STATUS_LOCAL));
 		mSlotMenu->GetMenuItem(0)->SetEnabled(false);
 		for (int s = 1; s < mServerSession->GetSlotCount(); ++s)
@@ -72,6 +74,17 @@ namespace State
 
 		if (!mServerSession->AreTeamsValid())
 			mStartButton->SetEnabled(false);
+
+		static bool hardCodeFlag = true;
+		if (hardCodeFlag && mServerSession->GetPlayerCount() == 4)
+		{
+			mServerSession->SendSetTeamMessage(0, 0);
+			mServerSession->SendSetTeamMessage(1, 1);
+			mServerSession->SendSetTeamMessage(2, 0);
+			mServerSession->SendSetTeamMessage(3, 1);
+
+			hardCodeFlag = false;
+		}
 
 		// Check if we can start the game
 		if (mStartButton->GetAndResetClickStatus())

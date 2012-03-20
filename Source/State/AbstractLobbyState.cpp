@@ -45,6 +45,7 @@ namespace State
 			mTeamMenu->GetMenuItem(i)->SetCaption(GetCaptionForTeam(mSession->GetPlayerTeam(i)));
 		}
 
+		/*
 		// Handle changing of slots
 		for (unsigned int i = 0; i < mSession->GetSlotCount(); ++i)
 		{
@@ -113,6 +114,7 @@ namespace State
 					mTeamChosen[i] = false; // DEBUG
 			}
 		}
+		*/
 
 		// Update the session and check for errors
 		try
