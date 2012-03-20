@@ -43,7 +43,6 @@
     <ClCompile Include="Source\Network\Messages\AddPlayerMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\RemovePlayerMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\SetTeamMessage.cpp" />
-    <ClCompile Include="Source\Network\Messages\SetMarkerMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\PlacePieceMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\RemovePieceMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\TurnMessage.cpp" />
@@ -72,6 +71,7 @@
     <ClCompile Include="Source\Network\Messages\GameOverMessage.cpp" />
     <ClCompile Include="Source\Components\PlayerList.cpp" />
     <ClCompile Include="Source\Scene\ObjModel.cpp" />
+    <ClCompile Include="Source\Logic\Ruleset2v2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -116,7 +116,6 @@
     <ClInclude Include="Include\Network\Messages\AddPlayerMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\RemovePlayerMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\SetTeamMessage.hpp" />
-    <ClInclude Include="Include\Network\Messages\SetMarkerMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\PlacePieceMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\RemovePieceMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\TurnMessage.hpp" />
@@ -148,6 +147,7 @@
     <ClInclude Include="Include\Network\Messages\GameOverMessage.hpp" />
     <ClInclude Include="Include\Components\PlayerList.hpp" />
     <ClInclude Include="Include\Scene\ObjModel.hpp" />
+    <ClInclude Include="Include\Logic\Ruleset2v2.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

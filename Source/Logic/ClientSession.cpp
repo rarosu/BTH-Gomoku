@@ -14,7 +14,7 @@ namespace Logic
 		, mKeepAliveCounter(0.0f)
 		, mClientTurn(false)
 	{
-		mPlayers[selfID] = new Player(playerName, 0, 0);	// TODO: Get initial team/marker from Accept message
+		mPlayers[selfID] = new Player(playerName, C_TEAM_NONE);
 	}
 
 	ClientSession::~ClientSession()
@@ -70,7 +70,7 @@ namespace Logic
 					Network::AddPlayerMessage* m = static_cast<Network::AddPlayerMessage*>(mClient->PopMessage(i));
 					
 					assert(mPlayers[m->mPlayerID] == NULL);
-					mPlayers[m->mPlayerID] = new Player(m->mName, m->mTeam, m->mMarkerID);
+					mPlayers[m->mPlayerID] = new Player(m->mName, m->mTeam);
 
 					if (mSessionNotifiee != NULL)
 						mSessionNotifiee->PlayerConnected(m->mPlayerID);
@@ -98,16 +98,6 @@ namespace Logic
 
 					assert(mPlayers[m->mPlayerID] != NULL);
 					mPlayers[m->mPlayerID]->SetTeam(m->mTeam);
-
-					SafeDelete(m);
-				} break;
-
-				case Network::C_MESSAGE_SET_MARKER:
-				{
-					Network::SetMarkerMessage* m = static_cast<Network::SetMarkerMessage*>(mClient->PopMessage(i));
-
-					assert(mPlayers[m->mPlayerID] != NULL);
-					mPlayers[m->mPlayerID]->SetMarkerType(m->mMarkerID);
 
 					SafeDelete(m);
 				} break;

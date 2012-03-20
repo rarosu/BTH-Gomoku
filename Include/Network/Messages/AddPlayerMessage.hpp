@@ -9,12 +9,11 @@ namespace Network
 	{
 	public:
 		AddPlayerMessage();
-		AddPlayerMessage(int playerID, int team, int markerID, const std::string& name);
+		AddPlayerMessage(int playerID, int team, const std::string& name);
 		static Message* Inflate(const std::string& args);
 
 		int mPlayerID;
 		int mTeam;
-		int mMarkerID;
 		std::string mName;
 	protected:
 		int ID() const;

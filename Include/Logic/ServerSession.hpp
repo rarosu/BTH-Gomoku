@@ -64,6 +64,11 @@ namespace Logic
 		*/
 		void SendStartMessage();
 
+		/**	
+			Set the team of a local player.
+		*/
+		void SetLocalPlayerTeam(PlayerID playerID, Team team);
+
 		/**
 			Implemented from ServerEventInterface
 		*/
