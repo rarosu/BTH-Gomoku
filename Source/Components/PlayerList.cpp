@@ -63,7 +63,7 @@ namespace Components
 		if(IsEnabled())
 		{
 			if(IsHovered())
-				mFont->WriteText(caption, &r, D3DXCOLOR(1.0, 1.0, 0.0, 1.0), GameFont::Center, GameFont::Middle);
+				mFont->WriteText(caption, &r, D3DXCOLOR(1.0, 0.0, 1.0, 1.0), GameFont::Center, GameFont::Middle);
 			else
 				mFont->WriteText(caption, &r, sPlayerColors[mPlayerID], GameFont::Center, GameFont::Middle);
 		}
