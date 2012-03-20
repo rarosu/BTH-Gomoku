@@ -154,6 +154,16 @@ namespace State
 		{
 			try
 			{
+				std::string newName("");
+				std::string oldName = mNameField->GetText();
+
+				for(int i = 0; i < oldName.length(); ++i)
+				{
+					if(oldName[i] != ' ')
+						newName += oldName[i];
+				}
+				mNameField->SetText(newName);
+
 				mClient = new Network::Client(mIPAddressField->GetText().c_str(), port);
 				mClient->Send(Network::JoinMessage(mNameField->GetText()));
 
