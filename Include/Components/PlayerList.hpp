@@ -20,11 +20,15 @@ namespace Components
 		void Draw();
 
 		std::string GetName();
+
 	protected:
 		void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
+
 	private:
-		const Logic::Session* mSession;
-		Logic::PlayerID mPlayerID;
+		const Logic::Session*	mSession;
+		Logic::PlayerID			mPlayerID;
+
+		static const D3DXCOLOR	sPlayerColors[];
 
 		GameFont* mFont;
 		Sprite* mHighlightBackground;

@@ -23,7 +23,6 @@ namespace State
 		SafeDelete(mSession);
 	}
 
-
 	void AbstractGameState::OnStatePushed()
 	{
 		
