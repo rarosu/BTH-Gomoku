@@ -133,7 +133,9 @@ namespace State
 	{
 		const int C_LABEL_WIDTH		= 150;
 		const int C_LABEL_HEIGHT	= 50;
-		const int C_LABEL_MARGIN	= 0;
+		const int C_LABEL_MARGIN	= 10;
+		const int C_LABEL_XOFFSET	= 50;
+		const int C_MENU_WIDTH		= 100;
 		const int C_BUTTON_XOFFSET	= 20;
 		const int C_BUTTON_YOFFSET	= 20;
 		const int C_BUTTON_WIDTH	= 150;
@@ -151,7 +153,7 @@ namespace State
 		new Components::Label(mDevice, mComponents, "GAME LOBBY", r);
 
 		// Create the labels
-		r.left = 50;
+		r.left = C_LABEL_XOFFSET;
 		r.right = r.left + C_LABEL_WIDTH;
 		r.top = 150;
 		r.bottom = r.top + C_LABEL_HEIGHT;
@@ -160,10 +162,19 @@ namespace State
 
 		for (unsigned int i = 0; i < 4/*mSession->GetSlotCount()*/; ++i)
 		{
-			r.top = r.bottom + C_LABEL_MARGIN;
+			r.left = C_LABEL_XOFFSET;
+			r.right = r.left + C_LABEL_WIDTH; 
+			r.top = r.bottom;
 			r.bottom = r.top + C_LABEL_HEIGHT;
-
 			mPlayerLabels.push_back(new Components::Label(mDevice, mComponents, "1.", r, 0, GameFont::Left));
+
+			r.left = r.right + C_LABEL_MARGIN;
+			r.right = r.left + C_MENU_WIDTH;
+			mTeamMenus.push_back(new Components::ClickMenu(mComponents, mDevice, r, C_MENU_WIDTH, C_LABEL_HEIGHT));
+			mTeamMenus.back()->AddMenuItem("Select Team");
+			mTeamMenus.back()->GetMenuItem(0)->AddSubItem("Team 1");
+			mTeamMenus.back()->GetMenuItem(0)->AddSubItem("Team 2");
+
 		}
 
 		// Create the cancel button

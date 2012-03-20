@@ -8,6 +8,7 @@
 #include "ChatConsole.hpp"
 #include "TextButton.hpp"
 #include "Label.hpp"
+#include "ClickMenu.hpp"
 
 namespace State
 {
@@ -68,6 +69,7 @@ namespace State
 		Components::TextButton*					mCancelButton;
 		Components::ChatConsole*				mChat;
 		std::vector<Components::Label*>			mPlayerLabels;
+		std::vector<Components::ClickMenu*>		mTeamMenus;
 	private:
 		Sprite*									mBackground;
 		Logic::Session*							mSession;
