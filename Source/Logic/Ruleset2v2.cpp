@@ -1,6 +1,7 @@
 #include "Ruleset2v2.hpp"
 #include "Session.hpp"
 #include <cstdlib>
+#include <algorithm>
 
 namespace Logic
 {
@@ -28,7 +29,17 @@ namespace Logic
 
 	unsigned int Ruleset2v2::GetNextPlayer(unsigned int currentPlayer) const
 	{
-		return mTurnOrder[(++currentPlayer) % GetPlayerCount()];
+		std::vector<unsigned int>::iterator it = std::find(mTurnOrder.begin(), mTurnOrder.end(), currentPlayer);
+
+		if (it == mTurnOrder.end())
+			it = mTurnOrder.begin();
+
+		it++;
+		
+		if (it == mTurnOrder.end())
+			it = mTurnOrder.begin();
+
+		return *it;
 	}
 
 }
