@@ -28,7 +28,7 @@ namespace Components
 		// Methods inherited from Component
 		virtual void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		virtual void Draw();
-		void LostFocus();
+		virtual void LostFocus();
 		void GotFocus();
 		// DEBUG
 		std::string GetName();

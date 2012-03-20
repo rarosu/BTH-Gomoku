@@ -1,7 +1,7 @@
 #ifndef CLICKMENU_HPP
 #define CLICKMENU_HPP
 
-#include <map>
+#include <vector>
 #include "GameFont.hpp"
 #include "ComponentGroup.hpp"
 #include "Button.hpp"
@@ -23,6 +23,7 @@ namespace Components
 		void Draw();
 		std::string GetCaption();
 		void SetCaption(std::string caption);
+		bool GetAndResetClickStatus();
 
 		// DEBUG
 		virtual std::string GetName();
@@ -38,6 +39,15 @@ namespace Components
 		D3DXCOLOR						mTextColor;
 	};
 
+	class LazyClickMenuItem : public ClickMenuItem
+	{
+	public:
+		LazyClickMenuItem(ClickMenu* ownerGroup, RECT position);
+
+	protected:
+		virtual void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState) {}
+	};
+
 	class ClickMenu : public ComponentGroup
 	{
 	public:
@@ -45,9 +55,11 @@ namespace Components
 				  ID3D10Device* device, 
 				  RECT position, 
 				  int itemWidth, 
-				  int itemHeight);
+				  int itemHeight,
+				  bool isLazy = false);
 
 		void AddMenuItem(const std::string& caption);
+		void LostFocus();
 
 		bool GetAndResetClickStatus(const std::string& caption);
 		bool GetAndResetClickStatus(const int index);
@@ -55,14 +67,18 @@ namespace Components
 		ClickMenuItem* GetMenuItem(const int index);
 		ClickMenu* GetSubMenu(const std::string& caption);
 		ClickMenu* GetSubMenu(const int index);
+		void Collapse(const int index);
+		void Collapse(ClickMenuItem* collapseItem);
+		void CollapseAll();
+		void Expand(const int index);
+		void Expand(ClickMenuItem* collapseItem);
 	
 	private:
-		typedef std::map<std::string, ClickMenuItem*> ItemMap;
-
 		ID3D10Device*						mDevice;
-		ItemMap								mItems;
+		std::vector<ClickMenuItem*>			mItems;
 		int									mItemWidth;
 		int									mItemHeight;
+		bool								mIsLazy;
 	};
 }
 #endif
