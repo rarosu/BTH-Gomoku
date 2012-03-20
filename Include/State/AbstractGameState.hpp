@@ -119,6 +119,7 @@ namespace State
 
 		int GetHighlightConstant(Scene::HighlightType type) const;
 		Scene::HighlightType GetHighlightType(int highlightConstant) const;
+		std::string GetHighlightName(Scene::HighlightType type) const;
 	};
 }
 

@@ -193,7 +193,17 @@ namespace State
 		// Set the game over flag and notify the players in the chat
 		mGameStage = GameStage::Won;
 
-		std::string winner = "! Game won: " + mSession->GetPlayerName(mSession->GetWinner());
+		std::string winners;
+		if (mSession->GetSlotCount() == 2)
+		{
+			winners = mSession->GetPlayerName(mSession->GetWinner());
+		}
+		else if (mSession->GetSlotCount() == 4)
+		{
+			winners = mSession->GetPlayerName(mSession->GetWinner()) + " & " + mSession->GetPlayerName(mSession->GetTeamMate(mSession->GetWinner()));
+		}
+
+		std::string winner = "! Game won: " + winners;
 		mChat->AddLine(winner);
 		mChat->SetFocus();
 		mChat->SetVisible(true);
@@ -217,6 +227,11 @@ namespace State
 	void AbstractGameState::SetHighlightedCell(const Logic::Cell& cell, int highlightType)
 	{
 		mScene->HighlightCell(cell, GetHighlightType(highlightType));
+		mScene->LookAtCell(cell);
+
+		mChat->AddLine("! Highlighted cell: " + GetHighlightName(GetHighlightType(highlightType)));
+		mChat->SetFocus();
+		mChat->SetVisible(true);
 	}
 
 	void AbstractGameState::SetSession(Logic::Session* session)
@@ -342,5 +357,34 @@ namespace State
 		}
 
 		return type;
+	}
+
+	std::string AbstractGameState::GetHighlightName(Scene::HighlightType type) const
+	{
+		std::string name;
+		switch (type)
+		{
+			case Scene::None:
+				name = "None";
+			break;
+
+			case Scene::Hint:
+				name = "Hint";
+			break;
+
+			case Scene::Warning:
+				name = "Warning";
+			break;
+
+			case Scene::General:
+				name = "General";
+			break;
+
+			case Scene::Mine:
+				name = "Mine";
+			break;
+		}
+
+		return name;
 	}
 }
