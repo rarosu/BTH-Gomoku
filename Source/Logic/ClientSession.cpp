@@ -97,13 +97,14 @@ namespace Logic
 				{
 					Network::RemovePlayerMessage* m = static_cast<Network::RemovePlayerMessage*>(mClient->PopMessage(i));
 					
-					assert(mPlayers[m->mPlayerID] != NULL);
+					if (mPlayers[m->mPlayerID] != NULL)
+					{
+						std::string name = mPlayers[m->mPlayerID]->GetName();
+						if (mSessionNotifiee != NULL)
+							mSessionNotifiee->PlayerDisconnected(m->mPlayerID, name, m->mReason);
 
-					std::string name = mPlayers[m->mPlayerID]->GetName();
-					if (mSessionNotifiee != NULL)
-						mSessionNotifiee->PlayerDisconnected(m->mPlayerID, name, m->mReason);
-
-					SafeDelete(mPlayers[m->mPlayerID]);
+						SafeDelete(mPlayers[m->mPlayerID]);
+					}
 					SafeDelete(m);
 				} break;
 
