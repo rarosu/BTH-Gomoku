@@ -30,6 +30,7 @@ cbuffer cbEveryFrame
 	matrix		gModel;
 	matrix		gMVP;
 	float2		gMarkedCell;
+	float4		gMarkedCellBox; // x = right, y = down, z = left, w = up
 	float		gLeft;		// TEST
 	float		gUp;
 	float		gRight;
@@ -59,8 +60,10 @@ float4 PS(PS_INPUT input) : SV_TARGET0
 {
 	float4 col = gCellTexture.Sample(LinearSampler, input.cellUV) * gBoardTexture.Sample(LinearSampler, input.boardUV);
 
-	if (input.worldPos.x > gLeft && input.worldPos.x < gRight &&
-		input.worldPos.z > gDown && input.worldPos.z < gUp)
+	//if (input.worldPos.x > gLeft && input.worldPos.x < gRight &&
+		//input.worldPos.z > gDown && input.worldPos.z < gUp)
+	if (input.worldPos.x > gMarkedCellBox.z && input.worldPos.x < gMarkedCellBox.x &&
+		input.worldPos.z > gMarkedCellBox.y && input.worldPos.z < gMarkedCellBox.w)
 	{
 		col = col * (1 - gPickColor.w) + gPickColor * gPickColor.w;
 		col.w = 1.0;

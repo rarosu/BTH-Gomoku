@@ -44,6 +44,7 @@ void Camera::MoveBack(const GameTime& gameTime)
 	forward = mDirection - (D3DXVec3Dot(&mDirection, &mWorldUp) * mWorldUp);
 	D3DXVec3Normalize(&forward, &forward);
 	mPosition -= forward * C_MOVE_SPEED * (float)gameTime.GetTimeSinceLastTick().Seconds;
+	mDestination = mPosition;
 }
 
 // Move camera forwards: walk

@@ -62,6 +62,7 @@ Scene::Scene(ID3D10Device* device, Components::ComponentGroup* ownerGroup, float
 		//mMarkers.push_back(new Marker(mDevice, C_CELL_SIZE * 0.5f, C_MARKER_COLORS[i]));
 		mMarkers.push_back(new Marker(mDevice, C_MARKER_TYPES[i]));
 	}
+
 }
 
 Scene::~Scene() throw()
@@ -197,11 +198,13 @@ void Scene::Draw()
 	float up = mHoveredCell.y * C_CELL_SIZE + c;
 	float right = mHoveredCell.x * C_CELL_SIZE + c;
 	float down = mHoveredCell.y * C_CELL_SIZE - c;
+	D3DXVECTOR4 vec = D3DXVECTOR4(right, down, left, up);
 
 	mEffect->SetVariable("gLeft", left);
 	mEffect->SetVariable("gUp", up);
 	mEffect->SetVariable("gRight", right);
 	mEffect->SetVariable("gDown", down);
+	mEffect->SetVariable("gMarkedCellBox", vec);
 
 	mEffect->SetVariable("gModel", mModelMatrix);
 	mEffect->SetVariable("gMVP", modelViewProjection);
@@ -293,6 +296,11 @@ Logic::Cell Scene::PickCell(int mouseX, int mouseY) const
 	float closestMultipleX = FindClosestMultiple(hit.x, C_CELL_SIZE);
 	float closestMultipleZ = FindClosestMultiple(hit.z, C_CELL_SIZE);
 	return Logic::Cell(static_cast<int>(closestMultipleX) / C_CELL_SIZE, static_cast<int>(closestMultipleZ) / C_CELL_SIZE);
+}
+
+void Scene::HighlightCell(Logic::Cell cell, HighlightType type)
+{
+	
 }
 
 void Scene::LookAtCell(const Logic::Cell& cell)

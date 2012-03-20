@@ -23,6 +23,8 @@ public:
 	Scene(ID3D10Device* device, Components::ComponentGroup* ownerGroup, float aspectRatio, const Logic::Grid* grid, unsigned int playerCount);
 	~Scene() throw();
 
+	enum HighlightType { Hint, Warning, General, Mine };
+
 	void HandleKeyPress(const InputState& currentInput, const GameTime& gameTime);
 
 	// Methods inherited from Component
@@ -53,6 +55,11 @@ public:
 	Logic::Cell PickCell(int mouseX, int mouseY) const;
 
 	/**
+		Highlight a given cell with a specific highlight type
+	*/
+	void HighlightCell(Logic::Cell cell, HighlightType type);
+
+	/**
 		Make the camera look at a specific cell.
 	*/
 	void LookAtCell(const Logic::Cell& cell);
@@ -61,6 +68,7 @@ protected:
 	void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState) {}
 
 private:
+	typedef std::map<HighlightType, Logic::Cell> HighlightMap;
 	static const D3DXCOLOR C_MARKER_COLORS[];
 	static const Marker::MarkerType C_MARKER_TYPES[];
 
@@ -81,6 +89,8 @@ private:
 		GridVertex mVertices[6];
 	};
 
+	
+
 	ID3D10Device*				mDevice;
 	Effect*						mEffect;
 	VertexBuffer*				mVertexBuffer;
@@ -89,6 +99,7 @@ private:
 	Camera*						mCamera;
 	std::vector<Marker*>		mMarkers;
 	Logic::Cell					mHoveredCell;
+	HighlightMap				mHighlightedCells;
 	const Logic::Grid*			mGrid;
 
 	D3DXMATRIX					mModelMatrix;
