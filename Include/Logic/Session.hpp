@@ -92,6 +92,11 @@ namespace Logic
 		virtual bool IsLocalPlayerTurn() const = 0;
 
 		/**
+			Check whether a specific player is local or not.
+		*/
+		virtual bool IsLocalPlayer(PlayerID index) const = 0;
+
+		/**
 			Set/Get the session notification interface, where we send
 			notifications on generic session events.
 		*/

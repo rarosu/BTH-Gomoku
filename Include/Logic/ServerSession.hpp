@@ -30,6 +30,11 @@ namespace Logic
 		bool IsLocalPlayerTurn() const;
 
 		/**
+			Check whether a specific player is local or not.
+		*/
+		bool IsLocalPlayer(PlayerID index) const;
+
+		/**
 			Getters
 		*/
 		unsigned short GetPort() const;

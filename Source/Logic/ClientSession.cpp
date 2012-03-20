@@ -27,6 +27,11 @@ namespace Logic
 		return mCurrentPlayer == mSelfID;
 	}
 
+	bool ClientSession::IsLocalPlayer(PlayerID index) const
+	{
+		return index == mSelfID;
+	}
+
 	bool ClientSession::IsConnected() const
 	{
 		return (mClient != NULL && mClient->IsConnected());
