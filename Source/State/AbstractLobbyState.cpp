@@ -43,8 +43,22 @@ namespace State
 			s << (i + 1) << ". " << mSession->GetPlayerName(i);
 
 			mPlayerLabels[i]->SetCaption(s.str());
-			mSlotMenu->GetMenuItem(i)->SetCaption(GetCaptionForSlot(mSession->GetSlotType(i)));
-			mTeamMenu->GetMenuItem(i)->SetCaption(GetCaptionForTeam(mSession->GetPlayerTeam(i)));
+
+			/*
+			mTeamMenus[i]->SetCurrentValue(mSession->GetPlayerTeam(i));
+			switch (mSession->GetSlotType(i))
+			{
+				case Logic::Session::C_STATUS_LOCAL:
+					mSlotMenus[i]->SetCurrentValue(0);
+				break;
+
+				case Logic::Session::C_STATUS_OPEN:
+				case Logic::Session::C_STATUS_REMOTE:
+					mSlotMenus[i]->SetCurrentValue(1);
+				break;
+			}
+			*/
+			
 		}
 
 		HandleMenus();
@@ -94,6 +108,8 @@ namespace State
 		mCancelButton = NULL;
 		mChat = NULL;
 		mPlayerLabels.clear();
+		mTeamMenus.clear();
+		mSlotMenus.clear();
 	}
 
 	void AbstractLobbyState::ChatInputEntered(const Components::ChatConsole* consoleInstance, const std::string& message, Logic::PlayerID target, Network::Recipient::Recipient recipient)
@@ -112,7 +128,12 @@ namespace State
 
 	void AbstractLobbyState::PlacePiece(Logic::PlayerID id, const Logic::Cell& cell)
 	{
-		// TODO: Stuff
+		assert(false);
+	}
+
+	void AbstractLobbyState::SetTeam(Logic::PlayerID id, Logic::Team team)
+	{
+		mTeamMenus[id]->SetCurrentValue(team);
 	}
 
 	void AbstractLobbyState::GameOver(Logic::PlayerID winningPlayer)
@@ -271,87 +292,19 @@ namespace State
 
 	void AbstractLobbyState::HandleMenus()
 	{
-		//// Handle changing of slots
-		//for (unsigned int i = 0; i < mSession->GetSlotCount(); ++i)
-		//{
-		//	if(mSlotMenu->GetSubMenu(i)->GetAndResetClickStatus(0))
-		//	{
-		//		mTeamMenu->CollapseAll();
-		//		mSlotMenu->CollapseAll();
+		for (int i = 0; i < mSession->GetSlotCount(); ++i)
+		{
+			if (mSlotMenus[i]->GetAndResetToggleStatus())
+			{
+				SlotChosen(i, mSlotMenus[i]->GetCurrentValue());
+			}
 
-		//		if(!mSlotChosen[i]) // DEBUG
-		//		{
-		//			std::string newCaption = mSlotMenu->GetSubMenu(i)->GetMenuItem(0)->GetCaption();
-		//			mSlotMenu->GetMenuItem(i)->SetCaption(newCaption);
-		//			mSlotMenu->Collapse(i);
-		//			mSlotChosen[i] = true; // DEBUG
+			if (mTeamMenus[i]->GetAndResetToggleStatus())
+			{
+				TeamChosen(i, mTeamMenus[i]->GetCurrentValue());
+			}
+		}
 
-		//			SlotChosen(i, 1);
-		//		}
-		//		else
-		//			mSlotChosen[i] = false; // DEBUG
-		//	}
-		//	else if(mSlotMenu->GetSubMenu(i)->GetAndResetClickStatus(1))
-		//	{
-		//		mTeamMenu->CollapseAll();
-		//		mSlotMenu->CollapseAll();
-
-		//		if(!mSlotChosen[i]) // DEBUG
-		//		{
-		//			std::string newCaption = mSlotMenu->GetSubMenu(i)->GetMenuItem(1)->GetCaption();
-		//			mSlotMenu->GetMenuItem(i)->SetCaption(newCaption);
-		//			mSlotMenu->Collapse(i);
-		//			mTeamMenu->CollapseAll();
-		//			mSlotChosen[i] = true; // DEBUG
-
-		//			SlotChosen(i, 1);
-		//		}
-		//		else
-		//			mSlotChosen[i] = false; // DEBUG
-		//	}
-		//}
-
-		//// Handle changing of teams
-		//for (unsigned int i = 0; i < mSession->GetSlotCount(); ++i)
-		//{
-		//	if(mTeamMenu->GetSubMenu(i)->GetAndResetClickStatus(0))
-		//	{
-		//		mTeamMenu->CollapseAll();
-		//		mSlotMenu->CollapseAll();
-
-		//		if(!mTeamChosen[i]) // DEBUG
-		//		{
-		//			std::string newCaption = mTeamMenu->GetSubMenu(i)->GetMenuItem(0)->GetCaption();
-		//			mTeamMenu->GetMenuItem(i)->SetCaption(newCaption);
-		//			mTeamMenu->Collapse(i);
-		//			mSlotMenu->CollapseAll();
-		//			mTeamChosen[i] = true; // DEBUG
-
-		//			TeamChosen(i, 1);
-		//		}
-		//		else
-		//			mTeamChosen[i] = false; // DEBUG
-		//	}
-		//	else if(mTeamMenu->GetSubMenu(i)->GetAndResetClickStatus(1))
-		//	{
-		//		mTeamMenu->CollapseAll();
-		//		mSlotMenu->CollapseAll();
-
-		//		if(!mTeamChosen[i]) // DEBUG
-		//		{
-		//			std::string newCaption = mTeamMenu->GetSubMenu(i)->GetMenuItem(1)->GetCaption();
-		//			mTeamMenu->GetMenuItem(i)->SetCaption(newCaption);
-		//			mTeamMenu->Collapse(i);
-		//			mSlotMenu->CollapseAll();
-		//			mTeamChosen[i] = true; // DEBUG
-
-		//			TeamChosen(i, 1);
-		//		}
-		//		else
-		//			mTeamChosen[i] = false; // DEBUG
-		//	}
-
-		//	mTeamMenu->GetAndResetClickStatus(i);
-		//}
+		
 	}
 }

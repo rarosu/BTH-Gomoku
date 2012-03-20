@@ -18,9 +18,7 @@ namespace State
 		  mBtnCancel(NULL),
 		  mGameType(NULL),
 		  mPlayerType(NULL),
-		  mBackground(NULL),
-		  mJustChosenG(false),	// DEBUG
-		  mJustChosenP(false)	// DEBUG
+		  mBackground(NULL)
 	{
 		mDefaultFont = new GameFont(mDevice, "Segoe Print", 48);
 		mBackground = new Sprite(mDevice, sViewport, "marbleBG1422x800.png", sViewport->GetWidth(), sViewport->GetHeight());
@@ -92,31 +90,34 @@ namespace State
 		mBtnCreate = new Components::TextButton(mComponents, r);
 		mBtnCreate->Initialize(mDevice, "Create Game");
 
+
+		std::vector<std::string> gameItems;
+		gameItems.push_back("Normal Game");
+		gameItems.push_back("Crazy Game");
+
 		r.left = C_OFFSET_LEFT + C_LABEL_WIDTH + 20;
 		r.right = r.left + C_INPUT_FIELD_WIDTH;
 		r.top = C_OFFSET_TOP;
 		r.bottom = r.top + C_INPUT_FIELD_HEIGHT;
-		mGameType = new Components::ClickMenu(mComponents, mDevice, r, r.right - r.left, r.bottom - r.top);
-		mGameType->AddMenuItem("Choose Game Type");
-		mGameType->GetMenuItem(0)->AddSubItem("Normal Game");
-		mGameType->GetMenuItem(0)->AddSubItem("Crazy Game");
+		mGameType = new Components::ToggleButton(mComponents, r, gameItems);
+		mGameType->Initialize(mDevice);
 		mGameType->SetVisible(false);
+		
+		
+		std::vector<std::string> playerItems;
+		playerItems.push_back("1 v 1 Player");
+		playerItems.push_back("2 v 2 Player");
 
 		r.left = C_OFFSET_LEFT + C_LABEL_WIDTH + 20;
 		r.right = r.left + C_INPUT_FIELD_WIDTH;
 		r.top = C_OFFSET_TOP + C_LABEL_HEIGHT * 1.5;
 		r.bottom = r.top + C_INPUT_FIELD_HEIGHT;
-		mPlayerType = new Components::ClickMenu(mComponents, mDevice, r, r.right - r.left, r.bottom - r.top);
-		mPlayerType->AddMenuItem("Choose Players");
-		mPlayerType->GetMenuItem(0)->AddSubItem("1 v 1 Player");
-		mPlayerType->GetMenuItem(0)->AddSubItem("2 v 2 Player");
+		mPlayerType = new Components::ToggleButton(mComponents, r, playerItems);
+		mPlayerType->Initialize(mDevice);
 
 		// Set the initial focus, and focus this component group
 		mIFName->SetFocus();
 		mComponents->SetFocus();
-
-		// Reset chosen game type
-		mChosenGame = GameType();
 	}
 
 	void CreateGameState::SaveSetupInfo()
@@ -158,60 +159,6 @@ namespace State
 			return;
 		}
 
-		// Check if a player type has been chosen
-		if (mPlayerType->GetSubMenu(0)->GetAndResetClickStatus(0))
-		{
-			if(!mJustChosenP) // DEBUG
-			{
-				mPlayerType->GetMenuItem(0)->SetCaption(mPlayerType->GetSubMenu(0)->GetMenuItem(0)->GetCaption());
-				mPlayerType->GetSubMenu(0)->SetVisible(false);
-				mChosenGame.mPlayers = GameType::Players1v1;
-				mJustChosenP = true; // DEBUG
-			}
-			else
-				mJustChosenP = false; // DEBUG
-		}
-		else if (mPlayerType->GetSubMenu(0)->GetAndResetClickStatus(1))
-		{
-			if(!mJustChosenP) // DEBUG
-			{
-				mPlayerType->GetMenuItem(0)->SetCaption(mPlayerType->GetSubMenu(0)->GetMenuItem(1)->GetCaption());
-				mPlayerType->GetSubMenu(0)->SetVisible(false);
-				mChosenGame.mPlayers = GameType::Players2v2;
-				mJustChosenP = true; // DEBUG
-			}
-			else
-				mJustChosenP = false; // DEBUG
-		}
-
-		// Check if a game type has been chosen
-		if (mGameType->GetSubMenu(0)->GetAndResetClickStatus(0))
-		{
-			if(!mJustChosenG) // DEBUG
-			{
-				mGameType->GetMenuItem(0)->SetCaption(mGameType->GetSubMenu(0)->GetMenuItem(0)->GetCaption());
-				mGameType->GetSubMenu(0)->SetVisible(false);
-				mChosenGame.mType = GameType::Normal;
-				mJustChosenG = true; // DEBUG
-			}
-			else
-				mJustChosenG = false; // DEBUG
-		}
-		else if (mGameType->GetSubMenu(0)->GetAndResetClickStatus(1))
-		{
-			if(!mJustChosenG) // DEBUG
-			{
-				mGameType->GetMenuItem(0)->SetCaption(mGameType->GetSubMenu(0)->GetMenuItem(1)->GetCaption());
-				mGameType->GetSubMenu(0)->SetVisible(false);
-				mChosenGame.mType = GameType::Crazy;
-				mJustChosenG = true; // DEBUG
-			}
-			else
-				mJustChosenG = false; // DEBUG
-		}
-
-
-
 		// Basic check to see if the port is valid
 		unsigned short port = 0;
 		std::stringstream s;
@@ -235,13 +182,13 @@ namespace State
 		if (mBtnCreate->GetAndResetClickStatus())
 		{
 			Logic::Ruleset* ruleset;
-			switch (mChosenGame.mPlayers)
+			switch (mPlayerType->GetCurrentValue())
 			{
-				case GameType::Players1v1:
+				case 0:
 					ruleset = new Logic::StandardRuleset();
 				break;
 
-				case GameType::Players2v2:
+				case 1:
 					ruleset = new Logic::Ruleset2v2();
 				break;
 			}
@@ -285,7 +232,7 @@ namespace State
 		mIFPort = NULL;
 		mBtnCreate = NULL;
 		mBtnCancel = NULL;
-		mPlayerType = NULL;
 		mGameType = NULL;
+		mPlayerType = NULL;
 	}
 }

@@ -8,7 +8,6 @@
 #include "ChatConsole.hpp"
 #include "TextButton.hpp"
 #include "Label.hpp"
-//#include "ClickMenu.hpp"
 #include "ToggleButton.hpp"
 #include "GameFont.hpp"		// DEBUG
 
@@ -37,6 +36,11 @@ namespace State
 		void ReceiveChatMessage(const std::string& message, Network::Recipient::Recipient recipient, Logic::PlayerID sourceID);
 
 		void PlacePiece(Logic::PlayerID id, const Logic::Cell& cell);
+
+		/**	
+			Set the team of the given player.
+		*/
+		void SetTeam(Logic::PlayerID id, Logic::Team team);
 
 		/**
 			Sent when the game is over and has been won.
@@ -72,8 +76,6 @@ namespace State
 		Components::TextButton*					mCancelButton;
 		Components::ChatConsole*				mChat;
 		std::vector<Components::Label*>			mPlayerLabels;
-		//Components::ClickMenu*					mTeamMenu;
-		//Components::ClickMenu*					mSlotMenu;
 		std::vector<Components::ToggleButton*>	mTeamMenus;
 		std::vector<Components::ToggleButton*>	mSlotMenus;
 

@@ -23,23 +23,11 @@ namespace State
 
 		void OnStatePushed();
 		void OnStatePopped();
-
 	private:
 		struct bgVertex
 		{
 			D3DXVECTOR2		position;
 			D3DXVECTOR2		uv;
-		};
-
-		struct GameType
-		{
-			enum Type { Normal, Crazy };
-			enum Players { Players1v1, Players2v2 };
-
-			Type		mType;
-			Players		mPlayers;
-
-			GameType() : mType(Type::Normal), mPlayers(Players::Players1v1) {}
 		};
 
 		ID3D10Device*							mDevice;
@@ -53,12 +41,8 @@ namespace State
 		Components::InputField*					mIFPort;
 		Components::TextButton*					mBtnCreate;
 		Components::TextButton*					mBtnCancel;
-		Components::ClickMenu*					mGameType;
-		Components::ClickMenu*					mPlayerType;
-
-		GameType								mChosenGame;
-		bool									mJustChosenP; // DEBUG
-		bool									mJustChosenG; // DEBUG
+		Components::ToggleButton*				mGameType;
+		Components::ToggleButton*				mPlayerType;
 
 		void CreateComponents();
 		void SaveSetupInfo();

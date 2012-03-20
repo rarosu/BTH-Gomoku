@@ -154,6 +154,11 @@ namespace Logic
 					if (GetPlayerSlot(message.mSlot) == m->mPlayerID)
 					{
 						mPlayers[m->mPlayerID]->SetTeam(m->mTeam);
+
+						if (mSessionNotifiee != NULL)
+							mSessionNotifiee->SetTeam(m->mPlayerID, m->mTeam);
+
+						mServer->Send(Network::SetTeamMessage(m->mPlayerID, m->mTeam));
 					}
 				} break;
 			}
@@ -207,6 +212,9 @@ namespace Logic
 
 			mGrid.AddMarker(cell, mCurrentPlayer);
 			mServer->Send(Network::PlacePieceMessage(mCurrentPlayer, cell.x, cell.y, -1));
+
+			if (mSessionNotifiee != NULL)
+				mSessionNotifiee->PlacePiece(mCurrentPlayer, cell);
 			
 			if (!CheckAndHandleWin())
 			{
@@ -242,6 +250,9 @@ namespace Logic
 		{
 			mPlayers[playerID]->SetTeam(team);
 			mServer->Send(Network::SetTeamMessage(playerID, team));
+
+			if (mSessionNotifiee != NULL)
+				mSessionNotifiee->SetTeam(playerID, team);
 		}
 	}
 

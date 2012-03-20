@@ -51,6 +51,11 @@ namespace State
 
 		void PlacePiece(Logic::PlayerID id, const Logic::Cell& cell);
 
+		/**	
+			Set the team of the given player.
+		*/
+		void SetTeam(Logic::PlayerID id, Logic::Team team);
+
 		/**
 			Sent when the game is over and has been won.
 		*/

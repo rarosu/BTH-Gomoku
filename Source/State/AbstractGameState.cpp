@@ -141,6 +141,11 @@ namespace State
 		mScene->LookAtCell(cell);
 	}
 
+	void AbstractGameState::SetTeam(Logic::PlayerID id, Logic::Team team)
+	{
+		assert(false);
+	}
+
 	void AbstractGameState::GameOver(Logic::PlayerID winningPlayer)
 	{
 		// Set the game over flag and notify the players in the chat

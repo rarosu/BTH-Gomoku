@@ -1,4 +1,5 @@
 #include "ToggleButton.hpp"
+#include <cassert>
 
 namespace Components
 {
@@ -7,8 +8,14 @@ namespace Components
 		  mValues(stringVector),
 		  mTextColor(D3DXCOLOR(1.0, 1.0, 1.0, 1.0)),
 		  mCurrentValue(0),
-		  mFont(NULL)
+		  mFont(NULL),
+		  mHasBeenToggled(false)
 	{
+	}
+
+	ToggleButton::~ToggleButton() throw()
+	{
+		SafeDelete(mFont);
 	}
 
 	void ToggleButton::Initialize(ID3D10Device* device)
@@ -31,6 +38,8 @@ namespace Components
 		{
 			mCurrentValue++;
 			mCurrentValue %= mValues.size();
+
+			mHasBeenToggled = true;
 		}
 	}
 
@@ -61,8 +70,33 @@ namespace Components
 		return mValues[mCurrentValue];
 	}
 
+	void ToggleButton::SetCurrentValue(int currentValue)
+	{
+		assert(mValues.size() > 0);
+
+		currentValue %= mValues.size();
+		mCurrentValue = currentValue;
+	}
+
+	int ToggleButton::GetCurrentValue() const
+	{
+		return mCurrentValue;
+	}
+
+	int ToggleButton::GetNumberOfValues() const
+	{
+		return mValues.size();
+	}
+
 	std::string ToggleButton::GetName()
 	{
 		return "ToggleButton: " + GetCaption();
+	}
+
+	bool ToggleButton::GetAndResetToggleStatus()
+	{
+		bool result = mHasBeenToggled;
+		mHasBeenToggled = false;
+		return result;
 	}
 }

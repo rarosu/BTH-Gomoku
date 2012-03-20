@@ -42,6 +42,11 @@ namespace Logic
 			removed from the player list.
 		*/
 		virtual void PlayerDisconnected(PlayerID id, const std::string& name, Network::RemovePlayerReason::RemovePlayerReason reason) = 0;
+
+		/**	
+			Set the team of the given player.
+		*/
+		virtual void SetTeam(PlayerID id, Team team) = 0;
 	};
 
 
