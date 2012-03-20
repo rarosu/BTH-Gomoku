@@ -12,4 +12,5 @@ BTH-Gomoku.suo
 *.dia~
 
 # Ignore data files
-Resources/GameData/
+Resources/GameData/CreateGameInfo.txt
+Resources/GameData/JoinGameInfo.txt
