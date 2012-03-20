@@ -16,7 +16,9 @@ namespace State
 		  mBtnCancel(NULL),
 		  mGameType(NULL),
 		  mPlayerType(NULL),
-		  mBackground(NULL)
+		  mBackground(NULL),
+		  mJustChosenG(false),	// DEBUG
+		  mJustChosenP(false)	// DEBUG
 	{
 		mDefaultFont = new GameFont(mDevice, "Segoe Print", 48);
 		mBackground = new Sprite(mDevice, sViewport, "marbleBG1422x800.png", sViewport->GetWidth(), sViewport->GetHeight());
@@ -94,7 +96,7 @@ namespace State
 		mGameType->AddMenuItem("Choose Game Type");
 		mGameType->GetMenuItem(0)->AddSubItem("Normal Game");
 		mGameType->GetMenuItem(0)->AddSubItem("Crazy Game");
-		//mGameType->SetVisible(false);
+		mGameType->SetVisible(false);
 
 		r.left = C_OFFSET_LEFT + C_LABEL_WIDTH + 20;
 		r.right = r.left + C_INPUT_FIELD_WIDTH;
@@ -124,29 +126,53 @@ namespace State
 		// Check if a player type has been chosen
 		if (mPlayerType->GetSubMenu(0)->GetAndResetClickStatus(0))
 		{
-			mPlayerType->GetMenuItem(0)->SetCaption(mPlayerType->GetSubMenu(0)->GetMenuItem(0)->GetCaption());
-			mPlayerType->GetSubMenu(0)->SetVisible(false);
-			mChosenGame.mPlayers = GameType::Players1v1;
+			if(!mJustChosenP) // DEBUG
+			{
+				mPlayerType->GetMenuItem(0)->SetCaption(mPlayerType->GetSubMenu(0)->GetMenuItem(0)->GetCaption());
+				mPlayerType->GetSubMenu(0)->SetVisible(false);
+				mChosenGame.mPlayers = GameType::Players1v1;
+				mJustChosenP = true; // DEBUG
+			}
+			else
+				mJustChosenP = false; // DEBUG
 		}
 		else if (mPlayerType->GetSubMenu(0)->GetAndResetClickStatus(1))
 		{
-			mPlayerType->GetMenuItem(0)->SetCaption(mPlayerType->GetSubMenu(0)->GetMenuItem(1)->GetCaption());
-			mPlayerType->GetSubMenu(0)->SetVisible(false);
-			mChosenGame.mPlayers = GameType::Players2v2;
+			if(!mJustChosenP) // DEBUG
+			{
+				mPlayerType->GetMenuItem(0)->SetCaption(mPlayerType->GetSubMenu(0)->GetMenuItem(1)->GetCaption());
+				mPlayerType->GetSubMenu(0)->SetVisible(false);
+				mChosenGame.mPlayers = GameType::Players2v2;
+				mJustChosenP = true; // DEBUG
+			}
+			else
+				mJustChosenP = false; // DEBUG
 		}
 
 		// Check if a game type has been chosen
 		if (mGameType->GetSubMenu(0)->GetAndResetClickStatus(0))
 		{
-			mGameType->GetMenuItem(0)->SetCaption(mGameType->GetSubMenu(0)->GetMenuItem(0)->GetCaption());
-			mGameType->GetSubMenu(0)->SetVisible(false);
-			mChosenGame.mType = GameType::Normal;
+			if(!mJustChosenG) // DEBUG
+			{
+				mGameType->GetMenuItem(0)->SetCaption(mGameType->GetSubMenu(0)->GetMenuItem(0)->GetCaption());
+				mGameType->GetSubMenu(0)->SetVisible(false);
+				mChosenGame.mType = GameType::Normal;
+				mJustChosenG = true; // DEBUG
+			}
+			else
+				mJustChosenG = false; // DEBUG
 		}
 		else if (mGameType->GetSubMenu(0)->GetAndResetClickStatus(1))
 		{
-			mGameType->GetMenuItem(0)->SetCaption(mGameType->GetSubMenu(0)->GetMenuItem(1)->GetCaption());
-			mGameType->GetSubMenu(0)->SetVisible(false);
-			mChosenGame.mType = GameType::Crazy;
+			if(!mJustChosenG) // DEBUG
+			{
+				mGameType->GetMenuItem(0)->SetCaption(mGameType->GetSubMenu(0)->GetMenuItem(1)->GetCaption());
+				mGameType->GetSubMenu(0)->SetVisible(false);
+				mChosenGame.mType = GameType::Crazy;
+				mJustChosenG = true; // DEBUG
+			}
+			else
+				mJustChosenG = false; // DEBUG
 		}
 
 		// Basic check to see if the port is valid

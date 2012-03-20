@@ -129,36 +129,45 @@ namespace State
 	void AbstractLobbyState::CreateComponents()
 	{
 		const int C_LABEL_WIDTH		= 150;
-		const int C_LABEL_HEIGHT	= 48;
-		const int C_LABEL_MARGIN	= 10;
-		const int C_BUTTON_YOFFSET	= 60;
+		const int C_LABEL_HEIGHT	= 50;
+		const int C_LABEL_MARGIN	= 0;
+		const int C_BUTTON_XOFFSET	= 20;
+		const int C_BUTTON_YOFFSET	= 20;
 		const int C_BUTTON_WIDTH	= 150;
-		const int C_BUTTON_HEIGHT	= 48;
+		const int C_BUTTON_HEIGHT	= 50;
 		const int C_CHAT_HEIGHT		= 150;
 
 		// Create the component groups
 		RECT r = { 0, 0, 0, 0 };
 		mComponents = new Components::ComponentGroup(sRootComponentGroup, "LobbyState Group", r);
 
+		r.left = 100;
+		r.right = sViewport->GetWidth() - r.left;
+		r.top = 30;
+		r.bottom = 150;
+		new Components::Label(mDevice, mComponents, "GAME LOBBY", r);
+
 		// Create the labels
 		r.left = 50;
 		r.right = r.left + C_LABEL_WIDTH;
-		r.top = 50;
+		r.top = 150;
 		r.bottom = r.top + C_LABEL_HEIGHT;
+		new Components::Label(mDevice, mComponents, "PLAYERS:", r);
+		r.bottom += 10;
 
-		for (unsigned int i = 0; i < mSession->GetSlotCount(); ++i)
+		for (unsigned int i = 0; i < 4/*mSession->GetSlotCount()*/; ++i)
 		{
-			mPlayerLabels.push_back(new Components::Label(mDevice, mComponents, "1.", r, 0, GameFont::Left));
-
 			r.top = r.bottom + C_LABEL_MARGIN;
 			r.bottom = r.top + C_LABEL_HEIGHT;
+
+			mPlayerLabels.push_back(new Components::Label(mDevice, mComponents, "1.", r, 0, GameFont::Left));
 		}
 
 		// Create the cancel button
-		r.left = 250;
+		r.left = sViewport->GetWidth() - (C_BUTTON_WIDTH + C_BUTTON_XOFFSET);
 		r.right = r.left + C_BUTTON_WIDTH;
-		r.top += C_BUTTON_YOFFSET;
-		r.bottom = r.top + C_BUTTON_HEIGHT;
+		r.bottom = sViewport->GetHeight() - (C_CHAT_HEIGHT + C_BUTTON_YOFFSET);
+		r.top = r.bottom - C_BUTTON_HEIGHT;
 		mCancelButton = new Components::TextButton(mComponents, r);
 		mCancelButton->Initialize(mDevice, "Cancel");
 

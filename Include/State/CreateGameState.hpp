@@ -32,13 +32,13 @@ namespace State
 
 		struct GameType
 		{
-			enum Type { Normal, Crazy, NotChosenT };
-			enum Players { Players1v1, Players2v2, NotChosenP };
+			enum Type { Normal, Crazy };
+			enum Players { Players1v1, Players2v2 };
 
 			Type		mType;
 			Players		mPlayers;
 
-			GameType() : mType(Type::NotChosenT), mPlayers(Players::NotChosenP) {}
+			GameType() : mType(Type::Normal), mPlayers(Players::Players1v1) {}
 		};
 
 		ID3D10Device*							mDevice;
@@ -56,6 +56,8 @@ namespace State
 		Components::ClickMenu*					mPlayerType;
 
 		GameType								mChosenGame;
+		bool									mJustChosenP; // DEBUG
+		bool									mJustChosenG; // DEBUG
 
 		void CreateComponents();
 	};

@@ -28,12 +28,10 @@ namespace State
 
 	void ServerLobbyState::AppendComponents()
 	{
-		/*RECT r = mCancelButton->GetBoundingRect();
-		r.left = r.right + 50;
-		r.right = r.left + C_BUTTON_WIDTH;*/
 		int top = mCancelButton->GetPosition().y;
+		int right = mCancelButton->GetPosition().x - 20;
 
-		RECT r = { 50, top, 200, top + mCancelButton->GetHeight() };
+		RECT r = { right - mCancelButton->GetWidth(), top, right, top + mCancelButton->GetHeight() };
 
 		mStartButton = new Components::TextButton(mComponents, r);
 		mStartButton->Initialize(mDevice, "Start");
