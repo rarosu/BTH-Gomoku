@@ -12,9 +12,11 @@ namespace State
 		mComponents(NULL),
 		mCancelButton(NULL),
 		mChat(NULL),
-		mSession(NULL)
+		mSession(NULL),
+		mDefaultFont(NULL)
 	{
 		mBackground = new Sprite(mDevice, sViewport, "marbleBG1422x800.png", sViewport->GetWidth(), sViewport->GetHeight());
+		mDefaultFont = new GameFont(mDevice);
 	}
 
 	AbstractLobbyState::~AbstractLobbyState() throw()
@@ -34,74 +36,7 @@ namespace State
 			return;
 		}
 
-		// Handle changing of slots
-		for (unsigned int i = 0; i < mSession->GetSlotCount(); ++i)
-		{
-			if(mSlotMenu->GetSubMenu(i)->GetMenuItem(0)->GetAndResetClickStatus())
-			{
-				if(!mSlotChosen[i]) // DEBUG
-				{
-					std::string newCaption = mSlotMenu->GetSubMenu(i)->GetMenuItem(0)->GetCaption();
-					mSlotMenu->GetMenuItem(i)->SetCaption(newCaption);
-					mSlotMenu->Collapse(i);
-					mTeamMenu->CollapseAll();
-					mSlotChosen[i] = true; // DEBUG
-
-					SlotChosen(i, 1);
-				}
-				else
-					mSlotChosen[i] = false; // DEBUG
-			}
-			else if(mSlotMenu->GetSubMenu(i)->GetMenuItem(1)->GetAndResetClickStatus())
-			{
-				if(!mSlotChosen[i]) // DEBUG
-				{
-					std::string newCaption = mSlotMenu->GetSubMenu(i)->GetMenuItem(1)->GetCaption();
-					mSlotMenu->GetMenuItem(i)->SetCaption(newCaption);
-					mSlotMenu->Collapse(i);
-					mTeamMenu->CollapseAll();
-					mSlotChosen[i] = true; // DEBUG
-
-					SlotChosen(i, 1);
-				}
-				else
-					mSlotChosen[i] = false; // DEBUG
-			}
-		}
-
-		for (unsigned int i = 0; i < mSession->GetSlotCount(); ++i)
-		{
-			if(mTeamMenu->GetSubMenu(i)->GetMenuItem(0)->GetAndResetClickStatus())
-			{
-				if(!mTeamChosen[i]) // DEBUG
-				{
-					std::string newCaption = mTeamMenu->GetSubMenu(i)->GetMenuItem(0)->GetCaption();
-					mTeamMenu->GetMenuItem(i)->SetCaption(newCaption);
-					mTeamMenu->Collapse(i);
-					mSlotMenu->CollapseAll();
-					mTeamChosen[i] = true; // DEBUG
-
-					TeamChosen(i, 1);
-				}
-				else
-					mTeamChosen[i] = false; // DEBUG
-			}
-			else if(mTeamMenu->GetSubMenu(i)->GetMenuItem(1)->GetAndResetClickStatus())
-			{
-				if(!mTeamChosen[i]) // DEBUG
-				{
-					std::string newCaption = mTeamMenu->GetSubMenu(i)->GetMenuItem(1)->GetCaption();
-					mTeamMenu->GetMenuItem(i)->SetCaption(newCaption);
-					mTeamMenu->Collapse(i);
-					mSlotMenu->CollapseAll();
-					mTeamChosen[i] = true; // DEBUG
-
-					TeamChosen(i, 1);
-				}
-				else
-					mTeamChosen[i] = false; // DEBUG
-			}
-		}
+		HandleMenus();
 
 		// Update the session and check for errors
 		try
@@ -214,13 +149,6 @@ namespace State
 		const int C_BUTTON_HEIGHT	= 50;
 		const int C_CHAT_HEIGHT		= 150;
 
-		// DEBUG: Reset workaround variables
-		for(int i = 0; i < 4; ++i)
-		{
-			mTeamChosen[i] = false;
-			mSlotChosen[i] = false;
-		}
-
 		// Create the component groups
 		RECT r = { 0, 0, 0, 0 };
 		mComponents = new Components::ComponentGroup(sRootComponentGroup, "LobbyState Group", r);
@@ -272,21 +200,34 @@ namespace State
 		r.right = r.left + C_MENU_SLOT_WIDTH;
 		r.top = C_LABEL_YOFFSET;
 		r.bottom = r.top + C_LABEL_HEIGHT;
-		mSlotMenu = new Components::ClickMenu(mComponents, mDevice, r, C_MENU_SLOT_WIDTH, C_LABEL_HEIGHT);
-
-		r.left = C_LABEL_XOFFSET + C_LABEL_WIDTH + C_LABEL_MARGIN;
-		r.right = r.left + C_MENU_WIDTH;
-		mTeamMenu = new Components::ClickMenu(mComponents, mDevice, r, C_MENU_WIDTH, C_LABEL_HEIGHT);
+		
+		std::vector<std::string> slotItems;
+		slotItems.push_back("Local");
+		slotItems.push_back("Network");
 
 		for (unsigned int i = 0; i < mSession->GetSlotCount(); ++i)
 		{
-			mSlotMenu->AddMenuItem("Local");
-			mSlotMenu->GetMenuItem(i)->AddSubItem("Local");
-			mSlotMenu->GetMenuItem(i)->AddSubItem("Network");
+			mSlotMenus.push_back(new Components::ToggleButton(mComponents, r, slotItems));
+			mSlotMenus.back()->Initialize(mDevice);
+			r.top = r.bottom;
+			r.bottom = r.top + C_LABEL_HEIGHT;
+		}
 
-			mTeamMenu->AddMenuItem("Select Team");
-			mTeamMenu->GetMenuItem(i)->AddSubItem("Team 1");
-			mTeamMenu->GetMenuItem(i)->AddSubItem("Team 2");
+		r.left = C_LABEL_XOFFSET + C_LABEL_WIDTH + C_LABEL_MARGIN;
+		r.right = r.left + C_MENU_WIDTH;
+		r.top = C_LABEL_YOFFSET;
+		r.bottom = r.top + C_LABEL_HEIGHT;
+
+		std::vector<std::string> teamItems;
+		teamItems.push_back("Team 1");
+		teamItems.push_back("Team 2");
+
+		for (unsigned int i = 0; i < mSession->GetSlotCount(); ++i)
+		{
+			mTeamMenus.push_back(new Components::ToggleButton(mComponents, r, teamItems));
+			mTeamMenus.back()->Initialize(mDevice);
+			r.top = r.bottom;
+			r.bottom = r.top + C_LABEL_HEIGHT;
 		}
 
 		// Set initial focus
@@ -298,8 +239,93 @@ namespace State
 	{
 	}
 
-	
 	void AbstractLobbyState::SlotChosen(int playerIndex, int slotIndex)
 	{
+	}
+
+	void AbstractLobbyState::HandleMenus()
+	{
+		//// Handle changing of slots
+		//for (unsigned int i = 0; i < mSession->GetSlotCount(); ++i)
+		//{
+		//	if(mSlotMenu->GetSubMenu(i)->GetAndResetClickStatus(0))
+		//	{
+		//		mTeamMenu->CollapseAll();
+		//		mSlotMenu->CollapseAll();
+
+		//		if(!mSlotChosen[i]) // DEBUG
+		//		{
+		//			std::string newCaption = mSlotMenu->GetSubMenu(i)->GetMenuItem(0)->GetCaption();
+		//			mSlotMenu->GetMenuItem(i)->SetCaption(newCaption);
+		//			mSlotMenu->Collapse(i);
+		//			mSlotChosen[i] = true; // DEBUG
+
+		//			SlotChosen(i, 1);
+		//		}
+		//		else
+		//			mSlotChosen[i] = false; // DEBUG
+		//	}
+		//	else if(mSlotMenu->GetSubMenu(i)->GetAndResetClickStatus(1))
+		//	{
+		//		mTeamMenu->CollapseAll();
+		//		mSlotMenu->CollapseAll();
+
+		//		if(!mSlotChosen[i]) // DEBUG
+		//		{
+		//			std::string newCaption = mSlotMenu->GetSubMenu(i)->GetMenuItem(1)->GetCaption();
+		//			mSlotMenu->GetMenuItem(i)->SetCaption(newCaption);
+		//			mSlotMenu->Collapse(i);
+		//			mTeamMenu->CollapseAll();
+		//			mSlotChosen[i] = true; // DEBUG
+
+		//			SlotChosen(i, 1);
+		//		}
+		//		else
+		//			mSlotChosen[i] = false; // DEBUG
+		//	}
+		//}
+
+		//// Handle changing of teams
+		//for (unsigned int i = 0; i < mSession->GetSlotCount(); ++i)
+		//{
+		//	if(mTeamMenu->GetSubMenu(i)->GetAndResetClickStatus(0))
+		//	{
+		//		mTeamMenu->CollapseAll();
+		//		mSlotMenu->CollapseAll();
+
+		//		if(!mTeamChosen[i]) // DEBUG
+		//		{
+		//			std::string newCaption = mTeamMenu->GetSubMenu(i)->GetMenuItem(0)->GetCaption();
+		//			mTeamMenu->GetMenuItem(i)->SetCaption(newCaption);
+		//			mTeamMenu->Collapse(i);
+		//			mSlotMenu->CollapseAll();
+		//			mTeamChosen[i] = true; // DEBUG
+
+		//			TeamChosen(i, 1);
+		//		}
+		//		else
+		//			mTeamChosen[i] = false; // DEBUG
+		//	}
+		//	else if(mTeamMenu->GetSubMenu(i)->GetAndResetClickStatus(1))
+		//	{
+		//		mTeamMenu->CollapseAll();
+		//		mSlotMenu->CollapseAll();
+
+		//		if(!mTeamChosen[i]) // DEBUG
+		//		{
+		//			std::string newCaption = mTeamMenu->GetSubMenu(i)->GetMenuItem(1)->GetCaption();
+		//			mTeamMenu->GetMenuItem(i)->SetCaption(newCaption);
+		//			mTeamMenu->Collapse(i);
+		//			mSlotMenu->CollapseAll();
+		//			mTeamChosen[i] = true; // DEBUG
+
+		//			TeamChosen(i, 1);
+		//		}
+		//		else
+		//			mTeamChosen[i] = false; // DEBUG
+		//	}
+
+		//	mTeamMenu->GetAndResetClickStatus(i);
+		//}
 	}
 }

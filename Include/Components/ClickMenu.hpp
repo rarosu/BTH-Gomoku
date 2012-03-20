@@ -60,6 +60,7 @@ namespace Components
 
 		void AddMenuItem(const std::string& caption);
 		void LostFocus();
+		void Draw();
 
 		bool GetAndResetClickStatus(const std::string& caption);
 		bool GetAndResetClickStatus(const int index);
@@ -72,6 +73,7 @@ namespace Components
 		void CollapseAll();
 		void Expand(const int index);
 		void Expand(ClickMenuItem* collapseItem);
+		int GetItemCount() const;
 	
 	private:
 		ID3D10Device*						mDevice;
@@ -79,6 +81,8 @@ namespace Components
 		int									mItemWidth;
 		int									mItemHeight;
 		bool								mIsLazy;
+
+		int GetIndex(std::string caption);
 	};
 }
 #endif

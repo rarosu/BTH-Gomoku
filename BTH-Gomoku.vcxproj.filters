@@ -73,6 +73,7 @@
     <ClCompile Include="Source\Logic\Ruleset2v2.cpp" />
     <ClCompile Include="Source\State\AbstractLobbyState.cpp" />
     <ClCompile Include="Source\State\CreditsState.cpp" />
+    <ClCompile Include="Source\Components\ToggleButton.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -150,6 +151,7 @@
     <ClInclude Include="Include\Scene\ObjModel.hpp" />
     <ClInclude Include="Include\Logic\Ruleset2v2.hpp" />
     <ClInclude Include="Include\State\CreditsState.hpp" />
+    <ClInclude Include="Include\Components\ToggleButton.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

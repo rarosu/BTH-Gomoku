@@ -8,7 +8,9 @@
 #include "ChatConsole.hpp"
 #include "TextButton.hpp"
 #include "Label.hpp"
-#include "ClickMenu.hpp"
+//#include "ClickMenu.hpp"
+#include "ToggleButton.hpp"
+#include "GameFont.hpp"		// DEBUG
 
 namespace State
 {
@@ -69,18 +71,20 @@ namespace State
 		Components::TextButton*					mCancelButton;
 		Components::ChatConsole*				mChat;
 		std::vector<Components::Label*>			mPlayerLabels;
-		Components::ClickMenu*					mTeamMenu;
-		Components::ClickMenu*					mSlotMenu;
-		bool									mTeamChosen[4];
-		bool									mSlotChosen[4];
+		//Components::ClickMenu*					mTeamMenu;
+		//Components::ClickMenu*					mSlotMenu;
+		std::vector<Components::ToggleButton*>	mTeamMenus;
+		std::vector<Components::ToggleButton*>	mSlotMenus;
 
 	private:
 		Sprite*									mBackground;
 		Logic::Session*							mSession;
+		GameFont*								mDefaultFont;	//DEBUG
 
 		void CreateComponents();
 		void TeamChosen(int playerIndex, int teamIndex);
 		void SlotChosen(int playerIndex, int slotIndex);
+		void HandleMenus();
 	};
 }
 
