@@ -92,7 +92,7 @@ namespace State
 
 		for (unsigned int i = 0; i < mSession->GetPlayerCount(); ++i)
 		{
-			if (mPlayerList->GetAndResetClickStatus(i) && !mSession->IsOpenSlot(i))
+			if (mPlayerList->GetAndResetClickStatus(i) && mSession->GetSlotType(i) == Logic::Session::C_STATUS_REMOTE)
 			{
 				mChat->SetInputFieldContent("/" + mSession->GetPlayerName(i) + " ");
 				mChat->SetVisible(true);

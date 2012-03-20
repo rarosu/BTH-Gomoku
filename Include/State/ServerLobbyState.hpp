@@ -18,6 +18,7 @@ namespace State
 		void AppendStatePopped();
 		void AppendComponents();
 		void AppendUpdate();
+		void SlotChosen(int playerIndex, int slotIndex);
 	private:
 		Components::TextButton*					mStartButton;
 

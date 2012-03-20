@@ -42,6 +42,13 @@ namespace Logic
 		return mSelfID;
 	}
 
+	Session::ClientSlot ClientSession::GetSlotType(PlayerID playerID) const
+	{
+		if (playerID == mSelfID)
+			return C_STATUS_LOCAL;
+		return C_STATUS_REMOTE;
+	}
+
 	void ClientSession::SetClientNotifiee(ClientNotificationInterface* notifiee)
 	{
 		mClientNotifiee = notifiee;

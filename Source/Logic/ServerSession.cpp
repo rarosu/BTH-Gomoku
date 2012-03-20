@@ -41,6 +41,20 @@ namespace Logic
 		return mPlayers[index] != NULL && mPlayerClients.find(index)->second == C_STATUS_LOCAL;
 	}
 
+	Session::ClientSlot ServerSession::GetSlotType(PlayerID playerID) const
+	{
+		if (mPlayers[playerID] != NULL)
+		{
+			if (mPlayerClients.find(playerID)->second > 0)
+				return C_STATUS_REMOTE;
+			return mPlayerClients.find(playerID)->second;
+		}
+		else
+		{
+			return C_STATUS_OPEN;
+		}
+	}
+
 	unsigned short ServerSession::GetPort() const
 	{
 		return mServer->GetPort();
@@ -229,6 +243,25 @@ namespace Logic
 			mPlayers[playerID]->SetTeam(team);
 			mServer->Send(Network::SetTeamMessage(playerID, team));
 		}
+	}
+
+	void ServerSession::BootPlayer(PlayerID playerID)
+	{
+		if (mPlayers[playerID] != NULL && mPlayerClients[playerID] != C_STATUS_LOCAL)
+		{
+			mServer->DisconnectClient(mPlayerClients[playerID]); // Own'd
+			
+			SafeDelete(mPlayers[playerID]);
+			mPlayerClients[playerID] = C_STATUS_OPEN;
+		}
+	}
+
+	void ServerSession::SetSlotType(PlayerID playerSlot, ClientSlot status)
+	{
+		assert(status == C_STATUS_LOCAL || status == C_STATUS_OPEN);
+
+		BootPlayer(playerSlot);
+		mPlayerClients[playerSlot] = status;
 	}
 
 	void ServerSession::ClientConnected(Network::Slot slot)

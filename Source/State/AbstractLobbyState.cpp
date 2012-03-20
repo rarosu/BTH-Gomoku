@@ -34,6 +34,17 @@ namespace State
 			return;
 		}
 
+		// Update the player labels
+		for (unsigned int i = 0; i < mSession->GetSlotCount(); ++i)
+		{
+			std::stringstream s;
+			s << (i + 1) << ". " << mSession->GetPlayerName(i);
+
+			mPlayerLabels[i]->SetCaption(s.str());
+			mSlotMenu->GetMenuItem(i)->SetCaption(GetCaptionForSlot(mSession->GetSlotType(i)));
+			mTeamMenu->GetMenuItem(i)->SetCaption(GetCaptionForTeam(mSession->GetPlayerTeam(i)));
+		}
+
 		// Handle changing of slots
 		for (unsigned int i = 0; i < mSession->GetSlotCount(); ++i)
 		{
@@ -47,7 +58,7 @@ namespace State
 					mTeamMenu->CollapseAll();
 					mSlotChosen[i] = true; // DEBUG
 
-					SlotChosen(i, 1);
+					SlotChosen(i, 0);
 				}
 				else
 					mSlotChosen[i] = false; // DEBUG
@@ -81,7 +92,7 @@ namespace State
 					mSlotMenu->CollapseAll();
 					mTeamChosen[i] = true; // DEBUG
 
-					TeamChosen(i, 1);
+					TeamChosen(i, 0);
 				}
 				else
 					mTeamChosen[i] = false; // DEBUG
@@ -116,15 +127,6 @@ namespace State
 			ChangeState(C_STATE_MENU);
 
 			return;
-		}
-
-		// Update the player labels
-		for (unsigned int i = 0; i < mSession->GetSlotCount(); ++i)
-		{
-			std::stringstream s;
-			s << (i + 1) << ". " << mSession->GetPlayerName(i);
-
-			mPlayerLabels[i]->SetCaption(s.str());
 		}
 
 		// Let the subclass define its own logic, if it wishes.
@@ -281,13 +283,13 @@ namespace State
 
 		for (unsigned int i = 0; i < mSession->GetSlotCount(); ++i)
 		{
-			mSlotMenu->AddMenuItem("Local");
-			mSlotMenu->GetMenuItem(i)->AddSubItem("Local");
-			mSlotMenu->GetMenuItem(i)->AddSubItem("Network");
+			mSlotMenu->AddMenuItem(GetCaptionForSlot(Logic::Session::C_STATUS_LOCAL));
+			mSlotMenu->GetMenuItem(i)->AddSubItem(GetCaptionForSlot(Logic::Session::C_STATUS_LOCAL));
+			mSlotMenu->GetMenuItem(i)->AddSubItem(GetCaptionForSlot(Logic::Session::C_STATUS_OPEN));
 
 			mTeamMenu->AddMenuItem("Select Team");
-			mTeamMenu->GetMenuItem(i)->AddSubItem("Team 1");
-			mTeamMenu->GetMenuItem(i)->AddSubItem("Team 2");
+			mTeamMenu->GetMenuItem(i)->AddSubItem(GetCaptionForTeam(0));
+			mTeamMenu->GetMenuItem(i)->AddSubItem(GetCaptionForTeam(1));
 		}
 
 		// Set initial focus
@@ -297,10 +299,32 @@ namespace State
 
 	void AbstractLobbyState::TeamChosen(int playerIndex, int teamIndex)
 	{
+		mSession->SendSetTeamMessage(playerIndex, teamIndex);
 	}
 
-	
-	void AbstractLobbyState::SlotChosen(int playerIndex, int slotIndex)
+	std::string AbstractLobbyState::GetCaptionForTeam(int team) const
 	{
+		switch (team)
+		{
+			case 0:
+				return "Team 1";
+			case 1:
+				return "Team 2";
+			default:
+				return "No Team";
+		}
+	}
+
+	std::string AbstractLobbyState::GetCaptionForSlot(Logic::Session::ClientSlot slotType) const
+	{
+		switch (slotType)
+		{
+			case Logic::Session::C_STATUS_LOCAL:
+				return "Local";
+			case Logic::Session::C_STATUS_OPEN:
+				return "Network";
+			default:
+				return "Invalid";
+		}
 	}
 }

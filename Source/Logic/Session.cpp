@@ -92,7 +92,7 @@ namespace Logic
 		{
 			for (unsigned int i = 0; i < mPlayers.size(); ++i)
 			{
-				if (i != index && mPlayers[i]->GetTeam() == team)
+				if (mPlayers[i] != NULL && i != index && mPlayers[i]->GetTeam() == team)
 				{
 					player = i;
 					break;
@@ -180,11 +180,6 @@ namespace Logic
 		}
 
 		return false;
-	}
-
-	bool Session::IsOpenSlot(PlayerID playerID) const
-	{
-		return mPlayers[playerID] == NULL;
 	}
 
 	PlayerID Session::GetWinner() const

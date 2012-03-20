@@ -23,16 +23,17 @@ namespace State
 
 	void ServerLobbyState::AppendStatePushed()
 	{
+		mSlotMenu->GetMenuItem(0)->SetCaption(GetCaptionForSlot(Logic::Session::C_STATUS_LOCAL));
 		mSlotMenu->GetMenuItem(0)->SetEnabled(false);
 		for (int s = 1; s < mServerSession->GetSlotCount(); ++s)
 		{
-			mSlotMenu->GetMenuItem(s)->SetCaption("Network");
+			mSlotMenu->GetMenuItem(s)->SetCaption(GetCaptionForSlot(Logic::Session::C_STATUS_OPEN));
 		}
 		
 		if (mServerSession->GetSlotCount() == 2)
 		{
-			mTeamMenu->GetMenuItem(0)->SetCaption("Team 1");
-			mTeamMenu->GetMenuItem(1)->SetCaption("Team 2");
+			mTeamMenu->GetMenuItem(0)->SetCaption(GetCaptionForTeam(0));
+			mTeamMenu->GetMenuItem(1)->SetCaption(GetCaptionForTeam(1));
 
 			mTeamMenu->GetMenuItem(0)->SetEnabled(false);
 			mTeamMenu->GetMenuItem(1)->SetEnabled(false);
@@ -66,10 +67,8 @@ namespace State
 		mStartButton->SetEnabled(true);
 
 		// Enable start button only if we have enough players
-		/*
 		if (mServerSession->GetPlayerCount() < mServerSession->GetSlotCount())
 			mStartButton->SetEnabled(false);
-		*/
 
 		if (!mServerSession->AreTeamsValid())
 			mStartButton->SetEnabled(false);
@@ -80,6 +79,20 @@ namespace State
 			// Start the game!
 			mServerGameState->SetServerSession(mServerSession);
 			ChangeState(C_STATE_SERVER_GAME);
+		}
+	}
+
+	void ServerLobbyState::SlotChosen(int playerIndex, int slotIndex)
+	{
+		switch (slotIndex)
+		{
+			case 0:
+				mServerSession->SetSlotType(playerIndex, Logic::Session::C_STATUS_LOCAL);
+			break;
+
+			case 1:
+				mServerSession->SetSlotType(playerIndex, Logic::Session::C_STATUS_OPEN);
+			break;
 		}
 	}
 }

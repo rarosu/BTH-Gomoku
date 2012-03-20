@@ -61,7 +61,7 @@ namespace State
 		virtual void AppendStatePopped() {}
 		virtual void AppendComponents() {}
 		virtual void AppendUpdate() {}
-
+		virtual void SlotChosen(int playerIndex, int slotIndex) {}
 
 
 		ID3D10Device*							mDevice;
@@ -75,13 +75,14 @@ namespace State
 		bool									mTeamChosen[4];
 		bool									mSlotChosen[4];
 
+		std::string GetCaptionForTeam(int team) const;
+		std::string GetCaptionForSlot(Logic::Session::ClientSlot slotType) const;
 	private:
 		Sprite*									mBackground;
 		Logic::Session*							mSession;
 
 		void CreateComponents();
 		void TeamChosen(int playerIndex, int teamIndex);
-		void SlotChosen(int playerIndex, int slotIndex);
 	};
 }
 

@@ -56,6 +56,11 @@ namespace Logic
 		unsigned int GetSelfID() const;
 
 		/**
+			Get the type of a slot
+		*/
+		ClientSlot GetSlotType(PlayerID playerID) const;
+
+		/**
 			Set the listener for client events
 		*/
 		void SetClientNotifiee(ClientNotificationInterface* notifiee);

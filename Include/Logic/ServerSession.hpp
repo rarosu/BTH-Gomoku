@@ -35,6 +35,11 @@ namespace Logic
 		bool IsLocalPlayer(PlayerID index) const;
 
 		/**
+			Get the type of a slot
+		*/
+		ClientSlot GetSlotType(PlayerID playerID) const;
+
+		/**
 			Getters
 		*/
 		unsigned short GetPort() const;
@@ -77,18 +82,26 @@ namespace Logic
 		void SetLocalPlayerTeam(PlayerID playerID, Team team);
 
 		/**
+			Boot a player
+		*/
+		void BootPlayer(PlayerID playerID);
+
+		/**
+			Set a slot type
+		*/
+		void SetSlotType(PlayerID playerSlot, ClientSlot status);
+
+		/**
 			Implemented from ServerEventInterface
 		*/
 		void ClientConnected(Network::Slot slot);
 		void ClientDisconnected(Network::Slot slot);
 	private:		
-		typedef int ClientSlot;
 		typedef std::map<PlayerID, ClientSlot> SlotMap;
 		typedef std::map<ClientSlot, float> TimeoutMap;
 
 		static const float C_TIMEOUT;
-		static const ClientSlot C_STATUS_OPEN = -1;
-		static const ClientSlot C_STATUS_LOCAL = -2;
+		
 
 		SlotMap mPlayerClients;								// Associates a player with a given client (or determines if the slot is open/local)
 		std::vector<ClientSlot> mPendingClients;			// Holds all the pending clients that we're awaiting a join message from

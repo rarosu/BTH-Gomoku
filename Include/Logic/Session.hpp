@@ -52,6 +52,11 @@ namespace Logic
 	class Session
 	{
 	public:
+		typedef int ClientSlot;
+		static const ClientSlot C_STATUS_REMOTE = -1;
+		static const ClientSlot C_STATUS_OPEN = -2;
+		static const ClientSlot C_STATUS_LOCAL = -3;
+
 		Session(unsigned int playerCount);
 		virtual ~Session() throw();
 
@@ -136,9 +141,9 @@ namespace Logic
 		bool HasOpenSlot() const;
 
 		/**
-			Returns true if the slot is open.
+			Get the type of a slot
 		*/
-		bool IsOpenSlot(PlayerID playerID) const;
+		virtual ClientSlot GetSlotType(PlayerID playerID) const = 0;
 
 		/**
 			Get the winning player (or C_PLAYER_NONE if no player has won yet)
