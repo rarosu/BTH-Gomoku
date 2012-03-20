@@ -278,7 +278,7 @@ namespace Logic
 		if (status == C_STATUS_LOCAL)
 		{
 			std::stringstream s;
-			s << mPlayers[0]->GetName() << " " << (playerSlot + 1);
+			s << mPlayers[0]->GetName() << (playerSlot + 1);
 
 			AddPlayer(playerSlot, C_STATUS_LOCAL, s.str(), 0);
 		}
