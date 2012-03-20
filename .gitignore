@@ -10,3 +10,6 @@ BTH-Gomoku.suo
 
 # Ignore backup files
 *.dia~
+
+# Ignore data files
+Resources/GameData/
