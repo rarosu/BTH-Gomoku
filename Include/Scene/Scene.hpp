@@ -62,6 +62,11 @@ public:
 		Make the camera look at a specific cell.
 	*/
 	void LookAtCell(const Logic::Cell& cell);
+
+	/**
+		Determine if a cell is highlighted
+	*/
+	HighlightType GetCellHighlight(const Logic::Cell& cell) const;
 protected:
 	// Methods inherited from Component
 	void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState) {}

@@ -14,6 +14,7 @@ namespace State
 		  mSession(NULL),
 		  mGameStage(GameStage::During),
 		  mGameOverLabel(NULL),
+		  mPieMenu(NULL),
 		  mSndPlacePiece(NULL)
 	{}
 
@@ -106,7 +107,45 @@ namespace State
 
 		// Update the scene
 		mScene->Update(mSession->GetGrid(), currInput, prevInput, gameTime);
+		mPieMenu->Update(gameTime, currInput, prevInput);
 
+
+
+		// Update scene
+		Scene::HighlightType highlightType = Scene::None;
+		int highlightOption = mPieMenu->GetAndResetClickedItemIndex();
+		switch (highlightOption)
+		{
+			case Components::PieMenu::C_ITEM_NEXT:
+				highlightType = Scene::Mine;
+			break;
+
+			case Components::PieMenu::C_ITEM_WARNING:
+				highlightType = Scene::Warning;
+			break;
+
+			case Components::PieMenu::C_ITEM_HINT:
+				highlightType = Scene::Hint;
+			break;
+
+			case Components::PieMenu::C_ITEM_OTHER:
+				highlightType = Scene::General;
+			break;
+		}
+
+		if (highlightType != Scene::None)
+		{
+			Logic::Cell pickedCell = mScene->PickCell(mPieMenu->GetPosition().x, mPieMenu->GetPosition().y);
+			
+			if (mScene->GetCellHighlight(pickedCell) == highlightType)
+				highlightType = Scene::None;
+
+			mScene->HighlightCell(pickedCell, highlightType);
+			mSession->SendHighlightMessage(pickedCell, GetHighlightConstant(highlightType));
+		}
+		
+		
+		Logic::Cell pickedCell = mScene->PickCell(currInput.Mouse.x, currInput.Mouse.y);
 		if (mGameStage == GameStage::During)
 		{
 			if (mSession->IsLocalPlayerTurn())
@@ -114,8 +153,7 @@ namespace State
 				if (currInput.Mouse.buttonIsPressed[C_MOUSE_LEFT] && !prevInput.Mouse.buttonIsPressed[C_MOUSE_LEFT] && mScene->HasFocus()
 					&& !(mGameMenu->IsHovered() || mPlayerList->IsHovered()))
 				{
-					Logic::Cell cell = mScene->PickCell(currInput.Mouse.x, currInput.Mouse.y);
-					mSession->SendPlacePieceMessage(cell);
+					mSession->SendPlacePieceMessage(pickedCell);
 				}
 			}
 		}
@@ -177,6 +215,11 @@ namespace State
 		mChat->SetVisible(true);
 	}
 
+	void AbstractGameState::SetHighlightedCell(const Logic::Cell& cell, int highlightType)
+	{
+		mScene->HighlightCell(cell, GetHighlightType(highlightType));
+	}
+
 	void AbstractGameState::SetSession(Logic::Session* session)
 	{
 		mSession = session;
@@ -221,6 +264,13 @@ namespace State
 		mGameOverLabel->SetVisible(false);
 
 		r.left = 0;
+		r.top = 0;
+		r.right = 0;
+		r.bottom = 0;
+		mPieMenu = new Components::PieMenu(mComponents, mDevice, r);
+		mPieMenu->Initialize();
+
+		r.left = 0;
 		r.right = sViewport->GetWidth();
 		r.bottom = sViewport->GetHeight();
 		r.top = r.bottom - C_CHAT_HEIGHT;
@@ -235,5 +285,63 @@ namespace State
 	float AbstractGameState::GetAspectRatio()
 	{
 		return static_cast<float>(sViewport->GetWidth()) / static_cast<float>(sViewport->GetHeight());
+	}
+
+	int AbstractGameState::GetHighlightConstant(Scene::HighlightType type) const
+	{
+		int constant = 0;
+		switch (type)
+		{
+			case Scene::None:
+				constant = 0;
+			break;
+
+			case Scene::Hint:
+				constant = 1;
+			break;
+
+			case Scene::Warning:
+				constant = 2;
+			break;
+
+			case Scene::General:
+				constant = 3;
+			break;
+
+			case Scene::Mine:
+				constant = 4;
+			break;
+		}
+
+		return constant;
+	}
+
+	Scene::HighlightType AbstractGameState::GetHighlightType(int highlightConstant) const
+	{
+		Scene::HighlightType type = Scene::None;
+		switch (highlightConstant)
+		{
+			case 0:
+				type = Scene::None;
+			break;
+
+			case 1:
+				type = Scene::Hint;
+			break;
+
+			case 2:
+				type = Scene::Warning;
+			break;
+
+			case 3:
+				type = Scene::General;
+			break;
+
+			case 4:
+				type = Scene::Mine;
+			break;
+		}
+
+		return type;
 	}
 }

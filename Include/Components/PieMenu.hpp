@@ -48,12 +48,12 @@ namespace Components
 	class PieMenu : public ComponentGroup
 	{
 	public:
-		static const int			C_ITEM_NONE;
-		static const int			C_ITEM_NEXT;
-		static const int			C_ITEM_WARNING;
-		static const int			C_ITEM_HINT;
-		static const int			C_ITEM_OTHER;
-		static const int			C_ITEM_COUNT;
+		static const int			C_ITEM_NONE = -1;
+		static const int			C_ITEM_NEXT = 0;
+		static const int			C_ITEM_WARNING = 1;
+		static const int			C_ITEM_HINT = 2;
+		static const int			C_ITEM_OTHER = 3;
+		static const int			C_ITEM_COUNT = 4;
 
 		PieMenu(ComponentGroup* ownerGroup, ID3D10Device* device, RECT position);
 		~PieMenu() throw();

@@ -23,8 +23,15 @@ namespace State
 
 	void ServerLobbyState::AppendClientConnected(Logic::PlayerID player)
 	{
-		mTeamMenus[player]->SetCurrentValue(mServerSession->GetPlayerTeam(player));
-		mTeamMenus[player]->SetEnabled(true);
+		if (mServerSession->GetSlotCount() == 2)
+		{
+			mServerSession->SendSetTeamMessage(player, 1);
+		}
+		else if (mServerSession->GetSlotCount() == 4)
+		{
+			mTeamMenus[player]->SetCurrentValue(mServerSession->GetPlayerTeam(player));
+			mTeamMenus[player]->SetEnabled(true);
+		}
 	}
 
 	void ServerLobbyState::AppendStatePushed()

@@ -47,6 +47,11 @@ namespace Logic
 			Set the team of the given player.
 		*/
 		virtual void SetTeam(PlayerID id, Team team) = 0;
+
+		/**
+			Highlight a cell for your teammate. 
+		*/
+		virtual void SetHighlightedCell(const Cell& cell, int highlightType) = 0;
 	};
 
 
@@ -139,6 +144,11 @@ namespace Logic
 			Change a player's team.
 		*/
 		virtual void SendSetTeamMessage(PlayerID player, Team team) = 0;
+
+		/**
+			Send a highlight message to your teammate.
+		*/
+		virtual void SendHighlightMessage(const Cell& cell, int highlightType) = 0;
 
 		/**
 			Check whether there exists an open slot, in which case not all slots have been filled or a player has left the game.

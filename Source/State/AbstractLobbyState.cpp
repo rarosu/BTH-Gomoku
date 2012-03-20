@@ -42,23 +42,7 @@ namespace State
 			std::stringstream s;
 			s << (i + 1) << ". " << mSession->GetPlayerName(i);
 
-			mPlayerLabels[i]->SetCaption(s.str());
-
-			/*
-			mTeamMenus[i]->SetCurrentValue(mSession->GetPlayerTeam(i));
-			switch (mSession->GetSlotType(i))
-			{
-				case Logic::Session::C_STATUS_LOCAL:
-					mSlotMenus[i]->SetCurrentValue(0);
-				break;
-
-				case Logic::Session::C_STATUS_OPEN:
-				case Logic::Session::C_STATUS_REMOTE:
-					mSlotMenus[i]->SetCurrentValue(1);
-				break;
-			}
-			*/
-			
+			mPlayerLabels[i]->SetCaption(s.str());		
 		}
 
 		HandleMenus();
@@ -154,6 +138,11 @@ namespace State
 		mTeamMenus[id]->SetCurrentValue(0);
 		mTeamMenus[id]->SetEnabled(false);
 		AppendClientDisconnected(id);
+	}
+
+	void AbstractLobbyState::SetHighlightedCell(const Logic::Cell& cell, int highlightType)
+	{
+		assert(false);
 	}
 	
 	void AbstractLobbyState::SetSession(Logic::Session* session)

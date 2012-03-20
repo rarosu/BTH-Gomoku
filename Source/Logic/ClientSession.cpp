@@ -173,6 +173,14 @@ namespace Logic
 					if (mSessionNotifiee != NULL)
 						mSessionNotifiee->GameOver(mWinner);
 				} break;
+
+				case Network::C_MESSAGE_HIGHLIGHT:
+				{
+					Network::HighlightMessage* m = static_cast<Network::HighlightMessage*>(mClient->PopMessage(i));
+
+					if (mSessionNotifiee != NULL)
+						mSessionNotifiee->SetHighlightedCell(Logic::Cell(m->mX, m->mY), m->mType);
+				} break;
 			}
 		}
 
@@ -209,5 +217,10 @@ namespace Logic
 		{
 			mClient->Send(Network::SetTeamMessage(player, team));
 		}
+	}
+
+	void ClientSession::SendHighlightMessage(const Cell& cell, int highlightType)
+	{
+		mClient->Send(Network::HighlightMessage(cell.x, cell.y, highlightType));
 	}
 }

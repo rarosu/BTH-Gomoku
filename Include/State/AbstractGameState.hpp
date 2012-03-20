@@ -72,6 +72,11 @@ namespace State
 			removed from the player list.
 		*/
 		void PlayerDisconnected(Logic::PlayerID id, const std::string& name, Network::RemovePlayerReason::RemovePlayerReason reason);
+
+		/**
+			Highlight a cell
+		*/
+		void SetHighlightedCell(const Logic::Cell& cell, int highlightType);
 	protected:
 		Components::ChatConsole*	mChat;
 
@@ -100,6 +105,7 @@ namespace State
 		Components::ClickMenu*		mGameMenu;
 		Components::PlayerList*		mPlayerList;
 		Components::Label*			mGameOverLabel;
+		Components::PieMenu*		mPieMenu;
 
 		Sound*						mSndPlacePiece;
 
@@ -110,6 +116,9 @@ namespace State
 
 		void CreateComponents();
 		float GetAspectRatio();
+
+		int GetHighlightConstant(Scene::HighlightType type) const;
+		Scene::HighlightType GetHighlightType(int highlightConstant) const;
 	};
 }
 

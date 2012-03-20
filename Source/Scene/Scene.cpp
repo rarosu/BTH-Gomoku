@@ -298,6 +298,13 @@ void Scene::LookAtCell(const Logic::Cell& cell)
 	mCamera->SetDestination(D3DXVECTOR3(cell.x * C_CELL_SIZE, 0.0f, cell.y * C_CELL_SIZE));
 }
 
+Scene::HighlightType Scene::GetCellHighlight(const Logic::Cell& cell) const
+{
+	if (mHighlightedCell == cell)
+		return mHighlightType;
+	return None;
+}
+
 D3DXVECTOR4 Scene::GetCellBounds(const Logic::Cell& cell) const
 {
 	int c = C_CELL_SIZE / 2;
@@ -313,13 +320,13 @@ D3DXCOLOR Scene::GetColorForHighlight(HighlightType highlightType) const
 	switch (highlightType)
 	{
 		case Hint:
-			return D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.5f);
+			return D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.5f);
 		case Warning:
 			return D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.5f);
 		case General:
-			return D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.5f);
+			return D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.5f);
 		case Mine:
-			return D3DXCOLOR(1.0f, 0.0f, 1.0f, 0.5f);
+			return D3DXCOLOR(0.0f, 1.0f, 0.0f, 0.5f);
 	}
 
 	return D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);

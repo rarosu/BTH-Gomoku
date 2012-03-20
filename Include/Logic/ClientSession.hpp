@@ -88,6 +88,11 @@ namespace Logic
 			Change team, if the player is local player.
 		*/
 		void SendSetTeamMessage(PlayerID player, Team team);
+
+		/**
+			Send a highlight message to your teammate.
+		*/
+		void SendHighlightMessage(const Cell& cell, int highlightType);
 	private:
 		static const float C_KEEP_ALIVE_DELAY;
 

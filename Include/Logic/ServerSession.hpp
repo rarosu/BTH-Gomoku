@@ -80,6 +80,11 @@ namespace Logic
 		void SendStartMessage();
 
 		/**
+			Send a highlight message to your teammate.
+		*/
+		void SendHighlightMessage(const Cell& cell, int highlightType);
+
+		/**
 			Boot a player
 		*/
 		void BootPlayer(PlayerID playerID);

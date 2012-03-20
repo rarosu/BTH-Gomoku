@@ -161,6 +161,30 @@ namespace Logic
 						mServer->Send(Network::SetTeamMessage(m->mPlayerID, m->mTeam));
 					}
 				} break;
+
+				case Network::C_MESSAGE_HIGHLIGHT:
+				{
+					Network::HighlightMessage* m = static_cast<Network::HighlightMessage*>(message.mMessage);
+					PlayerID source = GetPlayerSlot(message.mSlot);
+
+					for (PlayerID s = 0; s < mPlayers.size(); ++s)
+					{
+						if (mPlayers[s]->GetTeam() == mPlayers[source]->GetTeam() && s != source)
+						{
+							if (mPlayerClients[s] >= 0)
+							{
+								// Remote
+								mServer->Send(Network::HighlightMessage(m->mX, m->mY, m->mType));
+							}
+							else
+							{
+								// Local
+								if (mSessionNotifiee != NULL)
+									mSessionNotifiee->SetHighlightedCell(Logic::Cell(m->mX, m->mY), m->mType);
+							}
+						}
+					}
+				} break;
 			}
 
 			SafeDelete(message.mMessage);
@@ -245,6 +269,17 @@ namespace Logic
 		mServer->Send(Network::TurnMessage(mCurrentPlayer));
 
 		mServer->ShutdownListenSocket();
+	}
+
+	void ServerSession::SendHighlightMessage(const Cell& cell, int highlightType)
+	{
+		for (PlayerID i = 0; i < mPlayers.size(); ++i)
+		{
+			if (mPlayers[i] != NULL && mPlayers[i]->GetTeam() == mPlayers[0]->GetTeam() && mPlayerClients[i] >= 0)
+			{
+				mServer->Send(mPlayerClients[i], Network::HighlightMessage(cell.x, cell.y, highlightType));
+			}
+		}
 	}
 
 	void ServerSession::BootPlayer(PlayerID playerID)

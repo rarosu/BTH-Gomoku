@@ -79,13 +79,6 @@ namespace Components
 
 namespace Components
 {
-	const int			PieMenu::C_ITEM_NONE			= -1;
-	const int			PieMenu::C_ITEM_NEXT			= 0;
-	const int			PieMenu::C_ITEM_WARNING			= 1;
-	const int			PieMenu::C_ITEM_HINT			= 2;
-	const int			PieMenu::C_ITEM_OTHER			= 3;
-	const int			PieMenu::C_ITEM_COUNT			= 4;
-
 	PieMenu::PieMenu(ComponentGroup* ownerGroup, ID3D10Device* device, RECT position)
 		: ComponentGroup(ownerGroup, "Piemenu", position),
 		  mDevice(device), mDefaultFont(NULL), mMinDist(30), mMaxDist(200), mClickedItemIndex(-1)
@@ -131,6 +124,9 @@ namespace Components
 
 	void PieMenu::MouseButtonPressed(int buttonIndex, const InputState& currentState)
 	{
+		if (!IsEnabled())
+			return;
+
 		if(buttonIndex == C_MOUSE_RIGHT)
 		{
 			SetVisible(true);

@@ -60,6 +60,10 @@ namespace State
 		*/
 		void PlayerDisconnected(Logic::PlayerID id, const std::string& name, Network::RemovePlayerReason::RemovePlayerReason reason);
 	
+		/**
+			Highlight a cell for your teammate. 
+		*/
+		void SetHighlightedCell(const Logic::Cell& cell, int highlightType);
 	protected:
 		void SetSession(Logic::Session* session);
 

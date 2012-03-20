@@ -73,11 +73,8 @@
     <ClCompile Include="Source\Logic\Ruleset2v2.cpp" />
     <ClCompile Include="Source\State\AbstractLobbyState.cpp" />
     <ClCompile Include="Source\State\CreditsState.cpp" />
-    <ClCompile Include="Source\Network\Messages\HintMessage.cpp" />
-    <ClCompile Include="Source\Network\Messages\WarningMessage.cpp" />
-    <ClCompile Include="Source\Network\Messages\GeneralMessage.cpp" />
-    <ClCompile Include="Source\Network\Messages\MineMessage.cpp" />
     <ClCompile Include="Source\Components\ToggleButton.cpp" />
+    <ClCompile Include="Source\Network\Messages\HighlightMessage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -155,11 +152,8 @@
     <ClInclude Include="Include\Scene\ObjModel.hpp" />
     <ClInclude Include="Include\Logic\Ruleset2v2.hpp" />
     <ClInclude Include="Include\State\CreditsState.hpp" />
-    <ClInclude Include="Include\Network\Messages\HintMessage.hpp" />
-    <ClInclude Include="Include\Network\Messages\WarningMessage.hpp" />
-    <ClInclude Include="Include\Network\Messages\GeneralMessage.hpp" />
-    <ClInclude Include="Include\Network\Messages\MineMessage.hpp" />
     <ClInclude Include="Include\Components\ToggleButton.hpp" />
+    <ClInclude Include="Include\Network\Messages\HighlightMessage.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

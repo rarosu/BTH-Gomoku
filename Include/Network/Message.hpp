@@ -19,10 +19,7 @@ namespace Network
 	const int C_MESSAGE_GAME_OVER = 12;
 	const int C_MESSAGE_LEAVE_GAME = 13;
 	const int C_MESSAGE_STAY_ALIVE = 14;
-	const int C_MESSAGE_HINT = 15;
-	const int C_MESSAGE_WARNING = 16;
-	const int C_MESSAGE_GENERAL = 17;
-	const int C_MESSAGE_MINE = 18;
+	const int C_MESSAGE_HIGHLIGHT = 15;
 
 	class Message
 	{
