@@ -198,6 +198,16 @@ namespace State
 			
 			try
 			{
+				std::string newName("");
+				std::string oldName = mIFName->GetText();
+
+				for(int i = 0; i < oldName.length(); ++i)
+				{
+					if(oldName[i] != ' ')
+						newName += oldName[i];
+				}
+				mIFName->SetText(newName);
+
 				Network::Server* server = new Network::Server(ruleset->GetPlayerCount(), port);
 				mServerLobbyState->SetSessionArguments(server, mIFName->GetText(), ruleset);
 
