@@ -214,7 +214,7 @@ namespace Logic
 
 	void ServerSession::SendStartMessage()
 	{
-		mCurrentPlayer = mRuleset->GetStartingPlayer();
+		mCurrentPlayer = mRuleset->GetStartingPlayer(this);
 
 		mServer->Send(Network::StartGameMessage());
 		mServer->Send(Network::TurnMessage(mCurrentPlayer));

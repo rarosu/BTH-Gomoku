@@ -57,6 +57,7 @@ namespace State
 	protected:
 		void SetSession(Logic::Session* session);
 
+		virtual void AppendStatePushed() {}
 		virtual void AppendStatePopped() {}
 		virtual void AppendComponents() {}
 		virtual void AppendUpdate() {}

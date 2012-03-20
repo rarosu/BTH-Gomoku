@@ -4,12 +4,6 @@
 
 namespace Logic
 {
-	Ruleset2v2::Ruleset2v2(const Session* session)
-		: mSession(session)
-	{
-
-	}
-
 	unsigned int Ruleset2v2::GetPlayerCount() const
 	{
 		return 4;
@@ -21,13 +15,13 @@ namespace Logic
 	}
 
 
-	unsigned int Ruleset2v2::GetStartingPlayer() const
+	unsigned int Ruleset2v2::GetStartingPlayer(const Session* session) const
 	{
 		unsigned int startingPlayer = rand() % 4;
 		mTurnOrder.push_back(startingPlayer);
-		mTurnOrder.push_back(mSession->GetOpponent(startingPlayer, 0));
-		mTurnOrder.push_back(mSession->GetTeamMate(startingPlayer));
-		mTurnOrder.push_back(mSession->GetTeamMate(mTurnOrder[1]));
+		mTurnOrder.push_back(session->GetOpponent(startingPlayer, 0));
+		mTurnOrder.push_back(session->GetTeamMate(startingPlayer));
+		mTurnOrder.push_back(session->GetTeamMate(mTurnOrder[1]));
 
 		return startingPlayer;
 	}

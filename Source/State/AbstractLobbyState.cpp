@@ -142,6 +142,7 @@ namespace State
 		assert(mSession != NULL);
 
 		CreateComponents();
+		AppendStatePushed();
 	}
 
 	void AbstractLobbyState::OnStatePopped()

@@ -1,6 +1,7 @@
 #include "CreateGameState.hpp"
 #include "ServerSession.hpp"
 #include "StandardRuleset.hpp"
+#include "Ruleset2v2.hpp"
 
 namespace State
 {
@@ -175,6 +176,8 @@ namespace State
 				mJustChosenG = false; // DEBUG
 		}
 
+
+
 		// Basic check to see if the port is valid
 		unsigned short port = 0;
 		std::stringstream s;
@@ -197,7 +200,18 @@ namespace State
 
 		if (mBtnCreate->GetAndResetClickStatus())
 		{
-			Logic::Ruleset* ruleset = new Logic::StandardRuleset();
+			Logic::Ruleset* ruleset;
+			switch (mChosenGame.mPlayers)
+			{
+				case GameType::Players1v1:
+					ruleset = new Logic::StandardRuleset();
+				break;
+
+				case GameType::Players2v2:
+					ruleset = new Logic::Ruleset2v2();
+				break;
+			}
+			
 			try
 			{
 				Network::Server* server = new Network::Server(ruleset->GetPlayerCount(), port);

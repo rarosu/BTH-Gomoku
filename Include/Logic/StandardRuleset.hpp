@@ -11,7 +11,7 @@ namespace Logic
 		unsigned int GetPlayerCount() const;
 		unsigned int GetWinningRowLength() const;
 
-		unsigned int GetStartingPlayer() const;
+		unsigned int GetStartingPlayer(const Session* session) const;
 		unsigned int GetNextPlayer(unsigned int currentPlayer) const;
 	};
 }
