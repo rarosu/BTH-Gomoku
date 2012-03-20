@@ -1,7 +1,6 @@
 #include "Scene.hpp"
 #include <sstream>
 
-const D3DXCOLOR Scene::C_MARKER_COLORS[] = { D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f), D3DXCOLOR(0.0f, 0.0f, 1.0f, 1.0f), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f) };
 const Marker::MarkerType Scene::C_MARKER_TYPES[] = { Marker::Ring, Marker::Triangle, Marker::Quad, Marker::Cross};
 const int Scene::C_GRID_WIDTH = 64;
 const int Scene::C_GRID_HEIGHT = 64;
@@ -14,7 +13,8 @@ Scene::Scene(ID3D10Device* device, Components::ComponentGroup* ownerGroup, float
 	  mVertexBuffer(NULL),
 	  mEffect(NULL),
 	  mCamera(NULL),
-	  mGrid(grid)
+	  mGrid(grid),
+	  mHighlightType(None)
 {
 	// Create vertex buffer and compile effect
 	CreateBuffer();
@@ -192,23 +192,12 @@ void Scene::Draw()
 {
 	// Create Model-View-Projection-matrix
 	D3DXMATRIX modelViewProjection = mModelMatrix * mCamera->GetViewMatrix() * mCamera->GetProjectionMatrix();
-	
-	int c = C_CELL_SIZE / 2;
-	float left = mHoveredCell.x * C_CELL_SIZE - c;
-	float up = mHoveredCell.y * C_CELL_SIZE + c;
-	float right = mHoveredCell.x * C_CELL_SIZE + c;
-	float down = mHoveredCell.y * C_CELL_SIZE - c;
-	D3DXVECTOR4 vec = D3DXVECTOR4(right, down, left, up);
-
-	mEffect->SetVariable("gLeft", left);
-	mEffect->SetVariable("gUp", up);
-	mEffect->SetVariable("gRight", right);
-	mEffect->SetVariable("gDown", down);
-	mEffect->SetVariable("gMarkedCellBox", vec);
 
 	mEffect->SetVariable("gModel", mModelMatrix);
 	mEffect->SetVariable("gMVP", modelViewProjection);
-	mEffect->SetVariable("gMarkedCell", D3DXVECTOR2(mHoveredCell.x, mHoveredCell.y));
+	mEffect->SetVariable("gMarkedCell", GetCellBounds(mHoveredCell));
+	mEffect->SetVariable("gHighlightedCell", GetCellBounds(mHighlightedCell));
+	mEffect->SetVariable("gHighlightedColor", (D3DXVECTOR4) GetColorForHighlight(mHighlightType));
 
 	// Render the grid
 	mVertexBuffer->Bind();
@@ -300,7 +289,8 @@ Logic::Cell Scene::PickCell(int mouseX, int mouseY) const
 
 void Scene::HighlightCell(Logic::Cell cell, HighlightType type)
 {
-	
+	mHighlightedCell = cell;
+	mHighlightType = type;
 }
 
 void Scene::LookAtCell(const Logic::Cell& cell)
@@ -308,3 +298,29 @@ void Scene::LookAtCell(const Logic::Cell& cell)
 	mCamera->SetDestination(D3DXVECTOR3(cell.x * C_CELL_SIZE, 0.0f, cell.y * C_CELL_SIZE));
 }
 
+D3DXVECTOR4 Scene::GetCellBounds(const Logic::Cell& cell) const
+{
+	int c = C_CELL_SIZE / 2;
+	float left = cell.x * C_CELL_SIZE - c;
+	float up = cell.y * C_CELL_SIZE + c;
+	float right = cell.x * C_CELL_SIZE + c;
+	float down = cell.y * C_CELL_SIZE - c;
+	return D3DXVECTOR4(right, down, left, up);
+}
+
+D3DXCOLOR Scene::GetColorForHighlight(HighlightType highlightType) const
+{
+	switch (highlightType)
+	{
+		case Hint:
+			return D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.5f);
+		case Warning:
+			return D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.5f);
+		case General:
+			return D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.5f);
+		case Mine:
+			return D3DXCOLOR(1.0f, 0.0f, 1.0f, 0.5f);
+	}
+
+	return D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);
+}

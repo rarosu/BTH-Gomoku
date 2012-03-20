@@ -23,7 +23,7 @@ public:
 	Scene(ID3D10Device* device, Components::ComponentGroup* ownerGroup, float aspectRatio, const Logic::Grid* grid, unsigned int playerCount);
 	~Scene() throw();
 
-	enum HighlightType { Hint, Warning, General, Mine };
+	enum HighlightType { None, Hint, Warning, General, Mine };
 
 	void HandleKeyPress(const InputState& currentInput, const GameTime& gameTime);
 
@@ -66,10 +66,7 @@ public:
 protected:
 	// Methods inherited from Component
 	void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState) {}
-
 private:
-	typedef std::map<HighlightType, Logic::Cell> HighlightMap;
-	static const D3DXCOLOR C_MARKER_COLORS[];
 	static const Marker::MarkerType C_MARKER_TYPES[];
 
 	static const int C_GRID_WIDTH;
@@ -99,7 +96,9 @@ private:
 	Camera*						mCamera;
 	std::vector<Marker*>		mMarkers;
 	Logic::Cell					mHoveredCell;
-	HighlightMap				mHighlightedCells;
+	Logic::Cell					mHighlightedCell;
+	HighlightType				mHighlightType;
+
 	const Logic::Grid*			mGrid;
 
 	D3DXMATRIX					mModelMatrix;
@@ -115,6 +114,9 @@ private:
 	void MouseExited() {}
 	void MousePressed(int buttonIndex, const InputState& currentState) {}
 	void MouseReleased(int buttonIndex, const InputState& currentState) {}
+
+	D3DXVECTOR4 GetCellBounds(const Logic::Cell& cell) const;
+	D3DXCOLOR GetColorForHighlight(HighlightType highlightType) const;
 };
 
 #endif

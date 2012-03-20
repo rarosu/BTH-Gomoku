@@ -8,9 +8,9 @@ struct VS_INPUT
 struct PS_INPUT
 {
 	float4		position	: SV_POSITION;
+	float3		worldPos	: POSITION;
 	float2		cellUV		: TEXCOORD;
 	float2		boardUV		: UV;
-	float3		worldPos	: POSITION;
 };
 
 RasterizerState NoCulling
@@ -29,12 +29,9 @@ cbuffer cbEveryFrame
 {
 	matrix		gModel;
 	matrix		gMVP;
-	float2		gMarkedCell;
-	float4		gMarkedCellBox; // x = right, y = down, z = left, w = up
-	float		gLeft;		// TEST
-	float		gUp;
-	float		gRight;
-	float		gDown;		// END TEST
+	float4		gMarkedCell;		// x = right, y = down, z = left, w = up
+	float4		gHighlightedCell;
+	float4		gHighlightedColor;
 };
 
 int gWidth;
@@ -60,12 +57,19 @@ float4 PS(PS_INPUT input) : SV_TARGET0
 {
 	float4 col = gCellTexture.Sample(LinearSampler, input.cellUV) * gBoardTexture.Sample(LinearSampler, input.boardUV);
 
-	//if (input.worldPos.x > gLeft && input.worldPos.x < gRight &&
-		//input.worldPos.z > gDown && input.worldPos.z < gUp)
-	if (input.worldPos.x > gMarkedCellBox.z && input.worldPos.x < gMarkedCellBox.x &&
-		input.worldPos.z > gMarkedCellBox.y && input.worldPos.z < gMarkedCellBox.w)
+	// Hovered cell
+	if (input.worldPos.x > gMarkedCell.z && input.worldPos.x < gMarkedCell.x &&
+		input.worldPos.z > gMarkedCell.y && input.worldPos.z < gMarkedCell.w)
 	{
 		col = col * (1 - gPickColor.w) + gPickColor * gPickColor.w;
+		col.w = 1.0;
+	}
+
+	// Highlighted cell
+	if (input.worldPos.x > gHighlightedCell.z && input.worldPos.x < gHighlightedCell.x &&
+		input.worldPos.z > gHighlightedCell.y && input.worldPos.z < gHighlightedCell.w)
+	{
+		col = col * (1 - gHighlightedColor.w) + gHighlightedColor * gHighlightedColor.w;
 		col.w = 1.0;
 	}
 
