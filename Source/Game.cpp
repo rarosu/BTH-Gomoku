@@ -22,13 +22,12 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth,
 	State::ApplicationState::sViewport = &mViewport;
 	State::ApplicationState::sInputManager = &mInputManager;
 	State::ApplicationState::sManager = this;
+	Components::Component::Initialize(mDeviceD3D);
 
 	mRootComponentGroup = new Components::RootComponent(mDeviceD3D, mViewport.GetWidth(), mViewport.GetHeight());
 	mInputManager.AddKeyListener(mRootComponentGroup);
 	mInputManager.AddMouseListener(mRootComponentGroup);
 	State::ApplicationState::sRootComponentGroup = mRootComponentGroup;
-
-	Components::Component::Initialize();
 
 	// Create the states
 	mMenuState = new State::MenuState(State::C_STATE_MENU, mDeviceD3D);

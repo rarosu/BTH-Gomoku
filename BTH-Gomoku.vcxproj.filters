@@ -77,6 +77,7 @@
     <ClCompile Include="Source\Network\Messages\WarningMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\GeneralMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\MineMessage.cpp" />
+    <ClCompile Include="Source\Components\ToggleButton.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="Include\Network\Messages\WarningMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\GeneralMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\MineMessage.hpp" />
+    <ClInclude Include="Include\Components\ToggleButton.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

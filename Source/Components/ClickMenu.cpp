@@ -1,4 +1,5 @@
 #include "ClickMenu.hpp"
+#include <cassert>
 
 // Menu Item
 namespace Components
@@ -145,12 +146,13 @@ namespace Components
 
 		newItem->Initialize(mDevice, caption);
 		
-		mItems.push_back(newItem);
-
 		RECT menuRect = GetBoundingRect();
 		menuRect.bottom += mItemHeight;
 
+		mItems.push_back(newItem);
 		SetBoundingRect(menuRect);
+
+		mBoundingSprite = new Sprite(sDevice, sViewport, "whitePixel.png", GetWidth(), GetHeight());
 	}
 	
 	void ClickMenu::LostFocus()
@@ -159,37 +161,47 @@ namespace Components
 		ComponentGroup::LostFocus();
 	}
 
+	// DEBUG
+	void ClickMenu::Draw()
+	{
+		ComponentGroup::Draw(true);
+	}
+
 	bool ClickMenu::GetAndResetClickStatus(const std::string& caption)
 	{
-		ClickMenuItem* currItem = GetMenuItem(caption);
-		if(currItem != NULL)
-			return currItem->GetAndResetClickStatus();
-		
-		return false;
+		return GetAndResetClickStatus(GetIndex(caption));
 	}
 
 	bool ClickMenu::GetAndResetClickStatus(const int index)
 	{
-		if(index < mItems.size() && mItems.size() > 0)
-			return reinterpret_cast<ClickMenuItem*>(mItems[index])->GetAndResetClickStatus();
+		if(index >= 0 && index < mItems.size())
+		{
+			ClickMenuItem* currItem = reinterpret_cast<ClickMenuItem*>(mItems[index]);
+			bool clickStatus = currItem->GetAndResetClickStatus();
+
+			ClickMenu* subMenu = currItem->GetSubMenu();
+			if(subMenu != NULL)
+			{
+				for(int i = 0; i < subMenu->GetItemCount(); ++i)
+				{
+					subMenu->GetAndResetClickStatus(i);
+				}
+			}
+
+			return clickStatus;
+		}
 		else
 			return false;
 	}
 
 	ClickMenuItem* ClickMenu::GetMenuItem(const std::string& caption)
 	{
-		for(int i = 0; i < mItems.size(); ++i)
-		{
-			if(mItems[i]->GetCaption() == caption)
-				return mItems[i];
-		}
-
-		return NULL;
+		return GetMenuItem(GetIndex(caption));
 	}
 
 	ClickMenuItem* ClickMenu::GetMenuItem(const int index)
 	{
-		if(index < mItems.size() && mItems.size() > 0)
+		if(index >= 0 && index < mItems.size())
 			return reinterpret_cast<ClickMenuItem*>(mItems[index]);
 		else
 			return NULL;
@@ -197,7 +209,7 @@ namespace Components
 
 	ClickMenu* ClickMenu::GetSubMenu(const int index)
 	{
-		if(index < mItems.size() && mItems.size() > 0)
+		if(index >= 0 && index < mItems.size())
 			return reinterpret_cast<ClickMenuItem*>(mItems[index])->GetSubMenu();
 		else
 			return NULL;
@@ -205,15 +217,14 @@ namespace Components
 
 	ClickMenu* ClickMenu::GetSubMenu(const std::string& caption)
 	{
-		ClickMenuItem* currItem = GetMenuItem(caption);
-		if(currItem != NULL)
-			return currItem->GetSubMenu();
-		
-		return NULL;
+		return GetSubMenu(GetIndex(caption));
 	}
 
 	void ClickMenu::Collapse(const int index)
 	{
+		assert(index >= 0);
+		assert(index < mItems.size());
+
 		ClickMenuItem* currItem = reinterpret_cast<ClickMenuItem*>(mItems[index]);
 		Collapse(currItem);
 	}
@@ -235,6 +246,9 @@ namespace Components
 
 	void ClickMenu::Expand(const int index)
 	{
+		assert(index >= 0);
+		assert(index < mItems.size());
+
 		ClickMenuItem* currItem = reinterpret_cast<ClickMenuItem*>(mItems[index]);
 		Expand(currItem);
 	}
@@ -245,5 +259,21 @@ namespace Components
 		ClickMenu* subMenu = collapseItem->GetSubMenu();
 		if(subMenu != NULL)
 			subMenu->SetVisible(true);
+	}
+
+	int ClickMenu::GetIndex(std::string caption)
+	{
+		for(int i = 0; i < mItems.size(); ++i)
+		{
+			if(mItems[i]->GetCaption() == caption)
+				return i;
+		}
+
+		return -1;
+	}
+
+	int ClickMenu::GetItemCount() const
+	{
+		return mItems.size();
 	}
 }

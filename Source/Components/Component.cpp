@@ -6,6 +6,7 @@ namespace Components
 	const Viewport*		Component::sViewport = NULL;
 	Sound*				Component::sSndButtonClick = NULL;
 	Sound*				Component::sSndInputFull = NULL;
+	ID3D10Device*		Component::sDevice = NULL;
 
 	Component::Component(ComponentGroup* ownerGroup, RECT position)
 		: mOwner(ownerGroup), mPositionRect(position), mIsEnabled(true), mIsVisible(true), mIsHovered(false),
@@ -19,10 +20,11 @@ namespace Components
 	{
 	}
 
-	void Component::Initialize()
+	void Component::Initialize(ID3D10Device* device)
 	{
 		sSndButtonClick = SoundManager::GetInstance().CreateSound("Resources/Sounds/buttonClick.wav");
 		sSndInputFull = SoundManager::GetInstance().CreateSound("Resources/Sounds/inputFull.wav");
+		sDevice = device;
 	}
 
 	void Component::Update(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState)
@@ -164,6 +166,7 @@ namespace Components
 				SetFocus();
 				MouseReleased(index, currentState);
 				mIsClicked = true;
+
 				if(sSndButtonClick != NULL)
 					SoundManager::GetInstance().PlaySound(sSndButtonClick);
 			}

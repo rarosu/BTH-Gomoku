@@ -7,6 +7,7 @@
 #include "Globals.hpp"
 #include "Component.hpp"
 #include "InputManager.hpp"
+#include "Sprite.hpp"
 
 namespace Components
 {
@@ -28,6 +29,7 @@ namespace Components
 		// Methods inherited from Component
 		virtual void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
 		virtual void Draw();
+		void Draw(bool drawBounding);
 		virtual void LostFocus();
 		void GotFocus();
 		// DEBUG
@@ -47,6 +49,9 @@ namespace Components
 		void SetBoundingRect(const RECT& r);
 	protected:
 		std::vector<Component*>		mComponents;
+
+		// DEBUG
+		Sprite*						mBoundingSprite;
 
 	private:
 		Component*					mFocusedComponent;

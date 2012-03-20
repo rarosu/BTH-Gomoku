@@ -16,6 +16,8 @@ ObjModel::ObjModel(ID3D10Device* device, std::string filename, D3DXCOLOR color)
 	/*ID3D10ShaderResourceView *pSRView = NULL;
 	D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/red.png", NULL, NULL, &pSRView, NULL );
 	mEffect->SetVariable("modelTexture", pSRView);*/
+
+	mEffect->SetVariable("g_lightDirection", D3DXVECTOR4(50.0, -10.0, 50.0, 0.0));
 	mEffect->SetVariable("g_modelColor", (D3DXVECTOR4)color);
 }
 
@@ -27,61 +29,71 @@ ObjModel::~ObjModel() throw()
 bool ObjModel::Load(std::string filename)
 {
 	std::ifstream file;
-	char buffer[1024];
 	std::vector<D3DXVECTOR3> outPositions;
 	std::vector<D3DXVECTOR2> outUVCoords;
 	std::vector<D3DXVECTOR3> outNormals;
 	
-	file.open(filename.c_str(), std::ios_base::binary);
+	file.open(filename.c_str(), std::ios_base::in);
 	
 	if(!file.is_open())
 		return false;
 
-	while(file.getline(buffer, 1024))
+	while(!file.eof())
 	{
-		char key[1024];
+		// Read first line of file.
+		std::string line;
+		std::getline(file, line);
 
-		sscanf(buffer, "%s", key);
-		if(strcmp(key, "v") == 0)
+		// Copy line to a stringstream and copy first word into string key
+		std::stringstream streamLine;
+		streamLine.str(line);
+		std::string key;
+		streamLine >> key;
+
+		if(key == "v")
 		{
 			D3DXVECTOR3 currPos;
-			sscanf(buffer, "v %f %f %f", &currPos.x, &currPos.y, &currPos.z);
+			streamLine >> currPos.x;
+			streamLine >> currPos.y;
+			streamLine >> currPos.z;
 			outPositions.push_back(currPos);
 		}
-		else if(strcmp(key, "vt") == 0)
+		else if(key == "vt")
 		{
 			D3DXVECTOR2 currUV;
-			sscanf(buffer, "vt %f %f", &currUV.x, &currUV.y);
+			streamLine >> currUV.x;
+			streamLine >> currUV.y;
 			currUV.y = 1 - currUV.y;
 			outUVCoords.push_back(currUV);
 		}
-		else if(strcmp(key, "vn") == 0)
+		else if(key == "vn")
 		{
 			D3DXVECTOR3 currNormal;
-			sscanf(buffer, "vn %f %f %f", &currNormal.x, &currNormal.y, &currNormal.z);
+			streamLine >> currNormal.x;
+			streamLine >> currNormal.y;
+			streamLine >> currNormal.z;
 			outNormals.push_back(currNormal);
 		}
-		else if(strcmp(key, "f") == 0)
+		else if(key == "f")
 		{
-			int pos1, pos2, pos3, uv1, uv2, uv3, norm1, norm2, norm3;
-			sscanf(buffer, "f %i/%i/%i %i/%i/%i %i/%i/%i", &pos1, &uv1, &norm1, &pos2, 
-				&uv2, &norm2, &pos3, &uv3, &norm3);
+			int pos[3]; 
+			int uv[3];
+			int norm[3];
 
-			Vertex currVertex;
-			currVertex.Position = outPositions[pos1 - 1];
-			//currVertex.UV = outUVCoords[uv1 - 1];
-			currVertex.Normal = outNormals[norm1 - 1];
-			mVertices.push_back(currVertex);
+			for(int i = 0; i < 3; ++i)
+			{
+				streamLine >> pos[i];
+				streamLine.ignore();
+				streamLine >> uv[i];
+				streamLine.ignore();
+				streamLine >> norm[i];
 
-			currVertex.Position = outPositions[pos2 - 1];
-			//currVertex.UV = outUVCoords[uv2 - 1];
-			currVertex.Normal = outNormals[norm2 - 1];
-			mVertices.push_back(currVertex);
-
-			currVertex.Position = outPositions[pos3 - 1];
-			//currVertex.UV = outUVCoords[uv3 - 1];
-			currVertex.Normal = outNormals[norm3 - 1];
-			mVertices.push_back(currVertex);
+				Vertex currVertex;
+				currVertex.Position = outPositions[pos[i] - 1];
+				//currVertex.UV = outUVCoords[uv[i] - 1];
+				currVertex.Normal = outNormals[norm[i] - 1];
+				mVertices.push_back(currVertex);
+			}
 		}
 	}
 

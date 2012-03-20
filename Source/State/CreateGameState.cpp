@@ -2,6 +2,7 @@
 #include "ServerSession.hpp"
 #include "StandardRuleset.hpp"
 #include "Ruleset2v2.hpp"
+#include <fstream>
 
 namespace State
 {
@@ -78,6 +79,8 @@ namespace State
 		mIFPort = new Components::InputField(mDevice, mComponents, NULL, r, mDefaultFont, 14);
 		mIFPort->SetText("6666");
 
+		LoadSetupInfo();
+
 		r.left = r.right - C_BUTTON_WIDTH;
 		r.top = C_OFFSET_TOP + C_LABEL_HEIGHT * 6;
 		r.bottom = r.top + C_BUTTON_HEIGHT;
@@ -114,6 +117,37 @@ namespace State
 
 		// Reset chosen game type
 		mChosenGame = GameType();
+	}
+
+	void CreateGameState::SaveSetupInfo()
+	{
+		std::ofstream file;
+
+		file.open("Resources/GameData/CreateGameInfo.txt", std::ios::out);
+		if(file.is_open())
+		{
+			file << mIFName->GetText() << "\n";
+			file << mIFPort->GetText() << "\n";
+		}
+	}
+
+	void CreateGameState::LoadSetupInfo()
+	{
+		std::ifstream file;
+
+		file.open("Resources/GameData/CreateGameInfo.txt", std::ios::in);
+		if(file.is_open())
+		{
+			std::string name, port;
+			std::getline(file, name);
+			std::getline(file, port);
+
+			if(mIFName != NULL)
+				mIFName->SetText(name);
+
+			if(mIFPort != NULL)
+				mIFPort->SetText(port);
+		}
 	}
 
 	void CreateGameState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
@@ -216,6 +250,8 @@ namespace State
 			{
 				Network::Server* server = new Network::Server(ruleset->GetPlayerCount(), port);
 				mServerLobbyState->SetSessionArguments(server, mIFName->GetText(), ruleset);
+
+				SaveSetupInfo();
 				
 				ChangeState(C_STATE_SERVER_LOBBY);
 			}
