@@ -188,7 +188,7 @@ namespace Logic
 		mKeepAliveCounter += dt;
 		if (mKeepAliveCounter >= C_KEEP_ALIVE_DELAY)
 		{
-			//mClient->Send(Network::StayAliveMessage(mSelfID));
+			mClient->Send(Network::StayAliveMessage(mSelfID));
 			mKeepAliveCounter = 0.0f;
 		}
 	}

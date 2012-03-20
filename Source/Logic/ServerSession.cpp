@@ -7,7 +7,7 @@ using namespace Network;
 
 namespace Logic
 {
-	const float ServerSession::C_TIMEOUT = 1.0f;
+	const float ServerSession::C_TIMEOUT = 5.0f;
 
 	ServerSession::ServerSession(Network::Server* server, const std::string& adminName, Ruleset* ruleset) 
 		: Session(ruleset->GetPlayerCount())
@@ -198,7 +198,7 @@ namespace Logic
 			if (it->second <= 0.0f && mServer->IsConnected(it->first))
 			{
 				// TODO: Enable timeout again
-				//mServer->DisconnectClient(it->first);
+				mServer->DisconnectClient(it->first);
 			}
 		}
 	}
