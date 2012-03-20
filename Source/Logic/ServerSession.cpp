@@ -38,7 +38,7 @@ namespace Logic
 
 	bool ServerSession::IsLocalPlayer(PlayerID index) const
 	{
-		return mPlayers[index] != NULL && mPlayerClients[index] == C_STATUS_LOCAL;
+		return mPlayers[index] != NULL && mPlayerClients.find(index)->second == C_STATUS_LOCAL;
 	}
 
 	unsigned short ServerSession::GetPort() const
