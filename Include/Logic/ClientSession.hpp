@@ -41,6 +41,11 @@ namespace Logic
 		bool IsLocalPlayerTurn() const;
 
 		/**
+			Check whether a specific player is local or not.
+		*/
+		bool IsLocalPlayer(PlayerID index) const;
+
+		/**
 			Returns true if we're still connected to a server.
 		*/
 		bool IsConnected() const;

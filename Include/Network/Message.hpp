@@ -12,14 +12,13 @@ namespace Network
 	const int C_MESSAGE_ADD_PLAYER = 5;
 	const int C_MESSAGE_REMOVE_PLAYER = 6;
 	const int C_MESSAGE_SET_TEAM = 7;
-	const int C_MESSAGE_SET_MARKER = 8;
-	const int C_MESSAGE_PLACE_PIECE = 9;
-	const int C_MESSAGE_REMOVE_PIECE = 10;
-	const int C_MESSAGE_TURN = 11;
-	const int C_MESSAGE_START_GAME = 12;
-	const int C_MESSAGE_GAME_OVER = 13;
-	const int C_MESSAGE_LEAVE_GAME = 14;
-	const int C_MESSAGE_STAY_ALIVE = 15;
+	const int C_MESSAGE_PLACE_PIECE = 8;
+	const int C_MESSAGE_REMOVE_PIECE = 9;
+	const int C_MESSAGE_TURN = 10;
+	const int C_MESSAGE_START_GAME = 11;
+	const int C_MESSAGE_GAME_OVER = 12;
+	const int C_MESSAGE_LEAVE_GAME = 13;
+	const int C_MESSAGE_STAY_ALIVE = 14;
 
 	class Message
 	{

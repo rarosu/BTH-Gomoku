@@ -4,11 +4,11 @@
 namespace Network
 {
 	AddPlayerMessage::AddPlayerMessage() 
-		: mPlayerID(-1), mTeam(0), mMarkerID(-1)
+		: mPlayerID(-1), mTeam(0)
 	{}
 
-	AddPlayerMessage::AddPlayerMessage(int playerID, int team, int markerID, const std::string& name) 
-		: mPlayerID(playerID), mTeam(team), mMarkerID(markerID), mName(name)
+	AddPlayerMessage::AddPlayerMessage(int playerID, int team, const std::string& name) 
+		: mPlayerID(playerID), mTeam(team), mName(name)
 	{}
 
 	Message* AddPlayerMessage::Inflate(const std::string& args)
@@ -18,16 +18,14 @@ namespace Network
 
 		int playerID;
 		int team;
-		int markerID;
 		std::string name;
 
 		s >> playerID;
 		s >> team;
-		s >> markerID;
 		s.ignore();
 		std::getline(s, name);
 
-		return new AddPlayerMessage(playerID, team, markerID, name);
+		return new AddPlayerMessage(playerID, team, name);
 	}
 
 	int AddPlayerMessage::ID() const
@@ -38,7 +36,7 @@ namespace Network
 	std::string AddPlayerMessage::FlattenArguments() const
 	{
 		std::stringstream s;
-		s << mPlayerID << " " << mTeam << " " << mMarkerID << " " << mName;
+		s << mPlayerID << " " << mTeam << " " << mName;
 
 		return s.str();
 	}

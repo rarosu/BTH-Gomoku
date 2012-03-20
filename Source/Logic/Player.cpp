@@ -2,10 +2,9 @@
 
 namespace Logic
 {
-	Player::Player(const std::string& name, Team team, MarkerType markerType)
+	Player::Player(const std::string& name, Team team)
 		: mName(name)
 		, mTeam(team)
-		, mMarker(markerType)
 	{}
 
 	Player::~Player() throw()
@@ -20,10 +19,5 @@ namespace Logic
 	void Player::SetTeam(Team team)
 	{
 		mTeam = team;
-	}
-
-	void Player::SetMarkerType(MarkerType markerType)
-	{
-		mMarker = markerType;
 	}
 }

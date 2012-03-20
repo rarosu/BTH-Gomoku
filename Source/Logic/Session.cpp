@@ -71,6 +71,90 @@ namespace Logic
 		return id;
 	}
 
+	Team Session::GetPlayerTeam(PlayerID index) const
+	{
+		Team team = C_TEAM_NONE;
+
+		if (mPlayers[index] != NULL)
+		{
+			team = mPlayers[index]->GetTeam();
+		}
+
+		return team;
+	}
+
+	PlayerID Session::GetTeamMate(PlayerID index) const
+	{
+		PlayerID player = C_PLAYER_NONE;
+		Team team = GetPlayerTeam(index);
+
+		if (team != C_TEAM_NONE)
+		{
+			for (unsigned int i = 0; i < mPlayers.size(); ++i)
+			{
+				if (i != index && mPlayers[i]->GetTeam() == team)
+				{
+					player = i;
+					break;
+				}
+			}
+		}
+
+		return player;
+	}
+
+	PlayerID Session::GetOpponent(PlayerID index, int nth) const
+	{
+		Team team = GetPlayerTeam(index);
+		if (mPlayers.size() > 2)
+		{
+			if (team != C_TEAM_NONE)
+			{
+				nth %= 2; 
+
+				int count = 0;
+				for (unsigned int i = 0; i < mPlayers.size(); ++i)
+				{
+					if (mPlayers[i] != NULL && mPlayers[i]->GetTeam() != team)
+					{
+						(++count) %= 2;
+						if (count == nth)
+						{
+							return i;
+						}
+					}
+				}
+			}
+			else
+			{
+				return C_PLAYER_NONE;
+			}
+		}
+		else
+		{
+			return (index + 1) % 2;
+		}
+		
+
+		
+	}
+
+	bool Session::AreTeamsValid() const
+	{
+		// We only care for teams when we have more than 2 players.
+		if (mPlayers.size() > 2)
+		{
+			for (unsigned int i = 0; i < mPlayers.size(); ++i)
+			{
+				if (GetTeamMate(i) == C_PLAYER_NONE)
+					return false;
+			}
+		}
+
+		return true;
+	}
+
+
 	const Grid& Session::GetGrid() const
 	{
 		return mGrid;

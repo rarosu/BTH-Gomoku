@@ -65,9 +65,36 @@ namespace Logic
 		PlayerID GetPlayerByName(const std::string& name) const;
 
 		/**
+			Get the team of the given player, or C_TEAM_NONE if not chosen yet.
+		*/
+		Team GetPlayerTeam(PlayerID index) const;
+
+		/**
+			Get the teammate of a specific player, or C_PLAYER_NONE if none exists.
+		*/
+		PlayerID GetTeamMate(PlayerID index) const;
+
+		/**
+			Get the nth opponent to the given player.
+		*/
+		PlayerID GetOpponent(PlayerID index, int nth) const;
+
+		/**
+			Make sure all teams are valid.
+		*/
+		bool AreTeamsValid() const;
+		
+
+
+		/**
 			Check whether it is a local player's turn
 		*/
 		virtual bool IsLocalPlayerTurn() const = 0;
+
+		/**
+			Check whether a specific player is local or not.
+		*/
+		virtual bool IsLocalPlayer(PlayerID index) const = 0;
 
 		/**
 			Set/Get the session notification interface, where we send

@@ -187,6 +187,7 @@
     <ClCompile Include="Source\Logic\Grid\Grid.cpp" />
     <ClCompile Include="Source\Logic\ClientSession.cpp" />
     <ClCompile Include="Source\Logic\Player.cpp" />
+    <ClCompile Include="Source\Logic\Ruleset2v2.cpp" />
     <ClCompile Include="Source\Logic\ServerSession.cpp" />
     <ClCompile Include="Source\Logic\Session.cpp" />
     <ClCompile Include="Source\Logic\StandardRuleset.cpp" />
@@ -205,7 +206,6 @@
     <ClCompile Include="Source\Network\Messages\RefuseMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\RemovePieceMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\RemovePlayerMessage.cpp" />
-    <ClCompile Include="Source\Network\Messages\SetMarkerMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\SetTeamMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\StartGameMessage.cpp" />
     <ClCompile Include="Source\Network\Messages\StayAliveMessage.cpp" />
@@ -260,6 +260,7 @@
     <ClInclude Include="Include\Logic\ClientSession.hpp" />
     <ClInclude Include="Include\Logic\Player.hpp" />
     <ClInclude Include="Include\Logic\Ruleset.hpp" />
+    <ClInclude Include="Include\Logic\Ruleset2v2.hpp" />
     <ClInclude Include="Include\Logic\ServerSession.hpp" />
     <ClInclude Include="Include\Logic\Session.hpp" />
     <ClInclude Include="Include\Logic\StandardRuleset.hpp" />
@@ -278,7 +279,6 @@
     <ClInclude Include="Include\Network\Messages\RefuseMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\RemovePieceMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\RemovePlayerMessage.hpp" />
-    <ClInclude Include="Include\Network\Messages\SetMarkerMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\SetTeamMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\StartGameMessage.hpp" />
     <ClInclude Include="Include\Network\Messages\StayAliveMessage.hpp" />

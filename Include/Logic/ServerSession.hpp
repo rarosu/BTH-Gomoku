@@ -30,6 +30,11 @@ namespace Logic
 		bool IsLocalPlayerTurn() const;
 
 		/**
+			Check whether a specific player is local or not.
+		*/
+		bool IsLocalPlayer(PlayerID index) const;
+
+		/**
 			Getters
 		*/
 		unsigned short GetPort() const;
@@ -63,6 +68,11 @@ namespace Logic
 			Send start game message
 		*/
 		void SendStartMessage();
+
+		/**	
+			Set the team of a local player.
+		*/
+		void SetLocalPlayerTeam(PlayerID playerID, Team team);
 
 		/**
 			Implemented from ServerEventInterface

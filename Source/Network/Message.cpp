@@ -55,9 +55,6 @@ namespace Network
 			case C_MESSAGE_SET_TEAM:
 				m = SetTeamMessage::Inflate(args);
 				break;
-			case C_MESSAGE_SET_MARKER:
-				m = SetMarkerMessage::Inflate(args);
-				break;
 			case C_MESSAGE_PLACE_PIECE:
 				m = PlacePieceMessage::Inflate(args);
 				break;

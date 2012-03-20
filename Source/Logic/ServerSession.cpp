@@ -16,7 +16,7 @@ namespace Logic
 	{
 		mServer->SetEventInterface(this);
 
-		mPlayers[0] = new Player(adminName, 0, 0);
+		mPlayers[0] = new Player(adminName, C_TEAM_NONE);
 		mPlayerClients[0] = C_STATUS_LOCAL;
 
 		for (Slot s = 1; s < mPlayers.size(); ++s)
@@ -34,6 +34,11 @@ namespace Logic
 	bool ServerSession::IsLocalPlayerTurn() const
 	{
 		return mPlayerClients.find(mCurrentPlayer)->second == C_STATUS_LOCAL;
+	}
+
+	bool ServerSession::IsLocalPlayer(PlayerID index) const
+	{
+		return mPlayers[index] != NULL && mPlayerClients[index] == C_STATUS_LOCAL;
 	}
 
 	unsigned short ServerSession::GetPort() const
@@ -124,14 +129,18 @@ namespace Logic
 					mServer->Send(Network::TurnMessage(mCurrentPlayer));
 				} break;
 
-				case Network::C_MESSAGE_SET_MARKER:
-				{
-					Network::SetMarkerMessage* m = static_cast<Network::SetMarkerMessage*>(message.mMessage);
-				} break;
-
 				case Network::C_MESSAGE_SET_TEAM:
 				{
 					Network::SetTeamMessage* m = static_cast<Network::SetTeamMessage*>(message.mMessage);
+
+					assert(mPlayers[m->mPlayerID] != NULL);
+					assert(m->mTeam >= C_TEAM_NONE);
+					assert(m->mTeam < 2);
+
+					if (GetPlayerSlot(message.mSlot) == m->mPlayerID)
+					{
+						mPlayers[m->mPlayerID]->SetTeam(m->mTeam);
+					}
 				} break;
 			}
 
@@ -202,6 +211,15 @@ namespace Logic
 		mServer->Send(Network::TurnMessage(mCurrentPlayer));
 
 		mServer->ShutdownListenSocket();
+	}
+
+	void ServerSession::SetLocalPlayerTeam(PlayerID playerID, Team team)
+	{
+		if (mPlayerClients[playerID] == C_STATUS_LOCAL)
+		{
+			mPlayers[playerID]->SetTeam(team);
+			mServer->Send(Network::SetTeamMessage(playerID, team));
+		}
 	}
 
 	void ServerSession::ClientConnected(Network::Slot slot)
@@ -313,7 +331,7 @@ namespace Logic
 		{
 			mServer->Send(clientSlot, AcceptMessage(mPlayers.size(), openPlayerID));
 			
-			mPlayers[openPlayerID] = new Player(name, 0, 0);	// TODO: Set a valid team/marker here
+			mPlayers[openPlayerID] = new Player(name, C_TEAM_NONE);
 			mPlayerClients[openPlayerID] = clientSlot;
 
 			for (PlayerID i = 0; i < mPlayers.size(); ++i)
@@ -322,11 +340,11 @@ namespace Logic
 				{
 					if (i != openPlayerID)
 					{
-						mServer->Send(clientSlot, AddPlayerMessage(i, mPlayers[i]->GetTeam(), mPlayers[i]->GetMarkerType(), mPlayers[i]->GetName()));
+						mServer->Send(clientSlot, AddPlayerMessage(i, mPlayers[i]->GetTeam(), mPlayers[i]->GetName()));
 					
 						if (mPlayerClients[i] >= 0)
 						{
-							mServer->Send(mPlayerClients[i], Network::AddPlayerMessage(openPlayerID, mPlayers[openPlayerID]->GetTeam(), mPlayers[openPlayerID]->GetMarkerType(), mPlayers[openPlayerID]->GetName()));
+							mServer->Send(mPlayerClients[i], Network::AddPlayerMessage(openPlayerID, mPlayers[openPlayerID]->GetTeam(), mPlayers[openPlayerID]->GetName()));
 						}
 					}
 				}
@@ -369,7 +387,7 @@ namespace Logic
 
 			case Network::Recipient::Team:
 			{
-				Player::Team team = mPlayers[sourceID]->GetTeam();
+				Team team = mPlayers[sourceID]->GetTeam();
 				for (PlayerID s = 0; s < mPlayers.size(); ++s)
 				{
 					if (mPlayers[s] != NULL && mPlayerClients[s] != C_STATUS_LOCAL && s != sourceID && mPlayers[s]->GetTeam() == team)

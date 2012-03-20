@@ -8,7 +8,6 @@
 #include "PlacePieceMessage.hpp"
 #include "RemovePieceMessage.hpp"
 #include "RemovePlayerMessage.hpp"
-#include "SetMarkerMessage.hpp"
 #include "SetTeamMessage.hpp"
 #include "StartGameMessage.hpp"
 #include "GameOverMessage.hpp"
