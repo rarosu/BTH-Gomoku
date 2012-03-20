@@ -34,7 +34,7 @@ namespace Components
 		void SetVisible(bool isVisible);
 		bool IsPressed() const;
 		virtual bool IsHovered() const;
-		bool GetAndResetClickStatus();
+		virtual bool GetAndResetClickStatus();
 
 		// Get the dimensions & position of the component
 		float GetWidth() const;
