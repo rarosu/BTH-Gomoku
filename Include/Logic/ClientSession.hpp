@@ -78,6 +78,11 @@ namespace Logic
 			server. If the move is okay, the server will send back a place piece message.
 		*/
 		void SendPlacePieceMessage(const Logic::Cell& cell);
+
+		/**
+			Change team, if the player is local player.
+		*/
+		void SendSetTeamMessage(PlayerID player, Team team);
 	private:
 		static const float C_KEEP_ALIVE_DELAY;
 

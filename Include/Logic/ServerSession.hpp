@@ -64,6 +64,8 @@ namespace Logic
 		*/
 		void SendPlacePieceMessage(const Logic::Cell& cell);
 
+		void SendSetTeamMessage(PlayerID player, Team team);
+
 		/**
 			Send start game message
 		*/

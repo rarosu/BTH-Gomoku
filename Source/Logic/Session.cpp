@@ -61,7 +61,7 @@ namespace Logic
 		PlayerID id = C_PLAYER_NONE;
 		for (PlayerID i = 0; i < mPlayers.size(); ++i)
 		{
-			if (mPlayers[i]->GetName() == name)
+			if (mPlayers[i] != NULL && mPlayers[i]->GetName() == name)
 			{
 				id = i;
 				break;

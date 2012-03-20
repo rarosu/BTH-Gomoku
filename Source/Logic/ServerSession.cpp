@@ -176,7 +176,7 @@ namespace Logic
 			case Network::Recipient::Team:
 				for (PlayerID s = 0; s < mPlayers.size(); ++s)
 				{
-					if (mPlayers[s] != NULL && mPlayers[s]->GetTeam() == mPlayers[0]->GetTeam())
+					if (mPlayers[s] != NULL && mPlayers[s]->GetTeam() == mPlayers[0]->GetTeam() && mPlayerClients[s] != C_STATUS_LOCAL)
 					{
 						mServer->Send(mPlayerClients[s], Network::ChatMessage(0, s, recipient, message));
 					}
@@ -200,6 +200,15 @@ namespace Logic
 			}
 
 			mServer->Send(Network::TurnMessage(mCurrentPlayer));
+		}
+	}
+
+	void ServerSession::SendSetTeamMessage(PlayerID player, Team team)
+	{
+		if (mPlayers[player] != NULL)
+		{
+			mPlayers[player]->SetTeam(team);
+			mServer->Send(Network::SetTeamMessage(player, team));
 		}
 	}
 

@@ -126,6 +126,11 @@ namespace Logic
 		virtual void SendPlacePieceMessage(const Logic::Cell& cell) = 0;
 
 		/**
+			Change a player's team.
+		*/
+		virtual void SendSetTeamMessage(PlayerID player, Team team) = 0;
+
+		/**
 			Check whether there exists an open slot, in which case not all slots have been filled or a player has left the game.
 		*/
 		bool HasOpenSlot() const;

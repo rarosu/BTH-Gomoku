@@ -185,4 +185,12 @@ namespace Logic
 			}		
 		}
 	}
+
+	void ClientSession::SendSetTeamMessage(PlayerID player, Team team)
+	{
+		if (player == mSelfID)
+		{
+			mClient->Send(Network::SetTeamMessage(player, team));
+		}
+	}
 }
