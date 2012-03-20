@@ -81,7 +81,8 @@ namespace Logic
 				{
 					Network::AddPlayerMessage* m = static_cast<Network::AddPlayerMessage*>(mClient->PopMessage(i));
 					
-					assert(mPlayers[m->mPlayerID] == NULL);
+
+					SafeDelete(mPlayers[m->mPlayerID]);
 					mPlayers[m->mPlayerID] = new Player(m->mName, m->mTeam);
 
 					if (mSessionNotifiee != NULL)
@@ -97,13 +98,14 @@ namespace Logic
 				{
 					Network::RemovePlayerMessage* m = static_cast<Network::RemovePlayerMessage*>(mClient->PopMessage(i));
 					
-					assert(mPlayers[m->mPlayerID] != NULL);
+					if (mPlayers[m->mPlayerID] != NULL)
+					{
+						std::string name = mPlayers[m->mPlayerID]->GetName();
+						if (mSessionNotifiee != NULL)
+							mSessionNotifiee->PlayerDisconnected(m->mPlayerID, name, m->mReason);
 
-					std::string name = mPlayers[m->mPlayerID]->GetName();
-					if (mSessionNotifiee != NULL)
-						mSessionNotifiee->PlayerDisconnected(m->mPlayerID, name, m->mReason);
-
-					SafeDelete(mPlayers[m->mPlayerID]);
+						SafeDelete(mPlayers[m->mPlayerID]);
+					}
 					SafeDelete(m);
 				} break;
 
@@ -111,11 +113,13 @@ namespace Logic
 				{
 					Network::SetTeamMessage* m = static_cast<Network::SetTeamMessage*>(mClient->PopMessage(i));
 
-					assert(mPlayers[m->mPlayerID] != NULL);
-					mPlayers[m->mPlayerID]->SetTeam(m->mTeam);
+					if (mPlayers[m->mPlayerID] != NULL)
+					{
+						mPlayers[m->mPlayerID]->SetTeam(m->mTeam);
 
-					if (mSessionNotifiee != NULL)
-						mSessionNotifiee->SetTeam(m->mPlayerID, m->mTeam);
+						if (mSessionNotifiee != NULL)
+							mSessionNotifiee->SetTeam(m->mPlayerID, m->mTeam);
+					}
 
 					SafeDelete(m);
 				} break;
