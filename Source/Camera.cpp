@@ -12,6 +12,7 @@ Camera::Camera(D3DXVECTOR3 position, D3DXVECTOR3 direction, D3DXVECTOR3 worldUp,
 	: mPosition(position), mDirection(direction), mWorldUp(worldUp), mZoom(-200.0f)
 {
 	mPosition = mPosition - (D3DXVec3Dot(&mPosition, &mWorldUp) * mWorldUp);
+	mDestination = mPosition;
 
 	D3DXVec3Normalize(&mDirection, &mDirection);
 	CreateProjectionMatrix(viewFrustum);
@@ -23,6 +24,16 @@ Camera::~Camera() throw()
 
 void Camera::Update(const InputState& prevInput, const InputState& currInput, const GameTime& gameTime)
 {
+	D3DXVECTOR3 displacement = mDestination - mPosition;
+	//D3DXVec3Normalize(&displacement, &displacement);
+
+	mPosition += displacement * gameTime.GetTimeSinceLastTick().Seconds;
+	
+	displacement = mDestination - mPosition;
+	if (D3DXVec3Length(&displacement) <= 1.0f)
+	{
+		mPosition = mDestination;
+	}
 }
 
 // Move camera backwards
@@ -43,6 +54,7 @@ void Camera::MoveForward(const GameTime& gameTime)
 	forward = mDirection - (D3DXVec3Dot(&mDirection, &mWorldUp) * mWorldUp);
 	D3DXVec3Normalize(&forward, &forward);
 	mPosition += forward * C_MOVE_SPEED * (float)gameTime.GetTimeSinceLastTick().Seconds;
+	mDestination = mPosition;
 }
 
 // Move camera to the left: strafe
@@ -50,6 +62,7 @@ void Camera::MoveLeft(const GameTime& gameTime)
 {
 	D3DXVECTOR3 right = GetRight();
 	mPosition -= right * C_MOVE_SPEED * (float)gameTime.GetTimeSinceLastTick().Seconds;
+	mDestination = mPosition;
 }
 
 // Move camera to the right: strafe
@@ -57,6 +70,7 @@ void Camera::MoveRight(const GameTime& gameTime)
 {
 	D3DXVECTOR3 right = GetRight();
 	mPosition += right * C_MOVE_SPEED * (float)gameTime.GetTimeSinceLastTick().Seconds;
+	mDestination = mPosition;
 }
 
 // Tilt the camera horisontally: look left/right
@@ -171,9 +185,9 @@ void Camera::Zoom(short amount)
 	mZoom = Clamp(mZoom, C_ZOOM_MIN, C_ZOOM_MAX);
 }
 
-void Camera::LookAt(const D3DXVECTOR3& target)
+void Camera::SetDestination(const D3DXVECTOR3& destination)
 {
-	mPosition = target;
+	mDestination = destination;
 }
 
 /*

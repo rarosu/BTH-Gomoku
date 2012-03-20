@@ -297,6 +297,6 @@ Logic::Cell Scene::PickCell(int mouseX, int mouseY) const
 
 void Scene::LookAtCell(const Logic::Cell& cell)
 {
-	mCamera->LookAt(D3DXVECTOR3(cell.x * C_CELL_SIZE, 0.0f, cell.y * C_CELL_SIZE));
+	mCamera->SetDestination(D3DXVECTOR3(cell.x * C_CELL_SIZE, 0.0f, cell.y * C_CELL_SIZE));
 }
 

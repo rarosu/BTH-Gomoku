@@ -138,8 +138,7 @@ namespace State
 
 	void AbstractGameState::PlacePiece(Logic::PlayerID id, const Logic::Cell& cell)
 	{
-		// Ugly
-		//mScene->LookAtCell(cell);
+		mScene->LookAtCell(cell);
 	}
 
 	void AbstractGameState::GameOver(Logic::PlayerID winningPlayer)

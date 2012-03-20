@@ -35,9 +35,12 @@ public:
 	void TurnHorizontal(const GameTime& gameTime, bool turnLeft);
 	//void TurnVertical(float angle);
 	void Zoom(short amount);
-	void LookAt(const D3DXVECTOR3& target);
+	void SetDestination(const D3DXVECTOR3& destination);
 	
 private:
+	// When the camera is moving, this is the destination we want mPosition to move to.
+	D3DXVECTOR3				mDestination;
+
 	D3DXVECTOR3				mPosition;
 	D3DXVECTOR3				mDirection;
 	D3DXVECTOR3				mWorldUp;
