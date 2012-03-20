@@ -21,6 +21,8 @@ namespace Components
 
 		void Initialize(ID3D10Device* device, const std::string& caption);
 		void Draw();
+		std::string GetCaption();
+		void SetCaption(std::string caption);
 
 		// DEBUG
 		virtual std::string GetName();
@@ -48,8 +50,11 @@ namespace Components
 		void AddMenuItem(const std::string& caption);
 
 		bool GetAndResetClickStatus(const std::string& caption);
+		bool GetAndResetClickStatus(const int index);
 		ClickMenuItem* GetMenuItem(const std::string& caption);
+		ClickMenuItem* GetMenuItem(const int index);
 		ClickMenu* GetSubMenu(const std::string& caption);
+		ClickMenu* GetSubMenu(const int index);
 	
 	private:
 		typedef std::map<std::string, ClickMenuItem*> ItemMap;

@@ -10,6 +10,7 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth,
 	mClientGameState(NULL),
 	mCreateGameState(NULL),
 	mJoinGameState(NULL),
+	mCreditsState(NULL),
 	mDefaultFont(NULL),
 	mRootComponentGroup(NULL)
 {
@@ -37,6 +38,7 @@ Game::Game(HINSTANCE applicationInstance, LPCTSTR windowTitle, UINT clientWidth,
 	mClientLobbyState = new State::ClientLobbyState(State::C_STATE_CLIENT_LOBBY, mDeviceD3D, mClientGameState);
 	mCreateGameState = new State::CreateGameState(State::C_STATE_CREATE_GAME, mDeviceD3D, mServerLobbyState);
 	mJoinGameState = new State::JoinGameState(State::C_STATE_JOIN_GAME, mDeviceD3D, mClientLobbyState);
+	mCreditsState = new State::CreditsState(State::C_STATE_CREDITS, mDeviceD3D);
 
 	// Set the starting state
 	mCurrentState = mMenuState;
@@ -59,6 +61,7 @@ Game::~Game()
 	SafeDelete(mServerLobbyState);
 	SafeDelete(mServerGameState);
 	SafeDelete(mClientGameState);
+	SafeDelete(mCreditsState);
 
 	SafeDelete(mRootComponentGroup);
 }

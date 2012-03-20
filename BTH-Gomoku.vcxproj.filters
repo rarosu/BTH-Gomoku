@@ -67,11 +67,12 @@
     <ClCompile Include="Source\State\AbstractGameState.cpp" />
     <ClCompile Include="Source\Logic\StandardRuleset.cpp" />
     <ClCompile Include="Source\Components\ChatConsole.cpp" />
-    <ClCompile Include="Source\State\AbstractLobbyState.cpp" />
     <ClCompile Include="Source\Network\Messages\GameOverMessage.cpp" />
     <ClCompile Include="Source\Components\PlayerList.cpp" />
     <ClCompile Include="Source\Scene\ObjModel.cpp" />
     <ClCompile Include="Source\Logic\Ruleset2v2.cpp" />
+    <ClCompile Include="Source\State\AbstractLobbyState.cpp" />
+    <ClCompile Include="Source\State\CreditsState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -148,6 +149,7 @@
     <ClInclude Include="Include\Components\PlayerList.hpp" />
     <ClInclude Include="Include\Scene\ObjModel.hpp" />
     <ClInclude Include="Include\Logic\Ruleset2v2.hpp" />
+    <ClInclude Include="Include\State\CreditsState.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
@@ -186,5 +188,8 @@
     <None Include="Resources\Effects\Sprite.fx" />
     <None Include="Resources\Textures\whitePixel.png" />
     <None Include="Resources\Effects\ObjModel.fx" />
+    <None Include="Resources\Sounds\buttonClick.wav" />
+    <None Include="Resources\Sounds\inputFull.wav" />
+    <None Include="Resources\Sounds\placeMarker.wav" />
   </ItemGroup>
 </Project>

@@ -15,6 +15,7 @@
 #include "ClientLobbyState.hpp"
 #include "ServerGameState.hpp"
 #include "ClientGameState.hpp"
+#include "CreditsState.hpp"
 
 class Game : public D3DApplication, public State::StateManager
 {
@@ -45,6 +46,7 @@ private:
 	State::ClientLobbyState*	mClientLobbyState;
 	State::ServerGameState*		mServerGameState;
 	State::ClientGameState*		mClientGameState;
+	State::CreditsState*		mCreditsState;
 
 	State::ApplicationState*	mCurrentState;
 	State::ApplicationState*	mNextState;

@@ -65,6 +65,16 @@ namespace Components
 			mFont->WriteText(mCaption, &posRect, D3DXCOLOR(0.5, 0.5, 0.5, 1.0), GameFont::Center, GameFont::Middle);
 	}
 
+	std::string ClickMenuItem::GetCaption()
+	{
+		return mCaption;
+	}
+
+	void ClickMenuItem::SetCaption(std::string caption)
+	{
+		mCaption = caption;
+	}
+
 	void ClickMenuItem::AddSubItem(const std::string& caption)
 	{
 		if(mSubMenu == NULL)
@@ -130,6 +140,14 @@ namespace Components
 		return false;
 	}
 
+	bool ClickMenu::GetAndResetClickStatus(const int index)
+	{
+		if(index < mComponents.size() && mComponents.size() > 0)
+			return reinterpret_cast<ClickMenuItem*>(mComponents[index])->GetAndResetClickStatus();
+		else
+			return false;
+	}
+
 	ClickMenuItem* ClickMenu::GetMenuItem(const std::string& caption)
 	{
 		ItemMap::iterator it = mItems.find(caption);
@@ -138,6 +156,22 @@ namespace Components
 			return it->second;
 
 		return NULL;
+	}
+
+	ClickMenuItem* ClickMenu::GetMenuItem(const int index)
+	{
+		if(index < mComponents.size() && mComponents.size() > 0)
+			return reinterpret_cast<ClickMenuItem*>(mComponents[index]);
+		else
+			return NULL;
+	}
+
+	ClickMenu* ClickMenu::GetSubMenu(const int index)
+	{
+		if(index < mComponents.size() && mComponents.size() > 0)
+			return reinterpret_cast<ClickMenuItem*>(mComponents[index])->GetSubMenu();
+		else
+			return NULL;
 	}
 
 	ClickMenu* ClickMenu::GetSubMenu(const std::string& caption)

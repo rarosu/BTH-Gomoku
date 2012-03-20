@@ -136,7 +136,7 @@ void ObjModel::Draw(const Camera& camera, D3DXVECTOR3 drawPosition)
 {
 	UpdateWorldMatrix(drawPosition);
 	D3DXMATRIX worldViewProjection = (*mMatrixWorld) * (camera.GetViewMatrix() * camera.GetProjectionMatrix());
-	mEffect->SetVariable("g_matWorld", mMatrixWorld);
+	mEffect->SetVariable("g_matWorld", *mMatrixWorld);
 	mEffect->SetVariable("g_matWVP", worldViewProjection);
 
 	mVertexBuffer->Bind();

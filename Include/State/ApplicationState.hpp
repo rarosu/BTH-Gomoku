@@ -29,6 +29,7 @@ namespace State
 	const StateID C_STATE_CLIENT_GAME	= 5;
 	const StateID C_STATE_CREATE_GAME	= 6;
 	const StateID C_STATE_JOIN_GAME		= 7;
+	const StateID C_STATE_CREDITS		= 8;
 
 
 	/**

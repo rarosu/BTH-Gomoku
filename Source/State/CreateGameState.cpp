@@ -14,9 +14,12 @@ namespace State
 		  mIFPort(NULL),
 		  mBtnCreate(NULL),
 		  mBtnCancel(NULL),
-		  mBackground(NULL)
+		  mGameType(NULL),
+		  mPlayerType(NULL),
+		  mBackground(NULL),
+		  mJustChosenG(false),	// DEBUG
+		  mJustChosenP(false)	// DEBUG
 	{
-
 		mDefaultFont = new GameFont(mDevice, "Segoe Print", 48);
 		mBackground = new Sprite(mDevice, sViewport, "marbleBG1422x800.png", sViewport->GetWidth(), sViewport->GetHeight());
 	}
@@ -30,61 +33,86 @@ namespace State
 	void CreateGameState::CreateComponents()
 	{
 		// Define sizes
-		const int C_OFFSET_LEFT = 100;
-		const int C_OFFSET_TOP = 100;
 		const int C_BUTTON_WIDTH = 192;
 		const int C_BUTTON_HEIGHT = mDefaultFont->GetSize();
-		const int C_INPUT_FIELD_WIDTH = 192;
+		const int C_INPUT_FIELD_WIDTH = 300;
 		const int C_INPUT_FIELD_HEIGHT = mDefaultFont->GetSize();
-		const int C_LABEL_WIDTH = 220;
+		const int C_LABEL_WIDTH = 180;
 		const int C_LABEL_HEIGHT = mDefaultFont->GetSize();
+		const int C_OFFSET_LEFT = 180;
+		const int C_OFFSET_TOP = 180 - C_LABEL_HEIGHT * 1.5; // DEBUG: When Game Type is invisible
 		RECT r;
 
 		// Create all the components and put them in the right place
 		RECT compPos = { 0, 0, 0, 0 };
 		mComponents = new Components::ComponentGroup(sRootComponentGroup, "CreateGameState Group", compPos);
 
+		r.left = 100;
+		r.right = sViewport->GetWidth() - r.left;
+		r.top = 30;
+		r.bottom = 150;
+		new Components::Label(mDevice, mComponents, "CREATE A GAME", r);
+
 		r.left = C_OFFSET_LEFT;
 		r.right = r.left + C_LABEL_WIDTH;
-		r.top = C_OFFSET_TOP;
+		r.top = C_OFFSET_TOP + C_LABEL_HEIGHT * 3;
 		r.bottom = r.top + C_LABEL_HEIGHT;
-		new Components::Label(mDevice, mComponents, "Name:", r);
+		new Components::Label(mDevice, mComponents, "Name:", r, 0, GameFont::Right);
 
-		r.left = C_OFFSET_LEFT + C_LABEL_WIDTH;
+		r.left = C_OFFSET_LEFT + C_LABEL_WIDTH + 20;
 		r.right = r.left + C_INPUT_FIELD_WIDTH;
 		r.bottom = r.top + C_INPUT_FIELD_HEIGHT;
-		mIFName = new Components::InputField(mDevice, mComponents, NULL, r, mDefaultFont);
+		mIFName = new Components::InputField(mDevice, mComponents, NULL, r, mDefaultFont, 14);
 		mIFName->SetText("Admin");
 
 		r.left = C_OFFSET_LEFT;
 		r.right = r.left + C_LABEL_WIDTH;
-		r.top = C_OFFSET_TOP + C_LABEL_HEIGHT * 2;
+		r.top = C_OFFSET_TOP + C_LABEL_HEIGHT * 4.5;
 		r.bottom = r.top + C_LABEL_HEIGHT;
-		new Components::Label(mDevice, mComponents, "Port:", r);
+		new Components::Label(mDevice, mComponents, "Port:", r, 0, GameFont::Right);
 
-		r.left = C_OFFSET_LEFT + C_LABEL_WIDTH;
+		r.left = C_OFFSET_LEFT + C_LABEL_WIDTH + 20;
 		r.right = r.left + C_INPUT_FIELD_WIDTH;
 		r.bottom = r.top + C_INPUT_FIELD_HEIGHT;
-		mIFPort = new Components::InputField(mDevice, mComponents, NULL, r, mDefaultFont);
+		mIFPort = new Components::InputField(mDevice, mComponents, NULL, r, mDefaultFont, 14);
 		mIFPort->SetText("6666");
 
-		r.left = C_OFFSET_LEFT;
-		r.right = r.left + C_BUTTON_WIDTH;
-		r.top = C_OFFSET_TOP + C_LABEL_HEIGHT * 4;
+		r.left = r.right - C_BUTTON_WIDTH;
+		r.top = C_OFFSET_TOP + C_LABEL_HEIGHT * 6;
 		r.bottom = r.top + C_BUTTON_HEIGHT;
-		mBtnCreate = new Components::TextButton(mComponents, r);
-		mBtnCreate->Initialize(mDevice, "Create Game");
-
-		r.left = C_OFFSET_LEFT + C_BUTTON_WIDTH * 2;
-		r.right = r.left + C_BUTTON_WIDTH;
 		mBtnCancel = new Components::TextButton(mComponents, r);
 		mBtnCancel->Initialize(mDevice, "Cancel");
 
+		r.left = C_OFFSET_LEFT;
+		r.right = r.left + C_BUTTON_WIDTH;
+		mBtnCreate = new Components::TextButton(mComponents, r);
+		mBtnCreate->Initialize(mDevice, "Create Game");
 
+		r.left = C_OFFSET_LEFT + C_LABEL_WIDTH + 20;
+		r.right = r.left + C_INPUT_FIELD_WIDTH;
+		r.top = C_OFFSET_TOP;
+		r.bottom = r.top + C_INPUT_FIELD_HEIGHT;
+		mGameType = new Components::ClickMenu(mComponents, mDevice, r, r.right - r.left, r.bottom - r.top);
+		mGameType->AddMenuItem("Choose Game Type");
+		mGameType->GetMenuItem(0)->AddSubItem("Normal Game");
+		mGameType->GetMenuItem(0)->AddSubItem("Crazy Game");
+		mGameType->SetVisible(false);
+
+		r.left = C_OFFSET_LEFT + C_LABEL_WIDTH + 20;
+		r.right = r.left + C_INPUT_FIELD_WIDTH;
+		r.top = C_OFFSET_TOP + C_LABEL_HEIGHT * 1.5;
+		r.bottom = r.top + C_INPUT_FIELD_HEIGHT;
+		mPlayerType = new Components::ClickMenu(mComponents, mDevice, r, r.right - r.left, r.bottom - r.top);
+		mPlayerType->AddMenuItem("Choose Players");
+		mPlayerType->GetMenuItem(0)->AddSubItem("1 v 1 Player");
+		mPlayerType->GetMenuItem(0)->AddSubItem("2 v 2 Player");
 
 		// Set the initial focus, and focus this component group
 		mIFName->SetFocus();
-		mComponents->SetFocus();	
+		mComponents->SetFocus();
+
+		// Reset chosen game type
+		mChosenGame = GameType();
 	}
 
 	void CreateGameState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
@@ -95,6 +123,57 @@ namespace State
 			return;
 		}
 
+		// Check if a player type has been chosen
+		if (mPlayerType->GetSubMenu(0)->GetAndResetClickStatus(0))
+		{
+			if(!mJustChosenP) // DEBUG
+			{
+				mPlayerType->GetMenuItem(0)->SetCaption(mPlayerType->GetSubMenu(0)->GetMenuItem(0)->GetCaption());
+				mPlayerType->GetSubMenu(0)->SetVisible(false);
+				mChosenGame.mPlayers = GameType::Players1v1;
+				mJustChosenP = true; // DEBUG
+			}
+			else
+				mJustChosenP = false; // DEBUG
+		}
+		else if (mPlayerType->GetSubMenu(0)->GetAndResetClickStatus(1))
+		{
+			if(!mJustChosenP) // DEBUG
+			{
+				mPlayerType->GetMenuItem(0)->SetCaption(mPlayerType->GetSubMenu(0)->GetMenuItem(1)->GetCaption());
+				mPlayerType->GetSubMenu(0)->SetVisible(false);
+				mChosenGame.mPlayers = GameType::Players2v2;
+				mJustChosenP = true; // DEBUG
+			}
+			else
+				mJustChosenP = false; // DEBUG
+		}
+
+		// Check if a game type has been chosen
+		if (mGameType->GetSubMenu(0)->GetAndResetClickStatus(0))
+		{
+			if(!mJustChosenG) // DEBUG
+			{
+				mGameType->GetMenuItem(0)->SetCaption(mGameType->GetSubMenu(0)->GetMenuItem(0)->GetCaption());
+				mGameType->GetSubMenu(0)->SetVisible(false);
+				mChosenGame.mType = GameType::Normal;
+				mJustChosenG = true; // DEBUG
+			}
+			else
+				mJustChosenG = false; // DEBUG
+		}
+		else if (mGameType->GetSubMenu(0)->GetAndResetClickStatus(1))
+		{
+			if(!mJustChosenG) // DEBUG
+			{
+				mGameType->GetMenuItem(0)->SetCaption(mGameType->GetSubMenu(0)->GetMenuItem(1)->GetCaption());
+				mGameType->GetSubMenu(0)->SetVisible(false);
+				mChosenGame.mType = GameType::Crazy;
+				mJustChosenG = true; // DEBUG
+			}
+			else
+				mJustChosenG = false; // DEBUG
+		}
 
 		// Basic check to see if the port is valid
 		unsigned short port = 0;
@@ -156,5 +235,7 @@ namespace State
 		mIFPort = NULL;
 		mBtnCreate = NULL;
 		mBtnCancel = NULL;
+		mPlayerType = NULL;
+		mGameType = NULL;
 	}
 }

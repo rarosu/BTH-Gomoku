@@ -23,12 +23,13 @@ namespace Components
 	{
 	public:
 		InputField(ID3D10Device* device, ComponentGroup* ownerGroup, InputReceiver* receiver, 
-		RECT position, GameFont* font);
+		RECT position, GameFont* font, int maxChars = -1);
 		~InputField() throw();
 
 		bool IsEmpty() const;
 		std::string GetText() const;
 		void SetText(std::string newText);
+		void SetMaxCharacters(int maxChars);
 
 		// Methods inherited from Component
 		void Refresh(GameTime gameTime, const InputState& currInputState, const InputState& prevInputState);
@@ -63,6 +64,7 @@ namespace Components
 		bool						mHasFocus;
 		bool						mShowMarker;
 		float						mMSSinceBlink;
+		int							mMaxCharacters;
 		
 		static const float			C_MARKER_SPEED;
 		static const int			C_NUM_VERTICES;

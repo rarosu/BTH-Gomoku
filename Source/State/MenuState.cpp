@@ -44,7 +44,7 @@ namespace State
 		}
 
 		mMenuButtons->GetMenuItem(C_MENU_CAPTIONS[MenuButton::WatchReplay])->SetEnabled(false);
-		mMenuButtons->GetMenuItem(C_MENU_CAPTIONS[MenuButton::Credits])->SetEnabled(false);
+		//mMenuButtons->GetMenuItem(C_MENU_CAPTIONS[MenuButton::Credits])->SetEnabled(false);
 		mMenuButtons->GetSubMenu(C_MENU_CAPTIONS[MenuButton::StartGame])->GetMenuItem(C_START_GAME_CAPTIONS[1])->SetEnabled(true);
 		
 		mComponents->SetFocusedComponent(mMenuButtons->GetSubMenu(C_MENU_CAPTIONS[MenuButton::WatchReplay]));
@@ -77,7 +77,7 @@ namespace State
 		if (mMenuButtons->GetAndResetClickStatus(C_MENU_CAPTIONS[MenuButton::WatchReplay])) 
 			{} // Do nothing here yet
 		if (mMenuButtons->GetAndResetClickStatus(C_MENU_CAPTIONS[MenuButton::Credits]))
-			{} // Change to CreditsState
+			ChangeState(C_STATE_CREDITS);
 		if (mMenuButtons->GetAndResetClickStatus(C_MENU_CAPTIONS[MenuButton::Exit]))
 			QuitApplication();
 	}

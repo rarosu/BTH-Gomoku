@@ -4,10 +4,10 @@
 namespace State
 {
 	ServerLobbyState::ServerLobbyState(StateID id, ID3D10Device* device, State::ServerGameState* serverGameState)
-		: AbstractLobbyState(id, device)
-		, mStartButton(NULL)
-		, mServerSession(NULL)
-		, mServerGameState(serverGameState)
+		: AbstractLobbyState(id, device),
+		mStartButton(NULL),
+		mServerSession(NULL),
+		mServerGameState(serverGameState)
 	{}
 
 	void ServerLobbyState::SetSessionArguments(Network::Server* server, const std::string& adminName, Logic::Ruleset* ruleset)
@@ -28,9 +28,10 @@ namespace State
 
 	void ServerLobbyState::AppendComponents()
 	{
-		RECT r = mCancelButton->GetBoundingRect();
-		r.left = r.right + 50;
-		r.right = r.left + C_BUTTON_WIDTH;
+		int top = mCancelButton->GetPosition().y;
+		int right = mCancelButton->GetPosition().x - 20;
+
+		RECT r = { right - mCancelButton->GetWidth(), top, right, top + mCancelButton->GetHeight() };
 
 		mStartButton = new Components::TextButton(mComponents, r);
 		mStartButton->Initialize(mDevice, "Start");

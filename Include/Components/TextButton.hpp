@@ -17,6 +17,7 @@ namespace Components
 	
 		virtual void Initialize(ID3D10Device* device, std::string caption);
 		void Draw();
+		void SetCaption(std::string caption);
 		
 		// DEBUG
 		virtual std::string GetName();
