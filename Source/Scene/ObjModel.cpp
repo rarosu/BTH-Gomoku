@@ -16,6 +16,8 @@ ObjModel::ObjModel(ID3D10Device* device, std::string filename, D3DXCOLOR color)
 	/*ID3D10ShaderResourceView *pSRView = NULL;
 	D3DX10CreateShaderResourceViewFromFile(mDevice, "Resources/Textures/red.png", NULL, NULL, &pSRView, NULL );
 	mEffect->SetVariable("modelTexture", pSRView);*/
+
+	mEffect->SetVariable("g_lightDirection", D3DXVECTOR4(50.0, -10.0, 50.0, 0.0));
 	mEffect->SetVariable("g_modelColor", (D3DXVECTOR4)color);
 }
 

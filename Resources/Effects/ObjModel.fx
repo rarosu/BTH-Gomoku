@@ -25,6 +25,13 @@ SamplerState linearSampler {
 	AddressV = Wrap;
 };
 
+DepthStencilState EnableDepth
+{
+	DepthEnable = TRUE;
+	DepthWriteMask = ALL;
+	DepthFunc = LESS_EQUAL;
+};
+
 cbuffer cbEveryFrame
 {
 	matrix	g_matWorld;
@@ -33,6 +40,7 @@ cbuffer cbEveryFrame
 
 //Texture2D g_modelTexture;
 float4 g_modelColor;
+float4 g_lightDirection;
 
 PS_INPUT VS(VS_INPUT input)
 {
@@ -50,6 +58,11 @@ float4 PS(PS_INPUT input) : SV_Target0
 {
 	//float4 texColor = modelTexture.Sample(linearSampler, input.uv);
 	float4 texColor = g_modelColor;
+	float3 lightVec = normalize(g_lightDirection.xyz - input.positionW);
+	float diffuse = dot(lightVec, normalize(input.normalW));
+
+	texColor = texColor + (diffuse * 0.5);
+
 	return texColor;
 }
 
@@ -62,6 +75,7 @@ technique10 DrawTechnique
 		SetPixelShader(CompileShader(ps_4_0, PS()));
 
 		SetRasterizerState(NoCulling);
+		SetDepthStencilState(EnableDepth, 0xff);
 	}
 }
 
