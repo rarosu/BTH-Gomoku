@@ -81,7 +81,8 @@ namespace Logic
 				{
 					Network::AddPlayerMessage* m = static_cast<Network::AddPlayerMessage*>(mClient->PopMessage(i));
 					
-					assert(mPlayers[m->mPlayerID] == NULL);
+
+					SafeDelete(mPlayers[m->mPlayerID]);
 					mPlayers[m->mPlayerID] = new Player(m->mName, m->mTeam);
 
 					if (mSessionNotifiee != NULL)
