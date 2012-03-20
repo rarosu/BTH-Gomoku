@@ -111,11 +111,13 @@ namespace Logic
 				{
 					Network::SetTeamMessage* m = static_cast<Network::SetTeamMessage*>(mClient->PopMessage(i));
 
-					assert(mPlayers[m->mPlayerID] != NULL);
-					mPlayers[m->mPlayerID]->SetTeam(m->mTeam);
+					if (mPlayers[m->mPlayerID] != NULL)
+					{
+						mPlayers[m->mPlayerID]->SetTeam(m->mTeam);
 
-					if (mSessionNotifiee != NULL)
-						mSessionNotifiee->SetTeam(m->mPlayerID, m->mTeam);
+						if (mSessionNotifiee != NULL)
+							mSessionNotifiee->SetTeam(m->mPlayerID, m->mTeam);
+					}
 
 					SafeDelete(m);
 				} break;
