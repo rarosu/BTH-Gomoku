@@ -109,6 +109,9 @@ namespace Logic
 						if (mCurrentPlayer == m->mPlayerID)
 						{
 							mGrid.AddMarker(Logic::Cell(m->mX, m->mY), m->mPlayerID);
+							if (mSessionNotifiee != NULL)
+								mSessionNotifiee->PlacePiece(m->mPlayerID, Logic::Cell(m->mX, m->mY));
+
 							mServer->Send(Network::PlacePieceMessage(m->mPlayerID, m->mX, m->mY, -1));
 
 							if (!CheckAndHandleWin())
@@ -150,7 +153,27 @@ namespace Logic
 
 	void ServerSession::SendChatMessage(const std::string& message, PlayerID targetID, Network::Recipient::Recipient recipient)
 	{
-		mServer->Send(Network::ChatMessage(0, targetID, recipient, message));
+		switch (recipient)
+		{
+			case Network::Recipient::Broadcast:
+				mServer->Send(Network::ChatMessage(0, targetID, recipient, message));
+			break;
+
+			case Network::Recipient::Private:
+				if (mPlayers[targetID] != NULL && mPlayerClients[targetID] != C_STATUS_LOCAL)
+					mServer->Send(mPlayerClients[targetID], Network::ChatMessage(0, targetID, recipient, message));
+			break;
+
+			case Network::Recipient::Team:
+				for (PlayerID s = 0; s < mPlayers.size(); ++s)
+				{
+					if (mPlayers[s] != NULL && mPlayers[s]->GetTeam() == mPlayers[0]->GetTeam())
+					{
+						mServer->Send(mPlayerClients[s], Network::ChatMessage(0, s, recipient, message));
+					}
+				}
+			break;
+		}
 	}
 
 	void ServerSession::SendPlacePieceMessage(const Logic::Cell& cell)
@@ -177,6 +200,8 @@ namespace Logic
 
 		mServer->Send(Network::StartGameMessage());
 		mServer->Send(Network::TurnMessage(mCurrentPlayer));
+
+		mServer->ShutdownListenSocket();
 	}
 
 	void ServerSession::ClientConnected(Network::Slot slot)
@@ -206,6 +231,14 @@ namespace Logic
 			// TODO: Think about timeout?
 			// TODO: Should we think about timeout?
 			// TODO: Don't think about timeout.
+
+			// TODO: Forget about boot.
+			// TODO: Forget about timeout (keep it in mind, though)
+
+			// REDO: Think about timeout.
+			// TODO: Ponder meaning of life.
+
+			// TODO: Give up.
 
 			Network::RemovePlayerReason::RemovePlayerReason reason = Network::RemovePlayerReason::Left;
 			for (unsigned int i = 0; i < mPlayers.size(); ++i)
@@ -319,6 +352,7 @@ namespace Logic
 		switch (recipient)
 		{
 			case Network::Recipient::Broadcast:
+			{
 				for (PlayerID s = 0; s < mPlayers.size(); ++s)
 				{
 					if (mPlayers[s] != NULL && mPlayerClients[s] != C_STATUS_LOCAL && s != sourceID)
@@ -329,13 +363,39 @@ namespace Logic
 
 				if (mSessionNotifiee != NULL)
 				{
-					mSessionNotifiee->ReceiveChatMessage(message, sourceID);
+					mSessionNotifiee->ReceiveChatMessage(message, recipient, sourceID);
 				}
-				break;
+			} break;
+
 			case Network::Recipient::Team:
-				break;
+			{
+				Player::Team team = mPlayers[sourceID]->GetTeam();
+				for (PlayerID s = 0; s < mPlayers.size(); ++s)
+				{
+					if (mPlayers[s] != NULL && mPlayerClients[s] != C_STATUS_LOCAL && s != sourceID && mPlayers[s]->GetTeam() == team)
+					{
+						mServer->Send(mPlayerClients[s], Network::ChatMessage(sourceID, targetID, recipient, message));
+					}
+
+					if (mPlayerClients[s] == C_STATUS_LOCAL && mPlayers[s]->GetTeam() == team)
+					{
+						mSessionNotifiee->ReceiveChatMessage(message, recipient, sourceID);
+					}
+				}
+			} break;
+
 			case Network::Recipient::Private:
-				break;
+			{
+				if (mPlayers[targetID] != NULL && mPlayerClients[targetID] != C_STATUS_LOCAL && targetID != sourceID)
+				{
+					mServer->Send(mPlayerClients[targetID], Network::ChatMessage(sourceID, targetID, recipient, message));
+				}
+
+				if (mPlayerClients[targetID] == C_STATUS_LOCAL)
+				{
+					mSessionNotifiee->ReceiveChatMessage(message, recipient, sourceID);
+				}
+			} break;
 		}
 	}
 

@@ -55,6 +55,7 @@ namespace Network
 
 		void DisconnectClient(Slot slot);
 		bool IsConnected(Slot slot) const;
+		void ShutdownListenSocket();
 	private:
 		ServerEventInterface* mEventInterface;
 

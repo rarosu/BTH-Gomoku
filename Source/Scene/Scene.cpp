@@ -294,3 +294,9 @@ Logic::Cell Scene::PickCell(int mouseX, int mouseY) const
 	float closestMultipleZ = FindClosestMultiple(hit.z, C_CELL_SIZE);
 	return Logic::Cell(static_cast<int>(closestMultipleX) / C_CELL_SIZE, static_cast<int>(closestMultipleZ) / C_CELL_SIZE);
 }
+
+void Scene::LookAtCell(const Logic::Cell& cell)
+{
+	mCamera->LookAt(D3DXVECTOR3(cell.x * C_CELL_SIZE, 0.0f, cell.y * C_CELL_SIZE));
+}
+

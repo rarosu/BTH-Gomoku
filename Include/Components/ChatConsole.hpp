@@ -2,6 +2,7 @@
 #define CHAT_CONSOLE_HPP
 
 #include "Console.hpp"
+#include "Session.hpp"
 
 namespace Components
 {
@@ -13,7 +14,7 @@ namespace Components
 	class ChatInputReceiver
 	{
 	public:
-		virtual void ChatInputEntered(const ChatConsole* consoleInstance, const std::string& message) = 0;
+		virtual void ChatInputEntered(const ChatConsole* consoleInstance, const std::string& message, Logic::PlayerID target, Network::Recipient::Recipient recipient) = 0;
 	};
 
 
@@ -24,7 +25,7 @@ namespace Components
 	class ChatConsole : public Console
 	{
 	public:
-		ChatConsole(ID3D10Device* device, ComponentGroup* ownerGroup, const RECT& position, const D3DXCOLOR& background, 
+		ChatConsole(Logic::Session* session, ID3D10Device* device, ComponentGroup* ownerGroup, const RECT& position, const D3DXCOLOR& background, 
 					const std::string& name, UINT size = 100);
 
 		/**
@@ -52,9 +53,13 @@ namespace Components
 			notifications or modifications.
 		*/
 		void AddLine(const std::string& input);
+
+		void AddOutgoingMessage(const std::string& message, Network::Recipient::Recipient recipient, Logic::PlayerID targetID);
+		void AddIncomingMessage(const std::string& message, Network::Recipient::Recipient recipient, Logic::PlayerID sourceID);
 	private:
 		std::string mName;
 		ChatInputReceiver* mChatReceiver;
+		Logic::Session* mSession;
 	};
 }
 

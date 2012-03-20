@@ -45,6 +45,11 @@ namespace Components
 			Get the written contents in the input field
 		*/
 		std::string GetInputFieldContent() const;
+
+		/**
+			Set the contents of the input field, before the caret.
+		*/
+		void SetInputFieldContent(const std::string& input);
 	private:
 		struct TextLine
 		{

@@ -60,7 +60,7 @@ namespace Logic
 					Network::ChatMessage* m = static_cast<Network::ChatMessage*>(mClient->PopMessage(i));
 
 					if (mSessionNotifiee != NULL)
-						mSessionNotifiee->ReceiveChatMessage(m->mMessage, m->mSourceID);
+						mSessionNotifiee->ReceiveChatMessage(m->mMessage, m->mRecipient, m->mSourceID);
 
 					SafeDelete(m);
 				} break;
@@ -117,6 +117,8 @@ namespace Logic
 					Network::PlacePieceMessage* m = static_cast<Network::PlacePieceMessage*>(mClient->PopMessage(i));
 
 					mGrid.AddMarker(Logic::Cell(m->mX, m->mY), m->mPlayerID);
+					if (mSessionNotifiee != NULL)
+						mSessionNotifiee->PlacePiece(m->mPlayerID, Logic::Cell(m->mX, m->mY));
 
 					SafeDelete(m);
 				} break;
@@ -166,7 +168,6 @@ namespace Logic
 		mKeepAliveCounter += dt;
 		if (mKeepAliveCounter >= C_KEEP_ALIVE_DELAY)
 		{
-			// TODO: Resume sending stay alive messages
 			//mClient->Send(Network::StayAliveMessage(mSelfID));
 			mKeepAliveCounter = 0.0f;
 		}

@@ -74,22 +74,26 @@ namespace Network
 
 	void Server::Update()
 	{
-		// Find a free slot in the client list
-		int slot = -1;
-		if ( (slot = GetFreeSlot()) != -1 )
+		if (mListenSocket.IsBound())
 		{
-			SOCKET s = INVALID_SOCKET;
-			s = mListenSocket.Accept();
-
-			if (s != INVALID_SOCKET)
+			// Find a free slot in the client list
+			int slot = -1;
+			if ( (slot = GetFreeSlot()) != -1 )
 			{
-				// Add client and notify connect
-				mClients[slot] = new ComSocket(s);
+				SOCKET s = INVALID_SOCKET;
+				s = mListenSocket.Accept();
 
-				if (mEventInterface != NULL)
-					mEventInterface->ClientConnected(slot);
+				if (s != INVALID_SOCKET)
+				{
+					// Add client and notify connect
+					mClients[slot] = new ComSocket(s);
+
+					if (mEventInterface != NULL)
+						mEventInterface->ClientConnected(slot);
+				}
 			}
 		}
+		
 
 		// Update the clients
 		for (Slot i = 0; i < mClients.size(); ++i)
@@ -165,6 +169,11 @@ namespace Network
 
 		if (mEventInterface != NULL)
 			mEventInterface->ClientDisconnected(slot);
+	}
+
+	void Server::ShutdownListenSocket()
+	{
+		mListenSocket.Shutdown();
 	}
 
 	bool Server::IsConnected(Slot slot) const

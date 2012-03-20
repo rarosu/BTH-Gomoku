@@ -162,6 +162,7 @@
     <ClCompile Include="Source\Components\Label.cpp" />
     <ClCompile Include="Source\Components\List.cpp" />
     <ClCompile Include="Source\Components\PieMenu.cpp" />
+    <ClCompile Include="Source\Components\PlayerList.cpp" />
     <ClCompile Include="Source\Components\RootComponent.cpp" />
     <ClCompile Include="Source\Components\Scrollbar.cpp" />
     <ClCompile Include="Source\Components\TextButton.cpp" />
@@ -301,6 +302,7 @@
     <ClInclude Include="Include\State\MenuState.hpp" />
     <ClInclude Include="Include\State\StateRegistry.hpp" />
     <ClInclude Include="Include\WinInclude.hpp" />
+    <ClInclude Include="Include\Components\PlayerList.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

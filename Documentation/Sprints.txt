@@ -1,0 +1,11 @@
+* Implementera protokoll för 2v2
+** Ta bort marker type ur protokollet, ska inte gå att ändra
+** Se till att Accept inte skickar lag
+** Implementera DA-meddelanden
+** Skapa ruleset för 2v2
+** Se till att alla meddelanden från/till session skickas/tas emot rätt.
+* Fixa CreateGameState så att man kan skapa olika sorters spel (skapa 2v2)
+* Fixa Lobby
+** Se till att man kan ändra lag i GUIt
+* Fixa InGameState
+** Lägg till DA-meny för 2v2

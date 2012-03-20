@@ -123,6 +123,11 @@ namespace Components
 		newItem->Initialize(mDevice, caption);
 		
 		mItems[caption] = newItem;
+
+		RECT menuRect = GetBoundingRect();
+		menuRect.bottom += mItemHeight;
+
+		SetBoundingRect(menuRect);
 	}
 
 	bool ClickMenu::GetAndResetClickStatus(const std::string& caption)

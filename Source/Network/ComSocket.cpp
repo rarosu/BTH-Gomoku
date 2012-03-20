@@ -161,7 +161,7 @@ namespace Network
 		while (mReceiveBuffer.size() > 1)
 			InterpretBuffer();
 
-		if (!mMessagesToSend.empty())
+		while (!mMessagesToSend.empty())
 		{
 			std::string m = mMessagesToSend.front();
 			SendMessage(m);
@@ -175,7 +175,7 @@ namespace Network
 	// Returns first message in the receive queue, or NULL
 	std::string ComSocket::PopMessage()
 	{
-		return PopMessage(GetQueuedMessageCount() - 1);
+		return PopMessage(0);
 	}
 
 	std::string ComSocket::PopMessage(unsigned int index)

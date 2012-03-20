@@ -9,11 +9,22 @@
 #include "ChatConsole.hpp"
 #include "PieMenu.hpp"
 #include "ClickMenu.hpp"
+#include "PlayerList.hpp"
 
 #include "Sprite.hpp"
 
 namespace State
 {
+	namespace GameStage
+	{
+		enum GameStage
+		{
+			During,
+			Won,
+			Aborted
+		};
+	}
+
 	class AbstractGameState : public ApplicationState, public Logic::SessionNotificationInterface, public Components::ChatInputReceiver
 	{
 	public:
@@ -31,12 +42,14 @@ namespace State
 		/**
 			Called when a line has been entered in the chat
 		*/
-		void ChatInputEntered(const Components::ChatConsole* consoleInstance, const std::string& message);
+		void ChatInputEntered(const Components::ChatConsole* consoleInstance, const std::string& message, Logic::PlayerID target, Network::Recipient::Recipient recipient);
 		
 		/**
 			Sent when a chat message is received from the network.
 		*/
-		void ReceiveChatMessage(const std::string& message, Logic::PlayerID sourceID);
+		void ReceiveChatMessage(const std::string& message, Network::Recipient::Recipient recipient, Logic::PlayerID sourceID);
+
+		void PlacePiece(Logic::PlayerID id, const Logic::Cell& cell);
 
 		/**
 			Sent when the game is over and has been won.
@@ -56,11 +69,14 @@ namespace State
 	protected:
 		void SetSession(Logic::Session* session);
 
+		virtual void OnConnectionFailure() {}
 		virtual void InitializeGame() {}
 		virtual void EndGame() {}
 		virtual bool CanSendChatMessage() const { return true; }
 
 		void SetChatName(const std::string& name);
+
+		Components::ChatConsole* mChat;
 	private:
 		ID3D10Device* mDevice;
 
@@ -74,12 +90,11 @@ namespace State
 		// grid and all the markers.
 		Components::ComponentGroup*	mComponents;
 		Scene* mScene;
-		Components::ChatConsole* mChat;
+		Components::ClickMenu* mGameMenu;
+		Components::PlayerList*	mPlayerList;
 
-
-		// Indicates that either the game is over, or a disconnect happened.
-		bool mGameOver;
-		Sprite* mGameOverOverlay;
+		// Indicates the stage the game is in, currently
+		GameStage::GameStage mGameStage;
 		
 
 

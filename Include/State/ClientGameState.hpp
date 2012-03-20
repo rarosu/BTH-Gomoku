@@ -18,6 +18,7 @@ namespace State
 
 		void SetClientSession(Logic::ClientSession* clientSession);
 	protected:
+		void OnConnectionFailure();
 		void InitializeGame();
 		void EndGame();
 

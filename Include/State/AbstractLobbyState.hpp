@@ -26,12 +26,14 @@ namespace State
 		/**
 			Called when a line has been entered in the chat
 		*/
-		void ChatInputEntered(const Components::ChatConsole* consoleInstance, const std::string& message);
+		void ChatInputEntered(const Components::ChatConsole* consoleInstance, const std::string& message, Logic::PlayerID target, Network::Recipient::Recipient recipient);
 		
 		/**
 			Sent when a chat message is received from the network.
 		*/
-		void ReceiveChatMessage(const std::string& message, Logic::PlayerID sourceID);
+		void ReceiveChatMessage(const std::string& message, Network::Recipient::Recipient recipient, Logic::PlayerID sourceID);
+
+		void PlacePiece(Logic::PlayerID id, const Logic::Cell& cell);
 
 		/**
 			Sent when the game is over and has been won.

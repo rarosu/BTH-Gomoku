@@ -70,8 +70,9 @@
     <ClCompile Include="Source\Components\ChatConsole.cpp" />
     <ClCompile Include="Source\State\AbstractLobbyState.cpp" />
     <ClCompile Include="Source\Network\Messages\GameOverMessage.cpp" />
-    <ClCompile Include="Source\Scene\ObjModel.cpp" />
     <ClCompile Include="Source\State\CreditsState.cpp" />
+    <ClCompile Include="Source\Components\PlayerList.cpp" />
+    <ClCompile Include="Source\Scene\ObjModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -145,9 +146,10 @@
     <ClInclude Include="Include\Logic\StandardRuleset.hpp" />
     <ClInclude Include="Include\Components\ChatConsole.hpp" />
     <ClInclude Include="Include\State\AbstractLobbyState.hpp" />
-    <ClInclude Include="Include\Network\Messages\GameOverMessage.hpp" />
-    <ClInclude Include="Include\Scene\ObjModel.hpp" />
     <ClInclude Include="Include\State\CreditsState.hpp" />
+    <ClInclude Include="Include\Network\Messages\GameOverMessage.hpp" />
+    <ClInclude Include="Include\Components\PlayerList.hpp" />
+    <ClInclude Include="Include\Scene\ObjModel.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

@@ -171,6 +171,11 @@ void Camera::Zoom(short amount)
 	mZoom = Clamp(mZoom, C_ZOOM_MIN, C_ZOOM_MAX);
 }
 
+void Camera::LookAt(const D3DXVECTOR3& target)
+{
+	mPosition = target;
+}
+
 /*
 void Camera::MouseButtonPressed(int index, const InputState& currentState)
 {

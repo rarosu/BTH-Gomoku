@@ -56,6 +56,21 @@ namespace Logic
 		return result;
 	}
 
+	PlayerID Session::GetPlayerByName(const std::string& name) const
+	{
+		PlayerID id = C_PLAYER_NONE;
+		for (PlayerID i = 0; i < mPlayers.size(); ++i)
+		{
+			if (mPlayers[i]->GetName() == name)
+			{
+				id = i;
+				break;
+			}
+		}
+
+		return id;
+	}
+
 	const Grid& Session::GetGrid() const
 	{
 		return mGrid;
@@ -81,6 +96,11 @@ namespace Logic
 		}
 
 		return false;
+	}
+
+	bool Session::IsOpenSlot(PlayerID playerID) const
+	{
+		return mPlayers[playerID] == NULL;
 	}
 
 	PlayerID Session::GetWinner() const

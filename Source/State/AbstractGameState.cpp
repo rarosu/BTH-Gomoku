@@ -9,29 +9,28 @@ namespace State
 		, mComponents(NULL)
 		, mScene(NULL)
 		, mChat(NULL)
+		, mGameMenu(NULL)
+		, mPlayerList(NULL)
 		, mSession(NULL)
-		, mGameOver(false)
-		, mGameOverOverlay(NULL)
-	{
-		mGameOverOverlay = new Sprite(mDevice, sViewport, "whitePixel.png", sViewport->GetWidth(), sViewport->GetHeight());
-	}
+		, mGameStage(GameStage::During)
+	{}
 
 	AbstractGameState::~AbstractGameState() throw()
 	{
 		SafeDelete(mSession);
-		SafeDelete(mGameOverOverlay);
 	}
 
 
 	void AbstractGameState::OnStatePushed()
 	{
+		
 		CreateComponents();
 
 		InitializeGame();
 
 		// Make a quick sanity check - if we don't have a session, the game shouldn't be able to be played.
-		if (mSession == NULL)
-			mGameOver = true;
+		assert(mSession != NULL);
+		mGameStage = GameStage::During;
 	}
 
 	void AbstractGameState::OnStatePopped()
@@ -55,6 +54,14 @@ namespace State
 
 	void AbstractGameState::Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime)
 	{
+		// Check menu
+		if (mGameMenu->GetSubMenu("Menu")->GetAndResetClickStatus("Exit"))
+		{
+			ChangeState(C_STATE_MENU);
+
+			return;
+		}
+
 		// Update the session
 		try
 		{
@@ -63,7 +70,9 @@ namespace State
 		catch (Network::ConnectionFailure& e)
 		{
 			// On a disconnect, we simply set the game as game over, but allow the players to remain in game if they wish.
-			mGameOver = true;
+			if (mGameStage == GameStage::During)
+				OnConnectionFailure();
+			mGameStage = GameStage::Aborted;
 		}
 
 		// Toggle chat with TAB
@@ -81,14 +90,25 @@ namespace State
 			}
 		}
 
+		for (unsigned int i = 0; i < mSession->GetPlayerCount(); ++i)
+		{
+			if (mPlayerList->GetAndResetClickStatus(i) && !mSession->IsOpenSlot(i))
+			{
+				mChat->SetInputFieldContent("/" + mSession->GetPlayerName(i) + " ");
+				mChat->SetVisible(true);
+				mChat->SetFocus();
+			}
+		}
+
 		// Update the scene
 		mScene->Update(mSession->GetGrid(), currInput, prevInput, gameTime);
 
-		if (!mGameOver)
+		if (mGameStage == GameStage::During)
 		{
 			if (mSession->IsLocalPlayerTurn())
 			{
-				if (currInput.Mouse.buttonIsPressed[C_MOUSE_LEFT] && !prevInput.Mouse.buttonIsPressed[C_MOUSE_LEFT] && mScene->HasFocus())
+				if (currInput.Mouse.buttonIsPressed[C_MOUSE_LEFT] && !prevInput.Mouse.buttonIsPressed[C_MOUSE_LEFT] && mScene->HasFocus()
+					&& !(mGameMenu->IsHovered() || mPlayerList->IsHovered()))
 				{
 					Logic::Cell cell = mScene->PickCell(currInput.Mouse.x, currInput.Mouse.y);
 					mSession->SendPlacePieceMessage(cell);
@@ -98,32 +118,34 @@ namespace State
 	}
 
 	void AbstractGameState::Draw()
+	{}
+
+	void AbstractGameState::ChatInputEntered(const Components::ChatConsole* consoleInstance, const std::string& message, Logic::PlayerID target, Network::Recipient::Recipient recipient)
 	{
-		if (mGameOver)
+		if (CanSendChatMessage())
+			mSession->SendChatMessage(message, target, recipient);
+	}	
+
+	void AbstractGameState::ReceiveChatMessage(const std::string& message, Network::Recipient::Recipient recipient, Logic::PlayerID sourceID)
+	{
+		if (mChat != NULL)
 		{
-			mGameOverOverlay->Draw(D3DXVECTOR2(0.0f, 0.0f), D3DXCOLOR(0.6f, 0.6f, 0.6f, 0.2f));
+			mChat->AddIncomingMessage(message, recipient, sourceID);
+			mChat->SetFocus();
+			mChat->SetVisible(true);
 		}
 	}
 
-	void AbstractGameState::ChatInputEntered(const Components::ChatConsole* consoleInstance, const std::string& message)
+	void AbstractGameState::PlacePiece(Logic::PlayerID id, const Logic::Cell& cell)
 	{
-		if (CanSendChatMessage())
-			mSession->SendChatMessage(message, -1, Network::Recipient::Broadcast);
-	}	
-
-	void AbstractGameState::ReceiveChatMessage(const std::string& message, Logic::PlayerID sourceID)
-	{
-		std::string finalMessage = mSession->GetPlayerName(sourceID) + ": " + message; 
-		
-		mChat->AddLine(finalMessage);
-		mChat->SetVisible(true);
-		mChat->SetFocus();
+		// Ugly
+		//mScene->LookAtCell(cell);
 	}
 
 	void AbstractGameState::GameOver(Logic::PlayerID winningPlayer)
 	{
 		// Set the game over flag and notify the players in the chat
-		mGameOver = true;
+		mGameStage = GameStage::Won;
 
 		std::string winner = "! Game won: " + mSession->GetPlayerName(mSession->GetWinner());
 		mChat->AddLine(winner);
@@ -161,6 +183,10 @@ namespace State
 	void AbstractGameState::CreateComponents()
 	{
 		const int C_CHAT_HEIGHT = 128;
+		const int C_MENU_WIDTH = 128;
+		const int C_MENU_HEIGHT = 48;
+		const int C_PLIST_WIDTH = 200;
+		const int C_PLIST_HEIGHT = 48;
 
 		RECT r = { 0, 0, 0, 0 };
 
@@ -171,9 +197,21 @@ namespace State
 		r.right = sViewport->GetWidth();
 		r.bottom = sViewport->GetHeight();
 		r.top = r.bottom - C_CHAT_HEIGHT;
-		mChat = new Components::ChatConsole(mDevice, mComponents, r, D3DXCOLOR(0.6, 0.6, 0.6, 1.0f), "");
+		mChat = new Components::ChatConsole(mSession, mDevice, mComponents, r, D3DXCOLOR(0.6, 0.6, 0.6, 1.0f), "");
 		mChat->SetChatReceiver(this);
 		mChat->SetVisible(false);
+
+		r.left = 0;
+		r.right = 0;
+		r.top = 0;
+		r.bottom = 0;
+		mGameMenu = new Components::ClickMenu(mComponents, mDevice, r, C_MENU_WIDTH, C_MENU_HEIGHT);
+		mGameMenu->AddMenuItem("Menu");
+		mGameMenu->GetMenuItem("Menu")->AddSubItem("Exit");
+
+		r.left = sViewport->GetWidth() - C_PLIST_WIDTH;
+		r.top = 0;
+		mPlayerList = new Components::PlayerList(mSession, mDevice, mComponents, r, C_PLIST_WIDTH, C_PLIST_HEIGHT);
 
 		mScene->SetFocus();
 		mComponents->SetFocus();
