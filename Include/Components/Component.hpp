@@ -57,7 +57,7 @@ namespace Components
 		virtual std::string GetName() = 0;
 
 		// Static methods
-		static void Initialize(ID3D10Device* device);
+		static void Initialize();
 
 	protected:
 		ComponentGroup*				mOwner;
@@ -65,9 +65,6 @@ namespace Components
 		static const Viewport*		sViewport;
 		static Sound*				sSndButtonClick;
 		static Sound*				sSndInputFull;
-		
-		// DEBUG
-		static ID3D10Device*		sDevice;
 
 		void LoseFocus();
 

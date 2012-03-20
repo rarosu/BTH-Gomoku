@@ -11,7 +11,7 @@
 #include "ClickMenu.hpp"
 #include "PlayerList.hpp"
 #include "Label.hpp"
-
+#include "SoundManager.hpp"
 #include "Sprite.hpp"
 
 namespace State
@@ -100,6 +100,8 @@ namespace State
 		Components::ClickMenu*		mGameMenu;
 		Components::PlayerList*		mPlayerList;
 		Components::Label*			mGameOverLabel;
+
+		Sound*						mSndPlacePiece;
 
 		// Indicates the stage the game is in, currently
 		GameStage::GameStage		mGameStage;

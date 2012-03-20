@@ -151,8 +151,6 @@ namespace Components
 
 		mItems.push_back(newItem);
 		SetBoundingRect(menuRect);
-
-		mBoundingSprite = new Sprite(sDevice, sViewport, "whitePixel.png", GetWidth(), GetHeight());
 	}
 	
 	void ClickMenu::LostFocus()

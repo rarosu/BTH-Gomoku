@@ -13,7 +13,8 @@ namespace State
 		  mPlayerList(NULL),
 		  mSession(NULL),
 		  mGameStage(GameStage::During),
-		  mGameOverLabel(NULL)
+		  mGameOverLabel(NULL),
+		  mSndPlacePiece(NULL)
 	{}
 
 	AbstractGameState::~AbstractGameState() throw()
@@ -29,6 +30,8 @@ namespace State
 
 		InitializeGame();
 
+		mSndPlacePiece = SoundManager::GetInstance().CreateSound("Resources/Sounds/placeMarker.wav");
+
 		// Make a quick sanity check - if we don't have a session, the game shouldn't be able to be played.
 		assert(mSession != NULL);
 		mGameStage = GameStage::During;
@@ -43,6 +46,7 @@ namespace State
 		mScene = NULL;
 		mChat = NULL;
 		mGameOverLabel = NULL;
+		mSndPlacePiece = NULL;
 
 		SafeDelete(mSession);
 	}
@@ -139,6 +143,7 @@ namespace State
 	void AbstractGameState::PlacePiece(Logic::PlayerID id, const Logic::Cell& cell)
 	{
 		mScene->LookAtCell(cell);
+		SoundManager::GetInstance().PlaySound(mSndPlacePiece);
 	}
 
 	void AbstractGameState::SetTeam(Logic::PlayerID id, Logic::Team team)
