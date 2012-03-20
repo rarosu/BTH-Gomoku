@@ -16,6 +16,7 @@ namespace State
 
 		void GameStarted();
 	protected:
+		void AppendStatePushed();
 		void AppendStatePopped();
 		void AppendComponents();
 	private:

@@ -14,6 +14,7 @@ namespace State
 
 		void SetSessionArguments(Network::Server* server, const std::string& adminName, Logic::Ruleset* ruleset);
 	protected:
+		void AppendClientConnected(Logic::PlayerID player);
 		void AppendStatePushed();
 		void AppendStatePopped();
 		void AppendComponents();

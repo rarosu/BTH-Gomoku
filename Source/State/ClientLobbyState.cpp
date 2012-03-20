@@ -26,6 +26,23 @@ namespace State
 		ChangeState(C_STATE_CLIENT_GAME);
 	}
 
+	void ClientLobbyState::AppendStatePushed()
+	{
+		for (int i = 0; i < mClientSession->GetSlotCount(); ++i)
+		{
+			if (i != mClientSession->GetSelfID())
+				mSlotMenus[i]->SetCurrentValue(1);
+			else
+				mSlotMenus[i]->SetCurrentValue(0);
+			mTeamMenus[i]->SetEnabled(false);
+			mSlotMenus[i]->SetEnabled(false);
+		}
+
+		if (mClientSession->GetSlotCount() == 4)
+			mTeamMenus[mClientSession->GetSelfID()]->SetEnabled(true);
+		
+	}
+
 	void ClientLobbyState::AppendStatePopped()
 	{
 		mClientSession = NULL;

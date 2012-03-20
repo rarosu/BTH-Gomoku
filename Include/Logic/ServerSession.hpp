@@ -69,17 +69,15 @@ namespace Logic
 		*/
 		void SendPlacePieceMessage(const Logic::Cell& cell);
 
+		/**
+			Set the team of a player, and notify about the event.
+		*/
 		void SendSetTeamMessage(PlayerID player, Team team);
 
 		/**
 			Send start game message
 		*/
 		void SendStartMessage();
-
-		/**	
-			Set the team of a local player.
-		*/
-		void SetLocalPlayerTeam(PlayerID playerID, Team team);
 
 		/**
 			Boot a player
@@ -90,6 +88,14 @@ namespace Logic
 			Set a slot type
 		*/
 		void SetSlotType(PlayerID playerSlot, ClientSlot status);
+
+		/**
+			Check if we can start a game.
+
+			This can only happen, when we don't have any open slots (all network slots are filled)
+			and teams are in order.
+		*/
+		bool CanStartGame() const;
 
 		/**
 			Implemented from ServerEventInterface
@@ -110,6 +116,8 @@ namespace Logic
 
 		Ruleset* mRuleset;									// The ruleset determines all the rules for the game
 		Network::Server* mServer;							// The server holds all network clients, and queues their messages
+
+		void AddPlayer(PlayerID id, ClientSlot slot, const std::string& name, Team team);
 
 		PlayerID GetPlayerSlot(ClientSlot slot) const;
 		void HandleJoinMessage(Network::Slot clientSlot, const std::string& name);

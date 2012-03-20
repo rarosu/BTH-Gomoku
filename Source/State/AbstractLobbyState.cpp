@@ -144,11 +144,16 @@ namespace State
 	void AbstractLobbyState::PlayerConnected(Logic::PlayerID id)
 	{
 		mChat->AddLine("! Player connected: " + mSession->GetPlayerName(id));
+		AppendClientConnected(id);
 	}
 
 	void AbstractLobbyState::PlayerDisconnected(Logic::PlayerID id, const std::string& name, Network::RemovePlayerReason::RemovePlayerReason reason)
 	{
 		mChat->AddLine("! Player disconnected: " + name);
+
+		mTeamMenus[id]->SetCurrentValue(0);
+		mTeamMenus[id]->SetEnabled(false);
+		AppendClientDisconnected(id);
 	}
 	
 	void AbstractLobbyState::SetSession(Logic::Session* session)
@@ -233,6 +238,7 @@ namespace State
 		{
 			mSlotMenus.push_back(new Components::ToggleButton(mComponents, r, slotItems));
 			mSlotMenus.back()->Initialize(mDevice);
+			mSlotMenus.back()->SetEnabled(false);
 			r.top = r.bottom;
 			r.bottom = r.top + C_LABEL_HEIGHT;
 		}
@@ -250,6 +256,7 @@ namespace State
 		{
 			mTeamMenus.push_back(new Components::ToggleButton(mComponents, r, teamItems));
 			mTeamMenus.back()->Initialize(mDevice);
+			mTeamMenus.back()->SetEnabled(false);
 			r.top = r.bottom;
 			r.bottom = r.top + C_LABEL_HEIGHT;
 		}

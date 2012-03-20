@@ -63,6 +63,8 @@ namespace State
 	protected:
 		void SetSession(Logic::Session* session);
 
+		virtual void AppendClientConnected(Logic::PlayerID player) {}
+		virtual void AppendClientDisconnected(Logic::PlayerID player) {}
 		virtual void AppendStatePushed() {}
 		virtual void AppendStatePopped() {}
 		virtual void AppendComponents() {}

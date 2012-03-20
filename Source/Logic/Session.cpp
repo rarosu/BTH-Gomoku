@@ -118,7 +118,7 @@ namespace Logic
 					if (mPlayers[i] != NULL && mPlayers[i]->GetTeam() != team)
 					{
 						(++count) %= 2;
-						if (count == nth)
+						if (count - 1 == nth)
 						{
 							return i;
 						}
@@ -141,17 +141,31 @@ namespace Logic
 
 	bool Session::AreTeamsValid() const
 	{
-		// We only care for teams when we have more than 2 players.
-		if (mPlayers.size() > 2)
+		//// We only care for teams when we have more than 2 players.
+		//if (mPlayers.size() > 2)
+		//{
+		//	for (unsigned int i = 0; i < mPlayers.size(); ++i)
+		//	{
+		//		if (GetTeamMate(i) == C_PLAYER_NONE)
+		//			return false;
+		//	}
+		//}
+
+		//return true;
+
+		int count = 0;
+		for (unsigned int i = 0; i < mPlayers.size(); ++i)
 		{
-			for (unsigned int i = 0; i < mPlayers.size(); ++i)
+			if (mPlayers[i] != NULL)
 			{
-				if (GetTeamMate(i) == C_PLAYER_NONE)
-					return false;
+				if (mPlayers[i]->GetTeam() == 0)
+					count++;
+				else if (mPlayers[i]->GetTeam() == 1)
+					count--;
 			}
 		}
 
-		return true;
+		return count == 0;
 	}
 
 

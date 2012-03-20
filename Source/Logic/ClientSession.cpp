@@ -14,7 +14,7 @@ namespace Logic
 		, mKeepAliveCounter(0.0f)
 		, mClientTurn(false)
 	{
-		mPlayers[selfID] = new Player(playerName, C_TEAM_NONE);
+		mPlayers[selfID] = new Player(playerName, 0);
 	}
 
 	ClientSession::~ClientSession()

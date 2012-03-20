@@ -21,6 +21,12 @@ namespace State
 		SetSession(mServerSession);
 	}
 
+	void ServerLobbyState::AppendClientConnected(Logic::PlayerID player)
+	{
+		mTeamMenus[player]->SetCurrentValue(mServerSession->GetPlayerTeam(player));
+		mTeamMenus[player]->SetEnabled(true);
+	}
+
 	void ServerLobbyState::AppendStatePushed()
 	{
 		mSlotMenus[0]->SetCurrentValue(0);
@@ -31,6 +37,7 @@ namespace State
 			mSlotMenus[s]->SetEnabled(true);
 		}
 		
+		mTeamMenus[0]->SetEnabled(true);
 		if (mServerSession->GetSlotCount() == 2)
 		{
 			mTeamMenus[0]->SetCurrentValue(0);
@@ -62,14 +69,7 @@ namespace State
 
 	void ServerLobbyState::AppendUpdate()
 	{
-		mStartButton->SetEnabled(true);
-
-		// Enable start button only if we have enough players
-		if (mServerSession->GetPlayerCount() < mServerSession->GetSlotCount())
-			mStartButton->SetEnabled(false);
-
-		if (!mServerSession->AreTeamsValid())
-			mStartButton->SetEnabled(false);
+		mStartButton->SetEnabled(mServerSession->CanStartGame());
 
 		// Check if we can start the game
 		if (mStartButton->GetAndResetClickStatus())

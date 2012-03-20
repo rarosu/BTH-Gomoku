@@ -16,7 +16,7 @@ namespace Logic
 	{
 		mServer->SetEventInterface(this);
 
-		mPlayers[0] = new Player(adminName, C_TEAM_NONE);
+		mPlayers[0] = new Player(adminName, 0);
 		mPlayerClients[0] = C_STATUS_LOCAL;
 
 		for (Slot s = 1; s < mPlayers.size(); ++s)
@@ -231,6 +231,9 @@ namespace Logic
 		{
 			mPlayers[player]->SetTeam(team);
 			mServer->Send(Network::SetTeamMessage(player, team));
+
+			if (mSessionNotifiee != NULL)
+				mSessionNotifiee->SetTeam(player, team);
 		}
 	}
 
@@ -244,27 +247,25 @@ namespace Logic
 		mServer->ShutdownListenSocket();
 	}
 
-	void ServerSession::SetLocalPlayerTeam(PlayerID playerID, Team team)
-	{
-		if (mPlayerClients[playerID] == C_STATUS_LOCAL)
-		{
-			mPlayers[playerID]->SetTeam(team);
-			mServer->Send(Network::SetTeamMessage(playerID, team));
-
-			if (mSessionNotifiee != NULL)
-				mSessionNotifiee->SetTeam(playerID, team);
-		}
-	}
-
 	void ServerSession::BootPlayer(PlayerID playerID)
 	{
-		if (mPlayers[playerID] != NULL && mPlayerClients[playerID] != C_STATUS_LOCAL)
+		if (mPlayers[playerID] != NULL)
 		{
-			mServer->DisconnectClient(mPlayerClients[playerID]); // Own'd
+			if (mPlayerClients[playerID] != C_STATUS_LOCAL)
+			{
+				mServer->DisconnectClient(mPlayerClients[playerID]); // Own'd
+			}
+			else
+			{
+				mServer->Send(Network::RemovePlayerMessage(playerID, Network::RemovePlayerReason::Boot));
+				if (mSessionNotifiee != NULL)
+					mSessionNotifiee->PlayerDisconnected(playerID, mPlayers[playerID]->GetName(), Network::RemovePlayerReason::Boot);
+			}
 			
-			SafeDelete(mPlayers[playerID]);
-			mPlayerClients[playerID] = C_STATUS_OPEN;
 		}
+
+		SafeDelete(mPlayers[playerID]);
+		mPlayerClients[playerID] = C_STATUS_OPEN;
 	}
 
 	void ServerSession::SetSlotType(PlayerID playerSlot, ClientSlot status)
@@ -273,6 +274,27 @@ namespace Logic
 
 		BootPlayer(playerSlot);
 		mPlayerClients[playerSlot] = status;
+
+		if (status == C_STATUS_LOCAL)
+		{
+			std::stringstream s;
+			s << mPlayers[0]->GetName() << " " << (playerSlot + 1);
+
+			AddPlayer(playerSlot, C_STATUS_LOCAL, s.str(), 0);
+		}
+	}
+
+	bool ServerSession::CanStartGame() const
+	{
+		for (PlayerID i = 0; i < mPlayers.size(); ++i)
+		{
+			if (mPlayers[i] == NULL)
+				return false;
+			if (mPlayerClients.find(i)->second == C_STATUS_OPEN)
+				return false;
+		}
+
+		return AreTeamsValid();
 	}
 
 	void ServerSession::ClientConnected(Network::Slot slot)
@@ -340,6 +362,32 @@ namespace Logic
 		}
 	}
 
+	void ServerSession::AddPlayer(PlayerID id, ClientSlot slot, const std::string& name, Team team)
+	{
+		mPlayers[id] = new Player(name, team);
+		mPlayerClients[id] = slot;
+
+		for (PlayerID i = 0; i < mPlayers.size(); ++i)
+		{
+			if (mPlayers[i] != NULL)
+			{
+				if (i != id)
+				{
+					if (slot >= 0)
+						mServer->Send(slot, Network::AddPlayerMessage(i, mPlayers[i]->GetTeam(), mPlayers[i]->GetName()));
+					
+					if (mPlayerClients[i] >= 0)
+					{
+						mServer->Send(mPlayerClients[i], Network::AddPlayerMessage(id, mPlayers[id]->GetTeam(), mPlayers[id]->GetName()));
+					}
+				}
+			}
+		}
+
+		if (mSessionNotifiee != NULL)
+			mSessionNotifiee->PlayerConnected(id);
+	}
+
 	PlayerID ServerSession::GetPlayerSlot(ClientSlot slot) const
 	{
 		for (SlotMap::const_iterator it = mPlayerClients.begin(); it != mPlayerClients.end(); ++it)
@@ -383,28 +431,7 @@ namespace Logic
 		if (playerValid)
 		{
 			mServer->Send(clientSlot, AcceptMessage(mPlayers.size(), openPlayerID));
-			
-			mPlayers[openPlayerID] = new Player(name, C_TEAM_NONE);
-			mPlayerClients[openPlayerID] = clientSlot;
-
-			for (PlayerID i = 0; i < mPlayers.size(); ++i)
-			{
-				if (mPlayers[i] != NULL)
-				{
-					if (i != openPlayerID)
-					{
-						mServer->Send(clientSlot, AddPlayerMessage(i, mPlayers[i]->GetTeam(), mPlayers[i]->GetName()));
-					
-						if (mPlayerClients[i] >= 0)
-						{
-							mServer->Send(mPlayerClients[i], Network::AddPlayerMessage(openPlayerID, mPlayers[openPlayerID]->GetTeam(), mPlayers[openPlayerID]->GetName()));
-						}
-					}
-				}
-			}
-
-			if (mSessionNotifiee != NULL)
-				mSessionNotifiee->PlayerConnected(openPlayerID);
+			AddPlayer(openPlayerID, clientSlot, name, 0);
 		}
 		else
 		{
