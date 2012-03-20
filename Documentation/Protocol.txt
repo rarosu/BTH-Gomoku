@@ -6,10 +6,9 @@ DEFAULT FOR ID = -1;
 2		Join				NAME (string)																					CLIENT TO SERVER
 3		Accept				NUMBER_OF_PLAYERS (int), SELF_ID (int)															SERVER TO CLIENT
 4		Refuse				REASON (TOO_MANY_PLAYERS, INVALID_NAME)															SERVER TO CLIENT
-5		Add player			PLAYER_ID (int), TEAM (int), MARKER_ID (int), NAME (string)										SERVER TO CLIENT
+5		Add player			PLAYER_ID (int), TEAM (int), NAME (string)														SERVER TO CLIENT
 6		Remove player		PLAYER_ID (int), REASON (TIME_OUT, LEFT, BOOT)													SERVER TO CLIENT
 7		Set team			PLAYER_ID (int), TEAM (int)																		BOTH
-8		Set marker			PLAYER_ID (int), MARKER_ID (int)																BOTH
 9		Place piece			PLAYER_ID (int), X (int), Y (int), LIFETIME(int)												BOTH
 10		Remove piece		PLAYER_ID (int), X (int), Y (int)																SERVER TO CLIENT
 11		Turn				PLAYER_ID (int)																					SERVER TO CLIENT
