@@ -179,7 +179,7 @@ namespace State
 	{
 		// Define sizes
 		const int C_OFFSET_LEFT = 180;
-		const int C_OFFSET_TOP = 250;
+		const int C_OFFSET_TOP = 180;
 		const int C_BUTTON_WIDTH = 192;
 		const int C_BUTTON_HEIGHT = mDefaultFont->GetSize();
 		const int C_INPUT_FIELD_WIDTH = 300;
@@ -236,16 +236,17 @@ namespace State
 
 		LoadSetupInfo();
 
-		r.left = r.right - C_BUTTON_WIDTH;
 		r.top = C_OFFSET_TOP + C_LABEL_HEIGHT * 4.5;
+		r.bottom = r.top + C_LABEL_HEIGHT;
+		mJoinButton = new Components::TextButton(mComponents, r);
+		mJoinButton->Initialize(mDevice, "Join Game");
+
+		r.top = C_OFFSET_TOP + C_LABEL_HEIGHT * 6;
 		r.bottom = r.top + C_BUTTON_HEIGHT;
 		mCancelButton = new Components::TextButton(mComponents, r);
 		mCancelButton->Initialize(mDevice, "Cancel");
 
-		r.left = C_OFFSET_LEFT;
-		r.right = r.left + C_BUTTON_WIDTH;
-		mJoinButton = new Components::TextButton(mComponents, r);
-		mJoinButton->Initialize(mDevice, "Join Game");
+		
 
 		// Set the initial focus, and focus this component group
 		mNameField->SetFocus();

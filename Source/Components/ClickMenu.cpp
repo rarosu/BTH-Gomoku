@@ -161,12 +161,6 @@ namespace Components
 		ComponentGroup::LostFocus();
 	}
 
-	// DEBUG
-	void ClickMenu::Draw()
-	{
-		ComponentGroup::Draw(true);
-	}
-
 	bool ClickMenu::GetAndResetClickStatus(const std::string& caption)
 	{
 		return GetAndResetClickStatus(GetIndex(caption));

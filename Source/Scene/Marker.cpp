@@ -14,9 +14,9 @@ Marker::Marker(ID3D10Device* device, MarkerType type)
 		case MarkerType::Quad:
 			mMarker = new ObjModel(device, "quad.obj", D3DXCOLOR(0.0, 0.0, 1.0, 1.0));
 			break;
-		/*case MarkerType::Cross:
-			mMarker = new ObjModel(device, "ring.obj", D3DXCOLOR(1.0, 0.0, 0.0, 1.0));
-			break;*/
+		case MarkerType::Cross:
+			mMarker = new ObjModel(device, "cross.obj", D3DXCOLOR(1.0, 1.0, 0.0, 1.0));
+			break;
 	}
 }
 

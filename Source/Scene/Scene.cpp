@@ -1,7 +1,7 @@
 #include "Scene.hpp"
 #include <sstream>
 
-const Marker::MarkerType Scene::C_MARKER_TYPES[] = { Marker::Ring, Marker::Triangle, Marker::Quad, Marker::Cross};
+const Marker::MarkerType Scene::C_MARKER_TYPES[] = { Marker::Cross, Marker::Ring, Marker::Triangle, Marker::Quad };
 const int Scene::C_GRID_WIDTH = 64;
 const int Scene::C_GRID_HEIGHT = 64;
 const int Scene::C_CELL_SIZE = 32;
