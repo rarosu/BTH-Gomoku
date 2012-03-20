@@ -157,6 +157,8 @@ namespace State
 				mClient = new Network::Client(mIPAddressField->GetText().c_str(), port);
 				mClient->Send(Network::JoinMessage(mNameField->GetText()));
 
+				SaveSetupInfo();
+
 				mConnectState = C_CONNECT_STATE_CONNECTING;
 			}
 			catch (Network::ConnectionFailure& e)
@@ -232,6 +234,8 @@ namespace State
 		mPortField = new Components::InputField(mDevice, mComponents, NULL, r, mDefaultFont, 14);
 		mPortField->SetText("6666");
 
+		LoadSetupInfo();
+
 		r.left = r.right - C_BUTTON_WIDTH;
 		r.top = C_OFFSET_TOP + C_LABEL_HEIGHT * 4.5;
 		r.bottom = r.top + C_BUTTON_HEIGHT;
@@ -246,5 +250,41 @@ namespace State
 		// Set the initial focus, and focus this component group
 		mNameField->SetFocus();
 		mComponents->SetFocus();
+	}
+
+	void JoinGameState::SaveSetupInfo()
+	{
+		std::ofstream file;
+
+		file.open("Resources/GameData/JoinGameInfo.txt", std::ios::out);
+		if(file.is_open())
+		{
+			file << mNameField->GetText() << "\n";
+			file << mIPAddressField->GetText() << "\n";
+			file << mPortField->GetText() << "\n";
+		}
+	}
+		
+	void JoinGameState::LoadSetupInfo()
+	{
+		std::ifstream file;
+
+		file.open("Resources/GameData/JoinGameInfo.txt", std::ios::in);
+		if(file.is_open())
+		{
+			std::string name, ip, port;
+			std::getline(file, name);
+			std::getline(file, ip);
+			std::getline(file, port);
+
+			if(mNameField != NULL)
+				mNameField->SetText(name);
+
+			if(mIPAddressField != NULL)
+				mIPAddressField->SetText(ip);
+
+			if(mPortField != NULL)
+				mPortField->SetText(port);
+		}
 	}
 }

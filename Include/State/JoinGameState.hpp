@@ -22,6 +22,7 @@ namespace State
 
 		void Update(const InputState& currInput, const InputState& prevInput, const GameTime& gameTime);
 		void Draw();
+
 	private:
 		struct bgVertex
 		{
@@ -51,6 +52,8 @@ namespace State
 		int							mConnectState;
 
 		void CreateComponents();
+		void SaveSetupInfo();
+		void LoadSetupInfo();
 	};
 }
 

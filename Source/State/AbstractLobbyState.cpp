@@ -203,7 +203,7 @@ namespace State
 		const int C_MENU_WIDTH		= 180;
 		const int C_MENU_SLOT_WIDTH	= 120;
 		const int C_MENU_XOFFSET	= 10;
-		const int C_LABEL_WIDTH		= 250;
+		const int C_LABEL_WIDTH		= 300;
 		const int C_LABEL_HEIGHT	= 50;
 		const int C_LABEL_MARGIN	= 10;
 		const int C_LABEL_XOFFSET	= C_MENU_XOFFSET + C_MENU_SLOT_WIDTH + C_LABEL_MARGIN;

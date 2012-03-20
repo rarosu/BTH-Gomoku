@@ -23,6 +23,7 @@ namespace State
 
 		void OnStatePushed();
 		void OnStatePopped();
+
 	private:
 		struct bgVertex
 		{
@@ -60,6 +61,8 @@ namespace State
 		bool									mJustChosenG; // DEBUG
 
 		void CreateComponents();
+		void SaveSetupInfo();
+		void LoadSetupInfo();
 	};
 }
 #endif
