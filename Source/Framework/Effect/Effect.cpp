@@ -152,3 +152,8 @@ void Effect::SetVariable(const std::string& variableName, ID3D10ShaderResourceVi
 {
 	mEffect->GetVariableByName(variableName.c_str())->AsShaderResource()->SetResource(value);
 }
+
+bool Effect::operator==(const Effect& rhs) const
+{
+	return mEffect == rhs.mEffect;
+}

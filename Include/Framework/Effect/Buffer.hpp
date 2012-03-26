@@ -78,6 +78,17 @@ public:
 		been applied before this one is called.
 	*/
 	void Draw();
+
+	/**
+		Comparison operator and functions
+
+		Two buffers are equal if their vertex buffers, index buffers and
+		topology are equal.
+	*/
+	bool operator==(const VertexBuffer& rhs) const;
+	bool IsVertexBufferEqual(const VertexBuffer& buffer) const;
+	bool IsIndexBufferEqual(const VertexBuffer& buffer) const;
+	bool IsTopologyEqual(const VertexBuffer& buffer) const;
 private:
 	ID3D10Device* mDevice;
 	ID3D10Buffer* mVertexBuffer;

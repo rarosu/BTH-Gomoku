@@ -68,6 +68,28 @@ void VertexBuffer::Draw()
 	}
 }
 
+bool VertexBuffer::operator==(const VertexBuffer& rhs) const
+{
+	return IsVertexBufferEqual(rhs) && IsIndexBufferEqual(rhs) && IsTopologyEqual(rhs);
+}
+
+bool VertexBuffer::IsVertexBufferEqual(const VertexBuffer& buffer) const
+{
+	return mVertexBuffer == buffer.mVertexBuffer;
+}
+
+bool VertexBuffer::IsIndexBufferEqual(const VertexBuffer& buffer) const
+{
+	return mIndexBuffer == buffer.mIndexBuffer;
+}
+
+bool VertexBuffer::IsTopologyEqual(const VertexBuffer& buffer) const
+{
+	return mTopology == buffer.mTopology;
+}
+
+
+
 bool VertexBuffer::SetupIndexBuffer(IndexVector* indices, Usage::Usage usage)
 {
 	Data data;

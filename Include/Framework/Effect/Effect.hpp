@@ -46,6 +46,13 @@ public:
 	void SetVariable(const std::string& variableName, const D3DXVECTOR2& value);
 	void SetVariable(const std::string& variableName, const D3DXMATRIX& value);
 	void SetVariable(const std::string& variableName, ID3D10ShaderResourceView* value);
+
+	/**
+		Comparison operator
+
+		Two effects are equal if the effect pointer is equal.
+	*/
+	bool operator==(const Effect& rhs) const;
 private:
 	ID3D10Device* mDevice;
 	ID3D10Effect* mEffect;
