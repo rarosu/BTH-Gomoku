@@ -73,6 +73,11 @@ bool VertexBuffer::operator==(const VertexBuffer& rhs) const
 	return IsVertexBufferEqual(rhs) && IsIndexBufferEqual(rhs) && IsTopologyEqual(rhs);
 }
 
+bool VertexBuffer::operator!=(const VertexBuffer& rhs) const
+{
+	return !(*this == rhs);
+}
+
 bool VertexBuffer::IsVertexBufferEqual(const VertexBuffer& buffer) const
 {
 	return mVertexBuffer == buffer.mVertexBuffer;
@@ -86,6 +91,21 @@ bool VertexBuffer::IsIndexBufferEqual(const VertexBuffer& buffer) const
 bool VertexBuffer::IsTopologyEqual(const VertexBuffer& buffer) const
 {
 	return mTopology == buffer.mTopology;
+}
+
+const ID3D10Buffer* VertexBuffer::GetVertexBuffer() const
+{
+	return mVertexBuffer;
+}
+
+const ID3D10Buffer* VertexBuffer::GetIndexBuffer() const
+{
+	return mIndexBuffer;
+}
+
+Topology::Topology VertexBuffer::GetTopology() const
+{
+	return mTopology;
 }
 
 

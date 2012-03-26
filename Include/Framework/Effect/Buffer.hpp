@@ -86,9 +86,14 @@ public:
 		topology are equal.
 	*/
 	bool operator==(const VertexBuffer& rhs) const;
+	bool operator!=(const VertexBuffer& rhs) const;
 	bool IsVertexBufferEqual(const VertexBuffer& buffer) const;
 	bool IsIndexBufferEqual(const VertexBuffer& buffer) const;
 	bool IsTopologyEqual(const VertexBuffer& buffer) const;
+
+	const ID3D10Buffer* GetVertexBuffer() const;
+	const ID3D10Buffer* GetIndexBuffer() const;
+	Topology::Topology GetTopology() const;
 private:
 	ID3D10Device* mDevice;
 	ID3D10Buffer* mVertexBuffer;

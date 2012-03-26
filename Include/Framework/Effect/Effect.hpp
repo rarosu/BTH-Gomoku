@@ -53,6 +53,12 @@ public:
 		Two effects are equal if the effect pointer is equal.
 	*/
 	bool operator==(const Effect& rhs) const;
+	bool operator!=(const Effect& rhs) const;
+
+	/**
+		Get a read-only instance of the D3D effect pointer.
+	*/
+	const ID3D10Effect* GetEffect() const;
 private:
 	ID3D10Device* mDevice;
 	ID3D10Effect* mEffect;

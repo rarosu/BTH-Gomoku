@@ -157,3 +157,13 @@ bool Effect::operator==(const Effect& rhs) const
 {
 	return mEffect == rhs.mEffect;
 }
+
+bool Effect::operator!=(const Effect& rhs) const
+{
+	return !(*this == rhs);
+}
+
+const ID3D10Effect* Effect::GetEffect() const
+{
+	return mEffect;
+}

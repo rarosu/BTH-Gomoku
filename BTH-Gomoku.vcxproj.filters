@@ -75,7 +75,7 @@
     <ClCompile Include="Source\State\CreditsState.cpp" />
     <ClCompile Include="Source\Components\ToggleButton.cpp" />
     <ClCompile Include="Source\Network\Messages\HighlightMessage.cpp" />
-    <ClCompile Include="Source\Framework\Batch\GeometryBatch.cpp" />
+    <ClCompile Include="Source\Framework\Batch\RenderBatch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
@@ -155,7 +155,7 @@
     <ClInclude Include="Include\State\CreditsState.hpp" />
     <ClInclude Include="Include\Components\ToggleButton.hpp" />
     <ClInclude Include="Include\Network\Messages\HighlightMessage.hpp" />
-    <ClInclude Include="Include\Framework\Batch\GeometryBatch.hpp" />
+    <ClInclude Include="Include\Framework\Batch\RenderBatch.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />

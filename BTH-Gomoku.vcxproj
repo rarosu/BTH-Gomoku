@@ -169,7 +169,7 @@
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\Components\Console.cpp" />
     <ClCompile Include="Source\Components\ToggleButton.cpp" />
-    <ClCompile Include="Source\Framework\Batch\GeometryBatch.cpp" />
+    <ClCompile Include="Source\Framework\Batch\RenderBatch.cpp" />
     <ClCompile Include="Source\Framework\D3DApplication.cpp" />
     <ClCompile Include="Source\Framework\Effect\Buffer.cpp" />
     <ClCompile Include="Source\Framework\Effect\Effect.cpp" />
@@ -245,7 +245,7 @@
     <ClInclude Include="Include\Camera.hpp" />
     <ClInclude Include="Include\Components\Console.hpp" />
     <ClInclude Include="Include\Components\ToggleButton.hpp" />
-    <ClInclude Include="Include\Framework\Batch\GeometryBatch.hpp" />
+    <ClInclude Include="Include\Framework\Batch\RenderBatch.hpp" />
     <ClInclude Include="Include\Framework\D3DApplication.hpp" />
     <ClInclude Include="Include\Framework\Effect\Buffer.hpp" />
     <ClInclude Include="Include\Framework\Effect\Effect.hpp" />
