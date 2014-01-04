@@ -5,7 +5,7 @@
 // The main function, where it all starts. Initializes the window and runs the function
 int WINAPI WinMain(HINSTANCE applicationInstance, HINSTANCE prevInstance, PSTR cmdLineArgs, int showSetting)
 {
-	Game game(applicationInstance);
+	Game game(applicationInstance, "Gomoku");
 	return game.Run();
 }
 

@@ -66,9 +66,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(SolutionDir)\Build\x86\$(Configuration)\</IntDir>
-    <ExecutablePath>C:\Program Files (x86)\FMOD SoundSystem\FMOD Programmers API Windows\api;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Utilities\Bin\x86;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\Logic\Grid;Include\State;Include\Network;Include\Network\Messages;C:\Program Files (x86)\FMOD SoundSystem\FMOD Programmers API Windows\api\inc;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files (x86)\FMOD SoundSystem\FMOD Programmers API Windows\api\lib;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\Lib;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(ProjectDir)Libs\FMod\;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>Include;Include\Scene;Include\Framework;Include\Framework\Effect;Include\Components;Include\Logic;Include\Logic\Grid;Include\State;Include\Network;Include\Network\Messages;$(ProjectDir)Libs\FMod\inc;$(ProjectDir)Libs\DirectX\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)Libs\FMod\lib;$(ProjectDir)Libs\DirectX\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)\Dist\x86\$(Configuration)\</OutDir>
